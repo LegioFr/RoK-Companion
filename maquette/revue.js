@@ -5,10 +5,10 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=15,VERSION='v'+VNUM+' · 8 oct. 2026';
+var VNUM=16,VERSION='v'+VNUM+' · 8 oct. 2026';
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
-  '*':[{sel:'',t:'Le bandeau des tests se déplace : fais glisser sa ligne de titre (⠿). Les repères des notes traitées ne s’affichent plus sur l’écran.'}],
+  '*':[{sel:'',t:'Tests : deux séries séparées. « 🔧 Corrections à vérifier » (bandeau doré) et « Revue complète » (bandeau bleu), qui saute les tests en attente de vérification.'}],
   'connexion':[{sel:'[data-auth="connexion"]',t:'Écran ajouté, repris de la maquette validée B01-01.'},
     {sel:'[data-auth="connexion"] .a-primary',t:'Connexion qui marche : e-mail ou mot de passe faux → « E-mail ou mot de passe incorrect. » (texte proposé).'}],
   'inscription':[{sel:'#suEmail',t:'Adresse déjà utilisée : « Un compte existe déjà avec cette adresse… » sous E-mail, au lieu de passer à la confirmation (ta note 4).'},
@@ -120,6 +120,7 @@ var css=el('style');css.textContent=[
 '#rcPnl .rc-rvi{margin-top:6px;font-size:12.5px}#rcPnl .rc-rvi b{display:block;color:var(--rc-fg);font-weight:600}#rcPnl .rc-rvi span{color:var(--rc-dim)}',
 '#rcPnl .tl .new{display:inline-block;margin-left:6px;padding:0 7px;border-radius:9px;background:#d8b24c;color:#1c1408;font:700 11px/18px Roboto,sans-serif;vertical-align:1px}',
 '#rcRun .rm{margin:0 0 4px;color:#f3d982;font-size:12.5px;font-weight:600}',
+'#rcRun.fix{border-color:#d8b24c;background:rgba(32,24,8,.97)}#rcRun.fix .rn{color:#f3d982}',
 '#rcRun .rk .sim{border-color:#d8b24c88;color:#f3d982}',
 '#rcRun .rk .ph{border-color:var(--rc-line)}#rcRun.min .rb{display:none}#rcRun button:focus-visible{outline:2px solid var(--rc);outline-offset:2px}',
 '#rcRun .sm{display:none}@media(max-width:640px){#rcRun .lg{display:none}#rcRun .sm{display:inline}#rcRun .rk{flex-wrap:nowrap;gap:4px;margin-top:6px}#rcRun .rk button{flex:1 1 auto;min-height:36px;padding:0 6px;font-size:12.5px;white-space:nowrap}#rcRun .rk .nx{margin-left:0}#rcRun .rb{padding:0 10px 8px}#rcRun .ra{font-size:13.5px}#rcRun .re{font-size:12.5px;margin-top:2px}#rcRun .rh{padding:4px 4px 2px 10px}}',
@@ -147,7 +148,7 @@ var db=null,dbState='attente',NOTES=[],assets=null,RES={};
 function useLocal(){db=null;dbState='local';NOTES=LS.get('notes',[]);RES=LS.get('tests',{});refresh();announceReview();}
 /* Une fois par version : s'il y a des tests à revoir, la bulle s'ouvre sur l'onglet Tests. */
 function announceReview(){setTimeout(announceNow,0);}
-function announceNow(){if(LS.get('seenRev',0)>=VNUM)return;var n=reviewList().length;LS.set('seenRev',VNUM);if(!n)return;S.tab='tests';LS.set('tab','tests');showPnl(true);say(n+' test'+(n>1?'s':'')+' à revoir après mes modifications.');}
+function announceNow(){if(LS.get('seenRev',0)>=VNUM)return;var n=reviewList().length;LS.set('seenRev',VNUM);if(!n)return;S.tab='tests';LS.set('tab','tests');showPnl(true);say(n+' correction'+(n>1?'s':'')+' à vérifier : voir l’onglet Tests.');}
 function saveLocal(){LS.set('notes',NOTES);refresh();}
 (function initDb(tries){
   if(location.protocol==='file:'){useLocal();if(window.claude&&window.claude.use)window.claude.use('assets').then(function(a){assets=a||null;render();paintRun();},function(){});return;}
@@ -470,7 +471,8 @@ function saveRes(id,o){RES[id]=o;if(db)db.doc('tests/'+id).set(o).catch(function
 function setRes(id,etat){var o={etat:etat,taille:cls(),w:innerWidth,version:VERSION,vn:VNUM,date:new Date().toISOString()};var old=RES[id]||{};if(old.note)o.note=old.note;if(old.captures)o.captures=old.captures;saveRes(id,o);}
 function clearRes(id){var r=RES[id];if(r&&r.captures&&assets)r.captures.forEach(function(c){assets.delete(c).catch(function(){});});delete RES[id];if(db)db.doc('tests/'+id).delete().catch(function(){});else LS.set('tests',RES);refresh();paintRun();}
 function stats(){var ok=0,ko=0;FLAT.forEach(function(t){var r=RES[t.id];if(r&&r.etat==='ok')ok++;else if(r&&r.etat==='ko')ko++;});return {ok:ok,ko:ko,done:ok+ko,all:FLAT.length};}
-function firstTodo(){for(var i=0;i<FLAT.length;i++)if(!RES[FLAT[i].id])return i;return 0;}
+/* Revue complète : premier test pas encore fait, en laissant de côté ceux qui attendent la vérification d'une correction. */
+function firstTodo(){var b=baseV();for(var i=0;i<FLAT.length;i++){var r=RES[FLAT[i].id];if((!r||!r.etat)&&!needsReview(FLAT[i],b))return i;}return -1;}
 function prep(t,force){var pr=force?t.prep:t.own;if(pr&&window.RC_API){window.RC_API.go(pr[0],pr[1]);}}
 var run=el('div');run.id='rcRun';run.hidden=true;run.setAttribute('role','region');run.setAttribute('aria-label','Revue guidée');document.body.appendChild(run);
 /* Bandeau de la revue : on le déplace en faisant glisser sa ligne de titre ; position gardée (fraction de l'écran). */
@@ -493,8 +495,14 @@ function startRun(i,list){RUN={on:true,i:i,min:false,list:list||null};LS.set('ru
 function stopRun(){RUN.on=false;LS.set('run',RUN);paintRun();render();}
 function stepRun(d){
   var L=RUN.list,j;
-  if(L){var k=L.indexOf(RUN.i)+d;if(k<0)k=0;if(k>=L.length){stopRun();var n=reviewList().length;say(n?'Fin de la série : '+n+' test'+(n>1?'s':'')+' encore à revoir.':'Tous les tests modifiés sont revus. Merci !');return;}j=L[k];}
-  else{j=RUN.i+d;if(j<0)j=0;if(j>=FLAT.length){stopRun();var st=stats();say('Revue terminée : '+st.ok+' bons, '+st.ko+' problème'+(st.ko>1?'s':'')+'.');return;}}
+  if(L){var k=L.indexOf(RUN.i)+d;if(k<0)k=0;
+    if(k>=L.length){stopRun();var n=reviewList().length,fi=firstTodo();
+      say(n?'Fin de la série : '+n+' correction'+(n>1?'s':'')+' encore à vérifier.':'Corrections vérifiées. Reprends la revue complète'+(fi>=0?' au test '+(fi+1):'')+' dans l’onglet Tests.');
+      S.tab='tests';showPnl(true);return;}
+    j=L[k];}
+  else{var b=baseV();j=RUN.i+d;while(j>=0&&j<FLAT.length&&needsReview(FLAT[j],b))j+=d;
+    if(j<0){j=RUN.i;}
+    if(j>=FLAT.length){stopRun();var st=stats();say('Revue complète terminée : '+st.ok+' bons, '+st.ko+' problème'+(st.ko>1?'s':'')+'.');return;}}
   RUN.i=j;LS.set('run',RUN);var tj=FLAT[j];if(tj.own||RUN.list||(tj.prep&&location.hash!==tj.prep[1]))prep(tj,true);paintRun();
 }
 /* Captures d'écran jointes à un test (capacité assets) : un test avec capture est un problème. */
@@ -542,8 +550,8 @@ function problem(t){setRes(t.id,'ko');S.prefill='Test '+t.num+' : ';S.testRef=t.
 function paintRun(){
   run.hidden=!RUN.on;if(!RUN.on)return;
   var t=FLAT[RUN.i];if(!t){stopRun();return;}var r=RES[t.id];
-  run.className=RUN.min?'min':'';run.innerHTML='';placeRun();
-  var h=el('div','rh');h.title='Fais glisser cette ligne pour déplacer le bandeau';h.appendChild(el('span','grip','⠿'));var L=RUN.list;h.appendChild(el('span','rn',L?'À revoir '+(L.indexOf(RUN.i)+1)+'/'+L.length+' · test '+t.num:'Test '+t.num+'/'+FLAT.length));h.appendChild(el('span','rg',t.g));
+  run.className=(RUN.min?'min':'')+(RUN.list?' fix':'');run.innerHTML='';placeRun();
+  var h=el('div','rh');h.title='Fais glisser cette ligne pour déplacer le bandeau';h.appendChild(el('span','grip','⠿'));var L=RUN.list;h.appendChild(el('span','rn',L?'🔧 Correction '+(L.indexOf(RUN.i)+1)+'/'+L.length+' · test '+t.num:'Revue complète · test '+t.num+'/'+FLAT.length));h.appendChild(el('span','rg',t.g));
   h.appendChild(el('span','rs'+(r?' '+r.etat:''),r?(r.etat==='ok'?'✓ bon':'✗ problème'+(r.note?' · note '+r.note:'')):''));
   var mn=el('button','ib',RUN.min?'▾':'▴');mn.type='button';mn.setAttribute('aria-label',RUN.min?'Déplier le test':'Réduire le test');mn.onclick=function(){RUN.min=!RUN.min;LS.set('run',RUN);paintRun();};h.appendChild(mn);
   var x=el('button','ib','✕');x.type='button';x.setAttribute('aria-label','Quitter la revue guidée');x.onclick=stopRun;h.appendChild(x);run.appendChild(h);
@@ -570,28 +578,30 @@ function rTests(){
   var st=stats();
   var RV=reviewList();
   if(RV.length){
-    var box=el('div','rc-rv');box.appendChild(el('div','rc-rvt','À revoir après mes modifications ('+RV.length+')'));
+    var box=el('div','rc-rv');box.appendChild(el('div','rc-rvt','🔧 1 · Corrections à vérifier ('+RV.length+')'));box.appendChild(el('div','rc-rvi','Seulement les tests que j’ai modifiés. Ils sont mis de côté dans la revue complète : une fois vérifiés ici, ils comptent comme faits.'));
     var why={};RV.forEach(function(t){(why[t.maj+' '+t.why]=why[t.maj+' '+t.why]||[]).push(t);});
     Object.keys(why).forEach(function(k){var L=why[k];var d=el('div','rc-rvi');d.appendChild(el('b',null,'v'+L[0].maj+' · '+L[0].why));
       d.appendChild(el('span',null,'Test'+(L.length>1?'s':'')+' '+L.map(function(t){return t.num;}).join(', ')));box.appendChild(d);});
-    var rr=row();rr.style.marginTop='8px';rr.appendChild(chip('▶ Revoir ces '+RV.length+' test'+(RV.length>1?'s':''),true,function(){var L=RV.map(function(t){return t.i;});startRun(L[0],L);}));box.appendChild(rr);
+    var rr=row();rr.style.marginTop='8px';rr.appendChild(chip(RUN.on&&RUN.list?'Vérification en cours':'▶ Vérifier ces '+RV.length+' correction'+(RV.length>1?'s':''),true,function(){var L=RV.map(function(t){return t.i;});startRun(L[0],L);}));box.appendChild(rr);
     pb.appendChild(box);
   }
-  pb.appendChild(h4('Tests jusqu’à l’Accueil · '+VERSION));
+  pb.appendChild(h4((RV.length?'2 · ':'')+'Revue complète · jusqu’à l’Accueil · '+VERSION));
   pb.appendChild(el('p','txt',st.done+' sur '+st.all+' faits · '+st.ok+' bon'+(st.ok>1?'s':'')+' · '+st.ko+' problème'+(st.ko>1?'s':'')));
   var pg=el('div','prog');var bar=el('i');bar.style.width=Math.round(st.done/st.all*100)+'%';pg.appendChild(bar);pb.appendChild(pg);
   var r=row();r.style.marginTop='8px';
   var fi=firstTodo();
-  r.appendChild(chip(RUN.on?'Revue en cours (test '+(RUN.i+1)+')':st.done?'▶ Continuer au test '+(fi+1):'▶ Commencer la revue guidée',true,function(){startRun(RUN.on?RUN.i:fi);}));
+  var mainOn=RUN.on&&!RUN.list;
+  if(fi<0&&!mainOn)r.appendChild(el('p','txt','Tous les tests de la revue complète sont faits.'));
+  else r.appendChild(chip(mainOn?'Revue complète en cours (test '+(RUN.i+1)+')':st.done?'▶ Reprendre la revue complète au test '+(fi+1):'▶ Commencer la revue complète',true,function(){startRun(mainOn?RUN.i:fi);}));
   pb.appendChild(r);
   pb.appendChild(hint('La revue guidée ouvre chaque écran dans le bon état et affiche le test en haut, en petit. « ✗ Problème » te fait poser une note à l’endroit concerné.'));
   pb.appendChild(h4('Liste'));
   var f=row();[['todo','À faire'],['ko','Problèmes'],['all','Tous']].forEach(function(x){f.appendChild(chip(x[1],(S.tf||'todo')===x[0],function(){S.tf=x[0];render();}));});pb.appendChild(f);
   var open=LS.get('tgo',{}),tf=S.tf||'todo',gi=-1,cur=null,ul=null;
   FLAT.forEach(function(t){
-    var rr=RES[t.id];var show=tf==='all'||(tf==='todo'&&!rr)||(tf==='ko'&&rr&&rr.etat==='ko');
+    var rr=RES[t.id];var nr=needsReview(t);var show=tf==='all'||(tf==='todo'&&!rr&&!nr)||(tf==='ko'&&rr&&rr.etat==='ko');
     if(cur!==t.g){cur=t.g;var L=FLAT.filter(function(x){return x.g===t.g;});var ok=L.filter(function(x){return RES[x.id]&&RES[x.id].etat==='ok';}).length,ko=L.filter(function(x){return RES[x.id]&&RES[x.id].etat==='ko';}).length;
-      var vis=L.some(function(x){var q=RES[x.id];return tf==='all'||(tf==='todo'&&!q)||(tf==='ko'&&q&&q.etat==='ko');});
+      var vis=L.some(function(x){var q=RES[x.id];return tf==='all'||(tf==='todo'&&!q&&!needsReview(x))||(tf==='ko'&&q&&q.etat==='ko');});
       ul=null;if(!vis)return;
       var d=el('details','tg');d.open=open[t.g]!==undefined?open[t.g]:(tf!=='all');var g=t.g;d.ontoggle=function(){open[g]=d.open;LS.set('tgo',open);};
       var sm=el('summary');sm.appendChild(el('span',null,t.g));var kk=el('span','k');kk.innerHTML='<b>'+ok+'</b>'+(ko?' · <i>'+ko+' ✗</i>':'')+' / '+L.length;sm.appendChild(kk);d.appendChild(sm);
@@ -599,7 +609,7 @@ function rTests(){
     }
     if(!ul||!show)return;
     var li=el('li');li.appendChild(el('span','m'+(rr?' '+rr.etat:''),rr?(rr.etat==='ok'?'✓':'✗'):String(t.num)));
-    var q=el('button','rc-q',(rr?t.num+'. ':'')+t.txt);if(needsReview(t))q.appendChild(el('span','new','modifié en v'+t.maj));q.type='button';q.title='Faire ce test dans la revue guidée';q.onclick=function(){startRun(t.i);};li.appendChild(q);
+    var q=el('button','rc-q',(rr?t.num+'. ':'')+t.txt);if(nr)q.appendChild(el('span','new','🔧 correction à vérifier'));q.type='button';q.title='Faire ce test dans la revue guidée';q.onclick=function(){startRun(t.i);};li.appendChild(q);
     li.appendChild(el('span','e','Tu dois voir : '+t.att+(rr&&rr.note?' · note '+rr.note:'')));
     var b=el('div','b');
     function bt(txt,cls,fn){var z=el('button',cls,txt);z.type='button';z.onclick=fn;b.appendChild(z);return z;}
