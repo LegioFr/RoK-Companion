@@ -140,9 +140,12 @@ function renderHome(){
   var p=A(),pl=plan();
   $('#hEmblem').innerHTML=ic(p.icon);
   var n=unknown(p).length;var tl=$('#todoLink');tl.textContent=n?n+' à renseigner ›':'';tl.hidden=!n;
-  var r=p.res,tiles=[['r-food','Nourriture',fM(resTot(r.food))],['r-wood','Bois',fM(resTot(r.wood))],['r-stone','Pierre',fM(resTot(r.stone))],['r-gold','Or',fM(resTot(r.gold))],
-    ['a-build','Construction',fH(accTot(p.acc.build))],['a-research','Recherche',fH(accTot(p.acc.research))]];
-  $('#homeTiles').innerHTML=tiles.map(function(t){return '<a class="tile" href="#ma-ville-inventaire"><span class="ri">'+ic(t[0])+'</span><span><span class="tl">'+t[1]+'</span><div class="tv">'+t[2]+'</div></span></a>';}).join('');
+  /* Aperçu de ma ville : les 6 bulles de l'Accueil validé B04-01 (décision du 2026-10-08) */
+  var r=p.res,bv=p.v.builders,bo=p.v.bonus;
+  var tiles=[['t-hammer','Bâtisseurs',bv==null?null:String(bv),'#valeur-builders'],['i-gauge','Bonus de vitesse',bo==null?null:String(bo).replace('.',',')+' %','#valeur-bonus'],
+    ['r-food','Total nourriture',fM(resTot(r.food)),'#ma-ville-inventaire'],['r-wood','Total bois',fM(resTot(r.wood)),'#ma-ville-inventaire'],
+    ['r-stone','Total pierre',fM(resTot(r.stone)),'#ma-ville-inventaire'],['r-gold','Total or',fM(resTot(r.gold)),'#ma-ville-inventaire']];
+  $('#homeTiles').innerHTML=tiles.map(function(t){return '<a class="tile" href="'+t[3]+'"><span class="ri">'+ic(t[0])+'</span><span><span class="tl">'+t[1]+'</span><div class="tv'+(t[2]==null?' unk':'')+'">'+(t[2]==null?'—':t[2])+'</div>'+(t[2]==null?'<span class="todo">à renseigner</span>':'')+'</span></a>';}).join('');
   // objectif
   var oc=$('#objCard');oc.setAttribute('href',p.obj.href);$('#objFill').style.width=p.obj.pct+'%';
   $('#objText').innerHTML=S.active==='main'?('Reste : <b>Mur 24</b>, <b>Hôtel de ville 25</b> · '+(pl.miss?'il manque <b>'+fM(pl.miss)+' de pierre</b>':'<b class="ok">pierre couverte</b>')):
@@ -150,18 +153,19 @@ function renderHome(){
   // priorités
   var L=[];
   if(S.active==='main'){
-    L.push(['#plan-c25','Lancer le Mur niveau 24','Dernier prérequis du Château 25 · '+fH(pl.mur)+(pl.acc>=pl.mur?', couverts par tes accélérateurs':'')]);
-    L.push(pl.miss?['#fermes','Récupérer '+fM(pl.miss)+' de pierre','C’est ce qui manque au Château 25 · ta Ferme 1 peut l’envoyer']:['#plan-c25','Préparer l’Hôtel de ville 25','La pierre est couverte : il démarre juste après le Mur']);
-    if(S.time==='60')L.push(['#evenements','Entraîner des fantassins','Préparation KvK : il manque 95 000 troupes niveau 5']);
-    else L.push(['#depenser','Garder tes accélérateurs de recherche','Gouverneur le plus puissant dans 3 j : ils y rapportent des points']);
-    if(n)L.unshift(['#valeur-'+unknown(p)[0],'Renseigner : '+FIELDS[unknown(p)[0]].label,'Le plan en a besoin pour être juste']);
+    L.push(['#plan-c25','Lancer le Mur niveau 24','Dernier prérequis du Château 25 · '+fH(pl.mur)+(pl.acc>=pl.mur?', couverts par tes accélérateurs':''),2]);
+    L.push(pl.miss?['#fermes','Récupérer '+fM(pl.miss)+' de pierre','C’est ce qui manque au Château 25 · ta Ferme 1 peut l’envoyer',5]:['#plan-c25','Préparer l’Hôtel de ville 25','La pierre est couverte : il démarre juste après le Mur',2]);
+    if(S.time==='60')L.push(['#evenements','Entraîner des fantassins','Préparation KvK : il manque 95 000 troupes niveau 5',20]);
+    else L.push(['#depenser','Garder tes accélérateurs de recherche','Gouverneur le plus puissant dans 3 j : ils y rapportent des points',1]);
+    if(n)L.unshift(['#valeur-'+unknown(p)[0],'Renseigner : '+FIELDS[unknown(p)[0]].label,'Le plan en a besoin pour être juste',1]);
   }else if(S.active==='f1'){
-    L=[['#fermes','Envoyer de la pierre au Principal','Il manque '+fM(pl.miss)+' au Château 25'],['#valeur-mur','Lancer le Mur niveau 22','Avec ton bonus de 25 %'],['#ma-ville-inventaire','Récolter du bois','Ta ferme est sous la limite de pillage']];
+    L=[['#fermes','Envoyer de la pierre au Principal','Il manque '+fM(pl.miss)+' au Château 25',5],['#valeur-mur','Lancer le Mur niveau 22','Avec ton bonus de 25 %',2],['#ma-ville-inventaire','Récolter du bois','Ta ferme est sous la limite de pillage',S.time==='60'?30:10]];
   }else{
-    L=[['#ma-ville-progression','Renseigner tes valeurs',n+' valeurs manquantes'],['#valeur-mur','Lancer le Mur niveau 18',''],['#ma-ville-inventaire','Récolter de la nourriture','']];
+    L=[['#ma-ville-progression','Renseigner tes valeurs',n+' valeurs manquantes',5],['#valeur-mur','Lancer le Mur niveau 18','',2],['#ma-ville-inventaire','Récolter de la nourriture','',S.time==='60'?30:10]];
   }
-  var max=S.time==='10'?2:3;
-  $('#prioList').innerHTML=L.slice(0,max).map(function(x,i){return row({href:x[0],nb:i+1,title:esc(x[1]),sub:esc(x[2])});}).join('');
+  /* Le temps choisi décide du nombre d'actions : chacune affiche sa durée, le total tient dans le temps choisi. */
+  var max=S.time==='10'?2:3,shown=L.slice(0,max);
+  $('#prioList').innerHTML=shown.map(function(x,i){return row({href:x[0],nb:i+1,title:esc(x[1]),sub:esc(x[2]),pill:pill('plan','≈ '+x[3]+' min')});}).join('');
   $$('#timeChips .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.time===S.time));});
   // à surveiller
   var W=[];
@@ -579,7 +583,7 @@ function simLink(){
 }
 document.addEventListener('submit',function(e){var f=e.target.closest('[data-form]');if(!f)return;e.preventDefault();submitAuth(f.dataset.form);});
 document.addEventListener('input',function(e){var sh=e.target.closest('.a-shell');if(!sh)return;var f=$('.a-feedback',sh);if(f&&f.classList.contains('bad'))f.hidden=true;if(e.target.getAttribute('aria-invalid'))fieldErr(e.target.id,'');});
-try{var su=sessionStorage.getItem('rokUser');if(su&&ACC[su]){AUTH.user=su;S.email=su;}}catch(e){}
+try{var su=sessionStorage.getItem('rokUser');if(su&&ACC[su]){AUTH.user=su;S.email=su;}var sa=sessionStorage.getItem('rokActive');if(sa&&P[sa])S.active=ACC[DEMO].data.active=sa;sessionStorage.removeItem('rokActive');}catch(e){}
 
 /* ================= Actions ================= */
 function addProfileSheet(){
@@ -601,8 +605,8 @@ function createProfile(){
 }
 function deleteProfile(){
   var k=S.profileView&&P[S.profileView]?S.profileView:S.active,p=P[k];
-  if(k===S.active&&ORDER.length>1){openSheet('Supprimer le profil','<p class="shp">Sélectionne d’abord un autre profil avant de supprimer le profil actif.</p>',[['Fermer','close-sheet',''],['Supprimer','noop','danger is-off']]);return;}
-  openSheet('Supprimer le profil','<p class="shp">Le profil '+esc(p.name)+' sera supprimé de RoK Companion, <b>avec tout son historique</b> : bâtiments, réglages, inventaire, corrections et instantanés. Cette action est définitive. Elle n’interagit pas avec Rise of Kingdoms.</p><p class="shp muted">'+p.releves+' relevés, dont '+p.corr+' corrections · '+p.snaps+' instantané'+(p.snaps>1?'s':'')+'</p>',[['Annuler','close-sheet',''],['Supprimer','confirm-delete','danger',k]]);
+  var next=k===S.active?ORDER.filter(function(x){return x!==k;})[0]:null;
+  openSheet('Supprimer le profil',(next?'<p class="shp">C’est ton profil actif : <b>'+esc(P[next].name)+'</b> deviendra le profil actif.</p>':'')+'<p class="shp">Le profil '+esc(p.name)+' sera supprimé de RoK Companion, <b>avec tout son historique</b> : bâtiments, réglages, inventaire, corrections et instantanés. Cette action est définitive. Elle n’interagit pas avec Rise of Kingdoms.</p><p class="shp muted">'+p.releves+' relevés, dont '+p.corr+' corrections · '+p.snaps+' instantané'+(p.snaps>1?'s':'')+'</p>',[['Annuler','close-sheet',''],['Supprimer','confirm-delete','danger',k]]);
 }
 var ACT={
   'close-sheet':closeSheet,noop:function(){},
@@ -613,7 +617,7 @@ var ACT={
     openSheet('Modifier le profil','<div class="fld"><label for="epName">Nom du profil</label><input id="epName" maxlength="30" value="'+esc(p.name)+'"><small class="ferr" id="epErr" hidden></small></div><div class="fld"><label for="epId">ID joueur RoK — facultatif</label><input id="epId" inputmode="numeric" value="'+esc(p.pid)+'"></div>',[['Annuler','close-sheet',''],['Enregistrer','save-profile','primary',k]]);},
   'save-profile':function(k){var n=$('#epName').value.trim();if(!n){var e=$('#epErr');e.textContent='Donne un nom au profil.';e.hidden=false;return;}P[k].name=n;P[k].pid=$('#epId').value.trim();closeSheet();say('Profil enregistré.');refreshAll();},
   'delete-profile':deleteProfile,
-  'confirm-delete':function(k){var n=P[k].name;delete P[k];ORDER.splice(ORDER.indexOf(k),1);if(S.active===k)S.active=ORDER[0]||null;S.profileView=null;closeSheet();say('Profil « '+n+' » supprimé.');location.hash='accueil';refreshAll();},
+  'confirm-delete':function(k){var n=P[k].name,was=S.active===k;delete P[k];ORDER.splice(ORDER.indexOf(k),1);if(was)S.active=ORDER[0]||null;S.profileView=null;closeSheet();say('Profil « '+n+' » supprimé.'+(was&&S.active?' Profil actif : '+P[S.active].name+'.':''));location.hash='accueil';refreshAll();},
   quick:function(){S.quick=true;if(location.hash!=='#ma-ville-progression')location.hash='ma-ville-progression';renderCity();quickCount();},
   'quick-cancel':function(){S.quick=false;renderCity();},'quick-save':quickSave,
   correct:correctSheet,'save-correct':saveCorrect,
@@ -723,7 +727,22 @@ window.RC_API={
   demo:function(){AUTH.after=null;if(!ACC[DEMO])return;login(DEMO);},
   empty:function(){var em='nouveau'+(Object.keys(ACC).length)+'@exemple.fr';ACC[em]={pw:'rok12345',ok:true,data:null};AUTH.after=null;login(em);say('Nouveau compte sans profil : '+em+'.');},
   logout:function(){if(AUTH.user)logout();else location.hash='connexion';},
-  quick:function(){if(AUTH.user)ACT.quick();}
+  quick:function(){if(AUTH.user)ACT.quick();},
+  /* Met la maquette dans l'état demandé puis ouvre l'écran : 'out' (déconnecté), 'demo' (compte d'essai), 'vide' (nouveau compte sans profil) ;
+     'demo:f1' choisit aussi le profil actif. */
+  go:function(state,hash){
+    var st=(state||'').split(':'),h=(hash||'#accueil').replace(/^#/,'');
+    function nav(){if(location.hash==='#'+h)route();else location.hash=h;}
+    if(st[0]==='out'){if(AUTH.user){saveData();AUTH.user=null;try{sessionStorage.removeItem('rokUser');}catch(e){}}closeSheet();nav();return;}
+    if(st[0]==='vide'){var em='nouveau'+(Object.keys(ACC).length)+'@exemple.fr';ACC[em]={pw:'rok12345',ok:true,data:null};AUTH.after=h;login(em);return;}
+    if(st[0]==='demo'){
+      /* profils d'exemple supprimés pendant un test : on remet les exemples (rechargement, le compte d'essai reste connecté) */
+      var need=st[1]||'main';if(!(ACC[DEMO].data&&ACC[DEMO].data.P[need])){try{sessionStorage.setItem('rokUser',DEMO);sessionStorage.setItem('rokActive',need);}catch(e){}location.hash=h;location.reload();return;}
+      if(st[1]&&ACC[DEMO].data.P[st[1]])ACC[DEMO].data.active=st[1];
+      if(AUTH.user!==DEMO){AUTH.after=h;login(DEMO);}else{if(st[1]&&P[st[1]]){S.active=st[1];S.quick=false;refreshAll();}closeSheet();nav();}return;}
+    nav();
+  },
+  reset:function(){try{sessionStorage.setItem('rokUser',DEMO);}catch(e){}location.hash='accueil';location.reload();}
 };
 paintIcons(document);
 renderShots();showStep(1);

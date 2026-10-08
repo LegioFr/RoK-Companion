@@ -137,8 +137,10 @@
         </a>
 
         <section class="sec">
-          <div class="sec-t"><h2>Trois priorités du jour</h2>
-            <div class="chips" role="group" aria-label="Temps de jeu disponible" id="timeChips">
+          <div class="sec-t"><h2>Priorités du jour</h2></div>
+          <div class="timepick">
+            <span class="tp-q" id="timeQ"><i data-i="i-clock"></i>Combien de temps as-tu pour jouer ?</span>
+            <div class="chips" role="group" aria-labelledby="timeQ" id="timeChips">
               <button class="chip" type="button" data-time="10" aria-pressed="false">10 min</button>
               <button class="chip" type="button" data-time="30" aria-pressed="true">30 min</button>
               <button class="chip" type="button" data-time="60" aria-pressed="false">1 h</button>
@@ -751,6 +753,7 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="icones.js"></script>
 <script src="app.js"></script>
+<script src="tests-revue.js"></script>
 <script src="revue.js"></script>
 </body>
 </html>

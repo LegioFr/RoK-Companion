@@ -390,6 +390,13 @@ body.modal-open{overflow:hidden}
   :root{--gutter:clamp(96px,3vw,140px)}
   .app{zoom:1.3}
 }
+/* ---------- Accueil : temps de jeu (proposé le 2026-10-08) ---------- */
+.timepick{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:-4px 0 12px}
+.tp-q{display:inline-flex;align-items:center;gap:6px;color:var(--text);font-size:13px;font-weight:600}
+.tp-q svg{width:20px;height:20px}
+.tile .todo{margin-top:0}
+@media(min-width:700px){.tp-q{font-size:14px}}
+
 /* ---------- Accueil sans profil (B01-06 validée) ---------- */
 .empty-banner .pname{margin:0;color:var(--text)}
 .empty-banner .pmeta{margin:3px 0 0}
