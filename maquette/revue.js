@@ -5,15 +5,15 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VERSION='v7 · 8 oct. 2026';
+var VERSION='v8 · 8 oct. 2026';
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
   '*':[{sel:'',t:'Tests : « 📷 Capture » joint une ou plusieurs captures d’écran à un test (dans la revue guidée et dans la liste).'}],
   'connexion':[{sel:'[data-auth="connexion"]',t:'Écran ajouté, repris de la maquette validée B01-01.'},
     {sel:'[data-auth="connexion"] .a-primary',t:'Connexion qui marche : e-mail ou mot de passe faux → « E-mail ou mot de passe incorrect. » (texte proposé).'}],
-  'inscription':[{sel:'[data-auth="inscription"]',t:'Écran ajouté, repris de B01-02. Il mène toujours à la confirmation de l’e-mail.'},
+  'inscription':[{sel:'#suEmail',t:'Adresse déjà utilisée : « Un compte existe déjà avec cette adresse… » sous E-mail, au lieu de passer à la confirmation (ta note 4).'},
     {sel:'#suPw',t:'Texte proposé sous le champ : « Au moins 8 caractères. »'}],
-  'confirmation':[{sel:'[data-auth="confirmation"]',t:'Écran ajouté, repris de B01-03. « Simuler le lien de l’e-mail » est dans l’onglet Écran de la bulle.'}],
+  'confirmation':[{sel:'[data-auth="confirmation"]',t:'Les tests de cet écran préparent eux-mêmes un compte en attente (mot de passe rok12345) : plus besoin d’avoir fait les tests précédents.'}],
   'mot-de-passe-oublie':[{sel:'[data-auth="mot-de-passe-oublie"]',t:'Écran ajouté, repris de B01-04. Même message que l’adresse ait un compte ou non.'}],
   'nouveau-mot-de-passe':[{sel:'[data-auth="nouveau-mot-de-passe"]',t:'Écran ajouté, repris de B01-05. Après « Enregistrer », tu es connecté.'}],
   'accueil':[{sel:'#homeTiles',t:'Aperçu de ma ville : les 6 bulles de l’Accueil validé (Bâtisseurs, Bonus de vitesse, 4 totaux), à ta demande.'},

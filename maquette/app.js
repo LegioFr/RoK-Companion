@@ -557,7 +557,9 @@ function submitAuth(kind){
     fieldErr('suPw',p1.length<8?'Au moins 8 caractères.':'');bad=bad||p1.length<8;
     fieldErr('suPw2',p1!==p2?'Les mots de passe ne correspondent pas.':'');bad=bad||p1!==p2;
     if(bad){var f=$('[data-auth="inscription"] [aria-invalid="true"]');if(f)f.focus();return;}
-    if(!ACC[e2])ACC[e2]={pw:p1,ok:false,data:null};
+    /* Adresse déjà utilisée : on le dit (note 4 de Mickaël, 2026-10-08) au lieu de faire semblant d'envoyer un e-mail. */
+    if(ACC[e2]){fieldErr('suEmail','Un compte existe déjà avec cette adresse. Connecte-toi, ou touche « Mot de passe oublié ? » sur l’écran de connexion.');$('#suEmail').focus();return;}
+    ACC[e2]={pw:p1,ok:false,data:null};
     AUTH.pending=e2;$('[data-form="signup"]').reset();location.hash='confirmation';
   }else if(kind==='forgot'){
     AUTH.reset=$('#fgEmail').value.trim().toLowerCase();window.RC_CUR.sim=true;setCur(window.RC_CUR);
@@ -734,6 +736,8 @@ window.RC_API={
     var st=(state||'').split(':'),h=(hash||'#accueil').replace(/^#/,'');
     function nav(){if(location.hash==='#'+h)route();else location.hash=h;}
     if(st[0]==='out'){if(AUTH.user){saveData();AUTH.user=null;try{sessionStorage.removeItem('rokUser');}catch(e){}}closeSheet();nav();return;}
+    if(st[0]==='attente'){if(AUTH.user){saveData();AUTH.user=null;try{sessionStorage.removeItem('rokUser');}catch(e){}}
+      var ea='attente'+(Object.keys(ACC).length)+'@exemple.fr';ACC[ea]={pw:'rok12345',ok:false,data:null};AUTH.pending=ea;closeSheet();nav();return;}
     if(st[0]==='vide'){var em='nouveau'+(Object.keys(ACC).length)+'@exemple.fr';ACC[em]={pw:'rok12345',ok:true,data:null};AUTH.after=h;login(em);return;}
     if(st[0]==='demo'){
       /* profils d'exemple supprimés pendant un test : on remet les exemples (rechargement, le compte d'essai reste connecté) */

@@ -1,7 +1,7 @@
 /* Tests de la maquette, joués dans la bulle d'outils (onglet Tests, revue guidée).
    Un groupe = { g: titre, p: [état, écran] préparé avant son 1er test, l: tests }.
    Un test = [identifiant stable, ce qu'il faut faire, ce qu'on doit voir, préparation propre (facultative)].
-   États : 'out' déconnecté, 'demo' compte d'essai (':f1' choisit le profil actif), 'vide' nouveau compte sans profil.
+   États : 'out' déconnecté, 'attente' compte créé mais pas confirmé (mot de passe rok12345), 'demo' compte d'essai (':f1' choisit le profil actif), 'vide' nouveau compte sans profil.
    Les identifiants ne changent jamais : les résultats y sont rattachés. */
 window.RC_TESTS=[
  {g:'Se connecter',p:['out','#connexion'],l:[
@@ -25,13 +25,13 @@ window.RC_TESTS=[
   ['i5','Touche les deux yeux.','Chacun affiche ou masque son propre champ.'],
   ['i6','Touche « Se connecter » en bas.','Retour à l’écran de connexion.'],
   ['i7','Crée un compte avec une adresse inventée (ex. test1@exemple.fr) et un mot de passe de 8 caractères.','Écran « Confirme ton e-mail » avec ton adresse affichée.',['out','#inscription']],
-  ['i8','Crée un compte avec gouverneur@exemple.fr (adresse qui a déjà un compte).','Même écran de confirmation : l’appli ne dit pas que l’adresse a déjà un compte.',['out','#inscription']]
+  ['i8b','Crée un compte avec gouverneur@exemple.fr (adresse qui a déjà un compte).','Sous E-mail : « Un compte existe déjà avec cette adresse… ». Tu restes sur « Créer un compte ».',['out','#inscription']]
  ]},
- {g:'Confirmer l’e-mail',p:['out','#confirmation'],l:[
+ {g:'Confirmer l’e-mail',p:['attente','#confirmation'],l:[
   ['f1','Touche « Renvoyer l’e-mail ».','Message « E-mail renvoyé. » sous le bouton.'],
-  ['f2','Regarde l’adresse affichée.','C’est celle du compte que tu viens de créer, en entier, même longue.'],
-  ['f3','Touche « Retour à la connexion », puis connecte-toi avec le compte créé (pas encore confirmé).','Tu reviens sur « Confirme ton e-mail » avec « Confirme d’abord ton e-mail : touche le lien reçu. »'],
-  ['f4','Ouvre la bulle › Écran › « Simuler le lien de l’e-mail ».','Tu arrives connecté sur l’Accueil sans profil du nouveau compte.',['out','#confirmation']]
+  ['f2','Regarde l’adresse affichée.','C’est celle du compte en attente de confirmation (attente…@exemple.fr), en entier.'],
+  ['f3b','Retiens l’adresse affichée, touche « Retour à la connexion », puis connecte-toi avec cette adresse et le mot de passe rok12345.','Tu reviens sur « Confirme ton e-mail » avec « Confirme d’abord ton e-mail : touche le lien reçu. »'],
+  ['f4','Ouvre la bulle › Écran › « Simuler le lien de l’e-mail ».','Tu arrives connecté sur l’Accueil sans profil du nouveau compte.',['attente','#confirmation']]
  ]},
  {g:'Mot de passe oublié',p:['out','#mot-de-passe-oublie'],l:[
   ['o1','Touche « Envoyer le lien » sans adresse.','Le navigateur demande l’adresse.'],
