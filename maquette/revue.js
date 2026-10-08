@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=12,VERSION='v'+VNUM+' · 8 oct. 2026';
+var VNUM=13,VERSION='v'+VNUM+' · 8 oct. 2026';
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
   '*':[{sel:'',t:'Revue guidée : sur la confirmation de l’e-mail et le mot de passe oublié, le bouton « ✉ Simuler le lien de l’e-mail » est directement dans le bandeau du test.'}],
@@ -524,7 +524,13 @@ function paintRun(){
   bt('','Ouvrir l’écran','↻ Écran',function(){prep(t,true);},'Ouvrir l’écran du test');
   bt('ko','✗ Problème','✗ Problème',function(){problem(t);});
   bt('ok','✓ C’est bon','✓ Bon',function(){setRes(t.id,'ok');stepRun(1);});
-  if(CUR().sim)bt('sim','✉ Simuler le lien de l’e-mail','✉ Lien',function(){window.RC_API&&window.RC_API.simLink();},'Simuler le clic sur le lien reçu par e-mail');
+  /* Le bouton est là dès que le test en parle ; s'il manque un e-mail envoyé, il prépare l'écran du test d'abord (compte en attente). */
+  if(CUR().sim||/Simuler le lien/.test(t.txt))bt('sim','✉ Simuler le lien de l’e-mail','✉ Lien',function(){
+    var A=window.RC_API;if(!A)return;
+    if(CUR().sim){A.simLink();return;}
+    if(t.prep&&t.prep[0]==='attente'){prep(t,true);setTimeout(function(){A.simLink();},200);return;}
+    say('Fais d’abord la première partie du test : envoie le lien avec gouverneur@exemple.fr.');
+  },'Simuler le clic sur le lien reçu par e-mail');
   var ncap=(r&&r.captures&&r.captures.length)||0;
   bt('ph','📷 Capture'+(ncap?' ('+ncap+')':''),'📷'+(ncap?' '+ncap:''),function(){addShots(t);},'Joindre une capture d’écran à ce test');
   bt('nx','Passer ›','›',function(){stepRun(1);},'Passer ce test');
@@ -583,6 +589,8 @@ function rTests(){
   pb.appendChild(hint('« Remettre les exemples » recharge la maquette avec les profils d’exemple (tes notes et tes résultats restent).'));
 }
 paintRun();
+/* Après un rechargement en pleine revue, on rouvre l'écran du test en cours (les données de démonstration sont reparties à zéro). */
+if(RUN.on&&FLAT[RUN.i])setTimeout(function(){prep(FLAT[RUN.i],true);paintRun();},50);
 
 /* ---------- clavier ---------- */
 document.addEventListener('keydown',function(e){
