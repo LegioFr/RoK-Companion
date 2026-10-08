@@ -5,10 +5,10 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=13,VERSION='v'+VNUM+' · 8 oct. 2026';
+var VNUM=14,VERSION='v'+VNUM+' · 8 oct. 2026';
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
-  '*':[{sel:'',t:'Revue guidée : sur la confirmation de l’e-mail et le mot de passe oublié, le bouton « ✉ Simuler le lien de l’e-mail » est directement dans le bandeau du test.'}],
+  '*':[{sel:'',t:'Bulle › Écran › « ⛶ Plein écran » : cache la barre du navigateur et celle de claude.ai pour voir la maquette comme l’appli installée.'}],
   'connexion':[{sel:'[data-auth="connexion"]',t:'Écran ajouté, repris de la maquette validée B01-01.'},
     {sel:'[data-auth="connexion"] .a-primary',t:'Connexion qui marche : e-mail ou mot de passe faux → « E-mail ou mot de passe incorrect. » (texte proposé).'}],
   'inscription':[{sel:'#suEmail',t:'Adresse déjà utilisée : « Un compte existe déjà avec cette adresse… » sous E-mail, au lieu de passer à la confirmation (ta note 4).'},
@@ -266,6 +266,8 @@ function rEcran(){
   if(c.note)pb.appendChild(el('p','txt',c.note));
   var r=row();r.style.marginTop='12px';
   if(c.sim)r.appendChild(chip('Simuler le lien de l’e-mail',true,function(){window.RC_API&&window.RC_API.simLink();}));
+  var fs=!!(document.fullscreenElement||document.webkitFullscreenElement);
+  r.appendChild(chip(fs?'Quitter le plein écran':'⛶ Plein écran',fs,toggleFs));
   r.appendChild(chip('Plan des écrans',false,function(){showPnl(false);window.RC_API&&window.RC_API.openPlan();}));
   r.appendChild(chip('Planche des icônes',false,function(){location.hash='icones';}));
   pb.appendChild(r);
@@ -273,6 +275,18 @@ function rEcran(){
   pb.appendChild(hint('Les notes sont rangées par taille (téléphone, tablette, PC) : un repère s’affiche à la taille où la note a été prise.'));
   pb.appendChild(h4('Version de la maquette'));pb.appendChild(el('p','txt',VERSION));
 }
+
+/* Plein écran : cache la barre du navigateur et celle de claude.ai, pour voir la maquette comme l'appli installée. */
+function toggleFs(){
+  var d=document,e=d.documentElement;
+  if(d.fullscreenElement||d.webkitFullscreenElement){(d.exitFullscreen||d.webkitExitFullscreen).call(d);return;}
+  var req=e.requestFullscreen||e.webkitRequestFullscreen;
+  if(!req){say('Le plein écran n’est pas disponible dans ce navigateur.');return;}
+  try{var pr=req.call(e,{navigationUI:'hide'});if(pr&&pr.then)pr.then(function(){showPnl(false);say('Plein écran : bulle › Écran pour en sortir (ou geste retour).');},function(){say('Le plein écran est refusé ici. Ouvre la page seule (menu de claude.ai) ou installe la maquette, puis réessaie.');});}
+  catch(err){say('Le plein écran est refusé ici.');}
+}
+document.addEventListener('fullscreenchange',function(){render();placeBub();placePnl();redraw();});
+document.addEventListener('webkitfullscreenchange',function(){render();placeBub();placePnl();redraw();});
 
 /* Notes */
 function noteLine(n){return n.n+'. ['+n.taille+' · '+(n.cible||'')+(n.statut==='traitée'?' · traitée':'')+'] '+n.texte+(n.reponse?'\n   Réponse : '+n.reponse:'');}
