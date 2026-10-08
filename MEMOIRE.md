@@ -30,9 +30,8 @@ Dernière mise à jour : 2026-10-08.
 - **Source :** `maquette/` (`index.html`, `styles.css`, `app.js`, `icones.js`). Ouvrir `maquette/index.html` dans un navigateur suffit.
 - **Copie publiée :** https://claude.ai/artifact/Ku6BeFs1sgqTc8ihWTP47i (privée, visible par Mickaël). Pour la mettre à jour : `python3 maquette/outils/assembler.py`, puis publier le fichier produit sur la même adresse (lire l'artefact d'abord depuis une nouvelle session).
 - **Icônes :** `maquette/icones.js` est généré par `node maquette/outils/generer-icones.cjs` à partir de `maquette/outils/icones/` (dessins validés repris tels quels + nouvelles icônes).
-- **Ce qui marche déjà** (en mémoire du navigateur, perdu au rechargement) : changement et ajout de profil, suppression (refusée pour le profil actif tant qu'un autre existe), saisie et correction avec historique, saisie rapide, filtres, import de captures (vraies images choisies, lecture **simulée**), plan Château 25 recalculé (bonus de vitesse, pierre envoyée par la ferme), réservation, dépenser ou attendre, budget, fermes, migration, temps de jeu, composition des marches, comparaison, préparation de session, rapports, événements et rappels, bilan, codes cadeaux, réglages de Plus, déconnexion.
+- **Ce qui marche déjà** (en mémoire du navigateur, perdu au rechargement) : **écrans de compte** (connexion, création de compte, confirmation de l'e-mail, mot de passe oublié, nouveau mot de passe, déconnexion ; compte d'essai `gouverneur@exemple.fr` / `rok12345`, gardé connecté jusqu'à la fermeture de l'onglet ; un compte créé commence sans profil), Accueil sans profil (B01-06), changement et ajout de profil, suppression (refusée pour le profil actif tant qu'un autre existe), saisie et correction avec historique, saisie rapide, filtres, import de captures (vraies images choisies, lecture **simulée**), plan Château 25 recalculé (bonus de vitesse, pierre envoyée par la ferme), réservation, dépenser ou attendre, budget, fermes, migration, temps de jeu, composition des marches, comparaison, préparation de session, rapports, événements et rappels, bilan, codes cadeaux, réglages de Plus, déconnexion.
 - **Ce qui manque encore à la maquette :**
-  - les **écrans de connexion** (création de compte, connexion, mot de passe oublié) : ils existent dans les maquettes validées (`references/maquettes-validees/ROK_UI_B01_0*.html`) mais ne sont pas encore intégrés ;
   - la **conservation des données** d'une visite à l'autre (stockage du navigateur) ;
   - la **vraie lecture des captures** avec tesseract.js (voir `references/etude-lecture-captures-b03.md`) ;
   - les **vraies données du jeu** : tous les chiffres sont des exemples.
@@ -40,6 +39,7 @@ Dernière mise à jour : 2026-10-08.
 ### Statut des écrans
 | Écran | Statut |
 |---|---|
+| Connexion, création de compte, confirmation de l'e-mail, mot de passe oublié, nouveau mot de passe (B01-01 à 05), Accueil sans profil (B01-06) | **Validés** dans RoK ; intégrés à la maquette le 2026-10-08, mêmes dimensions que les maquettes validées aux 3 tailles. Messages d'erreur et parcours entre les écrans : **proposés par Claude**, à valider |
 | Accueil (base), fiche profil, Ma ville (Progression, Inventaire), écran d'une valeur, Plus (compte, installation, mise à jour) | **Validés** dans le projet RoK (voir `references/`) |
 | Import de captures (4 étapes) | **Validé** dans RoK (maquettes B03 v3) |
 | Ajouts sur l'Accueil (priorités du jour, objectif en cours, ma semaine) | Proposés par Claude, à revoir |
@@ -78,10 +78,11 @@ Dernière mise à jour : 2026-10-08.
 ## 6. Prochaines étapes
 
 1. Mickaël : passer le dépôt en privé (recommandé).
-2. Revue de la maquette, écran par écran, en commençant par **la connexion et l'Accueil**.
-3. Ajouter à la maquette : écrans de connexion, conservation des données dans le navigateur, vraie lecture des captures (tesseract.js), testée sur les captures de Mickaël (les 15 captures de l'étude RoK ne sont pas dans les dépôts : les redonner).
+2. Revue de la maquette, écran par écran : **connexion** (intégrée, à relire par Mickaël), puis **Accueil** (revue en cours, voir le journal du 2026-10-08, 2e session).
+3. Ajouter à la maquette : conservation des données dans le navigateur, vraie lecture des captures (tesseract.js), testée sur les captures de Mickaël (les 15 captures de l'étude RoK ne sont pas dans les dépôts : les redonner).
 4. Recherches sur le jeu, en commençant par ce qui sert aux premiers écrans : bâtiments et prérequis jusqu'au Château 25, ressources, caisses, accélérateurs.
 
 ## 7. Journal des sessions
 
 - **2026-10-08** (session Claude Code ouverte sur `LegioFr/RoK`) : discussion sur l'IA pour les captures et son coût ; création d'une maquette de l'appli finale (22 écrans), puis des icônes peintes (55 validées reprises, 35 nouvelles), puis de toutes les fonctions ; décision de lancer ce projet séparé ; création de ce dépôt, de ce document, rangement de la maquette et des références.
+- **2026-10-08** (2e session, revue) : intégration des écrans de compte validés B01-01 à 05 (connexion, création, confirmation, mot de passe oublié, nouveau mot de passe) et de l'Accueil sans profil B01-06, avec un parcours qui marche ; vérifiés aux tailles 390, 768 et 1920 (mêmes dimensions que les maquettes validées). Textes proposés par Claude, à valider : « E-mail ou mot de passe incorrect. », « Au moins 8 caractères. », « Saisis une adresse valide, par exemple nom@exemple.fr. », « E-mail renvoyé. », « Confirme d'abord ton e-mail : touche le lien reçu. », « Tu es déconnecté. Tes profils restent enregistrés. », « Nouveau mot de passe enregistré. ». La création de compte mène toujours à la confirmation, même si l'adresse a déjà un compte (l'appli ne révèle pas qui a un compte, comme « Mot de passe oublié »). Bouton d'information de la maquette déplacé en bas à droite (il cachait « Ajouter »). Revue de l'Accueil commencée : écarts relevés avec l'Accueil validé B04-01, questions posées à Mickaël.

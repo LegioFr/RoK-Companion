@@ -10,6 +10,99 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<!-- ===================================================== COMPTE (B01-01 à 05) -->
+<div class="auth" id="auth" hidden>
+  <div class="vis a-vis">
+    <span class="vt">Maquette de l’appli finale</span>
+    <span class="pill" id="aVisPill"><i></i><span id="aVisLabel"></span></span>
+    <span class="vn" id="aVisNote"></span>
+    <span class="vb">
+      <button class="vbtn" type="button" data-act="sim-link" id="simLink" hidden>Simuler le lien de l’e-mail</button>
+      <button class="vbtn" type="button" data-act="open-plan">Plan des écrans</button>
+      <button class="vbtn" type="button" data-act="hide-vis" aria-label="Masquer le bandeau de la maquette">Masquer</button>
+    </span>
+  </div>
+
+  <main class="a-shell" data-auth="connexion" data-title="Se connecter" data-b="B01-01" aria-label="Connexion RoK Companion" data-note="Écran validé (B01-01). Compte d’essai : gouverneur@exemple.fr, mot de passe rok12345. Messages d’erreur proposés par Claude, à valider." hidden>
+    <header class="a-brand"></header>
+    <section class="a-panel" aria-labelledby="loginTitle">
+      <h2 id="loginTitle">Se connecter</h2>
+      <form data-form="login">
+        <div class="a-field"><div class="a-lrow"><label for="liEmail">E-mail</label></div><input id="liEmail" type="email" placeholder="nom@exemple.fr" autocomplete="email" autocapitalize="none" spellcheck="false" required></div>
+        <div class="a-field"><div class="a-lrow"><label for="liPw">Mot de passe</label><a class="a-forgot" href="#mot-de-passe-oublie">Mot de passe oublié ?</a></div>
+          <div class="a-wrap"><input class="a-pw" id="liPw" type="password" placeholder="••••••••••••" autocomplete="current-password" required><button class="a-eye" type="button" data-act="a-eye" data-arg="liPw" aria-label="Afficher le mot de passe" aria-pressed="false" aria-controls="liPw"></button></div></div>
+        <button class="a-primary" type="submit">Se connecter</button>
+      </form>
+      <p class="a-feedback" role="status" aria-live="polite" hidden></p>
+      <div class="a-signup"><p>Pas encore de compte ?</p><a class="a-secondary" href="#inscription">Créer un compte</a></div>
+      <div class="a-security"></div>
+    </section>
+  </main>
+
+  <main class="a-shell" data-auth="inscription" data-title="Créer un compte" data-b="B01-02" aria-label="Inscription RoK Companion" data-note="Écran validé (B01-02). Crée un compte : tu passes par la confirmation de l’e-mail, puis tu arrives sur l’Accueil sans profil. Messages d’erreur proposés par Claude (sauf « Les mots de passe ne correspondent pas. »)." hidden>
+    <header class="a-brand"></header>
+    <section class="a-panel" aria-labelledby="suTitle">
+      <h2 id="suTitle">Créer un compte</h2>
+      <form data-form="signup">
+        <div class="a-field"><div class="a-lrow"><label for="suEmail">E-mail</label></div><input id="suEmail" type="email" placeholder="nom@exemple.fr" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" aria-describedby="suEmailErr" required><p class="a-err" id="suEmailErr" hidden></p></div>
+        <div class="a-field"><div class="a-lrow"><label for="suPw">Mot de passe</label></div>
+          <div class="a-wrap"><input class="a-pw" id="suPw" type="password" placeholder="••••••••••••" autocomplete="new-password" aria-describedby="suPwErr" required><button class="a-eye" type="button" data-act="a-eye" data-arg="suPw" aria-label="Afficher le mot de passe" aria-pressed="false" aria-controls="suPw"></button></div><p class="a-err" id="suPwErr" hidden></p></div>
+        <div class="a-field"><div class="a-lrow"><label for="suPw2">Confirmer le mot de passe</label></div>
+          <div class="a-wrap"><input class="a-pw" id="suPw2" type="password" placeholder="••••••••••••" autocomplete="new-password" aria-describedby="suPw2Err" required><button class="a-eye" type="button" data-act="a-eye" data-arg="suPw2" aria-label="Afficher la confirmation du mot de passe" aria-pressed="false" aria-controls="suPw2"></button></div><p class="a-err" id="suPw2Err" hidden></p></div>
+        <button class="a-primary" type="submit">Créer mon compte</button>
+      </form>
+      <p class="a-feedback" role="status" aria-live="polite" hidden></p>
+      <div class="a-signup"><p>Déjà un compte ?</p><a class="a-secondary" href="#connexion">Se connecter</a></div>
+      <div class="a-security"></div>
+    </section>
+  </main>
+
+  <main class="a-shell" data-auth="confirmation" data-title="Confirme ton e-mail" data-b="B01-03" aria-label="Confirmation d’e-mail RoK Companion" data-note="Écran validé (B01-03). Aucun e-mail n’est envoyé : « Simuler le lien de l’e-mail » fait comme si tu touchais le lien reçu. Tu arrives alors sur l’Accueil sans profil." hidden>
+    <header class="a-brand"></header>
+    <section class="a-panel" aria-labelledby="cfTitle">
+      <h2 id="cfTitle">Confirme ton e-mail</h2>
+      <p class="a-intro">Un e-mail de confirmation a pu être envoyé.</p>
+      <p class="a-recipient"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span id="cfEmail">nom@exemple.fr</span></p>
+      <button class="a-primary" id="cfResend" type="button" data-act="resend">Renvoyer l’e-mail</button>
+      <p class="a-feedback" role="status" aria-live="polite" hidden></p>
+      <div class="a-signup"><a class="a-secondary" href="#connexion">Retour à la connexion</a></div>
+      <div class="a-security"></div>
+    </section>
+  </main>
+
+  <main class="a-shell" data-auth="mot-de-passe-oublie" data-title="Mot de passe oublié" data-b="B01-04" aria-label="Récupération du compte RoK Companion" data-note="Écran validé (B01-04). Envoie le lien, puis « Simuler le lien de l’e-mail » pour choisir un nouveau mot de passe. Avec une adresse inconnue, le message est le même : l’appli ne dit pas qui a un compte." hidden>
+    <header class="a-brand"></header>
+    <section class="a-panel" aria-labelledby="fgTitle">
+      <h2 class="a-t1" id="fgTitle">Mot de passe oublié ?</h2>
+      <form data-form="forgot">
+        <div class="a-lrow"><label for="fgEmail">E-mail</label></div>
+        <input id="fgEmail" type="email" placeholder="nom@exemple.fr" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" required>
+        <button class="a-primary" type="submit">Envoyer le lien</button>
+      </form>
+      <p class="a-feedback" role="status" aria-live="polite" hidden></p>
+      <div class="a-signup"><a class="a-secondary" href="#connexion">Retour à la connexion</a></div>
+      <div class="a-security"></div>
+    </section>
+  </main>
+
+  <main class="a-shell" data-auth="nouveau-mot-de-passe" data-title="Nouveau mot de passe" data-b="B01-05" aria-label="Nouveau mot de passe RoK Companion" data-note="Écran validé (B01-05). Le nouveau mot de passe remplace l’ancien, puis tu es connecté. Messages d’erreur proposés par Claude (sauf « Les mots de passe ne correspondent pas. »)." hidden>
+    <header class="a-brand"></header>
+    <section class="a-panel" aria-labelledby="npwTitle">
+      <h2 class="a-t1" id="npwTitle">Nouveau mot de passe</h2>
+      <form data-form="newpw">
+        <div class="a-field"><div class="a-lrow"><label for="npPw">Nouveau mot de passe</label></div>
+          <div class="a-wrap"><input class="a-pw" id="npPw" type="password" placeholder="••••••••••••" autocomplete="new-password" aria-describedby="npPwErr" required><button class="a-eye" type="button" data-act="a-eye" data-arg="npPw" aria-label="Afficher le nouveau mot de passe" aria-pressed="false" aria-controls="npPw"></button></div><p class="a-err" id="npPwErr" hidden></p></div>
+        <div class="a-field"><div class="a-lrow"><label for="npPw2">Confirmer le nouveau mot de passe</label></div>
+          <div class="a-wrap"><input class="a-pw" id="npPw2" type="password" placeholder="••••••••••••" autocomplete="new-password" aria-describedby="npPw2Err" required><button class="a-eye" type="button" data-act="a-eye" data-arg="npPw2" aria-label="Afficher la confirmation du nouveau mot de passe" aria-pressed="false" aria-controls="npPw2"></button></div><p class="a-err" id="npPw2Err" hidden></p></div>
+        <button class="a-primary" type="submit">Enregistrer</button>
+      </form>
+      <p class="a-feedback" role="status" aria-live="polite" hidden></p>
+      <div class="a-signup"><a class="a-secondary" href="#connexion">Retour à la connexion</a></div>
+      <div class="a-security"></div>
+    </section>
+  </main>
+</div>
+
 <div class="stage">
 <main class="app" aria-label="RoK Companion — maquette de l’appli finale">
 
@@ -34,10 +127,13 @@
       <div class="p-tabs" role="group" aria-label="Profils" id="pTabs"></div>
     </header>
 
-    <div id="homeEmpty" hidden>
-      <div class="card hl"><h3>Aucun profil</h3><p>Ajoute ton compte Rise of Kingdoms pour commencer. L’appli ne se connecte jamais au jeu : tu renseignes toi-même tes valeurs.</p>
-        <div class="btns"><button class="btn primary" type="button" data-act="add-profile"><i data-i="i-plus"></i>Ajouter un profil</button></div></div>
-    </div>
+    <section class="banner empty-banner" id="homeEmpty" aria-labelledby="emptyTitle" hidden>
+      <div class="pmain">
+        <div class="emblem"><i data-i="i-crown"></i></div>
+        <div class="pinfo"><h2 class="pname" id="emptyTitle">Aucun profil RoK</h2><p class="pmeta">Crée ton premier profil pour afficher ton tableau de bord.</p></div>
+      </div>
+      <div class="empty-actions"><button class="btn primary" type="button" data-act="add-profile">Créer mon premier profil</button></div>
+    </section>
 
     <div class="cols" id="homeMain">
       <div class="col">
@@ -672,10 +768,6 @@
     <div id="shBody"></div>
     <div class="sheet-actions" id="shActions"></div>
   </div>
-</div>
-
-<div class="loggedout" id="loggedOut" hidden>
-  <div class="card hl"><h3>Tu es déconnecté</h3><p>Ton historique reste enregistré. Reconnecte-toi pour le retrouver.</p><div class="btns"><button class="btn primary" type="button" data-act="relogin">Se reconnecter</button></div></div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>

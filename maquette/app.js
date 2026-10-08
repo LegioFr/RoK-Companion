@@ -67,6 +67,14 @@ var P={
     obj:{title:'Hôtel de ville 18',short:'Hôtel de ville 18',pct:50,href:'#ma-ville-progression'}})
 };
 var ORDER=['main','f1','f2'];
+
+/* ================= Comptes (écrans B01-01 à 05) =================
+   Comptes gardés en mémoire du navigateur. Chaque compte a ses propres profils : le compte d'essai a les profils
+   d'exemple, un compte créé dans la maquette commence sans profil (Accueil sans profil, B01-06). */
+var DEMO='gouverneur@exemple.fr';
+var ACC={};ACC[DEMO]={pw:'rok12345',ok:true,data:{P:P,ORDER:ORDER,active:'main'}};
+var AUTH={user:null,after:null,pending:null,reset:null};
+var AUTH_IDS=['connexion','inscription','confirmation','mot-de-passe-oublie','nouveau-mot-de-passe'];
 var S={active:'main',time:'30',imported:false,sent:0,reserved:false,planSaved:false,inv:'res',cmdF:'all',form:'Coin',
   valKey:'caserne',quick:false,profileView:null,
   goals:[{t:'Recherche économie complète',icon:'t-flask',pct:68,sub:'Partage la pierre avec le Château 25 : l’appli ne la compte qu’une fois'},{t:'300 000 fantassins niveau 5',icon:'t-swords',pct:40,sub:''}],
@@ -126,7 +134,8 @@ function bind(){
 function renderHome(){
   var has=ORDER.length>0;$('#homeEmpty').hidden=has;$('#homeMain').hidden=!has;
   $('#pTabs').innerHTML=ORDER.map(function(k){var p=P[k];return '<button class="p-tab" type="button" data-prof="'+k+'" aria-pressed="'+(k===S.active)+'">'+ic(p.icon)+esc(p.name)+'</button>';}).join('')+
-    '<button class="p-tab add" type="button" data-act="add-profile" aria-label="Ajouter un profil">'+ic('i-plus')+'</button>';
+    '<button class="p-tab add" type="button" data-act="add-profile" aria-label="Ajouter un profil">'+ic('i-plus')+(has?'':'<span>Ajouter</span>')+'</button>';
+  $('#pTabs').classList.toggle('none',!has);
   if(!has)return;
   var p=A(),pl=plan();
   $('#hEmblem').innerHTML=ic(p.icon);
@@ -462,6 +471,9 @@ var visPill=$('#visPill'),visLabel=$('#visLabel'),visNote=$('#visNote');
 var cur='accueil';
 function route(){
   var h=(location.hash||'').slice(1)||'accueil',id=h,sub=null;
+  if(AUTH_IDS.indexOf(h)>=0){showAuth(h);return;}
+  if(!AUTH.user){AUTH.after=h;location.replace('#connexion');return;}
+  if(document.body.classList.contains('auth-on')){document.body.classList.remove('auth-on');$('#auth').hidden=true;cur=null;}
   if(h==='ma-ville'||h.indexOf('ma-ville-')===0){id='ma-ville';sub=h.slice(9)||'progression';}
   if(h.indexOf('valeur-')===0){id='valeur';var k=h.slice(7);if(FIELDS[k])S.valKey=k;}
   if(h.indexOf('profil-')===0){id='profil';S.profileView=h.slice(7);}else if(h==='profil'){S.profileView=null;}
@@ -484,8 +496,9 @@ function refreshAll(keepQuick){
 }
 /* Plan des écrans */
 (function(){
-  var G=[['accueil','Accueil','i-acc-c'],['ma-ville','Ma ville','i-hall'],['optimiser','Optimiser','i-sliders'],['combat','Combat','i-sword'],['plus','Plus','i-dots']],h='';
-  G.forEach(function(g){var it=[];screens.forEach(function(s){if(s.dataset.g!==g[0])return;
+  var G=[['compte','Compte','i-medal'],['accueil','Accueil','i-acc-c'],['ma-ville','Ma ville','i-hall'],['optimiser','Optimiser','i-sliders'],['combat','Combat','i-sword'],['plus','Plus','i-dots']],h='';
+  G.forEach(function(g){var it=[];if(g[0]==='compte')$$('[data-auth]').forEach(function(a){it.push(['#'+a.dataset.auth,a.dataset.title,'ok']);});
+    screens.forEach(function(s){if(s.dataset.g!==g[0])return;
     if(s===mv)panels.forEach(function(p){it.push(['#ma-ville-'+p.dataset.panel,p.dataset.title,p.dataset.st]);});
     else it.push([s.dataset.href||'#'+s.dataset.screen,s.dataset.title,s.dataset.st]);});
     h+='<div class="pg"><h3>'+ic(g[2])+g[1]+'</h3>'+it.map(function(x){return '<a class="pl" href="'+x[0]+'"><span>'+x[1]+'</span><span class="pill st-'+stc(x[2])+'"><i></i>'+LABEL[x[2]]+'</span></a>';}).join('')+'</div>';});
@@ -501,10 +514,81 @@ function setClean(v){document.body.classList.toggle('clean',v);try{localStorage.
 try{if(localStorage.getItem('rokFinalClean')==='1')document.body.classList.add('clean');}catch(e){}
 $('#hideVis').addEventListener('click',function(){setClean(true);});$('#showVis').addEventListener('click',function(){setClean(false);});
 
+/* ================= Compte : connexion, création, confirmation, mot de passe ================= */
+var LOGO_N=0;
+function logo(){var n=++LOGO_N;return '<svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="lgG'+n+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6df8f"/><stop offset=".55" stop-color="#d8b24c"/><stop offset="1" stop-color="#a77a26"/></linearGradient><linearGradient id="lgD'+n+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1c2638"/><stop offset="1" stop-color="#0a0e16"/></linearGradient></defs><circle cx="50" cy="50" r="44" fill="url(#lgD'+n+')" stroke="url(#lgG'+n+')" stroke-width="4"/><circle cx="50" cy="50" r="36" fill="none" stroke="#d8b24c" stroke-width="1.5" stroke-dasharray="1.5 3.2"/><circle cx="50" cy="50" r="31" fill="none" stroke="#d8b24c" stroke-opacity=".5" stroke-width="1"/><text x="50" y="61" text-anchor="middle" font-family="Noto Serif,Georgia,serif" font-weight="700" font-size="30" fill="url(#lgG'+n+')" letter-spacing="-1">RC</text></svg>';}
+$$('.a-brand').forEach(function(b){b.innerHTML=logo()+'<h1>RoK Companion</h1>';});
+$$('.a-security').forEach(function(b){b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 7 3v6c0 4.2-3.1 7.2-7 9-3.9-1.8-7-4.8-7-9V6l7-3Z"/><path d="m9 12 2 2 4-5"/></svg><span>Aucun accès à ton compte Rise of Kingdoms.</span>';});
+$$('.a-eye').forEach(function(b){b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.6"/><path class="slash" d="m4 4 16 16"/></svg>';});
+function shell(id){return $('[data-auth="'+id+'"]');}
+function authMsg(id,t,bad){var f=$('.a-feedback',shell(id));f.textContent=t||'';f.hidden=!t;f.classList.toggle('bad',!!bad);}
+function fieldErr(id,t){var i=$('#'+id),e=$('#'+id+'Err');if(t){i.setAttribute('aria-invalid','true');e.textContent=t;e.hidden=false;}else{i.removeAttribute('aria-invalid');if(e)e.hidden=true;}}
+function showAuth(id){
+  closeSheet();document.body.classList.add('auth-on');$('#auth').hidden=false;
+  var sh=shell(id);$$('[data-auth]').forEach(function(x){x.hidden=(x!==sh);});
+  $('#aVisPill').className='pill st-ok';$('#aVisLabel').textContent=LABEL.ok+' · '+sh.dataset.b;$('#aVisNote').textContent=sh.dataset.note;
+  $('#simLink').hidden=!(id==='confirmation'||(id==='mot-de-passe-oublie'&&AUTH.reset!==null));
+  if(id==='confirmation')$('#cfEmail').textContent=AUTH.pending||'nom@exemple.fr';
+  $$('#planBody .pl').forEach(function(a){a.setAttribute('aria-current',String(a.getAttribute('href')==='#'+id));});
+  if(cur!=='auth:'+id){window.scrollTo(0,0);$$('input',sh).forEach(function(i){if(i.type==='text')i.type='password';});}
+  cur='auth:'+id;
+}
+function saveData(){if(AUTH.user)ACC[AUTH.user].data={P:P,ORDER:ORDER,active:S.active};}
+function login(email){
+  saveData();var a=ACC[email];if(!a.data)a.data={P:{},ORDER:[],active:null};
+  P=a.data.P;ORDER=a.data.ORDER;S.active=a.data.active;S.profileView=null;S.quick=false;S.email=email;AUTH.user=email;
+  try{if(email===DEMO)sessionStorage.setItem('rokUser',email);else sessionStorage.removeItem('rokUser');}catch(e){}
+  $$('.a-shell form').forEach(function(f){f.reset();});AUTH_IDS.forEach(function(id){authMsg(id,'');});
+  var to=AUTH.after&&AUTH_IDS.indexOf(AUTH.after)<0?AUTH.after:'accueil';AUTH.after=null;
+  if(location.hash==='#'+to)route();else location.hash=to;
+}
+function logout(){saveData();AUTH.user=null;try{sessionStorage.removeItem('rokUser');}catch(e){}location.hash='connexion';authMsg('connexion','Tu es déconnecté. Tes profils restent enregistrés.');}
+var MAILRE=/^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+function submitAuth(kind){
+  if(kind==='login'){
+    var em=$('#liEmail').value.trim().toLowerCase(),pw=$('#liPw').value,a=ACC[em];
+    if(!a||a.pw!==pw){authMsg('connexion','E-mail ou mot de passe incorrect.',true);return;}
+    if(!a.ok){AUTH.pending=em;location.hash='confirmation';authMsg('confirmation','Confirme d’abord ton e-mail : touche le lien reçu.');return;}
+    login(em);
+  }else if(kind==='signup'){
+    var e2=$('#suEmail').value.trim().toLowerCase(),p1=$('#suPw').value,p2=$('#suPw2').value,bad=false;
+    fieldErr('suEmail',MAILRE.test(e2)?'':'Saisis une adresse valide, par exemple nom@exemple.fr.');bad=!MAILRE.test(e2);
+    fieldErr('suPw',p1.length<8?'Au moins 8 caractères.':'');bad=bad||p1.length<8;
+    fieldErr('suPw2',p1!==p2?'Les mots de passe ne correspondent pas.':'');bad=bad||p1!==p2;
+    if(bad){var f=$('[data-auth="inscription"] [aria-invalid="true"]');if(f)f.focus();return;}
+    if(!ACC[e2])ACC[e2]={pw:p1,ok:false,data:null};
+    AUTH.pending=e2;$('[data-form="signup"]').reset();location.hash='confirmation';
+  }else if(kind==='forgot'){
+    AUTH.reset=$('#fgEmail').value.trim().toLowerCase();$('#simLink').hidden=false;
+    authMsg('mot-de-passe-oublie','Si un compte correspond à cette adresse, un e-mail de réinitialisation a été envoyé.');
+  }else if(kind==='newpw'){
+    var n1=$('#npPw').value,n2=$('#npPw2').value;
+    fieldErr('npPw',n1.length<8?'Au moins 8 caractères.':'');
+    fieldErr('npPw2',n1!==n2?'Les mots de passe ne correspondent pas.':'');
+    if(n1.length<8||n1!==n2){var g=$('[data-auth="nouveau-mot-de-passe"] [aria-invalid="true"]');if(g)g.focus();return;}
+    var who=AUTH.reset&&ACC[AUTH.reset]?AUTH.reset:DEMO;ACC[who].pw=n1;ACC[who].ok=true;AUTH.reset=null;AUTH.after=null;
+    login(who);say('Nouveau mot de passe enregistré.');
+  }
+}
+function simLink(){
+  if(cur==='auth:confirmation'){var em=AUTH.pending;
+    if(!em||!ACC[em]){say('Crée d’abord un compte : l’e-mail part à ce moment-là.');return;}
+    if(ACC[em].ok&&ACC[em].data){location.hash='connexion';authMsg('connexion','Ce compte est déjà confirmé : connecte-toi.');return;}
+    ACC[em].ok=true;AUTH.pending=null;AUTH.after=null;login(em);say('E-mail confirmé. Bienvenue !');
+  }else if(cur==='auth:mot-de-passe-oublie'){
+    if(!AUTH.reset||!ACC[AUTH.reset]){say('Aucun compte avec cette adresse : aucun e-mail n’est parti.');return;}
+    location.hash='nouveau-mot-de-passe';
+  }
+}
+document.addEventListener('submit',function(e){var f=e.target.closest('[data-form]');if(!f)return;e.preventDefault();submitAuth(f.dataset.form);});
+document.addEventListener('input',function(e){var sh=e.target.closest('.a-shell');if(!sh)return;var f=$('.a-feedback',sh);if(f&&f.classList.contains('bad'))f.hidden=true;if(e.target.getAttribute('aria-invalid'))fieldErr(e.target.id,'');});
+try{var su=sessionStorage.getItem('rokUser');if(su&&ACC[su]){AUTH.user=su;S.email=su;}}catch(e){}
+
 /* ================= Actions ================= */
 function addProfileSheet(){
-  openSheet('Ajouter un profil','<div class="fld"><label for="npName">Nom du profil</label><input id="npName" maxlength="30" placeholder="Ex. Ferme 3"><small class="ferr" id="npErr" hidden></small></div>'+
-    '<div class="fld"><label>Type</label><div class="chips" data-single id="npType"><button class="chip" type="button" aria-pressed="false">Principal</button><button class="chip" type="button" aria-pressed="true">Ferme</button><button class="chip" type="button" aria-pressed="false">Secondaire</button></div></div>'+
+  var first=!ORDER.length;
+  openSheet(first?'Créer mon premier profil':'Ajouter un profil','<div class="fld"><label for="npName">Nom du profil</label><input id="npName" maxlength="30" placeholder="'+(first?'Ex. Principal':'Ex. Ferme 3')+'"><small class="ferr" id="npErr" hidden></small></div>'+
+    '<div class="fld"><label>Type</label><div class="chips" data-single id="npType"><button class="chip" type="button" aria-pressed="'+first+'">Principal</button><button class="chip" type="button" aria-pressed="'+!first+'">Ferme</button><button class="chip" type="button" aria-pressed="false">Secondaire</button></div></div>'+
     '<div class="fld"><label for="npId">ID joueur RoK — facultatif</label><input id="npId" inputmode="numeric" placeholder="Ex. 123456789"></div>',[['Annuler','close-sheet',''],['Créer le profil','create-profile','primary']]);
 }
 function createProfile(){
@@ -571,10 +655,10 @@ var ACT={
   'save-email':function(){var v=$('#em').value.trim();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){var e=$('#emErr');e.textContent='Saisis une adresse valide, par exemple nom@exemple.fr.';e.hidden=false;return;}S.email=v;closeSheet();renderPlus();say('Un lien de confirmation est envoyé à '+v+'.');},
   'sheet-password':function(){openSheet('Changer le mot de passe',pwField('pw0','Mot de passe actuel')+pwField('pw1','Nouveau mot de passe')+pwField('pw2','Confirme le nouveau mot de passe')+'<small class="ferr" id="pwErr" hidden></small>',[['Annuler','close-sheet',''],['Enregistrer','save-password','primary']]);},
   'save-password':function(){var e=$('#pwErr'),a=$('#pw0').value,b=$('#pw1').value,c=$('#pw2').value;e.hidden=true;
-    if(!a){e.textContent='Saisis ton mot de passe actuel.';}else if(b.length<8){e.textContent='Le nouveau mot de passe doit faire au moins 8 caractères.';}else if(b!==c){e.textContent='Les deux mots de passe ne sont pas identiques.';}else{closeSheet();say('Mot de passe changé.');return;}e.hidden=false;},
+    if(!a){e.textContent='Saisis ton mot de passe actuel.';}else if(AUTH.user&&ACC[AUTH.user].pw!==a){e.textContent='Mot de passe actuel incorrect.';}else if(b.length<8){e.textContent='Le nouveau mot de passe doit faire au moins 8 caractères.';}else if(b!==c){e.textContent='Les deux mots de passe ne sont pas identiques.';}else{if(AUTH.user)ACC[AUTH.user].pw=b;closeSheet();say('Mot de passe changé.');return;}e.hidden=false;},
   'sheet-norok':function(){openSheet('Aucun accès à ton compte RoK','<p class="shp">L’appli ne se connecte jamais à Rise of Kingdoms : pas d’identifiant, pas de mot de passe du jeu, aucune action à ta place. Tu renseignes toi-même tes valeurs, ou tu importes tes captures, lues sur ton téléphone.</p>',[['Compris','close-sheet','primary']]);},
   'sheet-logout':function(){openSheet('Se déconnecter','<p class="shp">Tu devras te reconnecter pour retrouver tes profils. Rien n’est supprimé.</p>',[['Annuler','close-sheet',''],['Se déconnecter','logout','danger']]);},
-  logout:function(){closeSheet();$('#loggedOut').hidden=false;},relogin:function(){$('#loggedOut').hidden=true;say('Te revoilà.');},
+  logout:function(){closeSheet();logout();},
   'sheet-install':function(){openSheet('Installer l’appli','<p class="shp"><b>Déjà installée sur cet appareil.</b></p><p class="shp muted">Sur un autre téléphone : ouvre l’appli dans le navigateur, puis « Ajouter à l’écran d’accueil ».</p>',[['Fermer','close-sheet','primary']]);},
   'sheet-update':function(){openSheet('Mise à jour','<p class="shp" id="updState">Ton appli est à jour (version d’exemple 1.4).</p>',[['Fermer','close-sheet',''],['Rechercher une mise à jour','check-update','primary']]);},
   'check-update':function(){var s=$('#updState');s.textContent='Recherche…';setTimeout(function(){s.textContent='Aucune nouvelle version. Ton appli est à jour.';},900);},
@@ -584,6 +668,10 @@ var ACT={
     openSheet('Historique et exports','<p class="shp muted">L’export en fichier viendra avec B15. Tu peux déjà copier l’état du profil en texte.</p><pre class="prev" id="expTxt">'+esc(txt)+'</pre>',[['Fermer','close-sheet',''],['Copier le texte','copy-export','primary']]);},
   'copy-export':function(){copy($('#expTxt').textContent,'Texte copié.');},
   'sheet-lang':function(){openSheet('Langue et fuseau horaire','<div class="fld"><label for="lg">Langue</label><select id="lg"><option'+(S.lang==='Français'?' selected':'')+'>Français</option><option'+(S.lang==='English'?' selected':'')+'>English</option></select></div><div class="fld"><label for="tz">Fuseau horaire</label><select id="tz">'+['Europe/Paris','Europe/London','America/Montreal','Africa/Casablanca'].map(function(z){return '<option'+(z===S.tz?' selected':'')+'>'+z+'</option>';}).join('')+'</select></div>',[['Annuler','close-sheet',''],['Enregistrer','save-lang','primary']]);},
+  'a-eye':function(id){var i=$('#'+id),b=$('[data-arg="'+id+'"]');var show=i.type==='password';i.type=show?'text':'password';b.setAttribute('aria-pressed',String(show));b.setAttribute('aria-label',b.getAttribute('aria-label').replace(show?'Afficher':'Masquer',show?'Masquer':'Afficher'));},
+  resend:function(){authMsg('confirmation','E-mail renvoyé.');},
+  'sim-link':simLink,
+  'open-plan':function(){openPlan();},'hide-vis':function(){setClean(true);},
   'save-lang':function(){S.lang=$('#lg').value;S.tz=$('#tz').value;closeSheet();renderPlus();say('Réglages enregistrés.');}
 };
 function updShare(){var a=S.marches[0],L=[];if($('#shName').checked)L.push('Profil : '+(A()?A().name:''));if($('#shCmd').checked)L.push('A : '+a.p+' + '+a.s+'\nB : '+a.p+' + '+S.cmpSec);if($('#shForm').checked)L.push('Formation : '+a.form);
