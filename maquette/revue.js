@@ -5,10 +5,10 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=11,VERSION='v'+VNUM+' · 8 oct. 2026';
+var VNUM=12,VERSION='v'+VNUM+' · 8 oct. 2026';
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
-  '*':[{sel:'',t:'Onglet Tests : « À revoir après mes modifications » liste les tests que j’ai changés depuis que tu les as faits, avec un bouton pour ne revoir que ceux-là.'}],
+  '*':[{sel:'',t:'Revue guidée : sur la confirmation de l’e-mail et le mot de passe oublié, le bouton « ✉ Simuler le lien de l’e-mail » est directement dans le bandeau du test.'}],
   'connexion':[{sel:'[data-auth="connexion"]',t:'Écran ajouté, repris de la maquette validée B01-01.'},
     {sel:'[data-auth="connexion"] .a-primary',t:'Connexion qui marche : e-mail ou mot de passe faux → « E-mail ou mot de passe incorrect. » (texte proposé).'}],
   'inscription':[{sel:'#suEmail',t:'Adresse déjà utilisée : « Un compte existe déjà avec cette adresse… » sous E-mail, au lieu de passer à la confirmation (ta note 4).'},
@@ -120,6 +120,7 @@ var css=el('style');css.textContent=[
 '#rcPnl .rc-rvi{margin-top:6px;font-size:12.5px}#rcPnl .rc-rvi b{display:block;color:var(--rc-fg);font-weight:600}#rcPnl .rc-rvi span{color:var(--rc-dim)}',
 '#rcPnl .tl .new{display:inline-block;margin-left:6px;padding:0 7px;border-radius:9px;background:#d8b24c;color:#1c1408;font:700 11px/18px Roboto,sans-serif;vertical-align:1px}',
 '#rcRun .rm{margin:0 0 4px;color:#f3d982;font-size:12.5px;font-weight:600}',
+'#rcRun .rk .sim{border-color:#d8b24c88;color:#f3d982}',
 '#rcRun .rk .ph{border-color:var(--rc-line)}#rcRun.min .rb{display:none}#rcRun button:focus-visible{outline:2px solid var(--rc);outline-offset:2px}',
 '#rcRun .sm{display:none}@media(max-width:640px){#rcRun .lg{display:none}#rcRun .sm{display:inline}#rcRun .rk{flex-wrap:nowrap;gap:4px;margin-top:6px}#rcRun .rk button{flex:1 1 auto;min-height:36px;padding:0 6px;font-size:12.5px;white-space:nowrap}#rcRun .rk .nx{margin-left:0}#rcRun .rb{padding:0 10px 8px}#rcRun .ra{font-size:13.5px}#rcRun .re{font-size:12.5px;margin-top:2px}#rcRun .rh{padding:4px 4px 2px 10px}}',
 '@media(max-width:640px){#rcPnl{left:0!important;right:0;top:auto!important;bottom:0;width:100%;max-height:72vh;border-radius:18px 18px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}}'
@@ -213,7 +214,7 @@ function draw(){
 var dt;function redraw(){clearTimeout(dt);dt=setTimeout(draw,80);}
 new MutationObserver(function(m){for(var i=0;i<m.length;i++){if(!mine(m[i].target)){redraw();return;}}}).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden','class','open']});
 addEventListener('resize',function(){redraw();placeBub();placePnl();if(S.sel)drawSel();});
-document.addEventListener('rc:route',function(){S.draft=null;if(S.insp)S.sel=null;drawSel();refresh();});
+document.addEventListener('rc:route',function(){S.draft=null;if(S.insp)S.sel=null;drawSel();refresh();if(typeof paintRun==='function'&&FLAT)paintRun();});
 
 /* ---------- bulle ---------- */
 function paintBub(){
@@ -523,6 +524,7 @@ function paintRun(){
   bt('','Ouvrir l’écran','↻ Écran',function(){prep(t,true);},'Ouvrir l’écran du test');
   bt('ko','✗ Problème','✗ Problème',function(){problem(t);});
   bt('ok','✓ C’est bon','✓ Bon',function(){setRes(t.id,'ok');stepRun(1);});
+  if(CUR().sim)bt('sim','✉ Simuler le lien de l’e-mail','✉ Lien',function(){window.RC_API&&window.RC_API.simLink();},'Simuler le clic sur le lien reçu par e-mail');
   var ncap=(r&&r.captures&&r.captures.length)||0;
   bt('ph','📷 Capture'+(ncap?' ('+ncap+')':''),'📷'+(ncap?' '+ncap:''),function(){addShots(t);},'Joindre une capture d’écran à ce test');
   bt('nx','Passer ›','›',function(){stepRun(1);},'Passer ce test');

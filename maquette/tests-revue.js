@@ -33,14 +33,14 @@ window.RC_TESTS=[
   ['f1','Touche « Renvoyer l’e-mail ».','Message « E-mail renvoyé. » sous le bouton.',null,8,'Les tests de la confirmation préparent eux-mêmes un compte en attente'],
   ['f2','Regarde l’adresse affichée.','C’est celle du compte en attente de confirmation (attente…@exemple.fr), en entier.',null,8,'Les tests de la confirmation préparent eux-mêmes un compte en attente'],
   ['f3b','Retiens l’adresse affichée, touche « Retour à la connexion », puis connecte-toi avec cette adresse et le mot de passe rok12345.','Tu reviens sur « Confirme ton e-mail » avec « Confirme d’abord ton e-mail : touche le lien reçu. »',null,8,'Les tests de la confirmation préparent eux-mêmes un compte en attente'],
-  ['f4','Ouvre la bulle › Écran › « Simuler le lien de l’e-mail ».','Tu arrives connecté sur l’Accueil sans profil du nouveau compte.',['attente','#confirmation'],8,'Les tests de la confirmation préparent eux-mêmes un compte en attente']
+  ['f4','Fais comme si tu touchais le lien reçu par e-mail : touche « ✉ Simuler le lien de l’e-mail » dans ce bandeau.','Ton compte est confirmé : tu arrives connecté sur l’Accueil sans profil du nouveau compte.',['attente','#confirmation'],12,'Le bouton « Simuler le lien » est maintenant dans le bandeau du test']
  ]},
  {g:'Mot de passe oublié',p:['out','#mot-de-passe-oublie'],l:[
   ['o1','Touche « Envoyer le lien » sans adresse.','Le navigateur demande l’adresse.'],
   ['o2b','Écris gouverneur@exemple.fr, puis « Envoyer le lien ».','« E-mail envoyé à gouverneur@exemple.fr : touche le lien qu’il contient… »',null,9,'« Mot de passe oublié » dit si l’adresse n’a pas de compte'],
   ['o3b','Recommence avec une adresse qui n’a pas de compte (ex. personne@exemple.fr).','Encadré rouge « Aucun compte avec cette adresse. Vérifie-la, ou crée un compte. »',null,9,'« Mot de passe oublié » dit si l’adresse n’a pas de compte'],
-  ['o4b','Juste après, ouvre la bulle › Écran.','Pas de bouton « Simuler le lien de l’e-mail » : aucun e-mail n’est parti.',null,9,'« Mot de passe oublié » dit si l’adresse n’a pas de compte'],
-  ['o5','Renvoie le lien avec gouverneur@exemple.fr, puis bulle › Écran › « Simuler le lien de l’e-mail ».','L’écran « Nouveau mot de passe » s’ouvre.'],
+  ['o4b','Juste après, regarde ce bandeau.','Pas de bouton « ✉ Simuler le lien de l’e-mail » : aucun e-mail n’est parti.',null,12,'Le bouton « Simuler le lien » est maintenant dans le bandeau du test'],
+  ['o5','Renvoie le lien avec gouverneur@exemple.fr, puis fais comme si tu touchais le lien reçu : « ✉ Simuler le lien de l’e-mail » dans ce bandeau.','L’écran « Nouveau mot de passe » s’ouvre.',null,12,'Le bouton « Simuler le lien » est maintenant dans le bandeau du test'],
   ['o6','Touche « Retour à la connexion ».','Écran de connexion.',['out','#mot-de-passe-oublie']],
   ['o7','Sur téléphone, regarde le titre « Mot de passe oublié ? ».','Il tient sur une seule ligne.',['out','#mot-de-passe-oublie']]
  ]},
@@ -119,6 +119,6 @@ window.RC_TESTS=[
   ['t1','Sur téléphone, fais défiler tout l’Accueil.','Une seule colonne, menu collé en bas, rien ne dépasse à droite, rien n’est caché sous le menu.'],
   ['t2','Sur tablette, en portrait puis en paysage.','Tout reste lisible ; l’Accueil s’adapte.'],
   ['t3','Sur PC (ou sur une fenêtre très large).','Menu à gauche, deux colonnes.'],
-  ['t4','Si un texte te paraît petit : bulle › Inspecter, touche-le.','Sa taille en px s’affiche : pose une note si c’est trop petit.']
+  ['t4','Si un texte te paraît petit : touche le rond bleu avec la clé (la bulle d’outils) › Inspecter, puis touche le texte.','Sa taille en px s’affiche : pose une note si c’est trop petit.']
  ]}
 ];
