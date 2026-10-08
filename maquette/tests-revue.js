@@ -35,9 +35,9 @@ window.RC_TESTS=[
  ]},
  {g:'Mot de passe oublié',p:['out','#mot-de-passe-oublie'],l:[
   ['o1','Touche « Envoyer le lien » sans adresse.','Le navigateur demande l’adresse.'],
-  ['o2','Écris gouverneur@exemple.fr, puis « Envoyer le lien ».','« Si un compte correspond à cette adresse, un e-mail de réinitialisation a été envoyé. »'],
-  ['o3','Recommence avec une adresse qui n’a pas de compte.','Exactement le même message.'],
-  ['o4','Juste après, bulle › Écran › « Simuler le lien de l’e-mail ».','Message « Aucun compte avec cette adresse : aucun e-mail n’est parti. »'],
+  ['o2b','Écris gouverneur@exemple.fr, puis « Envoyer le lien ».','« E-mail envoyé à gouverneur@exemple.fr : touche le lien qu’il contient… »'],
+  ['o3b','Recommence avec une adresse qui n’a pas de compte (ex. personne@exemple.fr).','Encadré rouge « Aucun compte avec cette adresse. Vérifie-la, ou crée un compte. »'],
+  ['o4b','Juste après, ouvre la bulle › Écran.','Pas de bouton « Simuler le lien de l’e-mail » : aucun e-mail n’est parti.'],
   ['o5','Renvoie le lien avec gouverneur@exemple.fr, puis bulle › Écran › « Simuler le lien de l’e-mail ».','L’écran « Nouveau mot de passe » s’ouvre.'],
   ['o6','Touche « Retour à la connexion ».','Écran de connexion.',['out','#mot-de-passe-oublie']],
   ['o7','Sur téléphone, regarde le titre « Mot de passe oublié ? ».','Il tient sur une seule ligne.',['out','#mot-de-passe-oublie']]

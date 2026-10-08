@@ -69,7 +69,8 @@ Dernière mise à jour : 2026-10-08.
 | 2026-10-08 | **Suppression de profil** : on peut supprimer n'importe quel profil, y compris le profil actif (change la règle B01-3B1 reprise de RoK). Un autre profil devient alors actif. |
 | 2026-10-08 | **Accueil, temps de jeu** (10 min / 30 min / 1 h) : principe gardé, mais il doit se comprendre sans explication. |
 | 2026-10-08 | **Accueil, Aperçu de ma ville** : 6 bulles, celles de l'Accueil validé B04-01 (Bâtisseurs, Bonus de vitesse, totaux de nourriture, bois, pierre, or) à la place des accélérateurs de construction et de recherche. |
-| 2026-10-08 | **Création de compte avec une adresse déjà utilisée** (note 4 de Mickaël) : l'appli le dit (« Un compte existe déjà avec cette adresse… ») au lieu de passer à la confirmation. Proposé par Claude : « Mot de passe oublié » garde son message validé (même message que l'adresse ait un compte ou non) — à confirmer par Mickaël. |
+| 2026-10-08 | **Création de compte avec une adresse déjà utilisée** (note 4 de Mickaël) : l'appli le dit (« Un compte existe déjà avec cette adresse… ») au lieu de passer à la confirmation. |
+| 2026-10-08 | **Mot de passe oublié** : pareil, l'appli dit « Aucun compte avec cette adresse… » ; avec une adresse connue, « E-mail envoyé à … » (textes proposés par Claude). Remplace le message unique validé dans RoK. |
 | 2026-10-08 | **Tests guidés dans la maquette** : liste complète des tests, chacun avec un lien qui ouvre le bon écran dans le bon état ; résultats partagés avec Claude. « Mieux vaut trop de tests que pas assez. » Agréable à faire, sans cacher l'écran. |
 
 ## 5. Questions ouvertes (à trancher plus tard)
@@ -98,3 +99,4 @@ Dernière mise à jour : 2026-10-08.
 - **2026-10-08** (2e session, suite) : premières notes de Mickaël lues et traitées (suppression du profil actif, temps de jeu peu compréhensible, bulles de l'Aperçu). Décisions appliquées (version v6). Onglet Tests et revue guidée ajoutés à la bulle (87 tests de la connexion à l'Accueil). Reste ouvert : messages proposés de la connexion à valider ; garder ou non « Objectif en cours » et « Ma semaine » sur l'Accueil ; liste de tests de Ma ville à faire ensuite.
 - **2026-10-08** (suite) : à la demande de Mickaël, captures d'écran jointes aux tests (bouton « 📷 Capture » dans la revue guidée et dans la liste), version v7.
 - **2026-10-08** (suite) : Mickaël a fait les tests 1 à 22 (tablette) : 20 bons, 2 problèmes. Test 19 (adresse déjà utilisée) et test 22 (connexion d'un compte non confirmé) : la création de compte avec une adresse existante faisait semblant de réussir. Corrigé en v8 ; les tests de la confirmation préparent eux-mêmes un compte en attente (état `attente`). Tests renommés `i8b` et `f3b` pour être refaits.
+- **2026-10-08** (suite) : v9, « Mot de passe oublié » dit si l'adresse n'a pas de compte (décision de Mickaël). Tests `o2b`, `o3b`, `o4b` à refaire.

@@ -528,7 +528,7 @@ function fieldErr(id,t){var i=$('#'+id),e=$('#'+id+'Err');if(t){i.setAttribute('
 function showAuth(id){
   closeSheet();document.body.classList.add('auth-on');$('#auth').hidden=false;
   var sh=shell(id);$$('[data-auth]').forEach(function(x){x.hidden=(x!==sh);});
-  setCur({id:id,screen:id,title:sh.dataset.title,st:'ok',label:LABEL.ok+' · '+sh.dataset.b,note:sh.dataset.note,sim:id==='confirmation'||(id==='mot-de-passe-oublie'&&AUTH.reset!==null)});
+  setCur({id:id,screen:id,title:sh.dataset.title,st:'ok',label:LABEL.ok+' · '+sh.dataset.b,note:sh.dataset.note,sim:id==='confirmation'||(id==='mot-de-passe-oublie'&&!!AUTH.reset)});
   if(id==='confirmation')$('#cfEmail').textContent=AUTH.pending||'nom@exemple.fr';
   $$('#planBody .pl').forEach(function(a){a.setAttribute('aria-current',String(a.getAttribute('href')==='#'+id));});
   if(cur!=='auth:'+id){window.scrollTo(0,0);$$('input',sh).forEach(function(i){if(i.type==='text')i.type='password';});}
@@ -562,8 +562,11 @@ function submitAuth(kind){
     ACC[e2]={pw:p1,ok:false,data:null};
     AUTH.pending=e2;$('[data-form="signup"]').reset();location.hash='confirmation';
   }else if(kind==='forgot'){
-    AUTH.reset=$('#fgEmail').value.trim().toLowerCase();window.RC_CUR.sim=true;setCur(window.RC_CUR);
-    authMsg('mot-de-passe-oublie','Si un compte correspond à cette adresse, un e-mail de réinitialisation a été envoyé.');
+    /* Décision de Mickaël du 2026-10-08 : on dit si l'adresse n'a pas de compte, comme à la création de compte. */
+    var fe=$('#fgEmail').value.trim().toLowerCase();
+    if(!ACC[fe]){AUTH.reset=null;window.RC_CUR.sim=false;setCur(window.RC_CUR);authMsg('mot-de-passe-oublie','Aucun compte avec cette adresse. Vérifie-la, ou crée un compte.',true);return;}
+    AUTH.reset=fe;window.RC_CUR.sim=true;setCur(window.RC_CUR);
+    authMsg('mot-de-passe-oublie','E-mail envoyé à '+fe+' : touche le lien qu’il contient pour choisir un nouveau mot de passe.');
   }else if(kind==='newpw'){
     var n1=$('#npPw').value,n2=$('#npPw2').value;
     fieldErr('npPw',n1.length<8?'Au moins 8 caractères.':'');
