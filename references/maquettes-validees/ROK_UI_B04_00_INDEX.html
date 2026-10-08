@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>RoK Companion — Index des maquettes B04-1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto:wght@400..800&display=swap" />
+<style>
+:root{color-scheme:dark;--canvas:#05070d;--surface:#101928;--surface-2:#172234;--text:#f3ead6;--muted:#b1bbca;--gold:#d8b24c;--gold-2:#f3d982;--gold-soft:rgba(216,178,76,.12);--line:rgba(216,178,76,.22);--line-cold:rgba(154,178,211,.17);--green:#3ecf8e;--amber:#e8b04a;--red:#ff7b7b;--cold:#9dadc4;--display:"Noto Serif",Georgia,"Times New Roman",serif}
+*{box-sizing:border-box}
+html{min-height:100%}
+body{margin:0;min-width:320px;color:var(--text);background:radial-gradient(900px 420px at 50% -8%,rgba(216,178,76,.10),transparent 64%),linear-gradient(180deg,#08111d 0%,#05070d 100%);background-attachment:fixed;font-family:Roboto,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.4}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+svg{display:block;flex:none;width:24px;height:24px}a{color:inherit;text-decoration:none}
+.stage{padding:16px 16px calc(104px + env(safe-area-inset-bottom))}
+.app{width:100%;max-width:620px;margin:0 auto}
+.screen{padding:16px 14px 18px;border:1px solid var(--line-cold);border-radius:22px;background:linear-gradient(150deg,#111b2b,#0d1522);box-shadow:0 8px 24px #0002}
+.header{display:flex;align-items:flex-start;gap:8px;margin-bottom:16px}.header .title-wrap{flex:1;min-width:0}
+.title-wrap h1{margin:0;color:var(--gold-2);font:700 32px/1.12 var(--display);overflow-wrap:anywhere}.title-wrap p{margin:7px 0 0;color:var(--muted);font-size:12px}
+.back{display:grid;place-items:center;width:44px;height:44px;margin:-4px 0 0 -8px;flex:none;border:0;background:transparent;color:var(--gold-2)}.back svg{width:24px;height:24px}
+.demo-note{display:flex;gap:9px;align-items:flex-start;margin:0 0 16px;padding:10px 12px;border:1px dashed var(--line);border-radius:12px;background:#d8b24c0b;color:var(--gold-2);font-size:12px;line-height:1.5}.demo-note svg{width:18px;height:18px;margin-top:1px}
+.section-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:5px 10px;margin:22px 0 10px}.section-title:first-child{margin-top:0}.section-title h2{margin:0;font:700 21px/1.15 var(--display)}.section-title .right{font-size:12px;color:var(--muted)}
+.panel{border:1px solid var(--line-cold);background:linear-gradient(135deg,#1b283b,#152032);border-radius:14px}
+.muted{color:var(--muted)}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* Profil actif (repris de B01-07, version condensée) */
+.profile-banner{display:flex;align-items:center;gap:10px;padding:12px 10px;margin-bottom:16px;border:1px solid #a9bdd51c;border-radius:19px;background:radial-gradient(ellipse at 0 100%,#ad86331a,transparent 70%),linear-gradient(130deg,#182337,#0e1624)}
+.emblem{width:52px;height:52px;flex:none;display:grid;place-items:center;border:1px solid #d2b15e99;border-radius:50%;background:radial-gradient(circle at 35% 25%,#4b4028,#24251f 75%);color:#ead08a}.emblem svg{width:30px;height:30px}
+.pb-info{flex:1;min-width:0}.name-row{display:flex;align-items:center;flex-wrap:wrap;gap:5px 8px}.profile-name{font:700 24px/1.12 var(--display)}.profile-meta{margin-top:5px;font-size:11px;color:var(--muted);line-height:1.5}
+.pill{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:3px 8px;border:1px solid #3ecf8e47;border-radius:30px;background:#3ecf8e14;color:var(--green);font-size:10px;font-weight:650}.pill i{width:6px;height:6px;background:currentColor;border-radius:50%}
+/* Etat de synchronisation P3B-20 */
+.sync{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;padding:4px 10px 4px 8px;border:1px solid;border-radius:30px;font-size:11px;font-weight:700;background:transparent}.sync svg{width:14px;height:14px}
+.sync.ok{color:var(--green);border-color:#3ecf8e55;background:#3ecf8e14}.sync.pending{color:var(--amber);border-color:#e8b04a66;background:#e8b04a14}.sync.error{color:var(--red);border-color:#ff7b7b66;background:#ff7b7b14}.sync.offline{color:var(--cold);border-color:#9dadc466;background:#9dadc414}
+.sync.pending svg{animation:spin 1.4s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.sync.pending svg{animation:none}}
+.meta-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:16px;font-size:12px;color:var(--muted)}
+/* Listes de valeurs */
+.rows{display:grid;gap:8px}
+.row{display:flex;align-items:center;gap:11px;width:100%;min-width:0;min-height:64px;padding:10px 10px 10px 12px;text-align:left;border:1px solid var(--line-cold);border-radius:14px;background:linear-gradient(135deg,#1b283b,#152032);color:var(--text)}
+.row .ri{flex:none;color:#dfc57e}.row .ri svg{width:24px;height:24px}
+.row .rc{flex:1;min-width:0}.row .rn{font-size:13px;font-weight:700;overflow-wrap:anywhere}.row .rm{margin-top:2px;color:var(--muted);font-size:11px;line-height:1.4}
+.row .rv{flex:none;max-width:48%;text-align:right;font:700 20px/1.15 var(--display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.row .rv.big{font-size:15px;letter-spacing:.2px}
+.row .rv.unknown{color:#8c98ab}.row .rv small{display:block;margin-top:2px;font:600 12px/1.3 Roboto,system-ui,sans-serif;color:var(--muted)}
+.row .go{flex:none;color:var(--gold-2);margin-left:-2px}.row .go svg{width:18px;height:18px}
+.row.is-unknown{border-style:dashed}
+.legend{display:flex;gap:8px;align-items:flex-start;margin-top:12px;color:var(--muted);font-size:12px;line-height:1.5}.legend svg{width:16px;height:16px;margin-top:2px;color:#dfc57e}
+/* Cartes d'accès */
+.access-grid{display:grid;gap:10px}
+.access{display:flex;flex-direction:column;gap:12px;padding:16px 14px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(135deg,#1d2a40,#152032);color:var(--text)}
+.access .top{display:flex;align-items:center;gap:12px}.access .ai{display:grid;place-items:center;width:48px;height:48px;flex:none;border:1px solid #d2b15e66;border-radius:14px;background:#d8b24c12;color:#ead08a}.access .ai svg{width:28px;height:28px}
+.access h3{margin:0;font:700 22px/1.15 var(--display)}.access .sub{margin-top:3px;color:var(--muted);font-size:12px}
+.access .go{margin-left:auto;color:var(--gold-2)}
+.access .facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.fact{padding:9px 10px;border:1px solid var(--line-cold);border-radius:11px;background:#10192888}.fact b{display:block;font:700 20px/1.15 var(--display);font-variant-numeric:tabular-nums}.fact span{display:block;margin-top:2px;color:var(--muted);font-size:11px}
+.access .last{color:var(--muted);font-size:11px}
+/* Onglets */
+.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:14px}
+.tab{min-height:44px;padding:8px 4px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--muted);font-size:13px;font-weight:800}.tab[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-soft);color:var(--gold-2)}
+/* Formulaires, boutons */
+.field{margin-top:14px}.field label,.field .lbl{display:block;margin-bottom:6px;color:var(--muted);font-size:12px;font-weight:800}
+.field input,.field select,.field textarea{width:100%;min-width:0;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);font-size:16px}
+.field textarea{height:76px;padding:10px 12px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px #d8b24c1a}
+.field input:disabled,.field select:disabled,.field textarea:disabled,.chip-btn:disabled{opacity:.55;cursor:not-allowed}
+.field .hint{margin-top:6px;color:var(--muted);font-size:11px;line-height:1.5}
+.field input.num{font:700 20px/1 var(--display);font-variant-numeric:tabular-nums}
+.chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:7px}
+.chip-btn{min-height:44px;padding:8px 8px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--muted);font-size:13px;font-weight:800}.chip-btn[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-soft);color:var(--gold-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:0;min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--text);font-size:16px;font-weight:800}
+.btn svg{width:18px;height:18px}
+.btn.primary{border:0;color:#1c1408;background:linear-gradient(110deg,#c8a44f,#dcc074)}
+.btn.danger{border-color:#ff7b7b66;background:#ff7b7b1f;color:#ffb4b4}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.small{min-height:40px;font-size:14px;padding:6px 12px}
+.actions{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-top:18px}
+.banner{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid;border-radius:14px;font-size:13px;line-height:1.5}.banner svg{width:20px;height:20px;margin-top:1px}.banner b{display:block;margin-bottom:2px}
+.banner.error{border-color:#ff7b7b66;background:#ff7b7b14;color:#ffd0d0}.banner.error svg{color:var(--red)}
+.banner.offline{border-color:#9dadc466;background:#9dadc414;color:#dbe3ef}.banner.offline svg{color:var(--cold)}
+.banner.pending{border-color:#e8b04a66;background:#e8b04a14;color:#f6dcaa}.banner.pending svg{color:var(--amber)}
+.banner.ok{border-color:#3ecf8e55;background:#3ecf8e14;color:#c8f3df}.banner.ok svg{color:var(--green)}
+.banner .ba{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+/* Historique */
+.timeline{display:grid;gap:0;margin:0;padding:0;list-style:none}
+.tl{position:relative;padding:0 0 18px 26px}.tl:last-child{padding-bottom:0}
+.tl:before{content:"";position:absolute;left:7px;top:14px;bottom:-4px;width:2px;background:var(--line-cold)}.tl:last-child:before{display:none}
+.tl:after{content:"";position:absolute;left:1px;top:4px;width:14px;height:14px;border-radius:50%;border:2px solid var(--cold);background:var(--canvas)}
+.tl.current:after{border-color:var(--gold);background:var(--gold)}
+.tl .card{padding:11px 12px;border:1px solid var(--line-cold);border-radius:13px;background:#10192888}.tl.current .card{border-color:#d8b24caa;background:var(--gold-soft)}
+.tl .tv{font:700 22px/1.15 var(--display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.tl .tv.big{font-size:16px}
+.tl .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}.tag{padding:2px 8px;border:1px solid var(--line-cold);border-radius:20px;color:var(--muted);font-size:10px;font-weight:700}.tag.gold{border-color:#d8b24c88;color:var(--gold-2)}
+.tl dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:8px 0 0;font-size:11px;color:var(--muted)}.tl dt{font-weight:700}.tl dd{margin:0;color:var(--text);overflow-wrap:anywhere}
+.append-note{margin-top:12px;font-size:11px;color:var(--muted);line-height:1.5}
+/* Navigation basse, reprise de B01 */
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));width:calc(100vw - 32px);max-width:430px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:6px;border-radius:19px;background:#0c1420;border:1px solid #a9bdd52b;box-shadow:0 8px 24px #0005;backdrop-filter:blur(16px);z-index:50}
+.nav{border:0;background:transparent;color:#9dadc4;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:58px;padding:7px 3px;gap:5px;border-radius:12px;font-size:11px;font-weight:600}.nav svg{width:21px;height:21px}.nav.active{color:#edd28b;background:#d8b24c12}
+/* Modale */
+.overlay{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:center;padding:12px 12px max(12px,env(safe-area-inset-bottom));background:#03070dc9;backdrop-filter:blur(6px);z-index:70}.overlay.open{display:flex}
+.sheet{width:min(100%,430px);max-height:100%;overflow-y:auto;background:var(--surface);border:1px solid #d8b24c33;border-radius:22px;padding:16px 18px 18px;box-shadow:0 26px 70px #0009}
+.sheet h3{margin:0 0 12px;font-family:var(--display);font-size:20px;color:var(--gold-2);line-height:1.2}.sheet h3:focus{outline:none}.sheet p{margin:0 0 10px;line-height:1.5}
+.sheet ul{margin:8px 0 0;padding:0 0 0 18px;color:var(--muted);font-size:13px;line-height:1.6}
+body.modal-open{overflow:hidden}
+.demo-feedback{margin:14px 0 0;padding:11px 13px;background:#d8b24c0b;border:1px solid var(--line);border-radius:12px;color:var(--gold-2);font-size:13px;line-height:1.5}.demo-feedback:empty{display:none}
+.preview-switch{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:16px;padding:10px 12px;border:1px dashed var(--line);border-radius:12px}.preview-switch>span{flex:0 0 100%;color:var(--gold-2);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}.preview-switch .chip-btn{flex:1 1 120px;min-height:40px;font-size:12px}
+.two{display:block}.two>section+section{margin-top:26px}
+@media(min-width:700px){
+ .stage{padding:28px 32px calc(136px + env(safe-area-inset-bottom))}.app{max-width:920px}.screen{padding:26px;border-radius:28px}.header{margin-bottom:22px}.title-wrap h1{font-size:42px}.title-wrap p{font-size:15px}
+ .emblem{width:68px;height:68px}.emblem svg{width:38px;height:38px}.profile-name{font-size:32px}.profile-meta{font-size:13px}.pill{font-size:12px;padding:4px 10px}.sync{font-size:13px}.sync svg{width:16px;height:16px}
+ .section-title h2{font-size:26px}.row{min-height:76px;padding:12px 14px;gap:14px}.row .rn{font-size:16px}.row .rm{font-size:13px}.row .rv{font-size:26px}.row .rv.big{font-size:19px}.row .ri svg{width:28px}.row .rv small{font-size:12px}
+ .access-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.access{padding:20px}.access h3{font-size:27px}.access .sub{font-size:14px}.fact b{font-size:25px}.fact span{font-size:13px}.access .last{font-size:13px}
+ .tab{min-height:52px;font-size:16px}.field label,.field .lbl{font-size:14px}.field input,.field select{height:52px;font-size:18px}.field textarea{font-size:18px}.btn{min-height:52px;font-size:18px}.btn.small{font-size:16px}.banner{font-size:15px}.demo-note{font-size:14px}.legend{font-size:14px}.meta-row{font-size:14px}
+ .bottom-nav{width:calc(100vw - 64px);max-width:820px;min-height:88px;padding:8px;border-radius:25px;bottom:calc(18px + env(safe-area-inset-bottom))}.nav{font-size:14px;gap:7px;border-radius:16px}.nav svg{width:28px;height:28px}
+ .overlay{padding:24px;align-items:center}.sheet{width:min(100%,620px);padding:28px;border-radius:26px}.sheet h3{font-size:28px;margin-bottom:18px}.sheet p{font-size:16px}.sheet ul{font-size:15px}
+ .tl .tv{font-size:28px}.tl .tv.big{font-size:20px}.tl dl{font-size:13px}.tag{font-size:12px}.append-note{font-size:13px}
+}
+@media(min-width:1100px){
+ .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}.two>section>.section-title:first-child{margin-top:0}.two>section+section{margin-top:0}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+.bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr))}.nav{text-decoration:none}.nav span{display:block}
+.nav{font-size:10.5px}@media(min-width:700px){.nav{font-size:14px}}
+/* Couleurs de ressources */
+.c-ble{color:#e3c25a!important}.c-bois{color:#c08f5d!important}.c-pierre{color:#aab4c2!important}.c-or{color:#f4d03f!important}
+.row .ri svg{width:28px;height:28px}
+/* Notes de maquette : hors écran */
+.mock-bar{margin:0 0 14px;padding:10px 12px;border:1px dashed var(--line);border-radius:14px;background:#d8b24c0b;color:var(--gold-2);font-size:12px;line-height:1.5}
+.mock-bar>b{letter-spacing:.2px}.mock-bar details{margin-top:6px}.mock-bar summary{cursor:pointer;font-weight:800;min-height:32px;display:flex;align-items:center}
+.mock-bar ul{margin:6px 0 4px;padding-left:18px;color:#e9d9a8}.mock-bar li{margin:3px 0}
+.mock-bar .preview-switch{margin:10px 0 0;border-style:solid;background:#05070d66}
+.mock-bar .preview-switch>span{flex:0 0 100%}
+.hidden{display:none!important}
+.grp{margin:16px 0 8px;color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.3px;text-transform:uppercase}
+.tabs2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:16px}
+.subtabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:14px}
+.subtabs .tab{min-height:40px;font-size:12px}
+.stats3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{min-width:0;padding:12px 8px;border:1px solid var(--line-cold);background:linear-gradient(135deg,#1b283b,#152032);border-radius:14px}
+.stat .ico{color:#dfc57e;margin-bottom:8px}.stat .lbl2{color:var(--muted);font-size:11px}.stat .v{margin-top:4px;font:700 clamp(19px,5.4vw,25px)/1.15 var(--display);white-space:nowrap;font-variant-numeric:tabular-nums}
+.short{display:flex;align-items:center;gap:12px;min-height:60px;padding:12px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(135deg,#1d2a40,#152032)}
+.short .ri{color:#dfc57e;flex:none}.short .rc{flex:1;min-width:0;font-weight:700;font-size:14px}.short .rc small{display:block;margin-top:2px;color:var(--muted);font-weight:500;font-size:12px}.short .go{color:var(--gold-2)}.short .go svg{width:18px}
+.short .count{flex:none;display:grid;place-items:center;min-width:34px;height:34px;padding:0 8px;border-radius:17px;background:var(--gold-soft);border:1px solid #d8b24c88;color:var(--gold-2);font:700 18px/1 var(--display)}
+.brief{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.brief .row{min-height:60px;padding:8px 10px}.brief .rv{font-size:17px}.brief .rv small{display:none}
+.hero-empty{padding:16px;border:1px dashed var(--line);border-radius:16px;background:#d8b24c0b}.hero-empty h3{margin:0 0 6px;font:700 20px/1.2 var(--display);color:var(--gold-2)}.hero-empty p{margin:0;color:var(--muted);line-height:1.5;font-size:13px}
+.cur-card{padding:14px;border:1px solid #d8b24caa;border-radius:16px;background:var(--gold-soft)}.cur-card .k{color:var(--muted);font-size:12px}.cur-card .v{margin-top:4px;font:700 34px/1.1 var(--display);font-variant-numeric:tabular-nums}.cur-card .v.unknown{color:#8c98ab}.cur-card .m{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.5}
+.approx{margin-top:6px;color:var(--gold-2);font-size:12px;min-height:1.4em}
+.err{margin-top:6px;color:var(--red);font-size:12px;min-height:1.4em}
+.facts-list{display:grid;gap:8px}.facts-list .row{min-height:60px}
+@media(min-width:700px){
+ .nav{font-size:14px}.mock-bar{font-size:14px}.short .rc{font-size:17px}.short .rc small{font-size:14px}.short{min-height:76px;padding:14px 18px}.short .count{min-width:42px;height:42px;font-size:22px;border-radius:21px}
+ .stat{padding:18px}.stat .lbl2{font-size:14px}.stat .v{font-size:32px}.brief{gap:12px}.brief .row{min-height:72px}.brief .rv{font-size:22px}
+ .cur-card .v{font-size:46px}.cur-card .k,.cur-card .m{font-size:14px}.hero-empty h3{font-size:25px}.hero-empty p{font-size:15px}.grp{font-size:14px}.subtabs .tab{min-height:48px;font-size:15px}.approx,.err{font-size:14px}
+ .row .ri svg{width:32px;height:32px}
+}
+@media(min-width:1100px){.dash{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 28px;align-items:start}.dash>.full{grid-column:1/-1}}
+
+.nic{position:relative;display:block}.nbadge{position:absolute;top:-8px;left:calc(100% - 5px);min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:#d8b24c;color:#1c1408;font:800 11px/19px Roboto,system-ui,sans-serif;text-align:center;box-shadow:0 0 0 2px #0c1420}@media(min-width:700px){.nbadge{top:-8px;min-width:22px;height:22px;line-height:22px;font-size:12px}}
+
+.title-wrap h1{font-size:clamp(26px,7.4vw,32px)}@media(min-width:700px){.title-wrap h1{font-size:42px}}
+.row{padding-right:16px}.short{padding-right:16px}.row .go{margin-left:2px}
+@media(min-width:700px){.row{padding-right:22px}.short{padding-right:22px}}
+.row .rn,.mini .ml,.short .rc{overflow-wrap:normal;word-break:normal;hyphens:manual}
+.group+.group{margin-top:26px}.group>.section-title:first-child{margin-top:0}
+.consigne{margin:12px 0 0;color:var(--muted);font-size:13px;line-height:1.5}@media(min-width:700px){.consigne{font-size:15px}}
+.err,.approx{min-height:0}.err:empty,.approx:empty{display:none}
+.field input.bad,.cell.bad{border-color:var(--red);background:#ff7b7b14}
+#form{margin-top:24px}.cur-card+.banner{margin-top:14px}
+.qbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+.meta-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}.meta-row .btn{margin-left:auto}.btn.ghost{background:transparent;border-color:#a9bdd540;color:var(--text)}.btn.ghost svg{width:16px;height:16px;color:var(--gold-2)}.qlabel{font-weight:800;color:var(--gold-2);font-size:14px}@media(min-width:700px){.qlabel{font-size:17px}}
+.row.edit{flex-wrap:wrap;cursor:default;padding-right:12px}
+.row.edit .rc{flex:1 1 90px}
+.cell{flex:none;width:108px;height:44px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);font:700 18px/1 var(--display);text-align:right;font-variant-numeric:tabular-nums;color:var(--text)}
+select.cell{font:600 13px Roboto,system-ui,sans-serif;text-align:left;width:150px}
+.cell:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px #d8b24c1a}
+.cell.changed{border-color:var(--gold);background:var(--gold-soft)}
+.rowerr{flex:0 0 calc(100% - 39px);margin:0 0 0 39px;color:#ffb4b4;font-size:13px;line-height:1.4}
+.saved{flex:none;display:inline-flex;gap:4px;align-items:center;color:var(--green);font-size:13px;font-weight:700;width:108px;justify-content:flex-end}.saved svg{width:16px;height:16px}
+.savebar{position:sticky;bottom:calc(92px + env(safe-area-inset-bottom));z-index:20;margin-top:18px;padding:12px;border:1px solid var(--line);border-radius:16px;background:#0c1420f2;backdrop-filter:blur(10px)}
+.savebar .count{font-weight:800;color:var(--gold-2);font-size:14px}
+.savebar .chips{margin-top:8px}.savebar .actions{margin-top:12px}
+@media(min-width:700px){.savebar{bottom:calc(118px + env(safe-area-inset-bottom));padding:16px}.savebar .count{font-size:17px}.cell{width:150px;font-size:22px;height:52px}select.cell{width:200px;font-size:15px}.saved{width:150px;font-size:15px}.rowerr{font-size:15px;margin-left:46px;flex-basis:calc(100% - 46px)}}
+.states{display:grid;gap:12px}.states article{display:flex;flex-direction:column}.states article .push{margin-top:auto}.states .banner{align-items:center}.states .btn{white-space:nowrap}
+@media(min-width:700px){.states{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.states article{padding:20px!important}.states article p{font-size:16px!important}.states article span.muted{font-size:13px!important}}
+
+.rescard{border:1px solid var(--line-cold);border-radius:14px;background:linear-gradient(135deg,#1b283b,#152032);overflow:hidden}.rescard+.rescard{margin-top:8px}
+.reshead{display:flex;align-items:center;gap:11px;width:100%;min-height:68px;padding:10px 14px 10px 12px;border:0;background:transparent;text-align:left;color:var(--text)}
+.reshead .ri{flex:none;color:#dfc57e}.reshead .ri svg{width:28px;height:28px}.reshead .rc{flex:1;min-width:0}.reshead .rn{font-size:13px;font-weight:700}.reshead .rm{margin-top:2px;color:var(--muted);font-size:11px;line-height:1.4}
+.reshead .rv{flex:none;white-space:nowrap;text-align:right;font:700 19px/1.15 var(--display);font-variant-numeric:tabular-nums}.reshead .rv small{display:block;margin-top:2px;font:600 12px/1.3 Roboto,system-ui,sans-serif;color:var(--muted)}
+.reshead .chv{flex:none;color:var(--gold-2)}.reshead .chv svg{width:18px;height:18px;transition:transform .15s}.rescard.open .chv svg{transform:rotate(90deg)}
+.resbody{padding:0 8px 10px;border-top:1px solid #a9bdd514}.resbody .rows{margin-top:10px}.resbody .row{background:#10192888;min-height:56px}.resbody .grp{margin:12px 4px 0}
+@media(min-width:700px){.reshead{min-height:84px;padding:12px 20px 12px 16px;gap:14px}.reshead .ri svg{width:32px;height:32px}.reshead .rn{font-size:16px}.reshead .rm{font-size:13px}.reshead .rv{font-size:26px}.reshead .rv small{font-size:12px}.resbody{padding:0 12px 14px}.resbody .row{min-height:68px}}
+/* Accueil : ajouts au tableau de bord B01-07 */
+.todo-list{display:grid;gap:8px}.cityq .mini{min-height:62px}
+.cityq .ml{overflow-wrap:normal;word-break:normal}
+.cityq .mv{font-size:20px}
+@media(min-width:700px){.cityq .mv{font-size:26px}}
+@media(min-width:700px){.cityq .mini-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(min-width:1100px){.cityq{grid-column:1/-1}.cityq .mini-stats{grid-template-columns:repeat(6,minmax(0,1fr))}.cityq .mv{font-size:22px}}
+/* ===== Révision visuelle du 2026-10-04 (règles : docs/ux/README.md, « Règles visuelles » ; référence : v7 validée) ===== */
+/* Navigation — téléphone et tablette : barre collée en bas, pleine largeur, opaque, trait fin en haut, zone sûre
+   respectée ; la page réserve exactement sa hauteur. Mêmes valeurs que l'Accueil B04-01. */
+:root{--nav-h:67px}
+html{scroll-padding-bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom))}
+.stage{padding-bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom))}
+.bottom-nav{left:0;right:0;bottom:0;transform:none;width:auto;max-width:none;min-height:0;padding:4px 6px calc(4px + env(safe-area-inset-bottom));border:0;border-top:1px solid #a9bdd52b;border-radius:0;background:#0c1420;box-shadow:none;backdrop-filter:none}
+.savebar{bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom))}
+/* Téléphone : plus de grand cadre, contenu à pleine largeur avec la marge latérale de la page. */
+@media(max-width:699px){
+ .screen{padding:0;border:0;border-radius:0;background:none;box-shadow:none}
+ /* Saisie rapide : la police des chiffres (Noto Serif) est plus large, la case garde sa largeur. */
+ .cell{padding:0 8px}
+}
+@media(min-width:700px){
+ :root{--nav-h:82px}
+ .stage{padding-bottom:calc(var(--nav-h) + 28px + env(safe-area-inset-bottom))}
+ .bottom-nav{padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+ .nav{min-height:64px}
+ .savebar{bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom))}
+}
+/* PC (1100 px et plus) : rail vertical fixe à gauche, mêmes 5 entrées ; contenu à pleine largeur (marges latérales),
+   aux tailles de la tablette, en colonnes régulières ; blocs à hauteur naturelle, rien n'est étiré. */
+@media(min-width:1100px){
+ :root{--rail-w:104px;--gutter:clamp(32px,3.5vw,96px);--col:340px}
+ body{--z:1}
+ .stage{padding:28px var(--gutter) 28px calc(var(--rail-w) * var(--z) + var(--gutter))}
+ html{scroll-padding-bottom:0}
+ .bottom-nav{top:0;bottom:0;left:0;right:auto;width:var(--rail-w);grid-template-columns:1fr;grid-auto-rows:min-content;align-content:start;gap:8px;padding:24px 10px;border-top:0;border-right:1px solid #a9bdd52b}
+ .nav{min-height:76px;padding:8px 4px;gap:7px;border-radius:16px;font-size:14px}
+ .nav svg{width:28px;height:28px}
+ .app{max-width:none}
+ .screen{padding:0;border:0;border-radius:0;background:none;box-shadow:none}
+ .savebar{bottom:16px}
+ /* Onglets : largeur de la tablette, pas étirés sur toute la page. */
+ .tabs2,.subtabs{max-width:652px}
+ /* Listes de valeurs : colonnes régulières (environ 340 px et plus), une valeur par case. */
+ .rows{grid-template-columns:repeat(auto-fill,minmax(var(--col),1fr));gap:12px 24px}
+ .resbody .rows{grid-template-columns:minmax(0,1fr);gap:8px}
+ /* Ma ville, Progression : Réglages et Bâtiments côte à côte, chacun sur deux colonnes. */
+ .two{grid-template-columns:repeat(12,minmax(0,1fr));gap:24px 32px}
+ .two>section:not(:has(#curCard)){grid-column:span 6}
+ /* Ma ville, Inventaire : une colonne par carte (ressource, type d'accélérateur), à hauteur naturelle. */
+ #gRes,#gAcc{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--col),1fr));gap:16px 24px;align-items:start}
+ #gRes>.rescard+.rescard,#gAcc>.rescard+.rescard{margin-top:0}
+ #gRes>:not(.rescard),#gAcc>:not(.rescard){grid-column:1/-1}
+ #gAcc>.grp{margin:8px 0 -6px}#gAcc>.grp:first-child{margin-top:0}
+ /* Écran d'une valeur : trois colonnes égales (valeur actuelle | formulaire | historique). */
+ .two>section:has(#curCard){display:contents}
+ .two>section>#curCard,.two>section>#conflict,.two>section>#toCorrect{grid-column:1/5}
+ .two>section>#curCard{grid-row:1}.two>section>#conflict{grid-row:2;margin-top:0}.two>section>#toCorrect{grid-row:2;margin-top:0!important}
+ .two>section>#form{grid-column:5/9;grid-row:1/4;margin-top:0}
+ .two>section#histSec{grid-column:9/13;grid-row:1/4;margin-top:0}
+ .two:has(#form.hidden)>section#histSec{grid-column:5/9}
+ .two:has(#curCard){grid-template-rows:min-content min-content 1fr}
+ /* États de synchronisation : une colonne par état. */
+ .states{grid-template-columns:repeat(auto-fill,minmax(var(--col),1fr));gap:24px}
+ /* Bouton seul : largeur de son texte, pas de bouton étiré sur toute la page. */
+ #openDel{width:auto!important;padding-inline:28px}
+}
+/* Écran large : même principe ; échelle calculée sur la hauteur disponible (--z, posée par le script), plafonnée à 1,6. */
+@media(min-width:2400px){
+ :root{--gutter:clamp(96px,3vw,140px)}
+ .app{zoom:var(--z)}
+}
+.idx{margin:0;padding-left:20px;line-height:1.6;font-size:14px}.idx li{margin:4px 0}.idxp{padding:14px;margin-bottom:12px}.idxp h3{margin:0 0 6px;font:700 19px/1.2 var(--display);color:var(--gold-2)}.idxp p{margin:0 0 10px;color:var(--muted);line-height:1.5}.slink{display:inline-flex;align-items:center;min-height:40px;padding:6px 12px;margin:4px 6px 4px 0;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--text);font-size:14px;font-weight:700}.slink:hover{border-color:var(--gold);color:var(--gold-2)}@media(min-width:700px){.idx{font-size:16px}.idxp{padding:20px}.idxp h3{font-size:24px}.slink{font-size:15px}}.stage{padding-bottom:40px}@media(min-width:1100px){.stage{padding:28px var(--gutter) 40px}.app{max-width:1160px}}</style>
+</head>
+<body>
+<div class="stage"><main class="app" aria-label="Index des maquettes B04-1">
+<div class="screen"><header class="header"><div class="title-wrap"><h1>Maquettes B04-1</h1><p>État du profil minimal · index des écrans et des états</p></div></header>
+<div class="banner offline" style="margin-bottom:18px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-9.5v.5"/></svg><div><b>Nouvelles versions (révision visuelle du 2026-10-04) — VALIDÉES par Mickaël le 2026-10-04</b>Version précédente validée : commit 67b8dcc de la PR #77 (historique Git). Ces versions appliquent les règles visuelles tirées de la v7 de l’essai de l’Accueil (docs/ux/README.md, « Règles visuelles ») sans changer le contenu, les états, les textes ni les décisions. Noms de bâtiments, compteurs, durées, niveaux et quantités : <em style="font-style:normal;font-weight:700">exemples illustratifs</em>, aucune valeur Rise of Kingdoms. Les écrans ne portent aucune annotation : les états s’ouvrent par les liens ci-dessous (fragment d’adresse stable).</div></div>
+<div class="group"><div class="section-title"><h2>Points NON VÉRIFIÉS</h2></div><ul class="idx"><li>NV-1 — liste des bâtiments : NON VÉRIFIÉE (noms et niveaux d’exemple).</li><li>NV-2 — compteurs d’Inventaire, valeurs de caisses de ressources, types et durées d’accélérateurs (1 min à 7 j), noms d’objets : NON VÉRIFIÉS (exemples illustratifs ; la liste réelle sera sourcée avec les données du jeu).</li><li>NV-3 — bonus de vitesse de construction : composition et affichage en jeu d’un total : NON VÉRIFIÉS.</li><li>Format K / M / B des ressources arrondies : accepté pour la maquette, NON VÉRIFIÉ en jeu.</li><li>Conservation du brouillon d’un formulaire et lecture des dernières valeurs hors connexion : à prouver en B04-1B.</li><li>Rendu sur appareils réels et moteurs autres que Chromium : non vérifié.</li><li>Polices Noto Serif et Roboto : chargées depuis Google Fonts dans les maquettes (l’appli les auto-hébergera) ; rendu sur appareil réel non vérifié.</li></ul></div>
+<div class="group"><div class="section-title"><h2>Choix encore ouverts</h2></div><ul class="idx"><li>Ressources : une ligne par ressource avec son total, détail « en ville / caisses » repliable (validé le 2026-10-04).</li><li>Accélérateurs : un repli par type avec son total en en-tête, généraux à part (validé le 2026-10-04).</li><li>Précision de stockage des quantités (les ressources sont arrondies comme en jeu) : à décider en B04-1A.</li></ul></div>
+<div class="banner pending" style="margin-bottom:18px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><b>Versions du 2026-10-04, validées le 2026-10-04 (PR #95)</b>Titre de page à 30 px sur téléphone et 44 px sur tablette et PC (02 à 05) ; icône Puissance en éclair (01, 05) et Points d’action en sablier (01) ; fiche de 05 alignée sur B01-08, fenêtre de suppression centrée sur téléphone.</div></div>
+<div class="banner pending" style="margin-bottom:18px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><b>Nouvelle version de 02 du 2026-10-05 — validée par Mickaël le 2026-10-05, sans réserve</b>Saisie rapide : chaque type d’accélérateur se déplie et se replie toujours, comme hors saisie rapide (chevron), sans perdre les valeurs saisies. Un type qui contient une valeur modifiée est ouvert par défaut mais peut être replié ; ses valeurs comptent toujours et sont enregistrées. Après un enregistrement avec erreurs, un type qui contient une ligne en erreur se rouvre. Les ressources, ouvertes en saisie rapide, ne changent pas. Nouveaux états : Construction ouvert ; Recherche modifié, replié.</div></div>
+<div class="banner pending" style="margin-bottom:18px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><b>Nouvelle version de 01 du 2026-10-05 — variante A choisie et validée par Mickaël le 2026-10-05</b>Bandeau de mise à jour, visible seulement quand une nouvelle version attend (état « Disponible » de B01-11) : « Nouvelle version disponible », bouton « Voir » qui ouvre la fenêtre de mise à jour de Plus, croix qui le masque jusqu’au prochain lancement. Téléphone et tablette : sous les onglets de profils ; PC : à gauche des onglets. Nouvel état : Mise à jour disponible.</div></div>
+<div class="group"><div class="section-title"><h2>Écrans et états</h2></div>
+<article class="panel idxp"><h3>01 · Accueil — tableau de bord</h3><p>Point 1 du manifeste. Reprise exacte de la v7 validée (vue « Proposé » de l’essai) : sélecteur de profils compact, bloc profil avec 6 chiffres, « Aperçu de ma ville » avec le lien « N à renseigner › », pastille sur « Ma ville ». Version du 2026-10-04 validée par Mickaël le 2026-10-04 : icône Puissance remplacée par l’éclair, Points d’action par le sablier.</p><div><a class="slink" href="ROK_UI_B04_01_ACCUEIL_TABLEAU_DE_BORD.html">Profil renseigné (par défaut)</a><a class="slink" href="ROK_UI_B04_01_ACCUEIL_TABLEAU_DE_BORD.html#tout-renseigne">Tout est renseigné</a><a class="slink" href="ROK_UI_B04_01_ACCUEIL_TABLEAU_DE_BORD.html#nouveau-profil">Nouveau profil</a><a class="slink" href="ROK_UI_B04_01_ACCUEIL_TABLEAU_DE_BORD.html#mise-a-jour">Mise à jour disponible</a></div></article><article class="panel idxp"><h3>02 · Ma ville — Progression et Inventaire</h3><p>Points 2 et 3. Réglages, bâtiments, Ressources / Accélérateurs / Objets, saisie rapide « Tout renseigner ».</p><div><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#progression">Progression (par défaut)</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#tout-renseigne">Tout est renseigné</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#inventaire-ressources">Inventaire · Ressources</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#inventaire-accelerateurs">Inventaire · Accélérateurs</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#inventaire-objets">Inventaire · Objets</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#inventaire-ressources-bois">Inventaire · Ressources, détail Bois ouvert</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#inventaire-ressources-detail">Inventaire · Ressources, tous les détails ouverts</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#inventaire-accelerateurs-detail">Inventaire · Accélérateurs, tous les types ouverts</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#nouveau-profil">Nouveau profil · Progression</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#nouveau-profil-inventaire">Nouveau profil · Inventaire</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#saisie-rapide">Saisie rapide · en cours (Progression)</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#saisie-rapide-ressources">Saisie rapide · en cours (Ressources)</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#saisie-rapide-accelerateurs">Saisie rapide · en cours (Accélérateurs)</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#saisie-rapide-accelerateurs-construction">Saisie rapide · Accélérateurs, Construction ouvert</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#saisie-rapide-accelerateurs-recherche-replie">Saisie rapide · Accélérateurs, Recherche modifié replié</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#saisie-rapide-enregistre">Saisie rapide · après enregistrement</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#saisie-rapide-erreur">Saisie rapide · erreur sur une ligne (Progression)</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#saisie-rapide-erreur-accelerateurs">Saisie rapide · erreur sur une ligne (Accélérateurs)</a><a class="slink" href="ROK_UI_B04_02_MA_VILLE.html#saisie-rapide-erreur-ressources">Saisie rapide · erreur sur une ligne (Ressources)</a></div></article><article class="panel idxp"><h3>03 · Valeur — saisie, correction, historique</h3><p>Points 4 et 5. Même écran pour un bâtiment, une ressource en ville, une caisse de ressource, un accélérateur et un objet.</p><div><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#batiment-correction">Bâtiment · correction</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#batiment-saisie">Bâtiment · première saisie</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#batiment-saisie-invalide">Bâtiment · saisie invalide</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#batiment-correction-refusee">Bâtiment · correction refusée</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#batiment-historique">Bâtiment · historique</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#ressource-correction">Ressource en ville · correction</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#ressource-saisie">Ressource en ville · première saisie</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#ressource-saisie-invalide">Ressource en ville · saisie invalide</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#ressource-correction-refusee">Ressource en ville · correction refusée</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#ressource-historique">Ressource en ville · historique</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#caisse-correction">Caisse de ressource · correction</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#caisse-saisie">Caisse de ressource · première saisie</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#caisse-saisie-invalide">Caisse de ressource · saisie invalide</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#caisse-correction-refusee">Caisse de ressource · correction refusée</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#caisse-historique">Caisse de ressource · historique</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#accelerateur-correction">Accélérateur · correction</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#accelerateur-saisie">Accélérateur · première saisie</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#accelerateur-saisie-invalide">Accélérateur · saisie invalide</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#accelerateur-correction-refusee">Accélérateur · correction refusée</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#accelerateur-historique">Accélérateur · historique</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#objet-correction">Objet · correction</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#objet-saisie">Objet · première saisie</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#objet-saisie-invalide">Objet · saisie invalide</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#objet-correction-refusee">Objet · correction refusée</a><a class="slink" href="ROK_UI_B04_03_VALEUR_SAISIE_CORRECTION_HISTORIQUE.html#objet-historique">Objet · historique</a></div></article><article class="panel idxp"><h3>04 · États de synchronisation</h3><p>Point 6. Synchronisé, En attente, Erreur, Hors connexion (les quatre sur une page pour la validation).</p><div><a class="slink" href="ROK_UI_B04_04_ETATS_SYNCHRONISATION.html">Les quatre états</a></div></article><article class="panel idxp"><h3>05 · Suppression du profil</h3><p>Point 7. Modale de confirmation (B04-D2) : l’historique est supprimé aussi. Nouvelle version du 2026-10-04, validée par Mickaël le 2026-10-04 : fiche alignée sur la fiche profil B01-08 (« Informations du profil » : Puissance, Type, ID joueur RoK ; « Modifier le profil » à côté de « Supprimer le profil ») ; modale inchangée, centrée sur téléphone ; icône Puissance : éclair.</p><div><a class="slink" href="ROK_UI_B04_05_SUPPRESSION_PROFIL.html">Modale ouverte</a></div></article></div>
+<div class="group"><div class="section-title"><h2>Notes de conception</h2></div>
+<article class="panel idxp"><h3>Révision visuelle du 2026-10-04 (validée)</h3><ul class="idx"><li>Règles appliquées partout : polices Noto Serif (titres, chiffres) et Roboto (texte) ; barre de navigation collée en bas, pleine largeur et opaque sur téléphone et tablette, rail vertical à gauche à partir de 1100 px (mêmes 5 entrées, pastille, état actif) ; plus de grand cadre sur téléphone et PC ; tablette inchangée hors polices et barre ; PC à pleine largeur aux tailles de la tablette, en colonnes régulières ; écran large : échelle selon la hauteur, plafonnée à 1,6.</li>
+<li>Organisation PC validée par Mickaël le 2026-10-04 (l’organisation de l’Accueil sur PC reste à revoir quand d’autres modules seront intégrés) — Accueil : celle de la v7 validée (profil puis À surveiller à gauche ; ville, Progression et Prochains événements à droite). Ma ville, Progression : Réglages du profil et Bâtiments côte à côte, chacun sur deux colonnes (quatre colonnes régulières). Ma ville, Ressources : une colonne par ressource. Ma ville, Accélérateurs : une colonne par type ; « Utilisables partout » en dessous, dans la première colonne. Ma ville, Objets : lignes sur les mêmes colonnes. Onglets à la largeur de la tablette.</li>
+<li>Valeur : trois colonnes égales, valeur actuelle | formulaire | historique ; dans l’état « historique », l’historique prend la place du formulaire. États de synchronisation : une colonne par état. Suppression : données du profil sur les mêmes colonnes, bouton « Supprimer le profil » à la largeur de son texte.</li>
+<li>Décisions de Mickaël du 2026-10-04 incluses (reprises de la PR #89) : les trois motifs de correction sur une seule ligne (écrans 02 et 03) ; tous les types d’accélérateurs repliés à l’ouverture de l’Inventaire (écran 02).</li>
+<li>Saisie rapide sur téléphone : marge intérieure des cases de saisie ramenée de 10 à 8 px (la police des chiffres, plus large, faisait dépasser « beaucoup »).</li>
+</ul></article>
+<article class="panel idxp"><h3>Accueil</h3><ul class="idx"><li>Révision visuelle (v7 validée par Mickaël le 2026-10-04) : sélecteur de profils compact à la place des 4 grandes cases, sous-titre « Profil actif et tableau de bord » et « Mis à jour… » retirés, « Mes statistiques » et la case VIP fondues dans le bloc profil (6 chiffres : Puissance, Kills, Morts, Hôtel de ville, Gemmes, Points d’action). Version précédente : l’Accueil reprenait le tableau de bord validé en B01-07 (sélecteur de profils, statistiques, progression, À surveiller, Prochains événements), sans rien retirer. Ajout : « Aperçu de ma ville », avec le lien « N à renseigner › » et, sur la navigation, la pastille de « Ma ville ». <b>Aucune saisie depuis l’Accueil.</b> Seule la barre de navigation change : 5 entrées avec « Ma ville ».</li><li>Rappel « à renseigner » (décision de Mickaël, 2026-10-04, options B + C) : petit lien doré « 13 à renseigner › » à droite du titre « Aperçu de ma ville » (il ouvre Ma ville sur la première catégorie incomplète) et pastille numérotée sur l’entrée « Ma ville » de la navigation, sur tous les écrans B04. Quand tout est renseigné, ni lien ni pastille (état #tout-renseigne). Pour un nouveau profil, le lien et la pastille affichent le total. « Aperçu de ma ville » (titre décidé par Mickaël) suit le profil choisi ; pour Principal, mêmes données d’exemple que Ma ville. Un total partiel est signalé par « incomplet » sous le chiffre.</li><li>Seule modification d’icône : l’icône Puissance (épée identique à l’entrée Combat) est remplacée par un hexagone à chevrons.</li></ul></article><article class="panel idxp"><h3>Ma ville</h3><ul class="idx"><li>Décision de Mickaël (2026-10-04) : « Ma ville » est une entrée principale avec les onglets Progression et Inventaire (Commandants viendra plus tard, non maquetté).</li><li><b>Ressources</b> (décision du 2026-10-04) : pour chaque ressource, « En ville » (quantité arrondie comme en jeu) + « En objets » (nombre de caisses de chaque valeur, saisi par nombre comme les accélérateurs) ; le total (en ville + objets) est <b>calculé par l’appli, jamais saisi</b>, et affiché arrondi. Les objets de ressources ont quitté l’onglet Objets. Présentation proposée : une ligne par ressource avec son total et le détail (en ville / caisses) qui se déplie. Valeurs de caisses : exemples NON VÉRIFIÉS (NV-2).</li><li><b>Accélérateurs</b> (décision du 2026-10-04) : saisie par durée, total par type (jours / heures / minutes) et, à part, total des accélérateurs généraux (utilisables partout) ; les totaux sont calculés, jamais saisis. Types : Construction, Recherche, Entraînement, Soins, Général. Durées d’exemple (1 min à 7 j) : la liste réelle reste NON VÉRIFIÉE (NV-2). Présentation proposée : un repli par type avec son total en en-tête. Plus aucune ligne grise d’aide ou de métadonnée sous les noms (règle de Mickaël du 2026-10-04) : dates, corrections et historique sont dans l’écran 03.</li><li><b>Totaux partiels</b> (décision du 2026-10-04) : une durée ou un compteur « — » n’entre pas dans le total ; le total affiche alors « incomplet » sous la valeur (exemples : Bois, Pierre, Or ; Construction, Recherche), sans « ≥ ». Même mot dans « Aperçu de ma ville » (Accueil), décision de Mickaël du 2026-10-04.</li><li><b>Saisie rapide « Tout renseigner »</b> : les lignes deviennent modifiables, un seul « Enregistrer » valide l’ensemble ; les ressources montrent « En ville » et chaque caisse, avec le total mis à jour en direct. Une première saisie n’a pas de motif. Décisions de Mickaël (2026-10-04) : un seul motif commun pour les corrections de valeurs déjà renseignées, demandé seulement s’il y a au moins une correction ; les lignes valides sont enregistrées même si une autre est invalide. Mode bloqué hors connexion (B04-D5).</li><li>Format K / M / B des ressources : accepté pour la maquette, <b>NON VÉRIFIÉ en jeu</b>. Listes de bâtiments et de compteurs : exemples NON VÉRIFIÉS (NV-1, NV-2). Bonus de vitesse : total affiché en jeu (B04-D4), NV-3. Chaque ligne ouvre l’écran d’une valeur (écran 03).</li></ul></article><article class="panel idxp"><h3>Valeur : saisie, correction, historique</h3><ul class="idx"><li>Écran type : le même écran sert à un bâtiment, une ressource en ville (quantité arrondie), un compteur de caisse de ressource, un accélérateur (nombre par durée) et un objet : correction et historique fonctionnent de la même façon pour une caisse que pour un accélérateur. L’état « Saisie invalide » montre le message d’erreur, affiché seulement en cas de saisie invalide.</li><li>Correction : une nouvelle valeur s’ajoute avec un motif ; l’originale est conservée (historique en ajout seulement). Si la valeur a été modifiée entre-temps (autre appareil), la correction est refusée et visible, rien n’est écrasé (C-054, P3B-14).</li><li>Ressource : saisie arrondie comme en jeu ; suffixes K / M / B acceptés pour la maquette, <b>NON VÉRIFIÉ en jeu</b>. Les quantités exactes au-delà de 2⁵³ ne sont donc plus affichées : la précision de stockage relève de B04-1A.</li><li>Les heures sont affichées en heure de Paris. Même écran pour les corrections depuis Ma ville (hors saisie rapide).</li></ul></article><article class="panel idxp"><h3>États de synchronisation</h3><ul class="idx"><li>B04-1 fonctionne en ligne seulement (B04-D5, option 1). L’état s’affiche en haut de Ma ville et de l’écran d’une valeur, avec un texte : la couleur ne porte jamais seule l’information. Hors connexion, « Tout renseigner » est aussi bloqué.</li><li>NON VÉRIFIÉ : conserver le brouillon d’un formulaire ouvert quand la connexion tombe, et l’affichage des dernières valeurs hors connexion, dépendent de l’implémentation et seront prouvés en B04-1B (pas de PowerSync).</li><li>Cet écran regroupe les quatre états pour la validation ; dans l’application, un seul état est affiché à la fois.</li></ul></article><article class="panel idxp"><h3>Supprimer le profil</h3><ul class="idx"><li>B04-D2 : supprimer un profil supprime aussi tout son historique ; le texte de confirmation le dit clairement.</li><li>Mot « instantané » (anciennement « snapshot ») : copie figée de tes valeurs à un moment donné, validé par Mickaël le 2026-10-04.</li><li>L’état « suppression bloquée » (profil actif alors qu’un autre existe) reste celui validé en B01 (écran 08), inchangé.</li><li>Décomptes (21 relevés dont 4 corrections, 1 instantané) calculés sur les mêmes données d’exemple que Ma ville.</li></ul></article>
+<article class="panel idxp"><h3>Décisions de Mickaël intégrées</h3><ul class="idx"><li>Navigation à 5 entrées : Accueil / Ma ville / Optimiser / Combat / Plus.</li><li>Révision visuelle : v7 de l’essai de l’Accueil validée le 2026-10-04 (règles dans docs/ux/README.md).</li><li>Mots validés : « instantané », « valeur d’origine », « correction n », « relevé ».</li><li>Saisie rapide (2026-10-04) : un motif commun pour les corrections faites dans ce mode, demandé seulement s’il y a au moins une correction ; les lignes valides sont enregistrées même si une autre est invalide.</li><li>Bouton « Tout renseigner » (2026-10-04) : sur la ligne de synchronisation, à droite, style secondaire avec petite icône crayon ; en saisie rapide, la même zone affiche « Saisie rapide » et « Annuler ».</li><li>Icônes d’accélérateurs : sablier seul pour tous les types, le type se lit dans le nom.</li><li>Inventaire (2026-10-04) : pour chaque ressource, stock « En ville » arrondi comme en jeu + caisses (nombre de chaque valeur) ; total calculé par l’appli. Les objets de ressources ont quitté l’onglet Objets. Accélérateurs : saisie par durée, total par type et total des généraux ; types Construction, Recherche, Entraînement, Soins, Général.</li><li>Totaux partiels : le mot « incomplet » sous le chiffre (Ma ville et Aperçu de ma ville), sans « ≥ » ni « au moins » ; seuls les petits mots « incomplet » et « à renseigner » restent sous les valeurs. Titre de l’Accueil : « Aperçu de ma ville ». Règle générale : aucune petite ligne grise d’aide ou de métadonnée sous les titres et les noms, hors historique.</li><li>Rappel « à renseigner » (2026-10-04) : petit lien doré « N à renseigner › » à droite de « Aperçu de ma ville » et pastille numérotée sur l’entrée « Ma ville » de la navigation (tous les écrans B04) ; ni lien ni pastille quand tout est renseigné ; le bloc « À renseigner » est supprimé. Dernière saisie retirée de Ma ville. Sous-titre « Profil Principal » de Ma ville gardé. Petits mots sous les valeurs : seulement « à renseigner » et « incomplet » (2026-10-04), à 12 px minimum ; plus d’unité (« niveau », « bâtisseurs », « en stock », « caisses »).</li><li>B04-D2 (suppression avec historique), B04-D4 (bonus de vitesse = total affiché en jeu), B04-D5 option 1 (en ligne seulement).</li></ul></article></div></div>
+</main></div>
+</body>
+</html>
