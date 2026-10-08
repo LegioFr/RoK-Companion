@@ -1,6 +1,8 @@
 /* Tests de la maquette, joués dans la bulle d'outils (onglet Tests, revue guidée).
    Un groupe = { g: titre, p: [état, écran] préparé avant son 1er test, l: tests }.
-   Un test = [identifiant stable, ce qu'il faut faire, ce qu'on doit voir, préparation propre (facultative)].
+   Un test = [identifiant stable, ce qu'il faut faire, ce qu'on doit voir, préparation propre (facultative, sinon null),
+   numéro de la version qui l'a modifié, pourquoi]. Règle : chaque modification de la maquette met à jour ces deux derniers champs
+   des tests touchés ; la bulle les propose alors dans « À revoir » à Mickaël.
    États : 'out' déconnecté, 'attente' compte créé mais pas confirmé (mot de passe rok12345), 'demo' compte d'essai (':f1' choisit le profil actif), 'vide' nouveau compte sans profil.
    Les identifiants ne changent jamais : les résultats y sont rattachés. */
 window.RC_TESTS=[
@@ -25,19 +27,19 @@ window.RC_TESTS=[
   ['i5','Touche les deux yeux.','Chacun affiche ou masque son propre champ.'],
   ['i6','Touche « Se connecter » en bas.','Retour à l’écran de connexion.'],
   ['i7','Crée un compte avec une adresse inventée (ex. test1@exemple.fr) et un mot de passe de 8 caractères.','Écran « Confirme ton e-mail » avec ton adresse affichée.',['out','#inscription']],
-  ['i8b','Crée un compte avec gouverneur@exemple.fr (adresse qui a déjà un compte).','Sous E-mail : « Un compte existe déjà avec cette adresse… ». Tu restes sur « Créer un compte ».',['out','#inscription']]
+  ['i8b','Crée un compte avec gouverneur@exemple.fr (adresse qui a déjà un compte).','Sous E-mail : « Un compte existe déjà avec cette adresse… ». Tu restes sur « Créer un compte ».',['out','#inscription'],8,'Adresse déjà utilisée : message d’erreur au lieu de la confirmation']
  ]},
  {g:'Confirmer l’e-mail',p:['attente','#confirmation'],l:[
-  ['f1','Touche « Renvoyer l’e-mail ».','Message « E-mail renvoyé. » sous le bouton.'],
-  ['f2','Regarde l’adresse affichée.','C’est celle du compte en attente de confirmation (attente…@exemple.fr), en entier.'],
-  ['f3b','Retiens l’adresse affichée, touche « Retour à la connexion », puis connecte-toi avec cette adresse et le mot de passe rok12345.','Tu reviens sur « Confirme ton e-mail » avec « Confirme d’abord ton e-mail : touche le lien reçu. »'],
-  ['f4','Ouvre la bulle › Écran › « Simuler le lien de l’e-mail ».','Tu arrives connecté sur l’Accueil sans profil du nouveau compte.',['attente','#confirmation']]
+  ['f1','Touche « Renvoyer l’e-mail ».','Message « E-mail renvoyé. » sous le bouton.',null,8,'Les tests de la confirmation préparent eux-mêmes un compte en attente'],
+  ['f2','Regarde l’adresse affichée.','C’est celle du compte en attente de confirmation (attente…@exemple.fr), en entier.',null,8,'Les tests de la confirmation préparent eux-mêmes un compte en attente'],
+  ['f3b','Retiens l’adresse affichée, touche « Retour à la connexion », puis connecte-toi avec cette adresse et le mot de passe rok12345.','Tu reviens sur « Confirme ton e-mail » avec « Confirme d’abord ton e-mail : touche le lien reçu. »',null,8,'Les tests de la confirmation préparent eux-mêmes un compte en attente'],
+  ['f4','Ouvre la bulle › Écran › « Simuler le lien de l’e-mail ».','Tu arrives connecté sur l’Accueil sans profil du nouveau compte.',['attente','#confirmation'],8,'Les tests de la confirmation préparent eux-mêmes un compte en attente']
  ]},
  {g:'Mot de passe oublié',p:['out','#mot-de-passe-oublie'],l:[
   ['o1','Touche « Envoyer le lien » sans adresse.','Le navigateur demande l’adresse.'],
-  ['o2b','Écris gouverneur@exemple.fr, puis « Envoyer le lien ».','« E-mail envoyé à gouverneur@exemple.fr : touche le lien qu’il contient… »'],
-  ['o3b','Recommence avec une adresse qui n’a pas de compte (ex. personne@exemple.fr).','Encadré rouge « Aucun compte avec cette adresse. Vérifie-la, ou crée un compte. »'],
-  ['o4b','Juste après, ouvre la bulle › Écran.','Pas de bouton « Simuler le lien de l’e-mail » : aucun e-mail n’est parti.'],
+  ['o2b','Écris gouverneur@exemple.fr, puis « Envoyer le lien ».','« E-mail envoyé à gouverneur@exemple.fr : touche le lien qu’il contient… »',null,9,'« Mot de passe oublié » dit si l’adresse n’a pas de compte'],
+  ['o3b','Recommence avec une adresse qui n’a pas de compte (ex. personne@exemple.fr).','Encadré rouge « Aucun compte avec cette adresse. Vérifie-la, ou crée un compte. »',null,9,'« Mot de passe oublié » dit si l’adresse n’a pas de compte'],
+  ['o4b','Juste après, ouvre la bulle › Écran.','Pas de bouton « Simuler le lien de l’e-mail » : aucun e-mail n’est parti.',null,9,'« Mot de passe oublié » dit si l’adresse n’a pas de compte'],
   ['o5','Renvoie le lien avec gouverneur@exemple.fr, puis bulle › Écran › « Simuler le lien de l’e-mail ».','L’écran « Nouveau mot de passe » s’ouvre.'],
   ['o6','Touche « Retour à la connexion ».','Écran de connexion.',['out','#mot-de-passe-oublie']],
   ['o7','Sur téléphone, regarde le titre « Mot de passe oublié ? ».','Il tient sur une seule ligne.',['out','#mot-de-passe-oublie']]
