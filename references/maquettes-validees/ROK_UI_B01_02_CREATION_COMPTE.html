@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<meta name="theme-color" content="#05070d">
+<title>RoK Companion — Créer un compte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto:wght@400..800&display=swap" />
+<style>
+:root{color-scheme:dark;font-family:Roboto,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f0ebd9;background:#080a0d;font-synthesis:none}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:16px 8px;background:radial-gradient(ellipse at 50% 0%,#1a2020 0%,#101719 39%,#080a0d 78%)}
+button,input{font:inherit}button{cursor:pointer}button,a,input{-webkit-tap-highlight-color:transparent}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #ead37b;outline-offset:3px}
+.shell{width:100%;max-width:396px;border:1px solid #444239;border-radius:27px;overflow:hidden;background:#101520;box-shadow:0 22px 38px #0008,inset 0 0 0 1px #ffffff02}
+.brand{height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border-bottom:1px solid #454238;background:repeating-linear-gradient(135deg,transparent 0 25px,#cfb7590a 26px 27px,transparent 28px 50px),radial-gradient(ellipse at 50% 23%,#b49c492c,transparent 58%),linear-gradient(145deg,#1c2235,#0b0e1b)}
+.emblem{width:80px;height:80px;border:2px solid #d8b957;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 33% 25%,#f3dc83 0%,#c49c3e 48%,#90611d 100%);box-shadow:0 0 0 5px #bc9d3912,inset 0 0 10px #f8df7222;color:#211705;font:bold 38px/1 "Noto Serif",Georgia,'Times New Roman',serif}
+.brand h1{margin:0;color:#ecd77e;font:bold 28px/1.35 "Noto Serif",Georgia,'Times New Roman',serif;letter-spacing:.25px;text-shadow:0 1px 2px #0008}
+.panel{margin:9px 15px 10px;padding:9px 16px 12px;border:1px solid #41414a;border-radius:18px;background:#181d2d;box-shadow:0 4px 12px #0005,inset 0 0 0 1px #ffffff02}
+h2{font:bold 30px/1.2 "Noto Serif",Georgia,'Times New Roman',serif;margin:0 0 4px;letter-spacing:-.3px}
+.intro{font-size:13px;line-height:1.4;color:#ada993;margin:0 0 12px;white-space:nowrap;letter-spacing:-.23px}
+.field+.field{margin-top:10px}.label-row{display:flex;align-items:center;justify-content:space-between;gap:4px;margin-bottom:7px;height:14px}
+label{font-size:11px;line-height:14px;font-weight:700;color:#e8d58b}
+.input-wrap{position:relative}input{display:block;width:100%;height:50px;padding:0 12px;border:1px solid #44444a;border-radius:12px;background:#1e2535;color:#f1eddd;box-shadow:inset 0 1px 0 #ffffff03;font-size:16px;min-width:0}input::placeholder{color:#95917f;opacity:1}.password-input{padding-right:48px}
+.eye{position:absolute;right:2px;top:3px;width:44px;height:44px;display:grid;place-items:center;border:0;background:transparent;color:#aaa58d;border-radius:10px}.eye svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.eye .slash{display:none}.eye[aria-pressed="true"] .slash{display:block}
+.primary,.secondary{width:100%;display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:16px;font-weight:750;text-decoration:none}.primary{height:50px;margin-top:11px;border:1px solid #e4bd5844;color:#171306;background:linear-gradient(100deg,#aa7727 0%,#d4ac46 49%,#f0db87 100%);box-shadow:0 10px 24px #cfaa382d;text-shadow:0 1px 0 #fff1}.primary:active{filter:brightness(.94)}
+.signup{border-top:1px solid #c8b46c29;margin-top:10px;padding-top:9px}.signup p{text-align:center;color:#aaa48f;font-size:12px;line-height:17px;margin:0 0 9px}.secondary{height:44px;background:#1d2433;border:1px solid #44444b;color:#edda8d}
+.security{min-height:38px;width:max-content;max-width:100%;margin:8px auto 0;padding:8px 12px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:24px;background:#213a3d66;border:1px solid #3b8d782f;color:#b4d1c8;font-size:10.5px;line-height:16px;white-space:nowrap}.security svg{width:18px;height:18px;flex:none;stroke:#40c69c;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.feedback{position:fixed;left:20px;right:20px;bottom:16px;margin:auto;max-width:370px;padding:12px 16px;border:1px solid #8c7943;border-radius:12px;background:#1d2433;color:#f0df9f;font-size:13px;text-align:center;box-shadow:0 6px 24px #0008}.feedback[hidden]{display:none}
+@media(max-width:389px){.panel{margin-inline:12px;padding-inline:14px}.intro{font-size:12px}.security{font-size:10px;padding-inline:9px}}
+
+/* Extensions tablette / PC uniquement : les règles mobiles restent intactes.
+   Un même gabarit est conservé en 1920 et en 3440 pixels de large. */
+@media (min-width:600px) {
+  :root { --login-unit:1.3px; }
+  body { padding:24px 20px; }
+  .shell { max-width:calc(396 * var(--login-unit)); border-radius:calc(27 * var(--login-unit)); }
+  .brand { height:calc(140 * var(--login-unit)); gap:calc(6 * var(--login-unit)); }
+  .emblem { width:calc(80 * var(--login-unit)); height:calc(80 * var(--login-unit)); font-size:calc(38 * var(--login-unit)); }
+  .brand h1 { font-size:calc(28 * var(--login-unit)); letter-spacing:calc(.25 * var(--login-unit)); }
+  .panel { margin:calc(9 * var(--login-unit)) calc(15 * var(--login-unit)) calc(10 * var(--login-unit)); padding:calc(9 * var(--login-unit)) calc(16 * var(--login-unit)) calc(12 * var(--login-unit)); border-radius:calc(18 * var(--login-unit)); }
+  h2 { font-size:calc(30 * var(--login-unit)); margin-bottom:calc(4 * var(--login-unit)); letter-spacing:calc(-.3 * var(--login-unit)); }
+  .intro { font-size:calc(13 * var(--login-unit)); margin-bottom:calc(12 * var(--login-unit)); letter-spacing:calc(-.23 * var(--login-unit)); }
+  .field + .field { margin-top:calc(10 * var(--login-unit)); }
+  .label-row { gap:calc(4 * var(--login-unit)); margin-bottom:calc(7 * var(--login-unit)); height:calc(14 * var(--login-unit)); }
+  label { font-size:calc(11 * var(--login-unit)); line-height:calc(14 * var(--login-unit)); }
+  input { height:calc(50 * var(--login-unit)); padding-inline:calc(12 * var(--login-unit)); border-radius:calc(12 * var(--login-unit)); font-size:calc(16 * var(--login-unit)); }
+  .password-input { padding-right:calc(48 * var(--login-unit)); }
+  .eye { right:calc(2 * var(--login-unit)); top:calc(3 * var(--login-unit)); width:calc(44 * var(--login-unit)); height:calc(44 * var(--login-unit)); border-radius:calc(10 * var(--login-unit)); }
+  .eye svg { width:calc(20 * var(--login-unit)); height:calc(20 * var(--login-unit)); }
+  .primary,.secondary { border-radius:calc(12 * var(--login-unit)); font-size:calc(16 * var(--login-unit)); }
+  .primary { height:calc(50 * var(--login-unit)); margin-top:calc(11 * var(--login-unit)); }
+  .signup { margin-top:calc(10 * var(--login-unit)); padding-top:calc(9 * var(--login-unit)); }
+  .signup p { font-size:calc(12 * var(--login-unit)); line-height:calc(17 * var(--login-unit)); margin-bottom:calc(9 * var(--login-unit)); }
+  .secondary { height:calc(44 * var(--login-unit)); }
+  .security { min-height:calc(38 * var(--login-unit)); margin-top:calc(8 * var(--login-unit)); padding:calc(8 * var(--login-unit)) calc(12 * var(--login-unit)); gap:calc(8 * var(--login-unit)); border-radius:calc(24 * var(--login-unit)); font-size:calc(10.5 * var(--login-unit)); line-height:calc(16 * var(--login-unit)); }
+  .security svg { width:calc(18 * var(--login-unit)); height:calc(18 * var(--login-unit)); }
+}
+/* Sur une fenêtre moins haute, préserver la visibilité de tous les contrôles. */
+@media (min-width:600px) and (max-height:900px) {
+  :root { --login-unit:1.15px; }
+}
+
+/* Inscription : espace pour trois champs, sans contraindre la hauteur du formulaire. */
+body{padding:16px max(8px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));place-items:center}
+.shell{min-width:0}
+.intro{white-space:normal;letter-spacing:0;color:#b1bbca;max-width:38em}
+.label-row{height:auto;min-height:14px}
+label{font-size:12px;line-height:16px}
+input{scroll-margin-block:24px}
+.password-input{padding-right:48px}
+.security{width:100%;white-space:normal;text-align:center;font-size:10.5px;padding-inline:8px}
+.feedback{position:static;max-width:none;margin:12px 0 0;padding:10px 12px;font-size:13px;line-height:1.45;text-align:left;box-shadow:none;overflow-wrap:anywhere}
+.input-error{color:#ffb8c2;font-size:12px;line-height:1.4;margin:6px 0 0}
+input:focus,input:focus-visible{outline:none;outline-offset:0;border-color:#d8b24c;box-shadow:0 0 0 2px #d8b24c1a}
+input[aria-invalid="true"]{border-color:#d98190}
+[hidden]{display:none!important}
+@media(min-width:600px){
+ body{padding:24px max(20px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left))}
+ label{font-size:calc(12 * var(--login-unit));line-height:calc(16 * var(--login-unit))}
+ .password-input{padding-right:calc(48 * var(--login-unit))}
+ .security{font-size:calc(10.5 * var(--login-unit));padding-inline:calc(8 * var(--login-unit))}
+ .feedback{font-size:15px}
+ .input-error{font-size:14px}
+}
+/* Le clavier laisse le formulaire défiler naturellement, sans contrôle fixé par-dessus. */
+@media(max-height:700px){body{align-items:start}}
+/* PC à hauteur limitée : compacter le décor et les espaces, garder les contrôles lisibles. */
+@media(min-width:1100px) and (max-height:1050px){
+ body{padding-top:12px;padding-bottom:max(12px,env(safe-area-inset-bottom))}
+ .brand{height:120px;gap:4px}
+ .emblem{width:60px;height:60px;font-size:30px}
+ .panel{margin-top:8px;margin-bottom:8px;padding-top:8px;padding-bottom:10px}
+ .intro{margin-bottom:10px}
+ .field+.field{margin-top:8px}
+ .label-row{margin-bottom:6px}
+ .primary{margin-top:10px}
+ .signup{margin-top:8px;padding-top:8px}
+ .signup p{margin-bottom:7px}
+ .security{margin-top:7px}
+}
+/* ===== Révision visuelle du 2026-10-04 (docs/ux/README.md, « Règles visuelles ») =====
+   Polices : Noto Serif (titres) et Roboto (texte), chargées depuis Google Fonts (règle 2).
+   Contrôle qualité (DEVELOPMENT.md) : aucun texte sous 11 px ; titre à 8 px au moins du bloc au-dessus. */
+.security{font-size:11px}
+.brand{gap:8px}
+@media(min-width:600px){
+ .security{font-size:max(11px,calc(10.5 * var(--login-unit)))}
+ .brand{gap:max(8px,calc(6 * var(--login-unit)))}
+}
+/* ===== Revue de Mickaël du 2026-10-04 (révision B01) ===== */
+/* Logo C « Sceau » à la place de l'emblème « R », même taille. */
+.emblem.logo{border:0;background:none;box-shadow:none;color:inherit}
+.emblem.logo .logo-c{display:block;width:100%;height:100%}
+/* Titre suivi directement du formulaire (phrase d'introduction retirée). */
+.panel>h2{margin-bottom:12px}
+/* Mention de sécurité plus compacte (texte de 11 px au moins). */
+.security{min-height:0;padding:5px 12px;gap:6px;line-height:16px}
+.security svg{width:14px;height:14px}
+@media(min-width:600px){
+ .panel>h2{margin-bottom:calc(12 * var(--login-unit))}
+ .security{min-height:0;padding:calc(5 * var(--login-unit)) calc(12 * var(--login-unit));gap:calc(6 * var(--login-unit));line-height:calc(16 * var(--login-unit))}
+ .security svg{width:calc(14 * var(--login-unit));height:calc(14 * var(--login-unit))}
+}
+/* 2e revue (2026-10-04) : la bulle de sécurité épouse son texte (largeur au contenu, centrée). */
+.security{width:max-content;max-width:100%;margin-left:auto;margin-right:auto}
+/* ===== Complément à la 3e revue de Mickaël (2026-10-04) : palette des maquettes B04, mise en page inchangée. ===== */
+:root{--canvas:#05070d;--surface:#101928;--surface-2:#172234;--text:#f3ead6;--muted:#b1bbca;--gold:#d8b24c;--gold-2:#f3d982;--gold-soft:rgba(216,178,76,.12);--line:rgba(216,178,76,.22);--line-cold:rgba(154,178,211,.17);--green:#3ecf8e;color:var(--text);background:var(--canvas)}
+body{background:radial-gradient(900px 420px at 50% -8%,rgba(216,178,76,.10),transparent 64%),linear-gradient(180deg,#08111d 0%,#05070d 100%);background-attachment:fixed;color:var(--text)}
+.shell{border-color:var(--line-cold);background:linear-gradient(150deg,#111b2b,#0d1522);box-shadow:0 8px 24px #0002}
+.brand{border-bottom-color:var(--line-cold);background:repeating-linear-gradient(135deg,transparent 0 25px,#cfb7590a 26px 27px,transparent 28px 50px),radial-gradient(ellipse at 50% 23%,#d8b24c26,transparent 58%),linear-gradient(130deg,#1b2638,#0e1624)}
+.brand h1{color:var(--gold-2)}
+.panel{border-color:var(--line-cold);background:linear-gradient(135deg,#1b283b,#152032);box-shadow:none}
+h2{color:var(--text)}
+.intro,.signup p{color:var(--muted)}
+label{color:var(--gold-2)}
+.forgot{color:var(--muted)}
+input{border-color:var(--line);background:var(--surface-2);color:var(--text);box-shadow:none}
+input::placeholder{color:#98a5b8}
+input:focus,input:focus-visible{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px #d8b24c1a}
+.eye{color:#dfc57e}
+.primary{border:0;color:#1c1408;background:linear-gradient(110deg,#c8a44f,#dcc074);box-shadow:none;text-shadow:none;font-weight:800}
+.secondary{border-color:var(--line);background:var(--surface-2);color:var(--text);font-weight:800}
+.signup{border-top-color:var(--line-cold)}
+.security{border-color:#3ecf8e47;background:#3ecf8e14;color:#c8f3df}.security svg{stroke:var(--green)}
+.feedback{border-color:var(--line);background:#d8b24c0b;color:var(--gold-2)}
+.recipient{border-color:var(--line);background:var(--surface-2);color:var(--text)}.recipient svg{stroke:var(--gold-2)}
+/* PC (1100 px et plus) : tailles des autres écrans sur PC — titre comme un titre de section B04 (26 px),
+   bouton principal, bouton secondaire et champs de 52 px avec un texte de 18 px (comme B04-03). La carte reste centrée. */
+@media(min-width:1100px){
+ :root{--login-unit:1.15px}
+ h2,#reset-title{font-size:26px}
+ input{height:52px;font-size:18px}
+ .primary{height:52px;min-height:52px;font-size:18px}
+ .secondary{height:52px;min-height:52px;font-size:18px}
+}
+/* Écran large (2400 px et plus) : échelle « Auto » selon la hauteur disponible, plafonnée à 1,6 (docs/ux/README.md). */
+@media(min-width:2400px){.shell{zoom:var(--z,1)}}
+</style>
+</head>
+<body>
+<main class="shell" aria-label="Inscription RoK Companion">
+<header class="brand"><div class="emblem logo" aria-hidden="true"><svg class="logo-c" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="lgG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6df8f"/><stop offset=".55" stop-color="#d8b24c"/><stop offset="1" stop-color="#a77a26"/></linearGradient><linearGradient id="lgD" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1c2638"/><stop offset="1" stop-color="#0a0e16"/></linearGradient></defs><circle cx="50" cy="50" r="44" fill="url(#lgD)" stroke="url(#lgG)" stroke-width="4"/><circle cx="50" cy="50" r="36" fill="none" stroke="#d8b24c" stroke-width="1.5" stroke-dasharray="1.5 3.2"/><circle cx="50" cy="50" r="31" fill="none" stroke="#d8b24c" stroke-opacity=".5" stroke-width="1"/><text x="50" y="61" text-anchor="middle" font-family="Noto Serif,Georgia,serif" font-weight="700" font-size="30" fill="url(#lgG)" letter-spacing="-1">RC</text></svg></div><h1>RoK Companion</h1></header>
+<section class="panel" aria-labelledby="signup-title">
+<h2 id="signup-title">Créer un compte</h2>
+<form id="signup-form">
+<div class="field">
+ <div class="label-row"><label for="email">E-mail</label></div>
+ <input id="email" name="email" type="email" placeholder="nom@exemple.fr" autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" required>
+</div>
+<div class="field">
+ <div class="label-row"><label for="password">Mot de passe</label></div>
+ <div class="input-wrap">
+  <input class="password-input" id="password" name="password" type="password" placeholder="••••••••••••" autocomplete="new-password" required>
+  <button class="eye" type="button" aria-label="Afficher le mot de passe" aria-pressed="false" aria-controls="password" data-toggle="password"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.6"/><path class="slash" d="m4 4 16 16"/></svg></button>
+ </div>
+</div>
+<div class="field">
+ <div class="label-row"><label for="confirmation">Confirmer le mot de passe</label></div>
+ <div class="input-wrap">
+  <input class="password-input" id="confirmation" name="confirmation" type="password" placeholder="••••••••••••" autocomplete="new-password" aria-describedby="confirmation-error" required>
+  <button class="eye" type="button" aria-label="Afficher la confirmation du mot de passe" aria-pressed="false" aria-controls="confirmation" data-toggle="confirmation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.6"/><path class="slash" d="m4 4 16 16"/></svg></button>
+ </div>
+ <p class="input-error" id="confirmation-error" hidden>Les mots de passe ne correspondent pas.</p>
+</div>
+<button class="primary" type="submit">Créer mon compte</button>
+</form>
+<p class="feedback" id="feedback" role="status" aria-live="polite" aria-atomic="true" hidden></p>
+<div class="signup"><p>Déjà un compte ?</p><a class="secondary" id="login-link" href="ROK_UI_B01_01_CONNEXION.html">Se connecter</a></div>
+<div class="security"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 7 3v6c0 4.2-3.1 7.2-7 9-3.9-1.8-7-4.8-7-9V6l7-3Z"/><path d="m9 12 2 2 4-5"/></svg><span>Aucun accès à ton compte Rise of Kingdoms.</span></div>
+</section>
+</main>
+<script>
+'use strict';
+const form=document.getElementById('signup-form');
+const password=document.getElementById('password');
+const confirmation=document.getElementById('confirmation');
+const error=document.getElementById('confirmation-error');
+const feedback=document.getElementById('feedback');
+function notify(message){feedback.textContent=message;feedback.hidden=false;}
+document.querySelectorAll('[data-toggle]').forEach(button=>{
+ button.addEventListener('click',()=>{
+  const field=document.getElementById(button.dataset.toggle);
+  const show=field.type==='password';
+  field.type=show?'text':'password';
+  button.setAttribute('aria-pressed',String(show));
+  const name=field===password?'le mot de passe':'la confirmation du mot de passe';
+  button.setAttribute('aria-label',(show?'Masquer ':'Afficher ')+name);
+ });
+});
+function clearMismatch(){
+ confirmation.setCustomValidity('');
+ confirmation.removeAttribute('aria-invalid');
+ error.hidden=true;
+ feedback.hidden=true;
+}
+password.addEventListener('input',clearMismatch);
+confirmation.addEventListener('input',clearMismatch);
+document.getElementById('email').addEventListener('input',()=>{feedback.hidden=true;});
+form.addEventListener('submit',event=>{
+ event.preventDefault();
+ clearMismatch();
+ if(password.value!==confirmation.value){
+  confirmation.setCustomValidity(error.textContent);
+  confirmation.setAttribute('aria-invalid','true');
+  error.hidden=false;
+  confirmation.focus();
+  return;
+ }
+ notify('Démonstration : aucun compte créé.');
+});
+</script>
+<script>/* Écran large (2400 px et plus) : échelle selon la hauteur disponible, plafonnée à 1,6 (docs/ux/README.md). */
+(()=>{const ZMAX=1.6;function ajusterEchelle(){const b=document.body,app=document.querySelector('.shell');if(innerWidth<2400){b.style.removeProperty('--z');return}let z=1;b.style.setProperty('--z',1);const dispo=innerHeight-60;for(let k=0;k<6;k++){const h=app.getBoundingClientRect().height;z=Math.max(1,Math.min(ZMAX,z*dispo/h));b.style.setProperty('--z',z.toFixed(3))}while(z>1&&app.getBoundingClientRect().height>dispo){z-=0.01;b.style.setProperty('--z',z.toFixed(3))}}
+addEventListener('resize',ajusterEchelle);addEventListener('hashchange',()=>requestAnimationFrame(ajusterEchelle));document.addEventListener('click',()=>requestAnimationFrame(ajusterEchelle));document.fonts&&document.fonts.ready.then(ajusterEchelle);ajusterEchelle()})();</script>
+</body>
+</html>

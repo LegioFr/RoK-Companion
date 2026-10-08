@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content"><title>RoK Companion — Mise à jour</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto:wght@400..800&display=swap" />
+<style>
+:root{color-scheme:dark;--canvas:#05070d;--surface:#101928;--surface-2:#172234;--text:#f3ead6;--muted:#b1bbca;--gold:#d8b24c;--gold-2:#f3d982;--gold-soft:rgba(216,178,76,.12);--line:rgba(216,178,76,.22);--line-cold:rgba(154,178,211,.17);--green:#3ecf8e;--display:"Noto Serif",Georgia,"Times New Roman",serif}
+*{box-sizing:border-box}
+html{min-height:100%;scroll-padding-bottom:110px}
+body{margin:0;min-width:320px;color:var(--text);background:radial-gradient(900px 420px at 50% -8%,rgba(216,178,76,.10),transparent 64%),linear-gradient(180deg,#08111d 0%,#05070d 100%);background-attachment:fixed;font-family:Roboto,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.4}
+button,input{font:inherit}a{-webkit-tap-highlight-color:transparent}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:3px}svg{display:block;flex:none;width:24px;height:24px}button{touch-action:manipulation}
+.stage{padding:16px 16px calc(104px + env(safe-area-inset-bottom))}
+.app{width:100%;max-width:620px;margin:0 auto}
+.screen{padding:16px 14px 18px;border:1px solid var(--line-cold);border-radius:22px;background:linear-gradient(150deg,#111b2b,#0d1522);box-shadow:0 8px 24px #0002}
+.header{margin-bottom:18px}.title-wrap h1{margin:0;color:var(--gold-2);font:700 36px/1.12 var(--display)}.title-wrap p{margin:7px 0 0;color:var(--muted);font-size:12px}
+
+.settings-grid{display:grid;gap:20px;min-width:0}
+.settings-group{min-width:0}.settings-group h2{margin:0 0 10px;font:700 21px/1.2 var(--display)}
+.settings-card{overflow:hidden;border:1px solid var(--line-cold);border-radius:16px;background:linear-gradient(135deg,#1b283b,#152032);box-shadow:0 5px 16px #0001}
+.account-summary,.about-summary{display:flex;align-items:center;gap:12px;padding:15px 13px;min-width:0}
+.account-summary{background:linear-gradient(110deg,#d8b24c0a,transparent)}
+.row-icon{flex:none;width:36px;height:36px;display:grid;place-items:center;color:#dfc57e;border-radius:11px;background:#d8b24c0a}.row-icon svg{width:22px;height:22px}
+.row-copy{display:block;flex:1;min-width:0;text-align:left}.row-title{display:block;font-size:14px;font-weight:650;line-height:1.4;overflow-wrap:anywhere}.row-sub{display:block;color:var(--muted);font-size:12px;line-height:1.5;margin-top:4px}.account-email{font-size:15px;font-weight:600;overflow-wrap:anywhere}.account-label{color:var(--muted);font-size:11px;margin-bottom:3px}
+.setting-row{display:flex;align-items:center;gap:12px;min-height:65px;width:100%;padding:13px;background:transparent;border:0;color:var(--text);text-align:left}
+.account-summary+.setting-row,.setting-row+.setting-row{border-top:1px solid var(--line-cold)}
+.setting-row:hover{background:#d8b24c09}.setting-row:focus-visible{outline-offset:-3px;border-radius:10px}.row-chevron{color:var(--muted);flex:none}.row-chevron svg{width:17px;height:17px}
+#logoutOpen .row-icon{color:#d9a5a2;background:#c97c7609}
+.security{display:flex;align-items:center;justify-content:center;gap:8px;margin:17px 0 0;color:#a9c2bd;font-size:10.5px;line-height:1.5;text-align:center}.security svg{color:var(--green);width:17px;height:17px}
+.feedback{margin:14px 0 0;padding:11px 13px;background:#d8b24c0b;border:1px solid var(--line);border-radius:12px;color:var(--gold-2);font-size:12px;line-height:1.5;overflow-wrap:anywhere}.feedback:empty{display:none}
+.overlay{position:fixed;top:var(--modal-top,0px);left:var(--modal-left,0px);width:var(--modal-width,100%);height:var(--modal-height,100dvh);display:none;align-items:flex-end;justify-content:center;padding:12px 12px max(12px,env(safe-area-inset-bottom));background:#03070dc9;backdrop-filter:blur(6px);z-index:70}.overlay.open{display:flex}
+.sheet{display:flex;flex-direction:column;width:min(100%,430px);min-height:0;max-height:100%;overflow:hidden;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:20px 18px 18px;box-shadow:0 26px 70px #0009}
+.sheet h2{flex:none;margin:0 0 15px;color:var(--gold-2);font:700 25px/1.15 var(--display)}.sheet h2:focus{outline:none}
+.sheet-body{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scroll-padding-block:12px;padding:3px;margin:-3px;-webkit-overflow-scrolling:touch}
+.sheet-intro{margin:0;color:var(--muted);font-size:13px;line-height:1.5}.field{margin-top:18px}.field label{display:block;margin-bottom:7px;color:var(--muted);font-size:12px;font-weight:700}
+.password-wrap{position:relative}.field input{display:block;width:100%;min-width:0;height:48px;padding:0 52px 0 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--text);font-size:16px}.field input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px #d8b24c1a}.field input[aria-invalid="true"]{border-color:#e7a49e}
+.eye{position:absolute;right:2px;top:2px;display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;border-radius:10px;background:transparent;color:#dfc57e}.eye svg{width:22px;height:22px}.eye .slash{display:none}.eye[aria-pressed="true"] .slash{display:block}
+.error{margin:10px 0 0;color:#f0b7b0;font-size:13px;line-height:1.5}.error:empty{display:none}
+.sheet-actions{flex:none;display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-top:20px;background:var(--surface)}.btn{min-width:0;min-height:46px;padding:10px 8px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--text);font-weight:700;font-size:15px}.btn.primary{border:0;color:#1c1408;background:linear-gradient(110deg,#c8a44f,#dcc074)}body.modal-open{overflow:hidden}
+@media(min-width:700px){
+ .stage{padding:28px 32px calc(136px + env(safe-area-inset-bottom))}.app{max-width:920px}.screen{padding:26px;border-radius:28px}.header{margin-bottom:28px}.title-wrap h1{font-size:44px}.title-wrap p{font-size:15px}
+ .settings-grid{gap:26px}.settings-group h2{font-size:27px;margin-bottom:14px}.settings-card{border-radius:20px}.setting-row{min-height:84px;padding:20px;gap:18px}.account-summary,.about-summary{padding:20px;gap:18px}.row-icon{width:44px;height:44px;border-radius:13px}.row-icon svg{width:27px;height:27px}.row-title{font-size:18px}.row-sub{font-size:14px}.account-email{font-size:20px}.account-label{font-size:13px}.row-chevron svg{width:20px;height:20px}.security{font-size:13px;margin-top:24px}.security svg{width:20px;height:20px}.feedback{font-size:14px;padding:14px 16px}
+ .overlay{padding:24px;align-items:center}.sheet{width:min(100%,620px);padding:28px;border-radius:26px}.sheet h2{font-size:29px;margin-bottom:20px}.sheet-intro{font-size:16px}.field{margin-top:22px}.field label{font-size:15px;margin-bottom:9px}.field input{height:54px;font-size:18px;padding-left:16px;border-radius:14px}.eye{top:5px;right:5px}.sheet-actions{margin-top:24px;gap:12px}.btn{min-height:54px;font-size:18px;border-radius:14px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Zone visible réduite : privilégier les deux champs et les actions. */
+#passwordError{flex:0 0 auto}
+@media(max-width:699px){
+
+#passwordOverlay.compact-view .sheet{padding:14px 16px;border-radius:20px}
+#passwordOverlay.compact-view .sheet h2{font-size:21px;margin-bottom:10px}
+#passwordOverlay.compact-view .sheet-intro{display:none}
+#passwordOverlay.compact-view .field{margin-top:10px}
+#passwordOverlay.compact-view .field:first-of-type{margin-top:0}
+#passwordOverlay.compact-view .field label{font-size:12px;margin-bottom:5px}
+#passwordOverlay.compact-view .field input{height:44px;font-size:16px}
+#passwordOverlay.compact-view .eye{top:0;right:2px}
+#passwordOverlay.compact-view .sheet-actions{margin-top:10px}
+#passwordOverlay.compact-view .btn{min-height:44px;padding:8px;font-size:15px}
+#passwordOverlay.compact-view .error{font-size:12px;margin-top:8px}
+}
+@media(max-width:699px) and (max-height:500px){
+
+#passwordOverlay .sheet{padding:14px 16px;border-radius:20px}
+#passwordOverlay .sheet h2{font-size:21px;margin-bottom:10px}
+#passwordOverlay .sheet-intro{display:none}
+#passwordOverlay .field{margin-top:10px}
+#passwordOverlay .field:first-of-type{margin-top:0}
+#passwordOverlay .field label{font-size:12px;margin-bottom:5px}
+#passwordOverlay .field input{height:44px;font-size:16px}
+#passwordOverlay .eye{top:0;right:2px}
+#passwordOverlay .sheet-actions{margin-top:10px}
+#passwordOverlay .btn{min-height:44px;padding:8px;font-size:15px}
+#passwordOverlay .error{font-size:12px;margin-top:8px}
+}
+
+/* Parcours d’installation : mêmes surfaces et gabarits que les feuilles de Plus. */
+[hidden]{display:none!important}
+.install-identity{display:flex;align-items:center;gap:11px;margin-bottom:18px;color:var(--text);font-weight:650;font-size:14px}
+.install-identity .row-icon{width:42px;height:42px;border:1px solid var(--line);background:var(--gold-soft)}
+.install-benefits{margin:17px 0 0;padding:0;list-style:none;display:grid;gap:12px}
+.install-benefits li{display:flex;gap:10px;align-items:flex-start;color:var(--text);font-size:14px;line-height:1.5}
+.install-benefits svg{width:18px;height:18px;color:#dfc57e;margin-top:2px}
+#installOverlay .security{justify-content:flex-start;text-align:left;margin-top:22px;font-size:11px}
+#installOverlay .security svg{width:18px;height:18px}
+#installActions.single-action{grid-template-columns:1fr}
+#installationStatus{margin-top:14px;font-size:12px}
+@media(min-width:700px){
+ .install-identity{font-size:18px;gap:14px;margin-bottom:24px}.install-identity .row-icon{width:52px;height:52px;border-radius:15px}
+ .install-benefits{gap:16px;margin-top:24px}.install-benefits li{font-size:17px;gap:12px}.install-benefits svg{width:22px;height:22px}
+ #installOverlay .security{font-size:13px;margin-top:26px}#installationStatus{font-size:14px}
+}
+
+/* Mise à jour : reprise du gabarit validé pour Installation et Plus. */
+#updateActions.single-action{grid-template-columns:1fr}
+#updateActions{grid-template-columns:minmax(0,1fr) minmax(0,1.6fr)}
+#updateActions .btn{overflow-wrap:break-word}
+#updateActions .btn:disabled{cursor:default;color:var(--muted);background:var(--surface-2);border:1px solid var(--line-cold)}
+.update-note{margin:18px 0 0;padding:13px 14px;border:1px solid var(--line-cold);border-radius:12px;background:var(--surface-2);color:var(--muted);font-size:13px;line-height:1.6}
+.update-note:empty{display:none}
+#updateFeedback{font-size:12px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+#updateDetails[aria-busy="true"] .row-icon svg{animation:update-turn 2s linear infinite}
+@keyframes update-turn{to{transform:rotate(360deg)}}
+@media(min-width:700px){.update-note{font-size:15px;padding:16px 18px;margin-top:24px;border-radius:14px}#updateFeedback{font-size:14px}}
+@media(prefers-reduced-motion:reduce){#updateDetails[aria-busy="true"] .row-icon svg{animation:none}}
+/* ===== Révision visuelle du 2026-10-04 (règles : docs/ux/README.md, « Règles visuelles » ; référence : maquettes B04 révisées) ===== */
+/* Navigation : 5 entrées (B04-D7), pastille sur « Ma ville », état actif ; mêmes styles que les maquettes B04.
+   Téléphone et tablette : barre collée en bas, pleine largeur, opaque, trait fin en haut, zone sûre respectée ;
+   la page réserve exactement sa hauteur. */
+:root{--nav-h:67px}
+.bottom-nav{position:fixed;z-index:50;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-areas:none;direction:ltr;top:auto;left:0;right:0;bottom:0;transform:none;width:auto;max-width:none;min-height:0;padding:4px 6px calc(4px + env(safe-area-inset-bottom));border:0;border-top:1px solid #a9bdd52b;border-radius:0;background:#0c1420;box-shadow:none;backdrop-filter:none}
+.nav{border:0;background:transparent;color:#9dadc4;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:58px;padding:7px 3px;gap:5px;border-radius:12px;font-size:10.5px;font-weight:600;line-height:1.4;text-decoration:none}
+.nav svg{display:block;flex:none;width:21px;height:21px}.nav span{display:block}.nav.active{color:#edd28b;background:#d8b24c12}
+.nic{position:relative;display:block}.nbadge{position:absolute;top:-8px;left:calc(100% - 5px);min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:#d8b24c;color:#1c1408;font:800 11px/19px Roboto,system-ui,sans-serif;text-align:center;box-shadow:0 0 0 2px #0c1420}
+@media(min-width:700px){
+ :root{--nav-h:82px}
+ .bottom-nav{padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+ .nav{min-height:64px;font-size:14px;gap:7px;border-radius:16px}.nav svg{width:28px;height:28px}
+ .nbadge{top:-8px;min-width:22px;height:22px;line-height:22px;font-size:12px}
+}
+/* PC (1100 px et plus) : rail vertical fixe à gauche, mêmes 5 entrées, plus de barre en bas. */
+@media(min-width:1100px){
+ :root{--rail-w:104px;--gutter:clamp(32px,3.5vw,96px);--col:340px}
+ body{--z:1}
+ .bottom-nav{top:0;bottom:0;left:0;right:auto;width:var(--rail-w);grid-template-columns:1fr;grid-auto-rows:min-content;align-content:start;gap:8px;padding:24px 10px;border-top:0;border-right:1px solid #a9bdd52b}
+ .nav{min-height:76px;padding:8px 4px;gap:7px;border-radius:16px;font-size:14px}
+ .nav svg{width:28px;height:28px}
+}
+/* Écran large (2400 px et plus) : marges latérales élargies ; échelle selon la hauteur (--z, posée par le script), plafonnée à 1,6. */
+@media(min-width:2400px){
+ :root{--gutter:clamp(96px,3vw,140px)}
+ .app{zoom:var(--z)}
+}
+/* Plus — téléphone : plus de grand cadre ; la page réserve exactement la hauteur de la barre. */
+html{scroll-padding-bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom))}
+.stage{padding-bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom))}
+.security{font-size:11px}
+@media(max-width:699px){.screen{padding:0;border:0;border-radius:0;background:none;box-shadow:none}}
+@media(min-width:700px){.stage{padding-bottom:calc(var(--nav-h) + 28px + env(safe-area-inset-bottom))}.security{font-size:13px}}
+/* Plus — PC : pleine largeur (marges latérales), tailles de la tablette ; une colonne régulière par groupe
+   (Compte, Application, À propos), chacune à sa hauteur naturelle ; rien n'est étiré. */
+@media(min-width:1100px){
+ html{scroll-padding-bottom:0}
+ .stage{padding:28px var(--gutter) 28px calc(var(--rail-w) * var(--z) + var(--gutter))}
+ .app{max-width:none}
+ .screen{padding:0;border:0;border-radius:0;background:none;box-shadow:none}
+ .settings-grid{grid-template-columns:repeat(auto-fit,minmax(var(--col),1fr));gap:26px 24px;align-items:start}
+ .security{margin-top:24px}
+}
+/* ===== Revue de Mickaël du 2026-10-04 (révision B01) ===== */
+/* Icônes de Plus redessinées dans la famille des maquettes B04 : trait 1,6, sans boîte de fond, tailles des lignes B04. */
+.row-icon{width:28px;height:28px;border-radius:0;background:none}.row-icon svg{width:28px;height:28px}
+#logoutOpen .row-icon{background:none}
+@media(min-width:700px){.row-icon{width:32px;height:32px}.row-icon svg{width:32px;height:32px}}
+/* Fenêtres d'installation et de mise à jour : logo C à côté de « RoK Companion » ; centrées sur téléphone. */
+.install-identity .logo-c{display:block;flex:none;width:42px;height:42px}
+@media(min-width:700px){.install-identity .logo-c{width:52px;height:52px}}
+@media(max-width:699px){#installOverlay,#updateOverlay{align-items:center}}
+/* 3e revue (2026-10-04) : pas de phrase qui répète le titre de la fenêtre de mise à jour. */
+#updateMessage:empty{display:none}
+/* Complément à la 3e revue (2026-10-04) : titre de page à la même taille partout, 30 px sur téléphone, 44 px sur tablette et PC (règle de B04-01). */
+.title-wrap h1{font-size:30px}@media(min-width:700px){.title-wrap h1{font-size:44px}}
+</style></head><body>
+<div class="stage" id="page"><main class="app" aria-label="Plus — RoK Companion"><div class="screen">
+<header class="header"><div class="title-wrap"><h1>Plus</h1></div></header>
+<div class="settings-grid">
+<section class="settings-group" aria-labelledby="accountTitle"><h2 id="accountTitle">Compte RoK Companion</h2><div class="settings-card">
+<div class="account-summary"><span class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg></span><div class="row-copy"><div class="account-label">Adresse e-mail</div><div class="account-email">nom@exemple.fr</div></div></div>
+<button class="setting-row" type="button" id="passwordOpen"><span class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="row-copy"><span class="row-title">Changer le mot de passe</span></span><span class="row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></span></button><button class="setting-row" type="button" id="logoutOpen"><span class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4"/><path d="m15 8 4 4-4 4M19 12H9"/></svg></span><span class="row-copy"><span class="row-title">Se déconnecter</span></span><span class="row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></span></button></div></section>
+<section class="settings-group" aria-labelledby="applicationTitle"><h2 id="applicationTitle">Application</h2><div class="settings-card">
+<button class="setting-row" type="button" id="install"><span class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m-4.5-4.5L12 15l4.5-4.5"/><path d="M5 19h14"/></svg></span><span class="row-copy"><span class="row-title">Installer RoK Companion</span></span><span class="row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></span></button><button class="setting-row" type="button" id="updates"><span class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14-4M4 5v4h4M4 13a8 8 0 0 0 14 4m2 2v-4h-4"/></svg></span><span class="row-copy"><span class="row-title">Mises à jour</span></span><span class="row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></span></button></div></section>
+<section class="settings-group about" aria-labelledby="aboutTitle"><h2 id="aboutTitle">À propos</h2><div class="settings-card about-summary"><span class="row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 8 4 3 4-7 4 7 4-3-2 10H6L4 8Z"/><path d="M7 21h10"/></svg></span><div class="row-copy"><span class="row-title">RoK Companion</span><span class="row-sub">Version 0.1.0</span></div></div></section>
+</div><p class="security"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z"/><path d="m9 12 2 2 4-4.5"/></svg><span>Aucun accès à ton compte Rise of Kingdoms.</span></p>
+<p class="feedback" id="pageStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+</div><nav class="bottom-nav" aria-label="Navigation principale"><a class="nav" href="ROK_UI_B04_01_ACCUEIL_TABLEAU_DE_BORD.html"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.7"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h5v-7h4v7h5V9"/></svg></span><span>Accueil</span></a><a class="nav" href="ROK_UI_B04_02_MA_VILLE.html"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.7"><path d="M3 21h18M5 21V9h3V6h3v3h2V6h3v3h3v12M10 21v-5h4v5"/></svg><span class="nbadge" id="navBadge" aria-label="13 valeurs à renseigner">13</span></span><span>Ma ville</span></a><button class="nav" type="button" data-demo="Optimiser"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.7"><path d="M3 7h4m5 0h9M3 17h9m5 0h4"/><circle cx="9.5" cy="7" r="2.5"/><circle cx="14.5" cy="17" r="2.5"/></svg></span><span>Optimiser</span></button><button class="nav" type="button" data-demo="Combat"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.7"><path d="m8 13 9-9 4-1-1 4-9 9Z"/><path d="m5 12 7 7m-3.5-3.5-4 4M3 18l3 3"/></svg></span><span>Combat</span></button><a class="nav active" href="ROK_UI_B01_09_PLUS_PARAMETRES.html" aria-current="page"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.7"><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg></span><span>Plus</span></a></nav></main></div>
+<div class="overlay" id="passwordOverlay"><form class="sheet" id="passwordForm" role="dialog" aria-modal="true" aria-labelledby="passwordTitle" aria-describedby="passwordIntro">
+<h2 id="passwordTitle" tabindex="-1">Changer le mot de passe</h2><div class="sheet-body"><p class="sheet-intro" id="passwordIntro">Définis un nouveau mot de passe pour ton compte RoK Companion.</p>
+<div class="field"><label for="newPassword">Nouveau mot de passe</label><div class="password-wrap"><input id="newPassword" enterkeyhint="next" name="newPassword" type="password" autocomplete="new-password" required><button class="eye" type="button" data-target="newPassword" aria-controls="newPassword" aria-pressed="false" aria-label="Afficher : nouveau mot de passe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.8"/><path class="slash" d="m4 4 16 16"/></svg></button></div></div><div class="field"><label for="confirmPassword">Confirmer le nouveau mot de passe</label><div class="password-wrap"><input id="confirmPassword" enterkeyhint="done" name="confirmPassword" type="password" autocomplete="new-password" required aria-describedby="passwordError"><button class="eye" type="button" data-target="confirmPassword" aria-controls="confirmPassword" aria-pressed="false" aria-label="Afficher : confirmer le nouveau mot de passe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.8"/><path class="slash" d="m4 4 16 16"/></svg></button></div></div>
+</div><p class="error" id="passwordError" role="alert" aria-atomic="true"></p>
+<div class="sheet-actions"><button class="btn" type="button" data-close>Annuler</button><button class="btn primary" type="submit">Enregistrer</button></div>
+</form></div>
+<div class="overlay" id="logoutOverlay"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="logoutTitle" aria-describedby="logoutIntro">
+<h2 id="logoutTitle" tabindex="-1">Se déconnecter ?</h2><div class="sheet-body"><p class="sheet-intro" id="logoutIntro">Tu reviendras à l’écran de connexion de RoK Companion.</p></div>
+<div class="sheet-actions"><button class="btn" type="button" data-close>Annuler</button><button class="btn primary" type="button" id="logoutConfirm">Se déconnecter</button></div></div></div>
+
+<div class="overlay" id="installOverlay"><section class="sheet" role="dialog" aria-modal="true" aria-labelledby="installTitle" aria-describedby="installMessage">
+<h2 id="installTitle" tabindex="-1">Installer RoK Companion</h2>
+<div class="sheet-body">
+<div class="install-identity"><svg class="logo-c" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="lgG1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6df8f"/><stop offset=".55" stop-color="#d8b24c"/><stop offset="1" stop-color="#a77a26"/></linearGradient><linearGradient id="lgD1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1c2638"/><stop offset="1" stop-color="#0a0e16"/></linearGradient></defs><circle cx="50" cy="50" r="44" fill="url(#lgD1)" stroke="url(#lgG1)" stroke-width="4"/><circle cx="50" cy="50" r="36" fill="none" stroke="#d8b24c" stroke-width="1.5" stroke-dasharray="1.5 3.2"/><circle cx="50" cy="50" r="31" fill="none" stroke="#d8b24c" stroke-opacity=".5" stroke-width="1"/><text x="50" y="61" text-anchor="middle" font-family="Noto Serif,Georgia,serif" font-weight="700" font-size="30" fill="url(#lgG1)" letter-spacing="-1">RC</text></svg><span>RoK Companion</span></div>
+<p class="sheet-intro" id="installMessage">Retrouve RoK Companion directement sur ton appareil.</p>
+<ul class="install-benefits" id="installBenefits">
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg><span>Un accès plus rapide à RoK Companion.</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg><span>Une ouverture comme une application.</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg><span>Une interface adaptée au mobile, à la tablette et au PC.</span></li>
+</ul>
+<p class="security"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z"/><path d="m9 12 2 2 4-4.5"/></svg><span>L’installation n’accède pas à ton compte Rise of Kingdoms.</span></p>
+<p class="feedback" id="installationStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+</div>
+<div class="sheet-actions" id="installActions"><button class="btn" type="button" id="installLater" data-close>Plus tard</button><button class="btn primary" type="button" id="installAction">Installer</button></div>
+</section></div>
+
+<div class="overlay" id="updateOverlay"><section class="sheet" role="dialog" aria-modal="true" aria-labelledby="updateTitle" aria-describedby="updateMessage updateNote">
+<h2 id="updateTitle" tabindex="-1">Mise à jour disponible</h2>
+<div class="sheet-body">
+<div id="updateDetails" aria-busy="false">
+<div class="install-identity"><svg class="logo-c" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="lgG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6df8f"/><stop offset=".55" stop-color="#d8b24c"/><stop offset="1" stop-color="#a77a26"/></linearGradient><linearGradient id="lgD2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1c2638"/><stop offset="1" stop-color="#0a0e16"/></linearGradient></defs><circle cx="50" cy="50" r="44" fill="url(#lgD2)" stroke="url(#lgG2)" stroke-width="4"/><circle cx="50" cy="50" r="36" fill="none" stroke="#d8b24c" stroke-width="1.5" stroke-dasharray="1.5 3.2"/><circle cx="50" cy="50" r="31" fill="none" stroke="#d8b24c" stroke-opacity=".5" stroke-width="1"/><text x="50" y="61" text-anchor="middle" font-family="Noto Serif,Georgia,serif" font-weight="700" font-size="30" fill="url(#lgG2)" letter-spacing="-1">RC</text></svg><span>RoK Companion</span></div>
+<p class="sheet-intro" id="updateMessage"></p>
+<p class="update-note" id="updateNote">La mise à jour sera préparée avant tout redémarrage. Tu choisis quand l’appliquer.</p>
+</div>
+<p class="feedback" id="updateFeedback"></p>
+</div>
+<p class="sr-only" id="updateAnnouncement" role="status" aria-live="polite" aria-atomic="true"></p>
+<div class="sheet-actions" id="updateActions"><button class="btn" type="button" id="updateLater">Plus tard</button><button class="btn primary" type="button" id="updateAction">Mettre à jour</button></div>
+</section></div>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const page=$('page'), form=$('passwordForm'), firstPassword=$('newPassword'), confirmation=$('confirmPassword'), error=$('passwordError');
+let activeOverlay=null,previousFocus=null,viewportFrame=0;
+function announce(message){
+ const status=document.getElementById('pageStatus');
+ status.textContent=message;
+ if(!message)return;
+ const bounds=status.getBoundingClientRect(),nav=document.querySelector('.bottom-nav').getBoundingClientRect();
+ const bottom=(nav.top>0?Math.min(window.innerHeight,nav.top):window.innerHeight)-12;
+ if(bounds.bottom>bottom)window.scrollBy({top:bounds.bottom-bottom,behavior:'instant'});
+ else if(bounds.top<12)window.scrollBy({top:bounds.top-12,behavior:'instant'});
+}
+function clearError(){error.textContent='';confirmation.setCustomValidity('');confirmation.removeAttribute('aria-invalid');}
+function resetPasswords(){form.reset();clearError();document.querySelectorAll('.eye').forEach(button=>{const input=$(button.dataset.target);input.type='password';button.setAttribute('aria-pressed','false');button.setAttribute('aria-label','Afficher : '+document.querySelector('label[for="'+input.id+'"]').textContent.toLowerCase());});}
+function updateModalViewport(){
+ if(!activeOverlay)return;
+ const v=window.visualViewport;
+ const compact=(v?v.width:window.innerWidth)<700&&(v?v.height:window.innerHeight)<=500;
+ activeOverlay.classList[compact?'add':'remove']('compact-view');
+ activeOverlay.style.setProperty('--modal-height',(v?v.height:window.innerHeight)+'px');
+ activeOverlay.style.setProperty('--modal-width',(v?v.width:window.innerWidth)+'px');
+ activeOverlay.style.setProperty('--modal-top',(v?v.offsetTop:0)+'px');
+ activeOverlay.style.setProperty('--modal-left',(v?v.offsetLeft:0)+'px');
+ const scroller=activeOverlay.querySelector('.sheet-body'),active=document.activeElement;
+ if(scroller.contains(active)&&active.matches('input,button,select')){
+  const bounds=scroller.getBoundingClientRect(),field=active.getBoundingClientRect();
+  if(field.bottom>bounds.bottom-12)scroller.scrollTop+=field.bottom-bounds.bottom+12;
+  else if(field.top<bounds.top+12)scroller.scrollTop-=bounds.top+12-field.top;
+ }
+}
+function scheduleViewport(){if(activeOverlay){cancelAnimationFrame(viewportFrame);viewportFrame=requestAnimationFrame(updateModalViewport);}}
+function openModal(id){
+ previousFocus=document.activeElement;
+ if(id==='passwordOverlay')resetPasswords();
+ activeOverlay=$(id);activeOverlay.classList.add('open');page.inert=true;document.body.classList.add('modal-open');
+ updateModalViewport();activeOverlay.querySelector('.sheet-body').scrollTop=0;activeOverlay.querySelector('h2').focus({preventScroll:true});
+}
+function closeModal(){
+ if(!activeOverlay)return;
+ const deferredUpdate=activeOverlay===$('updateOverlay')&&['available','preparing','ready'].includes(updateState);
+ if(deferredUpdate){updateResumeState=updateState==='ready'?'ready':'available';setUpdateState('deferred');}
+ cancelAnimationFrame(viewportFrame);activeOverlay.classList.remove('open');activeOverlay=null;
+ page.inert=false;document.body.classList.remove('modal-open');resetPasswords();
+ if(previousFocus)previousFocus.focus({preventScroll:true});
+ if(deferredUpdate)announce('Mise à jour reportée. Tu pourras la reprendre depuis Mises à jour.');
+}
+$('passwordOpen').addEventListener('click',()=>openModal('passwordOverlay'));
+$('logoutOpen').addEventListener('click',()=>openModal('logoutOverlay'));
+document.querySelectorAll('[data-close]').forEach(button=>button.addEventListener('click',closeModal));
+document.querySelectorAll('.overlay').forEach(overlay=>{overlay.addEventListener('click',event=>{if(event.target===overlay)closeModal();});overlay.addEventListener('focusin',scheduleViewport);});
+document.querySelectorAll('.eye').forEach(button=>button.addEventListener('click',()=>{
+ const input=$(button.dataset.target),visible=input.type==='password';input.type=visible?'text':'password';button.setAttribute('aria-pressed',String(visible));
+ button.setAttribute('aria-label',(visible?'Masquer : ':'Afficher : ')+document.querySelector('label[for="'+input.id+'"]').textContent.toLowerCase());
+}));
+[firstPassword,confirmation].forEach(input=>input.addEventListener('input',clearError));
+firstPassword.addEventListener('keydown',event=>{
+ if(event.key==='Enter'&&!event.isComposing){event.preventDefault();confirmation.focus();scheduleViewport();}
+});
+form.addEventListener('submit',event=>{
+ event.preventDefault();clearError();if(!form.reportValidity())return;
+ if(firstPassword.value!==confirmation.value){
+  const message='Les deux mots de passe doivent être identiques.';
+  confirmation.setCustomValidity(message);confirmation.setAttribute('aria-invalid','true');error.textContent=message;confirmation.focus();scheduleViewport();return;
+ }
+ closeModal();announce('Démonstration : mot de passe mis à jour. Aucun compte réel modifié.');
+});
+$('logoutConfirm').addEventListener('click',()=>{closeModal();announce('Démonstration : retour à l’écran de connexion. Aucune déconnexion réelle effectuée.');});
+// Les états ci-dessous sont uniquement ceux de la maquette, jamais ceux de l’appareil.
+let installationState='available';
+function setInstallationState(state,simulatedSuccess=false){
+ installationState=state;
+ const available=state==='available';
+ $('installBenefits').hidden=!available;
+ $('installLater').hidden=!available;
+ $('installActions').classList[available?'remove':'add']('single-action');
+ $('installAction').textContent=available?'Installer':'Fermer';
+ $('installMessage').textContent=available?'Retrouve RoK Companion directement sur ton appareil.':state==='installed'?'RoK Companion est déjà installé sur cet appareil.':'L’installation n’est pas disponible dans cet environnement.';
+ $('installationStatus').textContent=simulatedSuccess?'Démonstration : installation réussie simulée. Aucune installation réelle effectuée.':'';
+ scheduleViewport();
+}
+$('installAction').addEventListener('click',()=>{
+ if(installationState==='available')setInstallationState('installed',true);
+ else closeModal();
+});
+$('install').addEventListener('click',()=>openModal('installOverlay'));
+// Démonstration locale : aucune lecture des données, aucune mise à jour réelle.
+const updateStates={
+ available:{title:'Mise à jour disponible',message:'',note:'La mise à jour sera préparée avant tout redémarrage. Tu choisis quand l’appliquer.',action:'Mettre à jour',later:true},
+ preparing:{title:'Préparation de la mise à jour…',message:'Vérification des données en cours avant de poursuivre.',note:'En cas d’incertitude sur leur enregistrement, la mise à jour reste bloquée. Aucun redémarrage automatique.',action:'Préparation…',later:true},
+ ready:{title:'Mise à jour prête',message:'',note:'Tu peux redémarrer maintenant ou reporter cette étape. Rien ne se déclenche sans ton accord.',action:'Redémarrer maintenant',later:true},
+ deferred:{title:'Mise à jour reportée',message:'',note:'Tu pourras reprendre la mise à jour depuis l’entrée « Mises à jour » du menu Plus.',action:'Fermer',later:false},
+ current:{title:'Application à jour',message:'',note:'',action:'Fermer',later:false},
+ unavailable:{title:'Mise à jour indisponible',message:'',note:'Aucun redémarrage n’est lancé. Tu pourras réessayer plus tard depuis le menu Plus.',action:'Réessayer plus tard',later:false}
+};
+let updateState='available',updateResumeState='available';
+function setUpdateState(requested,simulatedRestart=false){
+ // Tout état inconnu reste bloqué : jamais de confirmation de réussite implicite.
+ const focusedBeforeState=document.activeElement;
+ const state=Object.prototype.hasOwnProperty.call(updateStates,requested)?requested:'unavailable';
+ updateState=state;
+ const content=updateStates[state],busy=state==='preparing';
+ $('updateTitle').textContent=content.title;
+ $('updateMessage').textContent=content.message;
+ $('updateNote').textContent=content.note;
+ $('updateDetails').setAttribute('aria-busy',String(busy));
+ $('updateLater').hidden=!content.later;
+ $('updateActions').classList[content.later?'remove':'add']('single-action');
+ $('updateAction').textContent=content.action;
+ $('updateAction').disabled=busy;
+ const success=simulatedRestart&&state==='current'?'Démonstration : redémarrage et mise à jour simulés. La page n’a pas été rechargée.':'';
+ $('updateFeedback').textContent=success;
+ $('updateAnnouncement').textContent=success||content.title+'.'+(content.message?' '+content.message:'');
+ if(activeOverlay===$('updateOverlay')&&(focusedBeforeState===$('updateAction')&&busy||focusedBeforeState===$('updateLater')&&!content.later))$('updateTitle').focus({preventScroll:true});
+ scheduleViewport();
+}
+$('updates').addEventListener('click',()=>{
+ if(updateState==='deferred')setUpdateState(updateResumeState);
+ announce('');openModal('updateOverlay');
+});
+$('updateLater').addEventListener('click',closeModal);
+$('updateAction').addEventListener('click',()=>{
+ if(updateState==='available'){setUpdateState('preparing');return;}
+ if(updateState==='preparing')return;
+ if(updateState==='ready'){setUpdateState('current',true);return;}
+ const unavailable=updateState==='unavailable';
+ closeModal();
+ if(unavailable)announce('Mise à jour indisponible. Tu pourras réessayer plus tard depuis Mises à jour.');
+});
+document.querySelectorAll('[data-demo]').forEach(button=>button.addEventListener('click',()=>announce('Démonstration : ouverture de l’écran '+button.dataset.demo+'.')));
+document.addEventListener('keydown',event=>{
+ if(!activeOverlay)return;
+ if(event.key==='Escape'){event.preventDefault();closeModal();return;}
+ if(event.key==='Tab'){
+  const fields=Array.from(activeOverlay.querySelectorAll('input,button,select')).filter(el=>!el.disabled&&!el.closest('[hidden]')),first=fields[0],last=fields[fields.length-1],active=document.activeElement;
+  if(event.shiftKey&&(active===first||active===activeOverlay.querySelector('h2'))){event.preventDefault();last.focus();}
+  else if(!event.shiftKey&&(active===last||active===activeOverlay.querySelector('h2'))){event.preventDefault();first.focus();}
+ }
+});
+if(window.visualViewport){window.visualViewport.addEventListener('resize',scheduleViewport);window.visualViewport.addEventListener('scroll',scheduleViewport);}
+window.addEventListener('resize',scheduleViewport);
+// Présenter le parcours dès l’ouverture du fichier ; la fermeture retrouve son entrée dans Plus.
+// Chaque état s’ouvre par un fragment d’adresse : #disponible (par défaut), #preparation, #prete, #reportee, #a-jour, #indisponible.
+const etatsMiseAJour={'disponible':'available','preparation':'preparing','prete':'ready','reportee':'deferred','a-jour':'current','indisponible':'unavailable'};
+function etatDepuisAdresse(){const e=etatsMiseAJour[location.hash.slice(1)]||'available';if(e==='deferred')updateResumeState='available';if(activeOverlay!==$('updateOverlay')){if(activeOverlay){activeOverlay.classList.remove('open');activeOverlay=null;page.inert=false;document.body.classList.remove('modal-open');}$('updates').focus({preventScroll:true});openModal('updateOverlay');}setUpdateState(e);$('updateAnnouncement').textContent='';}
+addEventListener('hashchange',etatDepuisAdresse);
+etatDepuisAdresse();
+</script>
+<script>/* Écran large (2400 px et plus) : échelle selon la hauteur disponible, plafonnée à 1,6 (docs/ux/README.md). */
+(()=>{const ZMAX=1.6;function ajusterEchelle(){const b=document.body,app=document.querySelector('.app');if(innerWidth<2400){b.style.removeProperty('--z');return}let z=1;b.style.setProperty('--z',1);const dispo=innerHeight-60;for(let k=0;k<6;k++){const h=app.getBoundingClientRect().height;z=Math.max(1,Math.min(ZMAX,z*dispo/h));b.style.setProperty('--z',z.toFixed(3))}while(z>1&&app.getBoundingClientRect().height>dispo){z-=0.01;b.style.setProperty('--z',z.toFixed(3))}}
+addEventListener('resize',ajusterEchelle);addEventListener('hashchange',()=>requestAnimationFrame(ajusterEchelle));document.addEventListener('click',()=>requestAnimationFrame(ajusterEchelle));document.fonts&&document.fonts.ready.then(ajusterEchelle);ajusterEchelle()})();</script>
+</body></html>

@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>RoK Companion — Maquettes B03 minimal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto:wght@400..800&display=swap" />
+<style>
+:root{color-scheme:dark;--canvas:#05070d;--surface:#101928;--surface-2:#172234;--text:#f3ead6;--muted:#b1bbca;--gold:#d8b24c;--gold-2:#f3d982;--gold-soft:rgba(216,178,76,.12);--line:rgba(216,178,76,.22);--line-cold:rgba(154,178,211,.17);--green:#3ecf8e;--amber:#e8b04a;--red:#ff7b7b;--cold:#9dadc4;--display:"Noto Serif",Georgia,"Times New Roman",serif}
+*{box-sizing:border-box}
+html{min-height:100%}
+body{margin:0;min-width:320px;color:var(--text);background:radial-gradient(900px 420px at 50% -8%,rgba(216,178,76,.10),transparent 64%),linear-gradient(180deg,#08111d 0%,#05070d 100%);background-attachment:fixed;font-family:Roboto,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.4}
+button,input,select,textarea{font:inherit;color:inherit}a{-webkit-tap-highlight-color:transparent}button{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+svg{display:block;flex:none;width:24px;height:24px}a{color:inherit;text-decoration:none}
+.stage{padding:16px 16px calc(104px + env(safe-area-inset-bottom))}
+.app{width:100%;max-width:620px;margin:0 auto}
+.screen{padding:16px 14px 18px;border:1px solid var(--line-cold);border-radius:22px;background:linear-gradient(150deg,#111b2b,#0d1522);box-shadow:0 8px 24px #0002}
+.header{display:flex;align-items:flex-start;gap:8px;margin-bottom:16px}.header .title-wrap{flex:1;min-width:0}
+.title-wrap h1{margin:0;color:var(--gold-2);font:700 32px/1.12 var(--display);overflow-wrap:anywhere}.title-wrap p{margin:7px 0 0;color:var(--muted);font-size:12px}
+.back{display:grid;place-items:center;width:44px;height:44px;margin:-4px 0 0 -8px;flex:none;border:0;background:transparent;color:var(--gold-2)}.back svg{width:24px;height:24px}
+.demo-note{display:flex;gap:9px;align-items:flex-start;margin:0 0 16px;padding:10px 12px;border:1px dashed var(--line);border-radius:12px;background:#d8b24c0b;color:var(--gold-2);font-size:12px;line-height:1.5}.demo-note svg{width:18px;height:18px;margin-top:1px}
+.section-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:5px 10px;margin:22px 0 10px}.section-title:first-child{margin-top:0}.section-title h2{margin:0;font:700 21px/1.15 var(--display)}.section-title .right{font-size:12px;color:var(--muted)}
+.panel{border:1px solid var(--line-cold);background:linear-gradient(135deg,#1b283b,#152032);border-radius:14px}
+.muted{color:var(--muted)}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* Profil actif (repris de B01-07, version condensée) */
+.profile-banner{display:flex;align-items:center;gap:10px;padding:12px 10px;margin-bottom:16px;border:1px solid #a9bdd51c;border-radius:19px;background:radial-gradient(ellipse at 0 100%,#ad86331a,transparent 70%),linear-gradient(130deg,#182337,#0e1624)}
+.emblem{width:52px;height:52px;flex:none;display:grid;place-items:center;border:1px solid #d2b15e99;border-radius:50%;background:radial-gradient(circle at 35% 25%,#4b4028,#24251f 75%);color:#ead08a}.emblem svg{width:30px;height:30px}
+.pb-info{flex:1;min-width:0}.name-row{display:flex;align-items:center;flex-wrap:wrap;gap:5px 8px}.profile-name{font:700 24px/1.12 var(--display)}.profile-meta{margin-top:5px;font-size:11px;color:var(--muted);line-height:1.5}
+.pill{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:3px 8px;border:1px solid #3ecf8e47;border-radius:30px;background:#3ecf8e14;color:var(--green);font-size:10px;font-weight:650}.pill i{width:6px;height:6px;background:currentColor;border-radius:50%}
+/* Etat de synchronisation P3B-20 */
+.sync{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;padding:4px 10px 4px 8px;border:1px solid;border-radius:30px;font-size:11px;font-weight:700;background:transparent}.sync svg{width:14px;height:14px}
+.sync.ok{color:var(--green);border-color:#3ecf8e55;background:#3ecf8e14}.sync.pending{color:var(--amber);border-color:#e8b04a66;background:#e8b04a14}.sync.error{color:var(--red);border-color:#ff7b7b66;background:#ff7b7b14}.sync.offline{color:var(--cold);border-color:#9dadc466;background:#9dadc414}
+.sync.pending svg{animation:spin 1.4s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.sync.pending svg{animation:none}}
+.meta-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:16px;font-size:12px;color:var(--muted)}
+/* Listes de valeurs */
+.rows{display:grid;gap:8px}
+.row{display:flex;align-items:center;gap:11px;width:100%;min-width:0;min-height:64px;padding:10px 10px 10px 12px;text-align:left;border:1px solid var(--line-cold);border-radius:14px;background:linear-gradient(135deg,#1b283b,#152032);color:var(--text)}
+.row .ri{flex:none;color:#dfc57e}.row .ri svg{width:24px;height:24px}
+.row .rc{flex:1;min-width:0}.row .rn{font-size:13px;font-weight:700;overflow-wrap:anywhere}.row .rm{margin-top:2px;color:var(--muted);font-size:11px;line-height:1.4}
+.row .rv{flex:none;max-width:48%;text-align:right;font:700 20px/1.15 var(--display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.row .rv.big{font-size:15px;letter-spacing:.2px}
+.row .rv.unknown{color:#8c98ab}.row .rv small{display:block;margin-top:2px;font:600 12px/1.3 Roboto,system-ui,sans-serif;color:var(--muted)}
+.row .go{flex:none;color:var(--gold-2);margin-left:-2px}.row .go svg{width:18px;height:18px}
+.row.is-unknown{border-style:dashed}
+.legend{display:flex;gap:8px;align-items:flex-start;margin-top:12px;color:var(--muted);font-size:12px;line-height:1.5}.legend svg{width:16px;height:16px;margin-top:2px;color:#dfc57e}
+/* Cartes d'accès */
+.access-grid{display:grid;gap:10px}
+.access{display:flex;flex-direction:column;gap:12px;padding:16px 14px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(135deg,#1d2a40,#152032);color:var(--text)}
+.access .top{display:flex;align-items:center;gap:12px}.access .ai{display:grid;place-items:center;width:48px;height:48px;flex:none;border:1px solid #d2b15e66;border-radius:14px;background:#d8b24c12;color:#ead08a}.access .ai svg{width:28px;height:28px}
+.access h3{margin:0;font:700 22px/1.15 var(--display)}.access .sub{margin-top:3px;color:var(--muted);font-size:12px}
+.access .go{margin-left:auto;color:var(--gold-2)}
+.access .facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.fact{padding:9px 10px;border:1px solid var(--line-cold);border-radius:11px;background:#10192888}.fact b{display:block;font:700 20px/1.15 var(--display);font-variant-numeric:tabular-nums}.fact span{display:block;margin-top:2px;color:var(--muted);font-size:11px}
+.access .last{color:var(--muted);font-size:11px}
+/* Onglets */
+.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:14px}
+.tab{min-height:44px;padding:8px 4px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--muted);font-size:13px;font-weight:800}.tab[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-soft);color:var(--gold-2)}
+/* Formulaires, boutons */
+.field{margin-top:14px}.field label,.field .lbl{display:block;margin-bottom:6px;color:var(--muted);font-size:12px;font-weight:800}
+.field input,.field select,.field textarea{width:100%;min-width:0;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);font-size:16px}
+.field textarea{height:76px;padding:10px 12px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px #d8b24c1a}
+.field input:disabled,.field select:disabled,.field textarea:disabled,.chip-btn:disabled{opacity:.55;cursor:not-allowed}
+.field .hint{margin-top:6px;color:var(--muted);font-size:11px;line-height:1.5}
+.field input.num{font:700 20px/1 var(--display);font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chips .chip-btn{flex:1 1 auto;padding:8px 6px;white-space:nowrap}@media (max-width:767px){.chips .chip-btn{font-size:12px}}@media (max-width:389px){.chips .chip-btn{padding:8px 4px}}
+.chip-btn{min-height:44px;padding:8px 8px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--muted);font-size:13px;font-weight:800}.chip-btn[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-soft);color:var(--gold-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:0;min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--text);font-size:16px;font-weight:800}
+.btn svg{width:18px;height:18px}
+.btn.primary{border:0;color:#1c1408;background:linear-gradient(110deg,#c8a44f,#dcc074)}
+.btn.danger{border-color:#ff7b7b66;background:#ff7b7b1f;color:#ffb4b4}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.small{min-height:40px;font-size:14px;padding:6px 12px}
+.actions{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-top:18px}
+.banner{display:flex;gap:10px;align-items:flex-start;padding:12px;border:1px solid;border-radius:14px;font-size:13px;line-height:1.5}.banner svg{width:20px;height:20px;margin-top:1px}.banner b{display:block;margin-bottom:2px}
+.banner.error{border-color:#ff7b7b66;background:#ff7b7b14;color:#ffd0d0}.banner.error svg{color:var(--red)}
+.banner.offline{border-color:#9dadc466;background:#9dadc414;color:#dbe3ef}.banner.offline svg{color:var(--cold)}
+.banner.pending{border-color:#e8b04a66;background:#e8b04a14;color:#f6dcaa}.banner.pending svg{color:var(--amber)}
+.banner.ok{border-color:#3ecf8e55;background:#3ecf8e14;color:#c8f3df}.banner.ok svg{color:var(--green)}
+.banner .ba{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+/* Historique */
+.timeline{display:grid;gap:0;margin:0;padding:0;list-style:none}
+.tl{position:relative;padding:0 0 18px 26px}.tl:last-child{padding-bottom:0}
+.tl:before{content:"";position:absolute;left:7px;top:14px;bottom:-4px;width:2px;background:var(--line-cold)}.tl:last-child:before{display:none}
+.tl:after{content:"";position:absolute;left:1px;top:4px;width:14px;height:14px;border-radius:50%;border:2px solid var(--cold);background:var(--canvas)}
+.tl.current:after{border-color:var(--gold);background:var(--gold)}
+.tl .card{padding:11px 12px;border:1px solid var(--line-cold);border-radius:13px;background:#10192888}.tl.current .card{border-color:#d8b24caa;background:var(--gold-soft)}
+.tl .tv{font:700 22px/1.15 var(--display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.tl .tv.big{font-size:16px}
+.tl .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}.tag{padding:2px 8px;border:1px solid var(--line-cold);border-radius:20px;color:var(--muted);font-size:10px;font-weight:700}.tag.gold{border-color:#d8b24c88;color:var(--gold-2)}
+.tl dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:8px 0 0;font-size:11px;color:var(--muted)}.tl dt{font-weight:700}.tl dd{margin:0;color:var(--text);overflow-wrap:anywhere}
+.append-note{margin-top:12px;font-size:11px;color:var(--muted);line-height:1.5}
+/* Navigation basse, reprise de B01 */
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));width:calc(100vw - 32px);max-width:430px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:6px;border-radius:19px;background:#0c1420;border:1px solid #a9bdd52b;box-shadow:0 8px 24px #0005;backdrop-filter:blur(16px);z-index:50}
+.nav{border:0;background:transparent;color:#9dadc4;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:58px;padding:7px 3px;gap:5px;border-radius:12px;font-size:11px;font-weight:600}.nav svg{width:21px;height:21px}.nav.active{color:#edd28b;background:#d8b24c12}
+/* Modale */
+.overlay{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:center;padding:12px 12px max(12px,env(safe-area-inset-bottom));background:#03070dc9;backdrop-filter:blur(6px);z-index:70}.overlay.open{display:flex}
+.sheet{width:min(100%,430px);max-height:100%;overflow-y:auto;background:var(--surface);border:1px solid #d8b24c33;border-radius:22px;padding:16px 18px 18px;box-shadow:0 26px 70px #0009}
+.sheet h3{margin:0 0 12px;font-family:var(--display);font-size:20px;color:var(--gold-2);line-height:1.2}.sheet h3:focus{outline:none}.sheet p{margin:0 0 10px;line-height:1.5}
+.sheet ul{margin:8px 0 0;padding:0 0 0 18px;color:var(--muted);font-size:13px;line-height:1.6}
+body.modal-open{overflow:hidden}
+.demo-feedback{margin:14px 0 0;padding:11px 13px;background:#d8b24c0b;border:1px solid var(--line);border-radius:12px;color:var(--gold-2);font-size:13px;line-height:1.5}.demo-feedback:empty{display:none}
+.preview-switch{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:16px;padding:10px 12px;border:1px dashed var(--line);border-radius:12px}.preview-switch>span{flex:0 0 100%;color:var(--gold-2);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}.preview-switch .chip-btn{flex:1 1 120px;min-height:40px;font-size:12px}
+.two{display:block}.two>section+section{margin-top:26px}
+@media(min-width:700px){
+ .stage{padding:28px 32px calc(136px + env(safe-area-inset-bottom))}.app{max-width:920px}.screen{padding:26px;border-radius:28px}.header{margin-bottom:22px}.title-wrap h1{font-size:42px}.title-wrap p{font-size:15px}
+ .emblem{width:68px;height:68px}.emblem svg{width:38px;height:38px}.profile-name{font-size:32px}.profile-meta{font-size:13px}.pill{font-size:12px;padding:4px 10px}.sync{font-size:13px}.sync svg{width:16px;height:16px}
+ .section-title h2{font-size:26px}.row{min-height:76px;padding:12px 14px;gap:14px}.row .rn{font-size:16px}.row .rm{font-size:13px}.row .rv{font-size:26px}.row .rv.big{font-size:19px}.row .ri svg{width:28px}.row .rv small{font-size:12px}
+ .access-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.access{padding:20px}.access h3{font-size:27px}.access .sub{font-size:14px}.fact b{font-size:25px}.fact span{font-size:13px}.access .last{font-size:13px}
+ .tab{min-height:52px;font-size:16px}.field label,.field .lbl{font-size:14px}.field input,.field select{height:52px;font-size:18px}.field textarea{font-size:18px}.btn{min-height:52px;font-size:18px}.btn.small{font-size:16px}.banner{font-size:15px}.demo-note{font-size:14px}.legend{font-size:14px}.meta-row{font-size:14px}
+ .bottom-nav{width:calc(100vw - 64px);max-width:820px;min-height:88px;padding:8px;border-radius:25px;bottom:calc(18px + env(safe-area-inset-bottom))}.nav{font-size:14px;gap:7px;border-radius:16px}.nav svg{width:28px;height:28px}
+ .overlay{padding:24px;align-items:center}.sheet{width:min(100%,620px);padding:28px;border-radius:26px}.sheet h3{font-size:28px;margin-bottom:18px}.sheet p{font-size:16px}.sheet ul{font-size:15px}
+ .tl .tv{font-size:28px}.tl .tv.big{font-size:20px}.tl dl{font-size:13px}.tag{font-size:12px}.append-note{font-size:13px}
+}
+@media(min-width:1100px){
+ .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}.two>section>.section-title:first-child{margin-top:0}.two>section+section{margin-top:0}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+.bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr))}.nav{text-decoration:none}.nav span{display:block}
+.nav{font-size:10.5px}@media(min-width:700px){.nav{font-size:14px}}
+/* Couleurs de ressources */
+.c-ble{color:#e3c25a!important}.c-bois{color:#c08f5d!important}.c-pierre{color:#aab4c2!important}.c-or{color:#f4d03f!important}
+.row .ri svg{width:28px;height:28px}
+/* Notes de maquette : hors écran */
+.mock-bar{margin:0 0 14px;padding:10px 12px;border:1px dashed var(--line);border-radius:14px;background:#d8b24c0b;color:var(--gold-2);font-size:12px;line-height:1.5}
+.mock-bar>b{letter-spacing:.2px}.mock-bar details{margin-top:6px}.mock-bar summary{cursor:pointer;font-weight:800;min-height:32px;display:flex;align-items:center}
+.mock-bar ul{margin:6px 0 4px;padding-left:18px;color:#e9d9a8}.mock-bar li{margin:3px 0}
+.mock-bar .preview-switch{margin:10px 0 0;border-style:solid;background:#05070d66}
+.mock-bar .preview-switch>span{flex:0 0 100%}
+.hidden{display:none!important}
+.grp{margin:16px 0 8px;color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.3px;text-transform:uppercase}
+.tabs2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:16px}
+.subtabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:14px}
+.subtabs .tab{min-height:40px;font-size:12px}
+.stats3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{min-width:0;padding:12px 8px;border:1px solid var(--line-cold);background:linear-gradient(135deg,#1b283b,#152032);border-radius:14px}
+.stat .ico{color:#dfc57e;margin-bottom:8px}.stat .lbl2{color:var(--muted);font-size:11px}.stat .v{margin-top:4px;font:700 clamp(19px,5.4vw,25px)/1.15 var(--display);white-space:nowrap;font-variant-numeric:tabular-nums}
+.short{display:flex;align-items:center;gap:12px;min-height:60px;padding:12px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(135deg,#1d2a40,#152032)}
+.short .ri{color:#dfc57e;flex:none}.short .rc{flex:1;min-width:0;font-weight:700;font-size:14px}.short .rc small{display:block;margin-top:2px;color:var(--muted);font-weight:500;font-size:12px}.short .go{color:var(--gold-2)}.short .go svg{width:18px}
+.short .count{flex:none;display:grid;place-items:center;min-width:34px;height:34px;padding:0 8px;border-radius:17px;background:var(--gold-soft);border:1px solid #d8b24c88;color:var(--gold-2);font:700 18px/1 var(--display)}
+.brief{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.brief .row{min-height:60px;padding:8px 10px}.brief .rv{font-size:17px}.brief .rv small{display:none}
+.hero-empty{padding:16px;border:1px dashed var(--line);border-radius:16px;background:#d8b24c0b}.hero-empty h3{margin:0 0 6px;font:700 20px/1.2 var(--display);color:var(--gold-2)}.hero-empty p{margin:0;color:var(--muted);line-height:1.5;font-size:13px}
+.cur-card{padding:14px;border:1px solid #d8b24caa;border-radius:16px;background:var(--gold-soft)}.cur-card .k{color:var(--muted);font-size:12px}.cur-card .v{margin-top:4px;font:700 34px/1.1 var(--display);font-variant-numeric:tabular-nums}.cur-card .v.unknown{color:#8c98ab}.cur-card .m{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.5}
+.approx{margin-top:6px;color:var(--gold-2);font-size:12px;min-height:1.4em}
+.err{margin-top:6px;color:var(--red);font-size:12px;min-height:1.4em}
+.facts-list{display:grid;gap:8px}.facts-list .row{min-height:60px}
+@media(min-width:700px){
+ .nav{font-size:14px}.mock-bar{font-size:14px}.short .rc{font-size:17px}.short .rc small{font-size:14px}.short{min-height:76px;padding:14px 18px}.short .count{min-width:42px;height:42px;font-size:22px;border-radius:21px}
+ .stat{padding:18px}.stat .lbl2{font-size:14px}.stat .v{font-size:32px}.brief{gap:12px}.brief .row{min-height:72px}.brief .rv{font-size:22px}
+ .cur-card .v{font-size:46px}.cur-card .k,.cur-card .m{font-size:14px}.hero-empty h3{font-size:25px}.hero-empty p{font-size:15px}.grp{font-size:14px}.subtabs .tab{min-height:48px;font-size:15px}.approx,.err{font-size:14px}
+ .row .ri svg{width:32px;height:32px}
+}
+@media(min-width:1100px){.dash{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 28px;align-items:start}.dash>.full{grid-column:1/-1}}
+
+.nic{position:relative;display:block}.nbadge{position:absolute;top:-8px;left:calc(100% - 5px);min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:#d8b24c;color:#1c1408;font:800 11px/19px Roboto,system-ui,sans-serif;text-align:center;box-shadow:0 0 0 2px #0c1420}@media(min-width:700px){.nbadge{top:-8px;min-width:22px;height:22px;line-height:22px;font-size:12px}}
+
+.title-wrap h1{font-size:clamp(26px,7.4vw,32px)}@media(min-width:700px){.title-wrap h1{font-size:42px}}
+.row{padding-right:16px}.short{padding-right:16px}.row .go{margin-left:2px}
+@media(min-width:700px){.row{padding-right:22px}.short{padding-right:22px}}
+.row .rn,.mini .ml,.short .rc{overflow-wrap:normal;word-break:normal;hyphens:manual}
+.group+.group{margin-top:26px}.group>.section-title:first-child{margin-top:0}
+.consigne{margin:12px 0 0;color:var(--muted);font-size:13px;line-height:1.5}@media(min-width:700px){.consigne{font-size:15px}}
+.err,.approx{min-height:0}.err:empty,.approx:empty{display:none}
+.field input.bad,.cell.bad{border-color:var(--red);background:#ff7b7b14}
+#form{margin-top:24px}.cur-card+.banner{margin-top:14px}
+.qbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+.meta-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}.meta-row .btn{margin-left:auto}.btn.ghost{background:transparent;border-color:#a9bdd540;color:var(--text)}.btn.ghost svg{width:16px;height:16px;color:var(--gold-2)}.qlabel{font-weight:800;color:var(--gold-2);font-size:14px}@media(min-width:700px){.qlabel{font-size:17px}}
+.row.edit{flex-wrap:wrap;cursor:default;padding-right:12px}
+.row.edit .rc{flex:1 1 90px}
+.cell{flex:none;width:108px;height:44px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);font:700 18px/1 var(--display);text-align:right;font-variant-numeric:tabular-nums;color:var(--text)}
+select.cell{font:600 13px Roboto,system-ui,sans-serif;text-align:left;width:150px}
+.cell:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px #d8b24c1a}
+.cell.changed{border-color:var(--gold);background:var(--gold-soft)}
+.rowerr{flex:0 0 calc(100% - 39px);margin:0 0 0 39px;color:#ffb4b4;font-size:13px;line-height:1.4}
+.saved{flex:none;display:inline-flex;gap:4px;align-items:center;color:var(--green);font-size:13px;font-weight:700;width:108px;justify-content:flex-end}.saved svg{width:16px;height:16px}
+.savebar{position:sticky;bottom:calc(92px + env(safe-area-inset-bottom));z-index:20;margin-top:18px;padding:12px;border:1px solid var(--line);border-radius:16px;background:#0c1420f2;backdrop-filter:blur(10px)}
+.savebar .count{font-weight:800;color:var(--gold-2);font-size:14px}
+.savebar .chips{margin-top:8px}.savebar .actions{margin-top:12px}
+@media(min-width:700px){.savebar{bottom:calc(118px + env(safe-area-inset-bottom));padding:16px}.savebar .count{font-size:17px}.cell{width:150px;font-size:22px;height:52px}select.cell{width:200px;font-size:15px}.saved{width:150px;font-size:15px}.rowerr{font-size:15px;margin-left:46px;flex-basis:calc(100% - 46px)}}
+.states{display:grid;gap:12px}.states article{display:flex;flex-direction:column}.states article .push{margin-top:auto}.states .banner{align-items:center}.states .btn{white-space:nowrap}
+@media(min-width:700px){.states{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.states article{padding:20px!important}.states article p{font-size:16px!important}.states article span.muted{font-size:13px!important}}
+
+.rescard{border:1px solid var(--line-cold);border-radius:14px;background:linear-gradient(135deg,#1b283b,#152032);overflow:hidden}.rescard+.rescard{margin-top:8px}
+.reshead{display:flex;align-items:center;gap:11px;width:100%;min-height:68px;padding:10px 14px 10px 12px;border:0;background:transparent;text-align:left;color:var(--text)}
+.reshead .ri{flex:none;color:#dfc57e}.reshead .ri svg{width:28px;height:28px}.reshead .rc{flex:1;min-width:0}.reshead .rn{font-size:13px;font-weight:700}.reshead .rm{margin-top:2px;color:var(--muted);font-size:11px;line-height:1.4}
+.reshead .rv{flex:none;white-space:nowrap;text-align:right;font:700 19px/1.15 var(--display);font-variant-numeric:tabular-nums}.reshead .rv small{display:block;margin-top:2px;font:600 12px/1.3 Roboto,system-ui,sans-serif;color:var(--muted)}
+.reshead .chv{flex:none;color:var(--gold-2)}.reshead .chv svg{width:18px;height:18px;transition:transform .15s}.rescard.open .chv svg{transform:rotate(90deg)}
+.resbody{padding:0 8px 10px;border-top:1px solid #a9bdd514}.resbody .rows{margin-top:10px}.resbody .row{background:#10192888;min-height:56px}.resbody .grp{margin:12px 4px 0}
+@media(min-width:700px){.reshead{min-height:84px;padding:12px 20px 12px 16px;gap:14px}.reshead .ri svg{width:32px;height:32px}.reshead .rn{font-size:16px}.reshead .rm{font-size:13px}.reshead .rv{font-size:26px}.reshead .rv small{font-size:12px}.resbody{padding:0 12px 14px}.resbody .row{min-height:68px}}
+/* Accueil : ajouts au tableau de bord B01-07 */
+.todo-list{display:grid;gap:8px}.cityq .mini{min-height:62px}
+.cityq .ml{overflow-wrap:normal;word-break:normal}
+.cityq .mv{font-size:20px}
+@media(min-width:700px){.cityq .mv{font-size:26px}}
+@media(min-width:700px){.cityq .mini-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(min-width:1100px){.cityq{grid-column:1/-1}.cityq .mini-stats{grid-template-columns:repeat(6,minmax(0,1fr))}.cityq .mv{font-size:22px}}
+/* ===== Révision visuelle du 2026-10-04 (règles : docs/ux/README.md, « Règles visuelles » ; référence : v7 validée) ===== */
+/* Navigation — téléphone et tablette : barre collée en bas, pleine largeur, opaque, trait fin en haut, zone sûre
+   respectée ; la page réserve exactement sa hauteur. Mêmes valeurs que l'Accueil B04-01. */
+:root{--nav-h:67px}
+html{scroll-padding-bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom))}
+.stage{padding-bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom))}
+.bottom-nav{left:0;right:0;bottom:0;transform:none;width:auto;max-width:none;min-height:0;padding:4px 6px calc(4px + env(safe-area-inset-bottom));border:0;border-top:1px solid #a9bdd52b;border-radius:0;background:#0c1420;box-shadow:none;backdrop-filter:none}
+.savebar{bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom))}
+/* Téléphone : plus de grand cadre, contenu à pleine largeur avec la marge latérale de la page. */
+@media(max-width:699px){
+ .screen{padding:0;border:0;border-radius:0;background:none;box-shadow:none}
+ /* Saisie rapide : la police des chiffres (Noto Serif) est plus large, la case garde sa largeur. */
+ .cell{padding:0 8px}
+}
+@media(min-width:700px){
+ :root{--nav-h:82px}
+ .stage{padding-bottom:calc(var(--nav-h) + 28px + env(safe-area-inset-bottom))}
+ .bottom-nav{padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+ .nav{min-height:64px}
+ .savebar{bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom))}
+}
+/* PC (1100 px et plus) : rail vertical fixe à gauche, mêmes 5 entrées ; contenu à pleine largeur (marges latérales),
+   aux tailles de la tablette, en colonnes régulières ; blocs à hauteur naturelle, rien n'est étiré. */
+@media(min-width:1100px){
+ :root{--rail-w:104px;--gutter:clamp(32px,3.5vw,96px);--col:340px}
+ body{--z:1}
+ .stage{padding:28px var(--gutter) 28px calc(var(--rail-w) * var(--z) + var(--gutter))}
+ html{scroll-padding-bottom:0}
+ .bottom-nav{top:0;bottom:0;left:0;right:auto;width:var(--rail-w);grid-template-columns:1fr;grid-auto-rows:min-content;align-content:start;gap:8px;padding:24px 10px;border-top:0;border-right:1px solid #a9bdd52b}
+ .nav{min-height:76px;padding:8px 4px;gap:7px;border-radius:16px;font-size:14px}
+ .nav svg{width:28px;height:28px}
+ .app{max-width:none}
+ .screen{padding:0;border:0;border-radius:0;background:none;box-shadow:none}
+ .savebar{bottom:16px}
+ /* Onglets : largeur de la tablette, pas étirés sur toute la page. */
+ .tabs2,.subtabs{max-width:652px}
+ /* Listes de valeurs : colonnes régulières (environ 340 px et plus), une valeur par case. */
+ .rows{grid-template-columns:repeat(auto-fill,minmax(var(--col),1fr));gap:12px 24px}
+ .resbody .rows{grid-template-columns:minmax(0,1fr);gap:8px}
+ /* Ma ville, Progression : Réglages et Bâtiments côte à côte, chacun sur deux colonnes. */
+ .two{grid-template-columns:repeat(12,minmax(0,1fr));gap:24px 32px}
+ .two>section:not(:has(#curCard)){grid-column:span 6}
+ /* Ma ville, Inventaire : une colonne par carte (ressource, type d'accélérateur), à hauteur naturelle. */
+ #gRes,#gAcc{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--col),1fr));gap:16px 24px;align-items:start}
+ #gRes>.rescard+.rescard,#gAcc>.rescard+.rescard{margin-top:0}
+ #gRes>:not(.rescard),#gAcc>:not(.rescard){grid-column:1/-1}
+ #gAcc>.grp{margin:8px 0 -6px}#gAcc>.grp:first-child{margin-top:0}
+ /* Écran d'une valeur : trois colonnes égales (valeur actuelle | formulaire | historique). */
+ .two>section:has(#curCard){display:contents}
+ .two>section>#curCard,.two>section>#conflict,.two>section>#toCorrect{grid-column:1/5}
+ .two>section>#curCard{grid-row:1}.two>section>#conflict{grid-row:2;margin-top:0}.two>section>#toCorrect{grid-row:2;margin-top:0!important}
+ .two>section>#form{grid-column:5/9;grid-row:1/4;margin-top:0}
+ .two>section#histSec{grid-column:9/13;grid-row:1/4;margin-top:0}
+ .two:has(#form.hidden)>section#histSec{grid-column:5/9}
+ .two:has(#curCard){grid-template-rows:min-content min-content 1fr}
+ /* États de synchronisation : une colonne par état. */
+ .states{grid-template-columns:repeat(auto-fill,minmax(var(--col),1fr));gap:24px}
+ /* Bouton seul : largeur de son texte, pas de bouton étiré sur toute la page. */
+ #openDel{width:auto!important;padding-inline:28px}
+}
+/* Écran large : même principe ; échelle calculée sur la hauteur disponible (--z, posée par le script), plafonnée à 1,6. */
+@media(min-width:2400px){
+ :root{--gutter:clamp(96px,3vw,140px)}
+ .app{zoom:var(--z)}
+}
+/* Complément à la 3e revue (2026-10-04) : titre de page à la même taille partout, 30 px sur téléphone, 44 px sur tablette et PC (règle de B04-01). */
+.title-wrap h1{font-size:30px}@media(min-width:700px){.title-wrap h1{font-size:44px}}
+
+/* ===== B03 minimal « Import de captures de l’Inventaire » (propositions du 2026-10-06) ===== */
+/* Icônes pleines : planche partagée, invisible (1 px), lue par chaque icône. */
+.sprite{position:absolute!important;top:0;left:0;width:1px!important;height:1px!important;overflow:hidden;pointer-events:none}
+/* Ma ville : liste plus longue, lignes plus basses et deux colonnes dans un détail ouvert (tablette) */
+.resbody .row{min-height:52px;padding-top:8px;padding-bottom:8px}
+@media(min-width:700px){.resbody .row{min-height:60px}}
+@media(min-width:700px) and (max-width:1099px){.resbody .rows{grid-template-columns:repeat(2,minmax(0,1fr))}.resbody .rows>.grp{grid-column:1/-1}.resbody .row{gap:10px;padding-left:10px;padding-right:14px}.resbody .row .rn{font-size:15px}.resbody .row .rv{font-size:22px}}
+/* Écrans d'import : blocs */
+.stack>*+*{margin-top:16px}
+.panel.pad{padding:14px}@media(min-width:700px){.panel.pad{padding:18px}}
+.panel h3{margin:0 0 8px;font:700 19px/1.2 var(--display);color:var(--gold-2)}@media(min-width:700px){.panel h3{font-size:23px}}
+.tips{margin:0;padding:0;list-style:none;display:grid;gap:10px;counter-reset:t}
+.tips li{position:relative;padding-left:34px;line-height:1.5;font-size:14px;counter-increment:t}.tips li:before{content:counter(t);position:absolute;left:0;top:0;width:24px;height:24px;border-radius:12px;background:var(--gold-soft);border:1px solid #d8b24c88;color:var(--gold-2);font:700 13px/22px Roboto,system-ui,sans-serif;text-align:center}
+@media(min-width:700px){.tips li{font-size:16px}}
+.keep{display:flex;gap:9px;align-items:flex-start;color:var(--text);font-size:14px;line-height:1.5}.keep svg{width:20px;height:20px;color:var(--gold-2);margin-top:1px}
+@media(min-width:700px){.keep{font-size:16px}}
+.pick{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:150px;padding:18px;border:1.5px dashed #d8b24c88;border-radius:16px;background:#d8b24c0b;text-align:center}
+.pick svg{width:36px;height:36px;color:var(--gold-2)}.pick b{font:700 19px/1.2 var(--display);color:var(--gold-2)}.pick span{color:var(--muted);font-size:13px;line-height:1.5}
+@media(min-width:700px){.pick b{font-size:23px}.pick span{font-size:15px}}
+/* Vignettes des captures (aucune image du jeu : dessin neutre) */
+.thumbs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(min-width:700px){.thumbs{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}}
+@media(min-width:1100px){.thumbs{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}}
+.thumb{min-width:0;padding:6px;border:1px solid var(--line-cold);border-radius:12px;background:#10192888}
+.thumb.warn{border-color:#e8b04a88;background:#e8b04a10}.thumb.bad{border-color:#ff7b7b88;background:#ff7b7b10}
+.thumb .tf{display:flex;align-items:center;gap:6px;margin-top:6px}.thumb .tn{flex:1;min-width:0;font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.thumb .tx{flex:none;display:grid;place-items:center;width:36px;height:36px;border:0;border-radius:10px;background:transparent;color:var(--muted)}.thumb .tx svg{width:18px;height:18px}
+.thumb .tw{margin:2px 2px 2px;font-size:12px;line-height:1.4;color:#f6dcaa}.thumb.bad .tw{color:#ffd0d0}
+@media(min-width:700px){.thumb .tn,.thumb .tw{font-size:13px}}
+.cap{position:relative;aspect-ratio:2.14/1;border-radius:7px;overflow:hidden;background:linear-gradient(160deg,#2b3a4f,#18222f 60%,#121a25)}
+.cap .cg{position:absolute;left:34%;right:6%;top:12%;bottom:10%;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:1fr;gap:5%}
+.cap .cg i{border-radius:12%;background:linear-gradient(150deg,#56708f,#34465e)}
+.cap .cg i:nth-child(3n+1){background:linear-gradient(150deg,#4f8a62,#2d553b)}.cap .cg i:nth-child(4n+2){background:linear-gradient(150deg,#4c6fa8,#2b416a)}.cap .cg i:nth-child(5n+3){background:linear-gradient(150deg,#7d5aa6,#46325f)}
+.cap .cg i.hl{outline:2px solid var(--gold-2);outline-offset:1px}
+.cap .pn{position:absolute;left:5%;top:12%;bottom:10%;width:24%;border-radius:6%;background:#0e151f99}
+/* Progression de l'analyse */
+.progress{height:10px;border-radius:6px;background:#0e1520;border:1px solid var(--line-cold);overflow:hidden}.progress i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#c8a44f,#dcc074)}
+.bigline{font:700 22px/1.2 var(--display);color:var(--text)}@media(min-width:700px){.bigline{font-size:28px}}
+.steps{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.steps li{display:flex;align-items:center;gap:10px;min-height:48px;padding:8px 12px;border:1px solid var(--line-cold);border-radius:12px;background:#10192888;font-size:14px}
+.steps li svg{width:20px;height:20px}.steps li .sn{flex:1;min-width:0;font-weight:700}.steps li .ss{flex:none;font-size:13px;font-weight:700}
+.steps li.ok .ss,.steps li.ok svg{color:var(--green)}.steps li.run .ss,.steps li.run svg{color:var(--gold-2)}.steps li.wait{color:var(--muted)}.steps li.bad{border-color:#ff7b7b66}.steps li.bad .ss,.steps li.bad svg{color:var(--red)}
+.steps li.run svg{animation:spin 1.4s linear infinite}@media(prefers-reduced-motion:reduce){.steps li.run svg{animation:none}}
+@media(min-width:700px){.steps li{font-size:16px;min-height:56px}.steps li .ss{font-size:14px}}
+.actions.one{grid-template-columns:1fr}
+.actions.solo{display:flex;flex-wrap:wrap;gap:8px}.actions.solo .btn{flex:1 1 200px}
+@media(min-width:1100px){.actions.solo .btn{flex:0 0 auto;padding-inline:28px}.limit{max-width:760px}}
+/* Relecture : lignes */
+.sumrow{display:flex;flex-wrap:wrap;gap:8px}
+.cnt{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:4px 12px;border:1px solid var(--line-cold);border-radius:20px;background:#10192888;font-size:13px;font-weight:700}
+.cnt.warn{color:#f6dcaa;border-color:#e8b04a66}.cnt.ok{color:#c8f3df;border-color:#3ecf8e55}.cnt.bad{color:#ffd0d0;border-color:#ff7b7b66}
+@media(min-width:700px){.cnt{font-size:15px;min-height:36px}}
+.rlist{display:grid;gap:10px}
+@media(min-width:1100px){.rlist{grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:14px 24px;align-items:start}}
+.rl{min-width:0;padding:12px;border:1px solid var(--line-cold);border-radius:14px;background:linear-gradient(135deg,#1b283b,#152032)}
+.rl.warn{border-color:#e8b04a77}.rl.bad{border-color:#ff7b7b77}.rl.off{border-style:dashed;background:#10192888}
+.rl.off .rl-top,.rl.off .rl-vals{opacity:.55}
+.rl-top{display:flex;align-items:center;gap:11px}.rl-top .ri{flex:none}.rl-top .ri svg{width:32px;height:32px}.rl-top .ri.line{color:#dfc57e}.rl-top .ri.line svg{width:28px;height:28px}
+.rl-name{flex:1;min-width:0;font-size:14px;font-weight:700;line-height:1.3}
+.conf{flex:none;display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border:1px solid;border-radius:20px;font-size:12px;font-weight:800;white-space:nowrap}.conf svg{width:13px;height:13px}
+.conf.ok{color:var(--green);border-color:#3ecf8e55;background:#3ecf8e14}.conf.warn{color:var(--amber);border-color:#e8b04a66;background:#e8b04a14}.conf.bad{color:var(--red);border-color:#ff7b7b66;background:#ff7b7b14}.conf.off{color:var(--cold);border-color:#9dadc466;background:#9dadc414}
+.rl-vals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:10px}
+.v3{min-width:0;padding:7px 9px;border:1px solid var(--line-cold);border-radius:10px;background:#10192888}
+.v3 span{display:block;color:var(--muted);font-size:12px;font-weight:700}.v3 b{display:block;margin-top:2px;font:700 17px/1.15 var(--display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.v3 b.unknown{color:#8c98ab}
+.v3.gold{border-color:#d8b24caa;background:var(--gold-soft)}.v3.warn{border-color:#e8b04a88}
+.rl-zone{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:13px;line-height:1.4}
+.rl-zone .zt{flex:1;min-width:0}
+.crop{flex:none;position:relative;width:52px;height:52px;border-radius:10px;overflow:hidden;background:linear-gradient(150deg,#56708f,#34465e);outline:2px solid #d8b24c99;outline-offset:-2px}
+.crop:before{content:"";position:absolute;inset:22% 22% 30%;border-radius:40%;background:#ffffff1f}.crop:after{content:"";position:absolute;right:6px;bottom:5px;width:44%;height:8px;border-radius:3px;background:#ffffff59}
+.crop.c2{background:linear-gradient(150deg,#4c6fa8,#2b416a)}.crop.c3{background:linear-gradient(150deg,#7d5aa6,#46325f)}.crop.c4{background:linear-gradient(150deg,#4f8a62,#2d553b)}
+.btn.link{min-height:40px;padding:4px 10px;border-color:transparent;background:transparent;color:var(--gold-2);font-size:14px}
+.rl-msg{margin-top:10px;font-size:13px;line-height:1.45;color:#f6dcaa}.rl.bad .rl-msg{color:#ffd0d0}.rl.off .rl-msg{color:var(--text)}
+.rl-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.rl-acts .btn{flex:1 1 120px}
+.rl .field{margin-top:10px}
+.rl-pair{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.rl-pair .chip-btn{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:8px 10px}.rl-pair .chip-btn b{font:700 17px/1.15 var(--display);color:var(--text)}
+.who{display:flex;align-items:center;gap:10px;margin-top:10px;padding:9px 10px;border:1px solid #d8b24c66;border-radius:12px;background:var(--gold-soft)}
+.who .wq{flex:1;min-width:0;font-size:13px;line-height:1.4}.who .wq b{display:block;font-size:14px;color:var(--gold-2)}
+@media(min-width:700px){.rl{padding:14px 16px}.rl-name{font-size:16px}.conf{font-size:13px}.v3 span{font-size:13px}.v3 b{font-size:20px}.rl-zone,.rl-msg{font-size:14px}.who .wq{font-size:14px}.who .wq b{font-size:16px}.rl-top .ri svg{width:36px;height:36px}}
+.gtitle{display:flex;align-items:baseline;gap:8px;margin:22px 0 10px}.gtitle h2{margin:0;font:700 21px/1.15 var(--display)}.gtitle .n{color:var(--muted);font-size:14px;font-weight:700}
+@media(min-width:700px){.gtitle h2{font-size:26px}.gtitle .n{font-size:16px}}
+.subgrp{margin:16px 0 8px;color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.3px;text-transform:uppercase}@media(min-width:700px){.subgrp{font-size:14px}}
+.rlist>.subgrp{grid-column:1/-1;margin:6px 0 -2px}
+.fold{width:100%;display:flex;align-items:center;gap:10px;min-height:52px;padding:10px 14px;border:1px solid var(--line-cold);border-radius:14px;background:#10192888;color:var(--text);font-size:14px;font-weight:700;text-align:left}.fold span{flex:1}.fold svg{width:18px;height:18px;color:var(--gold-2);transition:transform .15s}.fold[aria-expanded="true"] svg{transform:rotate(90deg)}
+@media(min-width:700px){.fold{font-size:16px;min-height:60px}}
+.daterow{display:grid;gap:14px}
+@media(min-width:700px){.daterow{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}}
+.daterow .field{margin-top:0}
+/* Relecture : en-tête de page, deux colonnes sur PC */
+@media(min-width:1100px){
+ .imp{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);gap:24px 32px;align-items:start}
+ .imp>.side{position:sticky;top:28px}
+ .imp>.main>.gtitle:first-child{margin-top:0}
+}
+/* Fenêtre : capture et zone, choix de l'élément */
+.sheet .cap{margin:4px 0 12px}
+.sheet .opts{display:grid;gap:8px;margin-top:10px}
+.opt{display:flex;align-items:center;gap:11px;width:100%;min-height:52px;padding:8px 12px;border:1px solid var(--line-cold);border-radius:12px;background:var(--surface-2);color:var(--text);font-size:14px;font-weight:700;text-align:left}.opt .ri svg{width:28px;height:28px}.opt span.on{flex:1}.opt[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-soft);color:var(--gold-2)}
+@media(min-width:700px){.opt{font-size:16px;min-height:60px}}
+.sheet .actions{margin-top:16px}
+/* Saisie à côté de la capture (repli, option D) */
+.side-by{display:grid;gap:14px}
+.side-by .capbig{position:sticky;top:8px;z-index:5;padding:6px;border:1px solid var(--line);border-radius:14px;background:#0c1420f2}
+@media(min-width:1100px){.side-by{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);align-items:start}.side-by .capbig{top:28px}}
+.capnav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;font-size:13px;font-weight:700}
+.capnav .btn{min-height:40px;padding:4px 10px}
+/* Résultat */
+.res-list{display:grid;gap:8px}
+@media(min-width:1100px){.res-list{grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:12px 24px;align-items:start}}
+.resl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 11px;min-height:60px;padding:10px 14px 10px 12px;border:1px solid var(--line-cold);border-radius:14px;background:linear-gradient(135deg,#1b283b,#152032)}
+.resl .ri svg{width:28px;height:28px}.resl .rn{flex:1;min-width:0;font-size:14px;font-weight:700}.resl .rv{flex:none;font:700 19px/1.15 var(--display);font-variant-numeric:tabular-nums}
+.resl .rmsg{flex:0 0 100%;font-size:13px;line-height:1.45}
+.resl.ok .rmsg{color:#c8f3df}.resl.same .rmsg{color:#dbe3ef}.resl.conflict{border-color:#e8b04a77}.resl.conflict .rmsg{color:#f6dcaa}.resl.invalid{border-color:#ff7b7b77}.resl.invalid .rmsg{color:#ffd0d0}
+@media(min-width:700px){.resl{min-height:72px;padding:12px 20px 12px 16px}.resl .rn{font-size:16px}.resl .rv{font-size:24px}.resl .ri svg{width:32px;height:32px}.resl .rmsg{font-size:14px}}
+/* Historique : origine Import */
+.tag.src{border-color:#3ecf8e66;color:#c8f3df}
+/* PC : boutons à la largeur de leur texte, alignés à droite */
+@media(min-width:1100px){.imp .actions,.limit .actions,.res-acts{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}.imp .actions .btn,.limit .actions .btn,.res-acts .btn{padding-inline:28px}}
+/* Ma ville : « Importer » à côté de « Tout renseigner », sur la ligne de synchronisation (décision de Mickaël du 2026-10-06) */
+.meta-row .mbtns{margin-left:auto;display:flex;flex-wrap:nowrap;gap:8px}.meta-row .mbtns .btn{margin-left:0;white-space:nowrap}
+/* Téléphone étroit (moins de 420 px) : « Synchronisé » seul sur sa ligne, puis « Importer » et « Tout renseigner » côte à côte, chacun sur la moitié de la largeur (choix de Mickaël du 2026-10-06). */
+@media(max-width:419px){.meta-row .mbtns.two{flex:0 0 100%;margin-left:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.meta-row .mbtns.two .btn{min-height:40px;padding-inline:8px}}
+.idx{margin:0;padding-left:20px;line-height:1.6;font-size:14px}.idx li{margin:4px 0}.idxp{padding:14px;margin-bottom:12px}.idxp h3{margin:0 0 6px;font:700 19px/1.2 var(--display);color:var(--gold-2)}.idxp p{margin:0 0 10px;color:var(--muted);line-height:1.5}.slink{display:inline-flex;align-items:center;min-height:40px;padding:6px 12px;margin:4px 6px 4px 0;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--text);font-size:14px;font-weight:700}.slink:hover{border-color:var(--gold);color:var(--gold-2)}@media(min-width:700px){.idx{font-size:16px}.idxp{padding:20px}.idxp h3{font-size:24px}.slink{font-size:15px}}.stage{padding-bottom:40px}@media(min-width:1100px){.stage{padding:28px var(--gutter) 40px}.app{max-width:1160px}}</style>
+</head>
+<body>
+<div class="stage">
+ <main class="app" aria-label="Index des maquettes B03 minimal">
+  <div class="screen">
+<header class="header"><div class="title-wrap"><h1>Maquettes B03 minimal</h1><p>Import de captures de l’Inventaire · index des écrans et des états</p></div></header>
+<div class="banner ok" style="margin-bottom:18px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="m5 12 5 5 9-10"/></svg><div><b>VALIDÉES PAR MICKAËL LE 2026-10-06 (version 3, commit 6cc47e7)</b>Validées le 2026-10-06 dans la session pilote, après trois tours de revue sur le site des maquettes (versions 8c5fb80, 2cd6845 et 6cc47e7, sur la base <code>test-preview</code> au SHA 2e4c0e7), avec les icônes « coffre de ressources » et « pack » et les nombres d’exemple des coffres et packs ; marques « Bon pour moi » sur les 6 écrans aux 4 tailles (<code>ROK-008</code>, <code>P3C-27</code>). La validation n’autorise aucun code. Les écrans ne portent aucune annotation : chaque état s’ouvre par un lien ci-dessous (fragment d’adresse stable). Quantités, dates et numéros de capture : <em style="font-style:normal;font-weight:700">données d’exemple</em>, aucune capture ni valeur d’un vrai compte ; les captures et leurs zones sont dessinées (aucune image du jeu, risque R11).</div></div>
+<div class="banner offline" style="margin-bottom:18px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-9.5v.5"/></svg><div><b>Maquettes à compléter avec la liste complète du catalogue</b>Les éléments montrés sont ceux vus sur les captures de l’étude B03-0 (<code>EVIDENCE.md</code>, « Écarts avec le catalogue local B04 ») : caisses de nourriture et de bois de 1 000 à 5 000 000 (7 paliers), de pierre de 750 à 3 750 000 (7 paliers), d’or de 500 à 200 000 (5 paliers), une caisse de gemmes ; 5 types d’accélérateurs aux durées 1, 5, 10, 15, 30 et 60 min, 3 h, 8 h et 15 h. La liste complète viendra de la mission B03-D14 ; Ma ville, la relecture et le résultat seront alors complétés.</div></div>
+<div class="group"><div class="section-title"><h2>Icônes de l’Inventaire (choix de Mickaël du 2026-10-06)</h2></div><ul class="idx"><li>Icônes pleines au rendu peint pour les ressources (nourriture, bois, pierre, or, gemmes), reprises telles quelles de la page de référence des icônes.</li><li>Accélérateurs en composition 1 : grands chevrons dorés avec l’outil devant (marteau, fiole, épées, croix, sablier).</li><li>Famille B : icône pleine dans les lignes de liste de Ma ville, de la relecture et du résultat ; les tuiles façon jeu ne sont pas retenues.</li><li>Une caisse reprend l’icône de sa ressource.</li><li>Coffres et packs (validées par Mickaël le 2026-10-06 avec les maquettes) : icône « coffre de ressources » (coffre de bois ouvert, ferrures dorées, pièce et épi qui dépassent) pour les coffres au choix et le groupe « Coffres et packs », et variante « pack » (sac noué avec une pièce) pour les packs de ressources, dans le même rendu peint ; l’icône au trait « Objet d’amélioration » n’est pas reprise.</li><li>Les autres icônes de l’appli (navigation, états, objets, bâtiments, réglages) ne changent pas : icônes au trait de B04.</li></ul></div>
+<div class="group"><div class="section-title"><h2>Points NON VÉRIFIÉS</h2></div><ul class="idx"><li>NV-2 et B03-D14 — liste complète des éléments : NON VÉRIFIÉE (catalogue d’exemple tiré de l’étude B03-0).</li><li>NV-9 — types d’accélérateurs VÉRIFIÉS par le panneau de droite du jeu (captures de Mickaël du 2026-10-06) : établi et marteau = construction, cible = entraînement, fiole = recherche, rouleau de bandage = soins, sablier = universel (« Accélération - 1 minute », n’importe quelle file ; « Généraux » dans l’appli). Les icônes de l’appli restent les dessins originaux choisis. Durées 24 h, 3 j et 7 j : NON VÉRIFIÉES (absentes des captures ; non montrées).</li><li>Caisse de gemmes : valeur VÉRIFIÉE = 10 gemmes (« Octroie à votre ville 10 gemmes », captures de Mickaël du 2026-10-06) ; elle compte dans le total des gemmes.</li><li>Noms du jeu des caisses (panneau de droite) : « 1 000 unités de nourriture », « 1 000 unités de bois », « 750 pierres », « 500 unités d’or ». L’appli garde les libellés courts « Caisse de 1 000 ».</li><li>Coffres et packs (captures de Mickaël du 2026-10-06) : Pack de ressources B niv. 1 (au hasard 1 000 nourriture, 1 000 bois ou 750 pierres), C niv. 1 (au hasard 1 000 nourriture, 1 000 bois, 750 pierres ou 500 or), niv. 2 (au hasard 10 000 nourriture, 10 000 bois, 7 500 pierres ou 5 000 or) ; Coffre de ressources « Choisissez un » niv. 1 à 5, au choix : 10 000 / 10 000 / 7 500 / 3 000 ; 50 000 / 50 000 / 37 500 / 15 000 ; 150 000 / 150 000 / 112 500 / 50 000 ; 500 000 / 500 000 / 375 000 / 200 000 ; 1 500 000 / 1 500 000 / 1 125 000 / 600 000 (nourriture / bois / pierres / or). Les quantités des maquettes sont des exemples, pas celles du compte de Mickaël. Autres niveaux et autres coffres : NON VÉRIFIÉS.</li><li>NV-7 — temps de lecture et de téléchargement sur le téléphone de Mickaël : NON VÉRIFIÉS (les états d’analyse montrent l’enchaînement, pas une durée).</li><li>Lisibilité d’une capture affichée en petit sur téléphone (zone, saisie à côté) : à vérifier sur appareil avec de vraies captures.</li><li>Rendu des icônes peintes à 28 px sur appareils réels et moteurs autres que Chromium : non vérifié.</li><li>Polices Noto Serif et Roboto : chargées depuis Google Fonts dans les maquettes ; rendu sur appareil réel non vérifié.</li></ul></div>
+<div class="group"><div class="section-title"><h2>Choix encore ouvert</h2></div><ul class="idx"><li>Outil de lecture gardé en cache après le premier import ou rechargé à chaque import (HP-B03-2) : décision technique au moment de l’autorisation du code ; le texte de l’écran ne promet rien.</li></ul></div>
+<div class="group"><div class="section-title"><h2>Choix tranchés par Mickaël le 2026-10-06, après sa revue</h2></div><ul class="idx"><li>Saisie à côté des captures proposée d’office dès qu’au moins un tiers des lignes lues sont à vérifier ou illisibles, et au moins 5 lignes (exemple : 9 sur 14).</li><li>Premier import : bouton « Confirmer les N éléments sûrs » et question sur chaque ligne ; l’élément est ensuite retenu sur l’appareil.</li><li>Lignes inchangées : repliées et non enregistrées, comme la saisie rapide B04.</li><li>Niveau de confiance en mots seulement : Sûr, À vérifier, Illisible, Ignoré.</li><li>Ressources en ville : seules les gemmes (nombre exact de la barre du haut) sont lues ; les autres, arrondies en jeu, ne sont pas importées (R3).</li><li>Icônes pleines des lignes : 28 px sur téléphone, 32 px sur tablette et PC ; pas de pastille de rareté des caisses.</li><li>Import : bouton « Importer » à côté de « Tout renseigner », dans l’onglet Inventaire ; la carte pleine largeur est retirée. À partir de 420 px de large, tout tient sur la ligne de synchronisation. En dessous (révision du 2026-10-06), « Synchronisé » reste seul sur sa ligne et les deux boutons, chacun avec son icône et son texte, se partagent la ligne suivante (40 px de haut). Hors connexion, « Importer » reste visible et indisponible. Titres courts : « Importer », « Analyse », « Résultat », sur une ligne dès 360 px.</li><li>Formats acceptés : PNG, JPEG et WebP, 20 Mo au plus par capture (conseil 4 et état « Fichiers refusés »).</li><li>Pastille « à renseigner » de Ma ville (et rappel « N à renseigner » de l’Accueil, même nombre, B04-D14) : elle ne compte que la Progression et les ressources en ville (4 dans l’exemple). Les caisses, accélérateurs et objets ne sont plus comptés ; ils gardent leur petit mot « à renseigner » dans les listes. Les maquettes B04 validées (01 à 03) comptent encore tout l’Inventaire (13) : elles ne sont pas modifiées ici.</li><li>Quitter la relecture par la flèche de retour : si au moins une ligne a été corrigée, exclue ou confirmée, fenêtre « Abandonner cet import ? » avec « Continuer la relecture » et « Abandonner » ; sinon, retour direct.</li><li>Liste longue de Ma ville : lignes plus basses, deux colonnes dans un détail ouvert sur tablette, une colonne par carte sur PC.</li><li>Caisse de gemmes : 10 gemmes (valeur vérifiée), comptée dans le total des gemmes.</li><li>Coffres et packs (choix A) : un groupe « Coffres et packs » dans Ma ville › Inventaire › Ressources liste les 8 éléments avec leur nombre ; ils ne comptent ni dans les totaux de ressources ni dans la pastille ; l’import les reconnaît ; l’écran d’un coffre rappelle son contenu en une ligne.</li></ul></div>
+<div class="group"><div class="section-title"><h2>Décisions intégrées</h2></div><ul class="idx"><li>B03-D1 : images seulement, 10 captures au plus, trois catégories de l’Inventaire. B03-D3 : « Tes captures restent sur ton appareil » (choix, analyse, relecture). B03-D5 : correction d’une valeur connue avec « Changé en jeu » proposé d’office, modifiable. B03-D6 : valeur lue, proposée et finale gardées (historique). B03-D7 : élément non reconnu signalé puis ignoré. B03-D8 : import en ligne seulement (états hors connexion). B03-D9 : capture déjà importée, avertissement sans blocage. B03-D11 : date du relevé aujourd’hui par défaut, modifiable, jamais future. B03-D12 : lignes à vérifier en tête. B03-D15 : case vue sur deux captures fusionnée (« Vue sur 2 captures »), ligne à vérifier si les deux lectures diffèrent.</li><li>B03-D2 confirmée : lecture sur l’appareil ; réserve 1 (confirmation de l’élément), réserve 2 (outil chargé au moment de l’import, environ 6 Mo), réserve 3 (saisie à côté des captures proposée d’office, seuil ci-dessus).</li><li>FB04-03 : un élément absent des captures garde sa valeur, jamais zéro (mention en bas de la relecture).</li><li>B04 : règles visuelles du 2026-10-04, navigation à 5 entrées, « — » pour l’inconnu, petits mots « à renseigner » et « incomplet » seulement, motifs sur une ligne, conflit sans écrasement (C-054, P3B-14).</li></ul></div>
+<div class="group"><div class="section-title"><h2>Écrans et états</h2></div>
+<article class="panel idxp"><h3>01 · Ma ville → Inventaire</h3><p>Point 1 du manifeste. Évolution de B04-02 : bouton « Importer » à côté de « Tout renseigner », dans l’onglet Inventaire (sur la ligne de synchronisation à partir de 420 px de large, sur une ligne à part en dessous sur téléphone) ; groupe « Coffres et packs » dans Ressources, hors des totaux ; icônes pleines choisies le 2026-10-06 pour les ressources, les caisses et les accélérateurs ; tailles réelles des caisses et durées des accélérateurs vues sur les captures (liste plus longue). Progression, Objets et saisie rapide « Tout renseigner » reprennent B04-02.</p><div><a class="slink" href="ROK_UI_B03_01_MA_VILLE_INVENTAIRE.html#inventaire-ressources">Inventaire · Ressources (par défaut)</a><a class="slink" href="ROK_UI_B03_01_MA_VILLE_INVENTAIRE.html#inventaire-ressources-bois">Ressources, détail Bois ouvert</a><a class="slink" href="ROK_UI_B03_01_MA_VILLE_INVENTAIRE.html#inventaire-ressources-detail">Ressources, tous les détails ouverts (liste longue)</a><a class="slink" href="ROK_UI_B03_01_MA_VILLE_INVENTAIRE.html#inventaire-ressources-coffres">Ressources, Coffres et packs ouverts</a><a class="slink" href="ROK_UI_B03_01_MA_VILLE_INVENTAIRE.html#inventaire-accelerateurs">Inventaire · Accélérateurs</a><a class="slink" href="ROK_UI_B03_01_MA_VILLE_INVENTAIRE.html#inventaire-accelerateurs-detail">Accélérateurs, tous les types ouverts (liste longue)</a><a class="slink" href="ROK_UI_B03_01_MA_VILLE_INVENTAIRE.html#inventaire-objets">Inventaire · Objets</a><a class="slink" href="ROK_UI_B03_01_MA_VILLE_INVENTAIRE.html#apres-import">Après un import</a><a class="slink" href="ROK_UI_B03_01_MA_VILLE_INVENTAIRE.html#hors-connexion">Hors connexion : import indisponible</a><a class="slink" href="ROK_UI_B03_01_MA_VILLE_INVENTAIRE.html#progression">Progression</a><a class="slink" href="ROK_UI_B03_01_MA_VILLE_INVENTAIRE.html#nouveau-profil-inventaire">Nouveau profil · Inventaire</a><a class="slink" href="ROK_UI_B03_01_MA_VILLE_INVENTAIRE.html#saisie-rapide-ressources">Saisie rapide · Ressources</a><a class="slink" href="ROK_UI_B03_01_MA_VILLE_INVENTAIRE.html#saisie-rapide-accelerateurs">Saisie rapide · Accélérateurs</a></div></article>
+<article class="panel idxp"><h3>02 · Choix des captures</h3><p>Point 2. Titre « Importer ». Conseils (faire défiler chaque onglet du jeu, captures qui se recouvrent acceptées, 10 au plus, PNG, JPEG ou WebP de 20 Mo au plus), mention « tes captures restent sur ton appareil », vignettes dessinées (aucune image du jeu).</p><div><a class="slink" href="ROK_UI_B03_02_CHOIX_CAPTURES.html#aucune">Aucune capture (par défaut)</a><a class="slink" href="ROK_UI_B03_02_CHOIX_CAPTURES.html#une">1 capture</a><a class="slink" href="ROK_UI_B03_02_CHOIX_CAPTURES.html#plusieurs">6 captures</a><a class="slink" href="ROK_UI_B03_02_CHOIX_CAPTURES.html#premier">6 captures, premier import sur l’appareil</a><a class="slink" href="ROK_UI_B03_02_CHOIX_CAPTURES.html#dix">10 captures : limite atteinte</a><a class="slink" href="ROK_UI_B03_02_CHOIX_CAPTURES.html#refusee">Fichiers refusés (format, plus de 20 Mo)</a><a class="slink" href="ROK_UI_B03_02_CHOIX_CAPTURES.html#deja-importee">Capture déjà importée : avertissement (B03-D9)</a><a class="slink" href="ROK_UI_B03_02_CHOIX_CAPTURES.html#hors-connexion">Hors connexion (B03-D8)</a></div></article>
+<article class="panel idxp"><h3>03 · Analyse en cours</h3><p>Point 3. Titre « Analyse ». Premier chargement de l’outil de lecture (environ 6 Mo, chargé seulement au moment d’un import), progression par capture, annulation, échecs.</p><div><a class="slink" href="ROK_UI_B03_03_ANALYSE.html#chargement">Premier chargement de l’outil de lecture</a><a class="slink" href="ROK_UI_B03_03_ANALYSE.html#lecture">Lecture en cours (par défaut)</a><a class="slink" href="ROK_UI_B03_03_ANALYSE.html#annulee">Analyse annulée</a><a class="slink" href="ROK_UI_B03_03_ANALYSE.html#echec">Lecture impossible pour une capture</a><a class="slink" href="ROK_UI_B03_03_ANALYSE.html#echec-outil">Outil de lecture non téléchargé</a></div></article>
+<article class="panel idxp"><h3>04 · Relecture</h3><p>Point 4. Lignes à vérifier en tête (douteuses, illisibles, non reconnues) ; pour chaque ligne : valeur lue, proposée, actuelle, niveau de confiance et zone de la capture ; corriger, exclure ; date du relevé ; motif « Changé en jeu » proposé d’office pour les corrections ; rien n’est enregistré sans « Enregistrer ».</p><div><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#relecture">Relecture (par défaut) : deux lectures différentes, chiffre peu net, case coupée, éléments non reconnus</a><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#premiere-fois">Premier import : confirmer les éléments reconnus</a><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#changer-element">Changer l’élément reconnu</a><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#zone">Voir la zone sur la capture</a><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#corriger">Ligne corrigée par le joueur</a><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#exclure">Ligne exclue</a><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#prete">Lignes tranchées : prête à enregistrer</a><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#inchangees">Lignes inchangées dépliées</a><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#date">Date du relevé modifiée</a><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#date-future">Date du relevé dans le futur : erreur</a><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#trop-douteuses">Trop de lignes douteuses : saisie à côté proposée</a><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#saisie-a-cote">Saisie à côté des captures (repli)</a><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#hors-connexion">Hors connexion : enregistrement bloqué</a><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#reprise">Reprise des lignes en conflit ou refusées</a><a class="slink" href="ROK_UI_B03_04_RELECTURE.html#quitter">Quitter une relecture modifiée : confirmation</a></div></article>
+<article class="panel idxp"><h3>05 · Résultat ligne par ligne</h3><p>Point 5. Titre « Résultat ». Enregistrée, déjà enregistrée, conflit, refusée (invalide) ; reprise des lignes à revoir ; lien vers l’historique de chaque valeur enregistrée.</p><div><a class="slink" href="ROK_UI_B03_05_RESULTAT.html#mixte">Résultat mixte (par défaut)</a><a class="slink" href="ROK_UI_B03_05_RESULTAT.html#envoi">Enregistrement en cours</a><a class="slink" href="ROK_UI_B03_05_RESULTAT.html#echec-envoi">Échec de tout l’envoi</a><a class="slink" href="ROK_UI_B03_05_RESULTAT.html#tout-enregistre">Tout enregistré</a><a class="slink" href="ROK_UI_B03_05_RESULTAT.html#apres-reprise">Après la reprise</a></div></article>
+<article class="panel idxp"><h3>06 · Valeur : historique avec l’origine « Import »</h3><p>Point 6. Évolution de B04-03 pour les valeurs de l’Inventaire : marque « Import », valeur lue, valeur proposée quand elle diffère, lecture (sûre, choisie ou corrigée par toi) et zone de la capture. Les bâtiments, réglages et objets restent sur B04-03.</p><div><a class="slink" href="ROK_UI_B03_06_HISTORIQUE_VALEUR.html#caisse-historique">Caisse · historique (par défaut) : deux lectures, choisie par toi</a><a class="slink" href="ROK_UI_B03_06_HISTORIQUE_VALEUR.html#coffre-historique">Coffre au choix · historique et contenu</a><a class="slink" href="ROK_UI_B03_06_HISTORIQUE_VALEUR.html#coffre-correction">Coffre au choix · correction</a><a class="slink" href="ROK_UI_B03_06_HISTORIQUE_VALEUR.html#coffre-saisie">Coffre au choix · première saisie</a><a class="slink" href="ROK_UI_B03_06_HISTORIQUE_VALEUR.html#caisse-import-corrige">Caisse · import corrigé à la relecture</a><a class="slink" href="ROK_UI_B03_06_HISTORIQUE_VALEUR.html#caisse-correction">Caisse · correction</a><a class="slink" href="ROK_UI_B03_06_HISTORIQUE_VALEUR.html#caisse-saisie">Caisse · première saisie</a><a class="slink" href="ROK_UI_B03_06_HISTORIQUE_VALEUR.html#accelerateur-historique">Accélérateur · historique</a><a class="slink" href="ROK_UI_B03_06_HISTORIQUE_VALEUR.html#accelerateur-correction">Accélérateur · correction</a><a class="slink" href="ROK_UI_B03_06_HISTORIQUE_VALEUR.html#accelerateur-saisie">Accélérateur · première saisie</a><a class="slink" href="ROK_UI_B03_06_HISTORIQUE_VALEUR.html#ressource-historique">Gemmes en ville · historique</a><a class="slink" href="ROK_UI_B03_06_HISTORIQUE_VALEUR.html#ressource-correction">Gemmes en ville · correction</a><a class="slink" href="ROK_UI_B03_06_HISTORIQUE_VALEUR.html#ressource-saisie">Ressource en ville · première saisie</a></div></article>
+</div>
+<div class="group"><div class="section-title"><h2>Notes de conception</h2></div><ul class="idx"><li>Relecture sur PC : résumé, date du relevé, mention de l’appareil et barre d’enregistrement dans une colonne à gauche, qui reste visible ; lignes sur des colonnes régulières à droite. Téléphone et tablette : une colonne, barre d’enregistrement collée en bas comme la saisie rapide B04.</li><li>Chaque ligne de relecture : icône et nom de l’élément reconnu, niveau de confiance, trois cases Lu / Proposé / Actuel (Proposé en or quand il change la valeur), zone de la capture avec « Voir », et boutons Corriger et Exclure.</li><li>Saisie à côté des captures : la capture reste visible en haut sur téléphone, à gauche sur PC ; les lignes de saisie sont celles de la saisie rapide B04.</li><li>Résultat : lignes à revoir en tête, puis déjà enregistrées, puis enregistrées ; une ligne enregistrée ouvre l’historique de sa valeur.</li><li>Historique : les entrées importées portent la marque « Import » et le détail de la lecture ; les entrées saisies à la main sont inchangées par rapport à B04-03.</li></ul></div>
+   <p class="demo-feedback" id="feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+  </div>
+  
+ </main>
+</div>
+<script>function announce(m){const s=document.getElementById('feedback');if(s)s.textContent=m}
+document.querySelectorAll('[data-demo]').forEach(b=>b.addEventListener('click',()=>announce('Démonstration : ouverture de l’écran « '+b.dataset.demo+' ».')));
+</script>
+<script>/* Écran large (2400 px et plus) : échelle selon la hauteur disponible, plafonnée à 1,6 (docs/ux/README.md). */
+(()=>{const ZMAX=1.6;function ajusterEchelle(){const b=document.body,app=document.querySelector('.app');if(innerWidth<2400){b.style.removeProperty('--z');return}let z=1;b.style.setProperty('--z',1);const dispo=innerHeight-60;for(let k=0;k<6;k++){const h=app.getBoundingClientRect().height;z=Math.max(1,Math.min(ZMAX,z*dispo/h));b.style.setProperty('--z',z.toFixed(3))}while(z>1&&app.getBoundingClientRect().height>dispo){z-=0.01;b.style.setProperty('--z',z.toFixed(3))}}
+addEventListener('resize',ajusterEchelle);addEventListener('hashchange',()=>requestAnimationFrame(ajusterEchelle));document.addEventListener('click',()=>requestAnimationFrame(ajusterEchelle));document.fonts&&document.fonts.ready.then(ajusterEchelle);ajusterEchelle()})();</script>
+</body>
+</html>

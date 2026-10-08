@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content" />
+<title>RoK Companion — Accueil, essai de révision visuelle (Actuel / Proposé)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto:wght@400..800&display=swap" />
+<style>
+/* ===== Vue « Actuel » : CSS de ROK_UI_B04_01_ACCUEIL_TABLEAU_DE_BORD.html, sous body[data-view="actuel"] ===== */
+:root{color-scheme:dark;--canvas:#05070d;--surface:#101928;--surface-2:#172234;--text:#f3ead6;--muted:#b1bbca;--gold:#d8b24c;--gold-2:#f3d982;--gold-soft:rgba(216,178,76,.12);--line:rgba(216,178,76,.22);--line-cold:rgba(154,178,211,.17);--green:#3ecf8e;--display:Georgia,"Times New Roman",serif}*{box-sizing:border-box}html{min-height:100%;scroll-padding-bottom:110px}body[data-view="actuel"]{margin:0;min-width:320px;color:var(--text);background:radial-gradient(900px 420px at 50% -8%,rgba(216,178,76,.10),transparent 64%),linear-gradient(180deg,#08111d 0%,#05070d 100%);background-attachment:fixed;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.4}button,input{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:3px}body[data-view="actuel"] svg{display:block;flex:none;width:24px;height:24px}button{touch-action:manipulation}body[data-view="actuel"] .stage{padding:16px 16px calc(104px + env(safe-area-inset-bottom))}body[data-view="actuel"] .app{width:100%;max-width:620px;margin:0 auto}body[data-view="actuel"] .screen{padding:16px 14px 18px;border:1px solid var(--line-cold);border-radius:22px;background:linear-gradient(150deg,#111b2b,#0d1522);box-shadow:0 8px 24px #0002}body[data-view="actuel"] .header{margin-bottom:18px}body[data-view="actuel"] .title-wrap h1{margin:0;color:var(--gold-2);font:700 36px/1.12 var(--display)}body[data-view="actuel"] .title-wrap p{margin:7px 0 0;color:var(--muted);font-size:12px}body[data-view="actuel"] .profile-banner{padding:14px 10px;border:1px solid #a9bdd51c;border-radius:19px;background:radial-gradient(ellipse at 0 100%,#ad86331a,transparent 70%),linear-gradient(130deg,#182337,#0e1624);box-shadow:0 8px 24px #0003}body[data-view="actuel"] .profile-main{display:flex;align-items:center;gap:10px;min-width:0}body[data-view="actuel"] .profile-info{flex:1;min-width:0}body[data-view="actuel"] .name-row{display:flex;align-items:center;flex-wrap:wrap;gap:5px 8px}body[data-view="actuel"] .profile-name{font:700 26px/1.12 var(--display);overflow-wrap:anywhere}body[data-view="actuel"] .profile-meta{margin-top:7px;font-size:11px;color:var(--muted);line-height:1.5}body[data-view="actuel"] .emblem{width:60px;height:60px;flex:none;display:grid;place-items:center;border:1px solid #d2b15e99;border-radius:50%;background:radial-gradient(circle at 35% 25%,#4b4028,#24251f 75%);color:#ead08a;box-shadow:0 0 0 4px #d8b24c09}body[data-view="actuel"] .emblem svg{width:35px;height:35px}body[data-view="actuel"] .active-pill{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:3px 8px;border:1px solid #3ecf8e47;border-radius:30px;background:#3ecf8e14;color:var(--green);font-size:10px;font-weight:650}body[data-view="actuel"] .active-pill i{width:6px;height:6px;background:currentColor;border-radius:50%}body[data-view="actuel"] .chev{display:grid;place-items:center;width:32px;min-height:44px;flex:none;margin-right:-6px;padding:0;border:0;background:transparent;color:var(--gold-2)}body[data-view="actuel"] .chev svg{width:20px;height:20px}body[data-view="actuel"] .profile-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:16px}body[data-view="actuel"] .profile-chip{min-width:0;padding:11px 3px 10px;border:1px solid var(--line-cold);border-radius:13px;background:#10192888;color:var(--text);display:flex;align-items:center;flex-direction:column;text-align:center}body[data-view="actuel"] .chip-icon{width:33px;height:33px;display:grid;place-items:center;margin-bottom:6px;color:#d9bf79}body[data-view="actuel"] .chip-icon svg{width:25px;height:25px}body[data-view="actuel"] .chip-name{font-size:10.5px;font-weight:700;line-height:1.35}body[data-view="actuel"] .chip-sub{margin-top:3px;max-width:100%;font-size:10.5px;line-height:1.4;color:var(--muted);white-space:pre-line;min-height:2.8em}body[data-view="actuel"] .profile-chip.active{background:var(--gold-soft);border-color:#d8b24caa}body[data-view="actuel"] .profile-chip.active .chip-sub{color:var(--green)}body[data-view="actuel"] .profile-chip.add{border-color:#d8b24c44}body[data-view="actuel"] .add .chip-icon{color:var(--gold-2)}body[data-view="actuel"] .dashboard-group{min-width:0;margin-top:24px}body[data-view="actuel"] .section-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:5px 10px;margin-bottom:12px}body[data-view="actuel"] .section-title h2{margin:0;font:700 22px/1.15 var(--display);color:var(--text)}body[data-view="actuel"] .section-title .right{font-size:12px;color:var(--muted)}body[data-view="actuel"] .hero-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}body[data-view="actuel"] .stat,body[data-view="actuel"] .mini,body[data-view="actuel"] .panel,body[data-view="actuel"] .event{border:1px solid var(--line-cold);background:linear-gradient(135deg,#1b283b,#152032);border-radius:14px}body[data-view="actuel"] .stat{min-width:0;padding:12px 8px}body[data-view="actuel"] .ico{color:#dfc57e;margin-bottom:8px}body[data-view="actuel"] .ico svg{width:24px;height:24px}body[data-view="actuel"] .label{color:var(--muted);font-size:11px}body[data-view="actuel"] .value{margin-top:4px;white-space:nowrap;font:700 clamp(21px,5.7vw,27px)/1.15 var(--display);font-variant-numeric:tabular-nums}body[data-view="actuel"] .trend{margin-top:10px;color:var(--green);font-size:10.5px;font-weight:650;white-space:normal;line-height:1.45}body[data-view="actuel"] .mini-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}body[data-view="actuel"] .mini{display:flex;align-items:center;gap:10px;min-width:0;padding:14px 10px}body[data-view="actuel"] .mi{color:#dfc57e}body[data-view="actuel"] .mi svg{width:24px;height:24px}body[data-view="actuel"] .mini>div:last-child{min-width:0}body[data-view="actuel"] .ml{color:var(--muted);font-size:11px}body[data-view="actuel"] .mv{font:700 22px/1.2 var(--display);margin-top:2px;font-variant-numeric:tabular-nums}body[data-view="actuel"] .progress-panel{padding:17px 14px}body[data-view="actuel"] .progress-row+.progress-row{margin-top:18px}body[data-view="actuel"] .progress-top{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;font-weight:600;margin-bottom:8px}body[data-view="actuel"] .progress-top span:last-child{flex:none;color:var(--muted);font-variant-numeric:tabular-nums}body[data-view="actuel"] .bar{height:7px;border-radius:10px;background:#29364a;overflow:hidden}body[data-view="actuel"] .fill{height:100%;border-radius:inherit;background:linear-gradient(110deg,#b89549,#e0c477)}body[data-view="actuel"] .watch-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}body[data-view="actuel"] .module{min-width:0;padding:12px 10px}body[data-view="actuel"] .module-title{display:flex;align-items:center;justify-content:space-between;gap:3px;padding-bottom:7px}body[data-view="actuel"] .module-title strong{display:flex;align-items:center;gap:5px;font-size:13px}body[data-view="actuel"] .module-title strong svg{width:18px;height:18px;color:#dfc57e}body[data-view="actuel"] .module-title button{display:grid;place-items:center;min-width:24px;min-height:36px;margin-right:-5px;padding:0;background:transparent;border:0;color:var(--muted)}body[data-view="actuel"] .module-title button svg{width:16px;height:16px}body[data-view="actuel"] .item{display:flex;align-items:flex-start;gap:7px;padding:12px 0;border-top:1px solid #a9bdd514}body[data-view="actuel"] .item:last-child{padding-bottom:2px}body[data-view="actuel"] .item>div:last-child{min-width:0}body[data-view="actuel"] .dot{color:#dfc57e;flex:none;padding-top:2px}body[data-view="actuel"] .dot svg{width:19px;height:19px}body[data-view="actuel"] .item b{display:block;font-size:11px;line-height:1.45;font-weight:650;overflow-wrap:break-word}body[data-view="actuel"] .item small{display:block;margin-top:3px;color:var(--muted);font-size:10px;line-height:1.45}body[data-view="actuel"] .event-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}body[data-view="actuel"] .event{min-width:0;text-align:center;padding:14px 5px}body[data-view="actuel"] .eico{display:flex;justify-content:center;margin-bottom:8px;color:#dfc57e}body[data-view="actuel"] .eico svg{width:26px;height:26px}body[data-view="actuel"] .event b{display:block;font-size:13px}body[data-view="actuel"] .event span{display:block;color:var(--muted);font-size:10px;margin-top:3px}body[data-view="actuel"] .bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));width:calc(100vw - 32px);max-width:430px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"home optimize combat more";direction:ltr;padding:6px;border-radius:19px;background:#0c1420;border:1px solid #a9bdd52b;box-shadow:0 8px 24px #0005;backdrop-filter:blur(16px);z-index:50}body[data-view="actuel"] .nav{border:0;background:transparent;color:#9dadc4;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:58px;padding:7px 3px;gap:5px;border-radius:12px;font-size:11px;font-weight:600}body[data-view="actuel"] .nav-home{grid-area:home}body[data-view="actuel"] .nav-optimize{grid-area:optimize}body[data-view="actuel"] .nav-combat{grid-area:combat}body[data-view="actuel"] .nav-more{grid-area:more}body[data-view="actuel"] .nav svg{flex:none;width:21px;height:21px}body[data-view="actuel"] .nav.active{color:#edd28b;background:#d8b24c12}/* Création : mêmes surfaces, champs, états sélectionnés et boutons que Profil. */.overlay{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:center;padding:12px 12px max(12px,env(safe-area-inset-bottom));background:#03070dc9;backdrop-filter:blur(6px);z-index:70}.overlay.open{display:flex}.sheet{width:min(100%,430px);max-height:calc(100dvh - 24px - env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;background:var(--surface);color:var(--text);border:1px solid #d8b24c33;border-radius:22px;padding:16px 18px 18px;box-shadow:0 26px 70px #0009}.sheet h3{margin:0 0 14px;font-family:var(--display);font-size:18px;color:var(--gold-2);line-height:1.2}.field{margin-top:11px}.field label{display:block;margin-bottom:6px;color:var(--muted);font-size:12px;font-weight:800}.field input{width:100%;min-width:0;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--text);font-size:16px}.field input::placeholder{color:#98a5b8;opacity:1}.field input:focus{border-color:var(--gold);box-shadow:0 0 0 3px #d8b24c1a}.types{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.type-btn{min-width:0;min-height:42px;padding:8px 4px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--muted);font-size:12px;font-weight:800}.type-btn.selected{border-color:var(--gold);background:var(--gold-soft);color:var(--gold-2)}.sheet-actions{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-top:16px}.btn{min-width:0;min-height:44px;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--text);font-weight:800}.btn.primary{border:0;color:#1c1408;background:linear-gradient(110deg,#c8a44f,#dcc074);box-shadow:none}body.modal-open{overflow:hidden}.btn{font-size:16px}@media(min-width:700px){body[data-view="actuel"] .stage{padding:28px 32px calc(136px + env(safe-area-inset-bottom))}body[data-view="actuel"] .app{max-width:920px}body[data-view="actuel"] .screen{padding:26px;border-radius:28px}body[data-view="actuel"] .header{margin-bottom:24px}body[data-view="actuel"] .title-wrap h1{font-size:44px}body[data-view="actuel"] .title-wrap p{font-size:15px}body[data-view="actuel"] .profile-banner{padding:22px;border-radius:24px}body[data-view="actuel"] .profile-main{gap:18px}body[data-view="actuel"] .emblem{width:82px;height:82px}body[data-view="actuel"] .emblem svg{width:48px;height:48px}body[data-view="actuel"] .profile-name{font-size:36px}body[data-view="actuel"] .active-pill{font-size:12px;padding:4px 10px}body[data-view="actuel"] .profile-meta{font-size:14px}body[data-view="actuel"] .chev{width:44px}body[data-view="actuel"] .chev svg{width:24px;height:24px}body[data-view="actuel"] .profile-strip{gap:12px;margin-top:22px}body[data-view="actuel"] .profile-chip{padding:14px 8px;border-radius:16px}body[data-view="actuel"] .chip-icon{width:40px;height:40px}body[data-view="actuel"] .chip-icon svg{width:30px;height:30px}body[data-view="actuel"] .chip-name{font-size:14px}body[data-view="actuel"] .chip-sub{font-size:12px}body[data-view="actuel"] .dashboard-group{margin-top:28px}body[data-view="actuel"] .section-title{margin-bottom:16px}body[data-view="actuel"] .section-title h2{font-size:27px}body[data-view="actuel"] .section-title .right{font-size:12px}body[data-view="actuel"] .hero-stats{gap:12px}body[data-view="actuel"] .stat{padding:18px}body[data-view="actuel"] .ico svg{width:28px;height:28px}body[data-view="actuel"] .label{font-size:14px}body[data-view="actuel"] .value{font-size:34px}body[data-view="actuel"] .trend{font-size:12px;margin-top:12px}body[data-view="actuel"] .stat,body[data-view="actuel"] .mini,body[data-view="actuel"] .panel,body[data-view="actuel"] .event{border-radius:19px}body[data-view="actuel"] .mini-stats{gap:12px;margin-top:12px}body[data-view="actuel"] .mini{padding:16px;gap:14px}body[data-view="actuel"] .mi svg{width:28px;height:28px}body[data-view="actuel"] .ml{font-size:14px}body[data-view="actuel"] .mv{font-size:28px}body[data-view="actuel"] .progress-panel{padding:24px}body[data-view="actuel"] .progress-top{font-size:15px;margin-bottom:10px}body[data-view="actuel"] .progress-row+.progress-row{margin-top:22px}body[data-view="actuel"] .bar{height:9px}body[data-view="actuel"] .watch-grid{gap:14px}body[data-view="actuel"] .module{padding:18px}body[data-view="actuel"] .module-title strong{font-size:17px;gap:8px}body[data-view="actuel"] .module-title strong svg{width:22px;height:22px}body[data-view="actuel"] .item{padding:16px 0;gap:12px}body[data-view="actuel"] .dot svg{width:24px;height:24px}body[data-view="actuel"] .item b{font-size:14px}body[data-view="actuel"] .item small{font-size:12px}body[data-view="actuel"] .event-row{gap:12px}body[data-view="actuel"] .event{padding:20px 12px}body[data-view="actuel"] .event b{font-size:16px}body[data-view="actuel"] .event span{font-size:13px}body[data-view="actuel"] .eico svg{width:30px;height:30px}body[data-view="actuel"] .bottom-nav{width:calc(100vw - 64px);max-width:820px;min-height:88px;padding:8px;border-radius:25px;bottom:calc(18px + env(safe-area-inset-bottom))}body[data-view="actuel"] .nav{font-size:14px;gap:7px;border-radius:16px}body[data-view="actuel"] .nav svg{width:28px;height:28px}.overlay{padding:24px;align-items:center}.sheet{width:min(100%,620px);max-height:calc(100dvh - 48px);padding:28px;border-radius:26px}.sheet h3{font-size:27px;margin-bottom:22px}.field{margin-top:18px}.field label{font-size:15px;margin-bottom:9px}.field input{height:54px;font-size:18px;padding:0 16px;border-radius:14px}.types{gap:10px}.type-btn{min-height:52px;font-size:15px;border-radius:14px}.sheet-actions{margin-top:24px;gap:12px}.btn{min-height:54px;font-size:18px;border-radius:14px}
+}/* A bounded desktop dashboard; identical sizing on standard and ultrawide screens. */@media(min-width:1100px){body[data-view="actuel"] .app{max-width:1160px}body[data-view="actuel"] .screen{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:24px}body[data-view="actuel"] .header,body[data-view="actuel"] .profile-banner{grid-column:1/-1}body[data-view="actuel"] .header{margin:0}body[data-view="actuel"] .screen{padding:28px}body[data-view="actuel"] .title-wrap h1{font-size:42px}body[data-view="actuel"] .profile-banner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);align-items:center;gap:28px;padding:20px}body[data-view="actuel"] .profile-strip{margin:0;gap:10px}body[data-view="actuel"] .profile-chip{padding:10px 6px}body[data-view="actuel"] .profile-name{font-size:34px}body[data-view="actuel"] .profile-meta{font-size:12px}body[data-view="actuel"] .emblem{width:76px;height:76px}body[data-view="actuel"] .emblem svg{width:44px;height:44px}body[data-view="actuel"] .chip-name{font-size:12px}body[data-view="actuel"] .chip-sub{font-size:11px}body[data-view="actuel"] .dashboard-group{margin:0}body[data-view="actuel"] .section-title{min-height:35px;margin-bottom:12px}body[data-view="actuel"] .section-title h2{font-size:25px}body[data-view="actuel"] .section-title .right{font-size:12px}body[data-view="actuel"] .statistics{grid-column:1}body[data-view="actuel"] .progression{grid-column:2}body[data-view="actuel"] .watch{grid-column:1}body[data-view="actuel"] .events{grid-column:2}body[data-view="actuel"] .stat{padding:16px 12px}body[data-view="actuel"] .value{font-size:30px}body[data-view="actuel"] .trend{font-size:11px}body[data-view="actuel"] .mini{padding:12px}body[data-view="actuel"] .mv{font-size:25px}body[data-view="actuel"] .ml{font-size:12px}body[data-view="actuel"] .progress-panel{min-height:calc(100% - 47px);display:flex;flex-direction:column;justify-content:center;gap:26px}body[data-view="actuel"] .progress-row+.progress-row{margin:0}body[data-view="actuel"] .module{padding:14px}body[data-view="actuel"] .module-title strong{font-size:15px}body[data-view="actuel"] .item{gap:9px;padding:14px 0}body[data-view="actuel"] .item b{font-size:12px}body[data-view="actuel"] .item small{font-size:11px}body[data-view="actuel"] .dot svg{width:21px;height:21px}body[data-view="actuel"] .event-row{gap:10px}body[data-view="actuel"] .event{padding:22px 6px}body[data-view="actuel"] .event span{font-size:11px}
+}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}/* Finitions : captions stables, titres secondaires et lignes partagées. */body[data-view="actuel"] .module{display:grid;grid-template-rows:auto repeat(3,1fr)}@supports(grid-template-rows:subgrid){body[data-view="actuel"] .watch-grid{grid-template-rows:auto repeat(3,auto);row-gap:0}body[data-view="actuel"] .module{grid-row:span 4;grid-template-rows:subgrid;row-gap:0}
+}@media(max-width:699px){body[data-view="actuel"] .statistics .section-title{align-items:flex-start;flex-direction:column;gap:6px}
+}/* La fenêtre suit la zone réellement visible, clavier compris. */.overlay{inset:auto;top:var(--modal-top,0px);left:var(--modal-left,0px);width:var(--modal-width,100%);height:var(--modal-height,100dvh)}.overlay .sheet{display:flex;flex-direction:column;min-height:0;max-height:100%;overflow:hidden}.sheet h3{flex:0 0 auto}.sheet-body{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scroll-padding-block:12px;padding:3px;margin:-3px;-webkit-overflow-scrolling:touch}.sheet-actions{flex:0 0 auto;background:var(--surface)}.field input:focus,.field input:focus-visible{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px #d8b24c1a}#addTitle:focus{outline:none}/* PC de hauteur limitée : espaces compacts, tailles de texte conservées. */@media (min-width:1100px) and (max-height:1080px){body[data-view="actuel"] .stage{padding-top:12px;padding-bottom:calc(120px + env(safe-area-inset-bottom))}body[data-view="actuel"] .screen{padding:16px;row-gap:12px}body[data-view="actuel"] .title-wrap p{margin-top:4px}body[data-view="actuel"] .profile-banner{padding-block:8px}body[data-view="actuel"] .profile-chip{padding-block:6px}body[data-view="actuel"] .chip-icon{height:30px;margin-bottom:4px}body[data-view="actuel"] .profile-meta{margin-top:4px}body[data-view="actuel"] .section-title{min-height:0;margin-bottom:6px}body[data-view="actuel"] .stat{padding-block:10px}body[data-view="actuel"] .ico{margin-bottom:4px}body[data-view="actuel"] .trend{margin-top:8px}body[data-view="actuel"] .mini-stats{margin-top:8px;row-gap:8px}body[data-view="actuel"] .mini{padding-block:6px}body[data-view="actuel"] .progress-panel{min-height:calc(100% - 34.75px);padding-block:16px;gap:18px}body[data-view="actuel"] .module{padding-block:8px}body[data-view="actuel"] .module-title{padding-bottom:3px}body[data-view="actuel"] .item{padding-block:6px}body[data-view="actuel"] .item:last-child{padding-bottom:2px}body[data-view="actuel"] .event{padding-block:14px}
+}/* Navigation PC : 68 px, avec une réserve correspondant à sa hauteur réelle. */@media(min-width:1100px){html{scroll-padding-bottom:calc(88px + env(safe-area-inset-bottom))}body[data-view="actuel"] .stage{padding-bottom:calc(88px + env(safe-area-inset-bottom))}body[data-view="actuel"] .bottom-nav{min-height:68px;padding:5px;border-radius:20px;bottom:calc(10px + env(safe-area-inset-bottom))}body[data-view="actuel"] .nav{min-height:56px;padding:4px 3px;gap:3px;border-radius:14px;font-size:14px;line-height:20px}body[data-view="actuel"] .nav svg{width:24px;height:24px}
+}body[data-view="actuel"] .demo-feedback{grid-column:1/-1;margin:14px 0 0;padding:11px 13px;background:#d8b24c0b;border:1px solid var(--line);border-radius:12px;color:var(--gold-2);font-size:14px;line-height:1.5;overflow-wrap:anywhere}body[data-view="actuel"] .demo-feedback:empty{display:none}body[data-view="actuel"] .chip-btn{min-height:44px;padding:8px 8px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--muted);font-size:13px;font-weight:800}body[data-view="actuel"] .chip-btn[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-soft);color:var(--gold-2)}body[data-view="actuel"] .preview-switch{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:16px;padding:10px 12px;border:1px dashed var(--line);border-radius:12px}body[data-view="actuel"] .preview-switch>span{flex:0 0 100%;color:var(--gold-2);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}body[data-view="actuel"] .preview-switch .chip-btn{flex:1 1 120px;min-height:40px;font-size:12px}body[data-view="actuel"] .mock-bar{margin:0 0 14px;padding:10px 12px;border:1px dashed var(--line);border-radius:14px;background:#d8b24c0b;color:var(--gold-2);font-size:12px;line-height:1.5}body[data-view="actuel"] .mock-bar>b{letter-spacing:.2px}body[data-view="actuel"] .mock-bar details{margin-top:6px}body[data-view="actuel"] .mock-bar summary{cursor:pointer;font-weight:800;min-height:32px;display:flex;align-items:center}body[data-view="actuel"] .mock-bar ul{margin:6px 0 4px;padding-left:18px;color:#e9d9a8}body[data-view="actuel"] .mock-bar li{margin:3px 0}body[data-view="actuel"] .mock-bar .preview-switch{margin:10px 0 0;border-style:solid;background:#05070d66}body[data-view="actuel"] .mock-bar .preview-switch>span{flex:0 0 100%}body[data-view="actuel"] .hidden{display:none!important}body[data-view="actuel"] .bottom-nav{grid-template-areas:none;grid-template-columns:repeat(5,minmax(0,1fr))}body[data-view="actuel"] .nav{grid-area:auto!important;text-decoration:none}body[data-view="actuel"] .nav span{display:block}body[data-view="actuel"] .mock-bar{max-width:100%}body[data-view="actuel"] .cityq .mini{text-decoration:none;color:inherit;align-items:flex-start}body[data-view="actuel"] .cityq .mi{margin-top:2px}body[data-view="actuel"] .cityq .mi svg{width:24px;height:24px}body[data-view="actuel"] .c-ble{color:#e3c25a!important}body[data-view="actuel"] .c-bois{color:#c08f5d!important}body[data-view="actuel"] .c-pierre{color:#aab4c2!important}body[data-view="actuel"] .c-or{color:#f4d03f!important}body[data-view="actuel"] .short{display:flex;align-items:center;gap:12px;min-height:60px;padding:12px 16px 12px 12px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(135deg,#1d2a40,#152032);color:var(--text);text-decoration:none}body[data-view="actuel"] .short .ri{color:#dfc57e;flex:none}body[data-view="actuel"] .short .ri svg{width:26px;height:26px}body[data-view="actuel"] .short .rc{flex:1;min-width:0;font-weight:700;font-size:14px}body[data-view="actuel"] .short .rc small{display:block;margin-top:2px;color:var(--muted);font-weight:500;font-size:12px}body[data-view="actuel"] .short .go{color:var(--gold-2);margin-left:2px}body[data-view="actuel"] .short .go svg{width:18px;height:18px}body[data-view="actuel"] .short .count{flex:none;display:grid;place-items:center;min-width:34px;height:34px;padding:0 8px;border-radius:17px;background:var(--gold-soft);border:1px solid #d8b24c88;color:var(--gold-2);font:700 18px/1 var(--display)}body[data-view="actuel"] .nic{position:relative;display:block}body[data-view="actuel"] .nbadge{position:absolute;top:-8px;left:calc(100% - 5px);min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:#d8b24c;color:#1c1408;font:800 11px/19px Inter,system-ui,sans-serif;text-align:center;box-shadow:0 0 0 2px #0c1420}body[data-view="actuel"] .todo-link{padding:6px 0;color:var(--gold-2);font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap}@media(min-width:700px){body[data-view="actuel"] .nbadge{top:-8px;min-width:22px;height:22px;line-height:22px;font-size:12px}body[data-view="actuel"] .todo-link{font-size:15px}}body[data-view="actuel"] .todo-card{padding:14px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(135deg,#1d2a40,#152032)}body[data-view="actuel"] .todo-title{margin:0 0 12px;font:700 20px/1.2 var(--display);color:var(--text)}body[data-view="actuel"] .pills{display:flex;flex-wrap:wrap;gap:8px}body[data-view="actuel"] .pillb{display:inline-flex;align-items:center;min-height:40px;padding:6px 14px;border:1px solid #d8b24c88;border-radius:20px;background:var(--gold-soft);color:var(--gold-2);font-size:14px;font-weight:700;text-decoration:none}body[data-view="actuel"] .pillb:hover{border-color:var(--gold)}body[data-view="actuel"] .inc{margin-top:2px;color:var(--muted);font-size:12px;min-height:0}body[data-view="actuel"] .inc:empty{display:none}@media(min-width:700px){body[data-view="actuel"] .todo-card{padding:20px}body[data-view="actuel"] .todo-title{font-size:26px}body[data-view="actuel"] .pillb{min-height:46px;font-size:16px;padding:8px 18px}body[data-view="actuel"] .inc{font-size:12px}}body[data-view="actuel"] .empty-item{padding:14px 0 6px;color:var(--muted);font-size:12px}@media(min-width:700px){body[data-view="actuel"] .nav{font-size:14px}body[data-view="actuel"] .short{min-height:76px;padding:14px 22px 14px 18px}body[data-view="actuel"] .short .rc{font-size:17px}body[data-view="actuel"] .short .rc small{font-size:14px}body[data-view="actuel"] .short .count{min-width:42px;height:42px;font-size:22px;border-radius:21px}body[data-view="actuel"] .short .ri svg{width:30px;height:30px}body[data-view="actuel"] .empty-item{font-size:14px}}body[data-view="actuel"] .nav{font-size:10.5px}@media(min-width:700px){body[data-view="actuel"] .nav{font-size:14px}}@media(min-width:700px){body[data-view="actuel"] .cityq .mini-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(min-width:1100px){body[data-view="actuel"] .cityq{grid-column:1/-1}body[data-view="actuel"] .cityq .mini-stats{grid-template-columns:repeat(6,minmax(0,1fr))}body[data-view="actuel"] .cityq .mv{font-size:22px}}
+
+/* ===== Vue « Proposé » : même CSS jusqu'à 1099 px (seules les polices changent), PC ci-dessous ===== */
+body:is([data-view="propose"],[data-view^="pc-"]){margin:0;min-width:320px;color:var(--text);background:radial-gradient(900px 420px at 50% -8%,rgba(216,178,76,.10),transparent 64%),linear-gradient(180deg,#08111d 0%,#05070d 100%);background-attachment:fixed;font-family:Roboto,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.4}body:is([data-view="propose"],[data-view^="pc-"]) svg{display:block;flex:none;width:24px;height:24px}body:is([data-view="propose"],[data-view^="pc-"]) .stage{padding:16px 16px calc(104px + env(safe-area-inset-bottom))}body:is([data-view="propose"],[data-view^="pc-"]) .app{width:100%;max-width:620px;margin:0 auto}body:is([data-view="propose"],[data-view^="pc-"]) .screen{padding:16px 14px 18px;border:1px solid var(--line-cold);border-radius:22px;background:linear-gradient(150deg,#111b2b,#0d1522);box-shadow:0 8px 24px #0002}body:is([data-view="propose"],[data-view^="pc-"]) .header{margin-bottom:18px}body:is([data-view="propose"],[data-view^="pc-"]) .title-wrap h1{margin:0;color:var(--gold-2);font:700 36px/1.12 var(--display)}body:is([data-view="propose"],[data-view^="pc-"]) .title-wrap p{margin:7px 0 0;color:var(--muted);font-size:12px}body:is([data-view="propose"],[data-view^="pc-"]) .profile-banner{padding:14px 10px;border:1px solid #a9bdd51c;border-radius:19px;background:radial-gradient(ellipse at 0 100%,#ad86331a,transparent 70%),linear-gradient(130deg,#182337,#0e1624);box-shadow:0 8px 24px #0003}body:is([data-view="propose"],[data-view^="pc-"]) .profile-main{display:flex;align-items:center;gap:10px;min-width:0}body:is([data-view="propose"],[data-view^="pc-"]) .profile-info{flex:1;min-width:0}body:is([data-view="propose"],[data-view^="pc-"]) .name-row{display:flex;align-items:center;flex-wrap:wrap;gap:5px 8px}body:is([data-view="propose"],[data-view^="pc-"]) .profile-name{font:700 26px/1.12 var(--display);overflow-wrap:anywhere}body:is([data-view="propose"],[data-view^="pc-"]) .profile-meta{margin-top:7px;font-size:11px;color:var(--muted);line-height:1.5}body:is([data-view="propose"],[data-view^="pc-"]) .emblem{width:60px;height:60px;flex:none;display:grid;place-items:center;border:1px solid #d2b15e99;border-radius:50%;background:radial-gradient(circle at 35% 25%,#4b4028,#24251f 75%);color:#ead08a;box-shadow:0 0 0 4px #d8b24c09}body:is([data-view="propose"],[data-view^="pc-"]) .emblem svg{width:35px;height:35px}body:is([data-view="propose"],[data-view^="pc-"]) .active-pill{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:3px 8px;border:1px solid #3ecf8e47;border-radius:30px;background:#3ecf8e14;color:var(--green);font-size:10px;font-weight:650}body:is([data-view="propose"],[data-view^="pc-"]) .active-pill i{width:6px;height:6px;background:currentColor;border-radius:50%}body:is([data-view="propose"],[data-view^="pc-"]) .chev{display:grid;place-items:center;width:32px;min-height:44px;flex:none;margin-right:-6px;padding:0;border:0;background:transparent;color:var(--gold-2)}body:is([data-view="propose"],[data-view^="pc-"]) .chev svg{width:20px;height:20px}body:is([data-view="propose"],[data-view^="pc-"]) .profile-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:16px}body:is([data-view="propose"],[data-view^="pc-"]) .profile-chip{min-width:0;padding:11px 3px 10px;border:1px solid var(--line-cold);border-radius:13px;background:#10192888;color:var(--text);display:flex;align-items:center;flex-direction:column;text-align:center}body:is([data-view="propose"],[data-view^="pc-"]) .chip-icon{width:33px;height:33px;display:grid;place-items:center;margin-bottom:6px;color:#d9bf79}body:is([data-view="propose"],[data-view^="pc-"]) .chip-icon svg{width:25px;height:25px}body:is([data-view="propose"],[data-view^="pc-"]) .chip-name{font-size:10.5px;font-weight:700;line-height:1.35}body:is([data-view="propose"],[data-view^="pc-"]) .chip-sub{margin-top:3px;max-width:100%;font-size:10.5px;line-height:1.4;color:var(--muted);white-space:pre-line;min-height:2.8em}body:is([data-view="propose"],[data-view^="pc-"]) .profile-chip.active{background:var(--gold-soft);border-color:#d8b24caa}body:is([data-view="propose"],[data-view^="pc-"]) .profile-chip.active .chip-sub{color:var(--green)}body:is([data-view="propose"],[data-view^="pc-"]) .profile-chip.add{border-color:#d8b24c44}body:is([data-view="propose"],[data-view^="pc-"]) .add .chip-icon{color:var(--gold-2)}body:is([data-view="propose"],[data-view^="pc-"]) .dashboard-group{min-width:0;margin-top:24px}body:is([data-view="propose"],[data-view^="pc-"]) .section-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:5px 10px;margin-bottom:12px}body:is([data-view="propose"],[data-view^="pc-"]) .section-title h2{margin:0;font:700 22px/1.15 var(--display);color:var(--text)}body:is([data-view="propose"],[data-view^="pc-"]) .section-title .right{font-size:12px;color:var(--muted)}body:is([data-view="propose"],[data-view^="pc-"]) .hero-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}body:is([data-view="propose"],[data-view^="pc-"]) .stat,body:is([data-view="propose"],[data-view^="pc-"]) .mini,body:is([data-view="propose"],[data-view^="pc-"]) .panel,body:is([data-view="propose"],[data-view^="pc-"]) .event{border:1px solid var(--line-cold);background:linear-gradient(135deg,#1b283b,#152032);border-radius:14px}body:is([data-view="propose"],[data-view^="pc-"]) .stat{min-width:0;padding:12px 8px}body:is([data-view="propose"],[data-view^="pc-"]) .ico{color:#dfc57e;margin-bottom:8px}body:is([data-view="propose"],[data-view^="pc-"]) .ico svg{width:24px;height:24px}body:is([data-view="propose"],[data-view^="pc-"]) .label{color:var(--muted);font-size:11px}body:is([data-view="propose"],[data-view^="pc-"]) .value{margin-top:4px;white-space:nowrap;font:700 clamp(21px,5.7vw,27px)/1.15 var(--display);font-variant-numeric:tabular-nums}body:is([data-view="propose"],[data-view^="pc-"]) .trend{margin-top:10px;color:var(--green);font-size:10.5px;font-weight:650;white-space:normal;line-height:1.45}body:is([data-view="propose"],[data-view^="pc-"]) .mini-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}body:is([data-view="propose"],[data-view^="pc-"]) .mini{display:flex;align-items:center;gap:10px;min-width:0;padding:14px 10px}body:is([data-view="propose"],[data-view^="pc-"]) .mi{color:#dfc57e}body:is([data-view="propose"],[data-view^="pc-"]) .mi svg{width:24px;height:24px}body:is([data-view="propose"],[data-view^="pc-"]) .mini>div:last-child{min-width:0}body:is([data-view="propose"],[data-view^="pc-"]) .ml{color:var(--muted);font-size:11px}body:is([data-view="propose"],[data-view^="pc-"]) .mv{font:700 22px/1.2 var(--display);margin-top:2px;font-variant-numeric:tabular-nums}body:is([data-view="propose"],[data-view^="pc-"]) .progress-panel{padding:17px 14px}body:is([data-view="propose"],[data-view^="pc-"]) .progress-row+.progress-row{margin-top:18px}body:is([data-view="propose"],[data-view^="pc-"]) .progress-top{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;font-weight:600;margin-bottom:8px}body:is([data-view="propose"],[data-view^="pc-"]) .progress-top span:last-child{flex:none;color:var(--muted);font-variant-numeric:tabular-nums}body:is([data-view="propose"],[data-view^="pc-"]) .bar{height:7px;border-radius:10px;background:#29364a;overflow:hidden}body:is([data-view="propose"],[data-view^="pc-"]) .fill{height:100%;border-radius:inherit;background:linear-gradient(110deg,#b89549,#e0c477)}body:is([data-view="propose"],[data-view^="pc-"]) .watch-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}body:is([data-view="propose"],[data-view^="pc-"]) .module{min-width:0;padding:12px 10px}body:is([data-view="propose"],[data-view^="pc-"]) .module-title{display:flex;align-items:center;justify-content:space-between;gap:3px;padding-bottom:7px}body:is([data-view="propose"],[data-view^="pc-"]) .module-title strong{display:flex;align-items:center;gap:5px;font-size:13px}body:is([data-view="propose"],[data-view^="pc-"]) .module-title strong svg{width:18px;height:18px;color:#dfc57e}body:is([data-view="propose"],[data-view^="pc-"]) .module-title button{display:grid;place-items:center;min-width:24px;min-height:36px;margin-right:-5px;padding:0;background:transparent;border:0;color:var(--muted)}body:is([data-view="propose"],[data-view^="pc-"]) .module-title button svg{width:16px;height:16px}body:is([data-view="propose"],[data-view^="pc-"]) .item{display:flex;align-items:flex-start;gap:7px;padding:12px 0;border-top:1px solid #a9bdd514}body:is([data-view="propose"],[data-view^="pc-"]) .item:last-child{padding-bottom:2px}body:is([data-view="propose"],[data-view^="pc-"]) .item>div:last-child{min-width:0}body:is([data-view="propose"],[data-view^="pc-"]) .dot{color:#dfc57e;flex:none;padding-top:2px}body:is([data-view="propose"],[data-view^="pc-"]) .dot svg{width:19px;height:19px}body:is([data-view="propose"],[data-view^="pc-"]) .item b{display:block;font-size:11px;line-height:1.45;font-weight:650;overflow-wrap:break-word}body:is([data-view="propose"],[data-view^="pc-"]) .item small{display:block;margin-top:3px;color:var(--muted);font-size:10px;line-height:1.45}body:is([data-view="propose"],[data-view^="pc-"]) .event-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}body:is([data-view="propose"],[data-view^="pc-"]) .event{min-width:0;text-align:center;padding:14px 5px}body:is([data-view="propose"],[data-view^="pc-"]) .eico{display:flex;justify-content:center;margin-bottom:8px;color:#dfc57e}body:is([data-view="propose"],[data-view^="pc-"]) .eico svg{width:26px;height:26px}body:is([data-view="propose"],[data-view^="pc-"]) .event b{display:block;font-size:13px}body:is([data-view="propose"],[data-view^="pc-"]) .event span{display:block;color:var(--muted);font-size:10px;margin-top:3px}body:is([data-view="propose"],[data-view^="pc-"]) .bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));width:calc(100vw - 32px);max-width:430px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"home optimize combat more";direction:ltr;padding:6px;border-radius:19px;background:#0c1420;border:1px solid #a9bdd52b;box-shadow:0 8px 24px #0005;backdrop-filter:blur(16px);z-index:50}body:is([data-view="propose"],[data-view^="pc-"]) .nav{border:0;background:transparent;color:#9dadc4;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:58px;padding:7px 3px;gap:5px;border-radius:12px;font-size:11px;font-weight:600}body:is([data-view="propose"],[data-view^="pc-"]) .nav-home{grid-area:home}body:is([data-view="propose"],[data-view^="pc-"]) .nav-optimize{grid-area:optimize}body:is([data-view="propose"],[data-view^="pc-"]) .nav-combat{grid-area:combat}body:is([data-view="propose"],[data-view^="pc-"]) .nav-more{grid-area:more}body:is([data-view="propose"],[data-view^="pc-"]) .nav svg{flex:none;width:21px;height:21px}body:is([data-view="propose"],[data-view^="pc-"]) .nav.active{color:#edd28b;background:#d8b24c12}/* Création : mêmes surfaces, champs, états sélectionnés et boutons que Profil. */@media(min-width:700px){body:is([data-view="propose"],[data-view^="pc-"]) .stage{padding:28px 32px calc(136px + env(safe-area-inset-bottom))}body:is([data-view="propose"],[data-view^="pc-"]) .app{max-width:920px}body:is([data-view="propose"],[data-view^="pc-"]) .screen{padding:26px;border-radius:28px}body:is([data-view="propose"],[data-view^="pc-"]) .header{margin-bottom:24px}body:is([data-view="propose"],[data-view^="pc-"]) .title-wrap h1{font-size:44px}body:is([data-view="propose"],[data-view^="pc-"]) .title-wrap p{font-size:15px}body:is([data-view="propose"],[data-view^="pc-"]) .profile-banner{padding:22px;border-radius:24px}body:is([data-view="propose"],[data-view^="pc-"]) .profile-main{gap:18px}body:is([data-view="propose"],[data-view^="pc-"]) .emblem{width:82px;height:82px}body:is([data-view="propose"],[data-view^="pc-"]) .emblem svg{width:48px;height:48px}body:is([data-view="propose"],[data-view^="pc-"]) .profile-name{font-size:36px}body:is([data-view="propose"],[data-view^="pc-"]) .active-pill{font-size:12px;padding:4px 10px}body:is([data-view="propose"],[data-view^="pc-"]) .profile-meta{font-size:14px}body:is([data-view="propose"],[data-view^="pc-"]) .chev{width:44px}body:is([data-view="propose"],[data-view^="pc-"]) .chev svg{width:24px;height:24px}body:is([data-view="propose"],[data-view^="pc-"]) .profile-strip{gap:12px;margin-top:22px}body:is([data-view="propose"],[data-view^="pc-"]) .profile-chip{padding:14px 8px;border-radius:16px}body:is([data-view="propose"],[data-view^="pc-"]) .chip-icon{width:40px;height:40px}body:is([data-view="propose"],[data-view^="pc-"]) .chip-icon svg{width:30px;height:30px}body:is([data-view="propose"],[data-view^="pc-"]) .chip-name{font-size:14px}body:is([data-view="propose"],[data-view^="pc-"]) .chip-sub{font-size:12px}body:is([data-view="propose"],[data-view^="pc-"]) .dashboard-group{margin-top:28px}body:is([data-view="propose"],[data-view^="pc-"]) .section-title{margin-bottom:16px}body:is([data-view="propose"],[data-view^="pc-"]) .section-title h2{font-size:27px}body:is([data-view="propose"],[data-view^="pc-"]) .section-title .right{font-size:12px}body:is([data-view="propose"],[data-view^="pc-"]) .hero-stats{gap:12px}body:is([data-view="propose"],[data-view^="pc-"]) .stat{padding:18px}body:is([data-view="propose"],[data-view^="pc-"]) .ico svg{width:28px;height:28px}body:is([data-view="propose"],[data-view^="pc-"]) .label{font-size:14px}body:is([data-view="propose"],[data-view^="pc-"]) .value{font-size:34px}body:is([data-view="propose"],[data-view^="pc-"]) .trend{font-size:12px;margin-top:12px}body:is([data-view="propose"],[data-view^="pc-"]) .stat,body:is([data-view="propose"],[data-view^="pc-"]) .mini,body:is([data-view="propose"],[data-view^="pc-"]) .panel,body:is([data-view="propose"],[data-view^="pc-"]) .event{border-radius:19px}body:is([data-view="propose"],[data-view^="pc-"]) .mini-stats{gap:12px;margin-top:12px}body:is([data-view="propose"],[data-view^="pc-"]) .mini{padding:16px;gap:14px}body:is([data-view="propose"],[data-view^="pc-"]) .mi svg{width:28px;height:28px}body:is([data-view="propose"],[data-view^="pc-"]) .ml{font-size:14px}body:is([data-view="propose"],[data-view^="pc-"]) .mv{font-size:28px}body:is([data-view="propose"],[data-view^="pc-"]) .progress-panel{padding:24px}body:is([data-view="propose"],[data-view^="pc-"]) .progress-top{font-size:15px;margin-bottom:10px}body:is([data-view="propose"],[data-view^="pc-"]) .progress-row+.progress-row{margin-top:22px}body:is([data-view="propose"],[data-view^="pc-"]) .bar{height:9px}body:is([data-view="propose"],[data-view^="pc-"]) .watch-grid{gap:14px}body:is([data-view="propose"],[data-view^="pc-"]) .module{padding:18px}body:is([data-view="propose"],[data-view^="pc-"]) .module-title strong{font-size:17px;gap:8px}body:is([data-view="propose"],[data-view^="pc-"]) .module-title strong svg{width:22px;height:22px}body:is([data-view="propose"],[data-view^="pc-"]) .item{padding:16px 0;gap:12px}body:is([data-view="propose"],[data-view^="pc-"]) .dot svg{width:24px;height:24px}body:is([data-view="propose"],[data-view^="pc-"]) .item b{font-size:14px}body:is([data-view="propose"],[data-view^="pc-"]) .item small{font-size:12px}body:is([data-view="propose"],[data-view^="pc-"]) .event-row{gap:12px}body:is([data-view="propose"],[data-view^="pc-"]) .event{padding:20px 12px}body:is([data-view="propose"],[data-view^="pc-"]) .event b{font-size:16px}body:is([data-view="propose"],[data-view^="pc-"]) .event span{font-size:13px}body:is([data-view="propose"],[data-view^="pc-"]) .eico svg{width:30px;height:30px}body:is([data-view="propose"],[data-view^="pc-"]) .bottom-nav{width:calc(100vw - 64px);max-width:820px;min-height:88px;padding:8px;border-radius:25px;bottom:calc(18px + env(safe-area-inset-bottom))}body:is([data-view="propose"],[data-view^="pc-"]) .nav{font-size:14px;gap:7px;border-radius:16px}body:is([data-view="propose"],[data-view^="pc-"]) .nav svg{width:28px;height:28px}
+}/* A bounded desktop dashboard; identical sizing on standard and ultrawide screens. *//* Finitions : captions stables, titres secondaires et lignes partagées. */body:is([data-view="propose"],[data-view^="pc-"]) .module{display:grid;grid-template-rows:auto repeat(3,1fr)}@supports(grid-template-rows:subgrid){body:is([data-view="propose"],[data-view^="pc-"]) .watch-grid{grid-template-rows:auto repeat(3,auto);row-gap:0}body:is([data-view="propose"],[data-view^="pc-"]) .module{grid-row:span 4;grid-template-rows:subgrid;row-gap:0}
+}@media(max-width:699px){body:is([data-view="propose"],[data-view^="pc-"]) .statistics .section-title{align-items:flex-start;flex-direction:column;gap:6px}
+}/* La fenêtre suit la zone réellement visible, clavier compris. *//* PC de hauteur limitée : espaces compacts, tailles de texte conservées. *//* Navigation PC : 68 px, avec une réserve correspondant à sa hauteur réelle. */body:is([data-view="propose"],[data-view^="pc-"]) .demo-feedback{grid-column:1/-1;margin:14px 0 0;padding:11px 13px;background:#d8b24c0b;border:1px solid var(--line);border-radius:12px;color:var(--gold-2);font-size:14px;line-height:1.5;overflow-wrap:anywhere}body:is([data-view="propose"],[data-view^="pc-"]) .demo-feedback:empty{display:none}body:is([data-view="propose"],[data-view^="pc-"]) .chip-btn{min-height:44px;padding:8px 8px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--muted);font-size:13px;font-weight:800}body:is([data-view="propose"],[data-view^="pc-"]) .chip-btn[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-soft);color:var(--gold-2)}body:is([data-view="propose"],[data-view^="pc-"]) .preview-switch{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:16px;padding:10px 12px;border:1px dashed var(--line);border-radius:12px}body:is([data-view="propose"],[data-view^="pc-"]) .preview-switch>span{flex:0 0 100%;color:var(--gold-2);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px}body:is([data-view="propose"],[data-view^="pc-"]) .preview-switch .chip-btn{flex:1 1 120px;min-height:40px;font-size:12px}body:is([data-view="propose"],[data-view^="pc-"]) .mock-bar{margin:0 0 14px;padding:10px 12px;border:1px dashed var(--line);border-radius:14px;background:#d8b24c0b;color:var(--gold-2);font-size:12px;line-height:1.5}body:is([data-view="propose"],[data-view^="pc-"]) .mock-bar>b{letter-spacing:.2px}body:is([data-view="propose"],[data-view^="pc-"]) .mock-bar details{margin-top:6px}body:is([data-view="propose"],[data-view^="pc-"]) .mock-bar summary{cursor:pointer;font-weight:800;min-height:32px;display:flex;align-items:center}body:is([data-view="propose"],[data-view^="pc-"]) .mock-bar ul{margin:6px 0 4px;padding-left:18px;color:#e9d9a8}body:is([data-view="propose"],[data-view^="pc-"]) .mock-bar li{margin:3px 0}body:is([data-view="propose"],[data-view^="pc-"]) .mock-bar .preview-switch{margin:10px 0 0;border-style:solid;background:#05070d66}body:is([data-view="propose"],[data-view^="pc-"]) .mock-bar .preview-switch>span{flex:0 0 100%}body:is([data-view="propose"],[data-view^="pc-"]) .hidden{display:none!important}body:is([data-view="propose"],[data-view^="pc-"]) .bottom-nav{grid-template-areas:none;grid-template-columns:repeat(5,minmax(0,1fr))}body:is([data-view="propose"],[data-view^="pc-"]) .nav{grid-area:auto!important;text-decoration:none}body:is([data-view="propose"],[data-view^="pc-"]) .nav span{display:block}body:is([data-view="propose"],[data-view^="pc-"]) .mock-bar{max-width:100%}body:is([data-view="propose"],[data-view^="pc-"]) .cityq .mini{text-decoration:none;color:inherit;align-items:flex-start}body:is([data-view="propose"],[data-view^="pc-"]) .cityq .mi{margin-top:2px}body:is([data-view="propose"],[data-view^="pc-"]) .cityq .mi svg{width:24px;height:24px}body:is([data-view="propose"],[data-view^="pc-"]) .c-ble{color:#e3c25a!important}body:is([data-view="propose"],[data-view^="pc-"]) .c-bois{color:#c08f5d!important}body:is([data-view="propose"],[data-view^="pc-"]) .c-pierre{color:#aab4c2!important}body:is([data-view="propose"],[data-view^="pc-"]) .c-or{color:#f4d03f!important}body:is([data-view="propose"],[data-view^="pc-"]) .short{display:flex;align-items:center;gap:12px;min-height:60px;padding:12px 16px 12px 12px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(135deg,#1d2a40,#152032);color:var(--text);text-decoration:none}body:is([data-view="propose"],[data-view^="pc-"]) .short .ri{color:#dfc57e;flex:none}body:is([data-view="propose"],[data-view^="pc-"]) .short .ri svg{width:26px;height:26px}body:is([data-view="propose"],[data-view^="pc-"]) .short .rc{flex:1;min-width:0;font-weight:700;font-size:14px}body:is([data-view="propose"],[data-view^="pc-"]) .short .rc small{display:block;margin-top:2px;color:var(--muted);font-weight:500;font-size:12px}body:is([data-view="propose"],[data-view^="pc-"]) .short .go{color:var(--gold-2);margin-left:2px}body:is([data-view="propose"],[data-view^="pc-"]) .short .go svg{width:18px;height:18px}body:is([data-view="propose"],[data-view^="pc-"]) .short .count{flex:none;display:grid;place-items:center;min-width:34px;height:34px;padding:0 8px;border-radius:17px;background:var(--gold-soft);border:1px solid #d8b24c88;color:var(--gold-2);font:700 18px/1 var(--display)}body:is([data-view="propose"],[data-view^="pc-"]) .nic{position:relative;display:block}body:is([data-view="propose"],[data-view^="pc-"]) .nbadge{position:absolute;top:-8px;left:calc(100% - 5px);min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:#d8b24c;color:#1c1408;font:800 11px/19px Roboto,system-ui,sans-serif;text-align:center;box-shadow:0 0 0 2px #0c1420}body:is([data-view="propose"],[data-view^="pc-"]) .todo-link{padding:6px 0;color:var(--gold-2);font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap}@media(min-width:700px){body:is([data-view="propose"],[data-view^="pc-"]) .nbadge{top:-8px;min-width:22px;height:22px;line-height:22px;font-size:12px}body:is([data-view="propose"],[data-view^="pc-"]) .todo-link{font-size:15px}}body:is([data-view="propose"],[data-view^="pc-"]) .todo-card{padding:14px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(135deg,#1d2a40,#152032)}body:is([data-view="propose"],[data-view^="pc-"]) .todo-title{margin:0 0 12px;font:700 20px/1.2 var(--display);color:var(--text)}body:is([data-view="propose"],[data-view^="pc-"]) .pills{display:flex;flex-wrap:wrap;gap:8px}body:is([data-view="propose"],[data-view^="pc-"]) .pillb{display:inline-flex;align-items:center;min-height:40px;padding:6px 14px;border:1px solid #d8b24c88;border-radius:20px;background:var(--gold-soft);color:var(--gold-2);font-size:14px;font-weight:700;text-decoration:none}body:is([data-view="propose"],[data-view^="pc-"]) .pillb:hover{border-color:var(--gold)}body:is([data-view="propose"],[data-view^="pc-"]) .inc{margin-top:2px;color:var(--muted);font-size:12px;min-height:0}body:is([data-view="propose"],[data-view^="pc-"]) .inc:empty{display:none}@media(min-width:700px){body:is([data-view="propose"],[data-view^="pc-"]) .todo-card{padding:20px}body:is([data-view="propose"],[data-view^="pc-"]) .todo-title{font-size:26px}body:is([data-view="propose"],[data-view^="pc-"]) .pillb{min-height:46px;font-size:16px;padding:8px 18px}body:is([data-view="propose"],[data-view^="pc-"]) .inc{font-size:12px}}body:is([data-view="propose"],[data-view^="pc-"]) .empty-item{padding:14px 0 6px;color:var(--muted);font-size:12px}@media(min-width:700px){body:is([data-view="propose"],[data-view^="pc-"]) .nav{font-size:14px}body:is([data-view="propose"],[data-view^="pc-"]) .short{min-height:76px;padding:14px 22px 14px 18px}body:is([data-view="propose"],[data-view^="pc-"]) .short .rc{font-size:17px}body:is([data-view="propose"],[data-view^="pc-"]) .short .rc small{font-size:14px}body:is([data-view="propose"],[data-view^="pc-"]) .short .count{min-width:42px;height:42px;font-size:22px;border-radius:21px}body:is([data-view="propose"],[data-view^="pc-"]) .short .ri svg{width:30px;height:30px}body:is([data-view="propose"],[data-view^="pc-"]) .empty-item{font-size:14px}}body:is([data-view="propose"],[data-view^="pc-"]) .nav{font-size:10.5px}@media(min-width:700px){body:is([data-view="propose"],[data-view^="pc-"]) .nav{font-size:14px}}@media(min-width:700px){body:is([data-view="propose"],[data-view^="pc-"]) .cityq .mini-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* ===== Sélecteur de comparaison (outil de revue, hors écran de l'appli) ===== */
+.cmp{box-sizing:border-box;min-height:var(--cmp-h);flex-wrap:wrap;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 16px;background:#000;border-bottom:1px solid #ffffff1f;font:600 13px/1.2 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+:root{--cmp-h:52px}
+.cmp a{display:inline-flex;align-items:center;min-height:36px;padding:6px 12px;border-radius:9px;color:#c9d1dc;text-decoration:none;white-space:nowrap}
+.cmp a[aria-current="true"]{background:#ffffff1a;color:#fff}
+
+/* ===== Vue « Proposé » ===== */
+/* Même police partout, celle du rendu Android : Noto Serif (titres, chiffres) et Roboto (texte). */
+body:is([data-view="propose"],[data-view^="pc-"]){--display:"Noto Serif",Georgia,"Times New Roman",serif;font-family:Roboto,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+
+/* Navigation (choix « B » de Mickaël) — téléphone et tablette : barre collée en bas, pleine largeur,
+   fond opaque, trait fin en haut, zone sûre respectée. La page réserve exactement sa hauteur :
+   la dernière section s'arrête juste au-dessus et rien n'apparaît autour de la barre. */
+body:is([data-view="propose"],[data-view^="pc-"]){--nav-h:67px}
+body:is([data-view="propose"],[data-view^="pc-"]) .stage{padding-bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom))}
+html:has(body:is([data-view="propose"],[data-view^="pc-"])){scroll-padding-bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom))}
+body:is([data-view="propose"],[data-view^="pc-"]) .bottom-nav{left:0;right:0;bottom:0;transform:none;width:auto;max-width:none;min-height:0;padding:4px 6px calc(4px + env(safe-area-inset-bottom));border:0;border-top:1px solid #a9bdd52b;border-radius:0;background:#0c1420;box-shadow:none;backdrop-filter:none}
+@media(min-width:700px){
+ body:is([data-view="propose"],[data-view^="pc-"]){--nav-h:82px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .stage{padding-bottom:calc(var(--nav-h) + 28px + env(safe-area-inset-bottom))}
+ body:is([data-view="propose"],[data-view^="pc-"]) .bottom-nav{padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+ body:is([data-view="propose"],[data-view^="pc-"]) .nav{min-height:64px}
+}
+
+
+/* Éléments propres à la vue Proposé : masqués dans la vue Actuel (qui reste identique à B04-01). */
+body[data-view="actuel"] .p-only{display:none}
+/* Sélecteur de profils compact (idée reprise de la direction B), au style actuel ; remplace les 4 grandes cases. */
+body:is([data-view="propose"],[data-view^="pc-"]) .profile-strip{display:none}
+body:is([data-view="propose"],[data-view^="pc-"]) .header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px 20px}
+body:is([data-view="propose"],[data-view^="pc-"]) .p-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) 48px;gap:4px;width:100%;padding:4px;border:1px solid var(--line-cold);border-radius:14px;background:#10192888}
+body:is([data-view="propose"],[data-view^="pc-"]) .p-tab{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-width:0;min-height:44px;padding:6px 8px;border:1px solid transparent;border-radius:11px;background:transparent;color:var(--muted);font-size:14px;font-weight:700;white-space:nowrap}
+body:is([data-view="propose"],[data-view^="pc-"]) .p-tab svg{width:18px;height:18px;color:#d9bf79}
+body:is([data-view="propose"],[data-view^="pc-"]) .p-tab[aria-pressed="true"]{border-color:#d8b24caa;background:var(--gold-soft);color:var(--gold-2)}
+body:is([data-view="propose"],[data-view^="pc-"]) .p-tab.add{color:var(--gold-2)}
+/* Téléphone : sous le titre, toutes les entrées visibles d'un coup (pas de défilement caché) ; icônes masquées sauf « + ». */
+@media(min-width:700px){
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-tabs{display:flex;width:auto}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-tab{padding:6px 14px 6px 11px;font-size:15px}
+}
+/* Bloc du profil (idée reprise de la direction B) : la zone mise en avant. Haut compact, puis 5 chiffres
+   traités pareil en colonnes égales séparées par un trait fin. « Mes statistiques » disparaît en tant que
+   section ; HDV et VIP restent dans la ligne sous le nom. Tout le bloc ouvre la fiche du profil. */
+body:is([data-view="propose"],[data-view^="pc-"]) .title-wrap p{display:none}
+body:is([data-view="propose"],[data-view^="pc-"]) #heroMeta{display:none}
+body:is([data-view="propose"],[data-view^="pc-"]) .statistics{display:none}
+body:is([data-view="propose"],[data-view^="pc-"]) .profile-banner{cursor:pointer;padding:14px 12px;border-color:#d8b24c66;background:radial-gradient(ellipse at 0 0,#d8b24c26,transparent 62%),linear-gradient(130deg,#1b2638,#0e1624)}
+body:is([data-view="propose"],[data-view^="pc-"]) .profile-main{align-items:flex-start;gap:10px}
+body:is([data-view="propose"],[data-view^="pc-"]) .emblem{width:44px;height:44px}body:is([data-view="propose"],[data-view^="pc-"]) .emblem svg{width:26px;height:26px}
+body:is([data-view="propose"],[data-view^="pc-"]) .profile-name{font-size:22px}
+body:is([data-view="propose"],[data-view^="pc-"]) .profile-meta{margin-top:3px;font-size:12px}
+body:is([data-view="propose"],[data-view^="pc-"]) .chev{min-height:30px;margin-top:-1px}
+body:is([data-view="propose"],[data-view^="pc-"]) .p-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 10px;margin-top:14px;padding-top:12px;border-top:1px solid #d8b24c33}
+/* Téléphone : grille 3 × 2 complète, sans traits verticaux, colonnes alignées d'une ligne à l'autre. */
+body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi{min-width:0}
+body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi .trend{white-space:nowrap;font-size:clamp(11px,3.1vw,12px)}
+body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi .label{display:flex;align-items:center;gap:5px;white-space:nowrap}
+body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi .value{font-size:clamp(19px,5.2vw,24px)}
+body:is([data-view="propose"],[data-view^="pc-"]) .p-ki{display:block;color:#dfc57e}body:is([data-view="propose"],[data-view^="pc-"]) .p-ki svg{width:16px;height:16px}
+body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi .trend{margin-top:3px}
+@media(min-width:700px){
+ body:is([data-view="propose"],[data-view^="pc-"]) .profile-banner{padding:20px 22px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .profile-main{gap:14px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .emblem{width:56px;height:56px}body:is([data-view="propose"],[data-view^="pc-"]) .emblem svg{width:32px;height:32px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .profile-name{font-size:30px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .profile-meta{font-size:14px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .chev{min-height:40px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpis{grid-template-columns:repeat(6,minmax(0,1fr));gap:0;margin-top:18px;padding-top:16px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi{padding:0 6px;border-left:1px solid #a9bdd526}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi:first-child{padding-left:0;border-left:0}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi:last-child{padding-right:0}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi .trend{font-size:11.5px;letter-spacing:-.01em}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi .value{font-size:22px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi .label{font-size:12px;white-space:normal;align-items:flex-start;min-height:2.6em}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi .p-ki svg{width:16px;height:16px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-ki svg{width:20px;height:20px}
+}
+/* Téléphone : « Accueil » plus petit avec « + Ajouter » à sa droite ; la barre d'onglets ne contient que les profils
+   (défilement horizontal interne s'il y en a beaucoup, jamais de débordement de page). */
+body:is([data-view="propose"],[data-view^="pc-"]) .p-addtop{display:none}
+@media(max-width:699px){
+ body:is([data-view="propose"],[data-view^="pc-"]) .title-wrap h1{font-size:30px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-addtop{display:inline-flex;align-items:center;gap:5px;min-height:44px;padding:0 12px 0 9px;border:1px solid #d8b24c88;border-radius:12px;background:transparent;color:var(--gold-2);font-size:13px;font-weight:600}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-addtop svg{width:15px;height:15px}
+ /* Onglets de largeurs égales (l'actif n'est pas plus large) ; défilement interne s'il y a beaucoup de profils. */
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-tabs{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(max-content,1fr);overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-tabs::-webkit-scrollbar{display:none}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-tab{padding:6px 12px}
+ /* Plus de grand cadre : contenu à pleine largeur avec la marge latérale de la page. */
+ body:is([data-view="propose"],[data-view^="pc-"]) .screen{padding:0;border:0;border-radius:0;background:none;box-shadow:none}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-tab.add{display:none}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-tab:not(.add) svg{display:none}
+}
+
+/* PC (1100 px et plus) : barre verticale fixe à gauche (rail), mêmes 5 entrées ; plus de barre en bas.
+   Le contenu occupe toute la largeur restante, aux tailles et espacements de la tablette (768),
+   avec plus de colonnes. */
+@media(min-width:1100px){
+ body:is([data-view="propose"],[data-view^="pc-"]){--rail-w:104px;--gutter:clamp(32px,3.5vw,96px);--z:1}
+ body:is([data-view="propose"],[data-view^="pc-"]) .stage{padding:28px var(--gutter) 28px calc(var(--rail-w) * var(--z) + var(--gutter))}
+ html:has(body:is([data-view="propose"],[data-view^="pc-"])){scroll-padding-bottom:0}
+ body:is([data-view="propose"],[data-view^="pc-"]) .bottom-nav{top:calc(var(--cmp-h) / var(--z));bottom:0;left:0;right:auto;width:var(--rail-w);grid-template-columns:1fr;grid-auto-rows:min-content;align-content:start;gap:8px;padding:24px 10px;border-top:0;border-right:1px solid #a9bdd52b}
+ body:is([data-view="propose"],[data-view^="pc-"]) .nav{min-height:76px;padding:8px 4px;gap:7px;border-radius:16px;font-size:14px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .nav svg{width:28px;height:28px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .app{max-width:none}
+ /* Plus de grand cadre : le contenu est posé sur le fond, à côté du rail. */
+ body:is([data-view="propose"],[data-view^="pc-"]) .screen{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px 32px;align-items:start;padding:0;border:0;border-radius:0;background:none;box-shadow:none}
+ body:is([data-view="propose"],[data-view^="pc-"]) .header{grid-column:1/-1;margin:0}
+ body:is([data-view="propose"],[data-view^="pc-"]) .dashboard-group{margin:0}
+ /* Hauteurs naturelles, colonnes indépendantes : tous les blocs d'une colonne partagent la même cellule et se
+    placent sous le précédent grâce aux hauteurs mesurées (--bh, --ch, --ph, posées par le script). */
+ body:is([data-view="propose"],[data-view^="pc-"]){--sec-gap:28px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .profile-banner,body:is([data-view="propose"],[data-view^="pc-"]) .watch{grid-column:1/8;grid-row:2}
+ body:is([data-view="propose"],[data-view^="pc-"]) .cityq,body:is([data-view="propose"],[data-view^="pc-"]) .progression,body:is([data-view="propose"],[data-view^="pc-"]) .events{grid-column:8/-1;grid-row:2}
+ body:is([data-view="propose"],[data-view^="pc-"]) .watch{margin-top:calc(var(--bh,0px) + var(--sec-gap))}
+ body:is([data-view="propose"],[data-view^="pc-"]) .progression{margin-top:calc(var(--ch,0px) + var(--sec-gap))}
+ body:is([data-view="propose"],[data-view^="pc-"]) .events{margin-top:calc(var(--ch,0px) + var(--ph,0px) + var(--sec-gap) * 2)}
+ body:is([data-view="propose"],[data-view^="pc-"]) .cityq .mini-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+ body:is([data-view="propose"],[data-view^="pc-"]) .events .event{padding-block:14px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi{padding:0 12px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi:first-child{padding-left:0}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi:last-child{padding-right:0}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi .value{font-size:28px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi .label{font-size:13px;white-space:nowrap;min-height:0;align-items:center}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi .trend{font-size:14px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .p-kpi .p-ki svg{width:18px;height:18px}
+ body:is([data-view="propose"],[data-view^="pc-"]) .demo-feedback{grid-column:1/-1;margin:0}
+}
+/* Écran large : même principe ; échelle calculée pour occuper la hauteur disponible sans la dépasser
+   (variable --z, posée par le script) ; blocs côte à côte alignés à la même hauteur. */
+@media(min-width:2400px){
+ body:is([data-view="propose"],[data-view^="pc-"]){--gutter:clamp(96px,3vw,140px)}
+ body:is([data-view="propose"],[data-view^="pc-"]) .app{zoom:var(--z)}
+ body:is([data-view="propose"],[data-view^="pc-"]) .profile-banner,body:is([data-view="propose"],[data-view^="pc-"]) .watch{grid-column:1/7}
+ body:is([data-view="propose"],[data-view^="pc-"]) .cityq,body:is([data-view="propose"],[data-view^="pc-"]) .progression,body:is([data-view="propose"],[data-view^="pc-"]) .events{grid-column:7/-1}
+}
+
+/* ===== Organisations PC à comparer (#pc-a, #pc-b, #pc-c) : identiques à « Proposé » sous 1100 px ;
+   mêmes blocs, seule la disposition change. Hauteurs naturelles, rien n'est étiré. ===== */
+@media(min-width:1100px){
+ body[data-view^="pc-"] .profile-banner,body[data-view^="pc-"] .cityq,body[data-view^="pc-"] .progression,body[data-view^="pc-"] .events,body[data-view^="pc-"] .watch{margin-top:0;align-self:start}
+ /* À surveiller en une colonne : Objectifs puis Activité l'un sous l'autre (A et C) */
+ body[data-view="pc-a"] .watch .watch-grid,body[data-view="pc-c"] .watch .watch-grid{grid-template-columns:1fr;grid-template-rows:none;row-gap:14px}
+ body[data-view="pc-a"] .watch .module,body[data-view="pc-c"] .watch .module{grid-row:auto;grid-template-rows:auto repeat(3,auto);row-gap:0}
+
+ /* A — profil en bandeau, puis 3 colonnes égales : ville | Progression + événements | À surveiller */
+ body[data-view="pc-a"] .profile-banner{grid-column:1/-1;grid-row:2}
+ body[data-view="pc-a"] .p-kpi .value{font-size:32px}
+ body[data-view="pc-a"] .cityq{grid-column:1/5;grid-row:3}
+ body[data-view="pc-a"] .progression{grid-column:5/9;grid-row:3}
+ body[data-view="pc-a"] .events{grid-column:5/9;grid-row:3;margin-top:calc(var(--ph,0px) + var(--sec-gap))}
+ body[data-view="pc-a"] .watch{grid-column:9/-1;grid-row:3}
+
+ /* B — tablette élargie : profil ; ville sur une ligne de 6 ; Progression | événements ; Objectifs | Activité */
+ body[data-view="pc-b"] .profile-banner{grid-column:1/-1;grid-row:2}
+ body[data-view="pc-b"] .p-kpi .value{font-size:32px}
+ body[data-view="pc-b"] .cityq{grid-column:1/-1;grid-row:3}
+ body[data-view="pc-b"] .cityq .mini-stats{grid-template-columns:repeat(6,minmax(0,1fr))}
+ body[data-view="pc-b"] .progression{grid-column:1/7;grid-row:4}
+ body[data-view="pc-b"] .events{grid-column:7/-1;grid-row:4}
+ body[data-view="pc-b"] .watch{grid-column:1/-1;grid-row:5}
+
+ /* C — tableau de bord 3 colonnes : profil + Progression | ville + événements | À surveiller */
+ body[data-view="pc-c"] .profile-banner{grid-column:1/5;grid-row:2}
+ body[data-view="pc-c"] .progression{grid-column:1/5;grid-row:2;margin-top:calc(var(--bh,0px) + var(--sec-gap))}
+ body[data-view="pc-c"] .cityq{grid-column:5/9;grid-row:2}
+ body[data-view="pc-c"] .events{grid-column:5/9;grid-row:2;margin-top:calc(var(--ch,0px) + var(--sec-gap))}
+ body[data-view="pc-c"] .watch{grid-column:9/-1;grid-row:2}
+ /* colonne étroite : les 6 chiffres du profil en 3 × 2, sans trait (comme sur téléphone) */
+ body[data-view="pc-c"] .p-kpis{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 14px}
+ body[data-view="pc-c"] .p-kpi,body[data-view="pc-c"] .p-kpi:first-child,body[data-view="pc-c"] .p-kpi:last-child{padding:0;border-left:0}
+}
+@media(min-width:1100px){
+ /* colonnes d'un tiers : Aperçu de ma ville en 2 × 3 pour que chaque valeur tienne sur une ligne */
+ body[data-view="pc-a"] .cityq .mini-stats,body[data-view="pc-c"] .cityq .mini-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+</style>
+</head>
+<body data-view="actuel">
+<nav class="cmp" aria-label="Comparer les versions"><a href="#actuel">Actuel</a><a href="#propose">Proposé · v7 validée</a><a href="#pc-a" title="Organisation PC non retenue (pour mémoire)">PC A · non retenue</a><a href="#pc-b" title="Organisation PC non retenue (pour mémoire)">PC B · non retenue</a><a href="#pc-c" title="Organisation PC non retenue (pour mémoire)">PC C · non retenue</a></nav>
+<div id="views">
+<div class="stage">
+  <main class="app" aria-label="Accueil RoK Companion — thème sombre et or">
+    <div class="screen">
+
+      <header class="header">
+        <div class="title-wrap">
+          <h1>Accueil</h1>
+          <p>Profil actif et tableau de bord</p>
+        </div>
+        <button class="p-only p-addtop" type="button" onclick="openAdd()" aria-label="Ajouter un profil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16"/></svg><span>Ajouter</span></button>
+        <div class="p-only p-tabs" role="group" aria-label="Profils">
+          <button class="p-tab" type="button" data-ptab="main" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 8 4 3 4-7 4 7 4-3-2 10H6L4 8Z"/><path d="M7 21h10"/></svg><span>Principal</span></button>
+          <button class="p-tab" type="button" data-ptab="farm" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-9M12 16C5 16 3 12 3 6c6 0 9 3 9 8M12 12c0-6 3-9 9-9 0 6-3 9-9 9"/></svg><span>Ferme 1</span></button>
+          <button class="p-tab" type="button" data-ptab="alt" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z"/><path d="M12 6v11"/></svg><span>Secondaire</span></button>
+          <button class="p-tab add" type="button" onclick="openAdd()" aria-label="Ajouter un profil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16"/></svg><span>Ajouter</span></button>
+        </div>
+      </header>
+
+      <section class="profile-banner">
+        <div class="profile-main">
+          <div class="emblem" id="heroEmblem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 8 4 3 4-7 4 7 4-3-2 10H6L4 8Z"/><path d="M7 21h10"/></svg></div>
+
+          <div class="profile-info">
+            <div class="name-row">
+              <div class="profile-name" id="heroName">Principal</div>
+              <span class="active-pill"><i></i> Actif</span>
+            </div>
+            <div class="profile-meta" id="heroMeta">Royaume #3567 · HDV 25 · VIP 17</div><div class="p-only profile-meta" id="pMeta">Royaume #3567 · VIP 17</div>
+          </div>
+
+          <button class="chev" aria-label="Ouvrir le profil" onclick="alert('Maquette : ouverture de la fiche profil')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m9 6 6 6-6 6"/></svg>
+          </button>
+        </div>
+
+        <div class="p-only p-kpis">
+          <div class="p-kpi"><div class="label"><span class="p-ki"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="M8.5 12.5 12 9l3.5 3.5M8.5 16 12 12.5l3.5 3.5"/></svg></span>Puissance</div><div class="value" id="pPower">—</div><div class="trend" id="pPowerT">—</div></div>
+          <div class="p-kpi"><div class="label"><span class="p-ki"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21v-4H5v-6a7 7 0 0 1 14 0v6h-3v4ZM10 18v3m4-3v3"/><circle cx="9" cy="11" r="1"/><circle cx="15" cy="11" r="1"/><path d="m11 15 1-2 1 2"/></svg></span>Kills</div><div class="value" id="pKills">—</div><div class="trend" id="pKillsT">—</div></div>
+          <div class="p-kpi"><div class="label"><span class="p-ki"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20V9a6 6 0 0 1 12 0v11M4 21h16M12 7v8m-3-5h6"/></svg></span>Morts</div><div class="value" id="pDeaths">—</div><div class="trend" id="pDeathsT">—</div></div>
+          <div class="p-kpi"><div class="label"><span class="p-ki"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8h14v13M7 8V3h3v5m4 0V3h3v5M9 21v-7h6v7M8 11h1m6 0h1"/></svg></span>Hôtel de ville</div><div class="value" id="pCh">—</div></div>
+          <div class="p-kpi"><div class="label"><span class="p-ki"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8 4-5h10l4 5-9 13L3 8Zm0 0h18M7 3l2 5 3 13 3-13 2-5M9 8l3-5 3 5"/></svg></span>Gemmes</div><div class="value" id="pGems">—</div></div>
+          <div class="p-kpi"><div class="label"><span class="p-ki"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m13 2-9 12h7l-1 8 10-13h-8l1-7Z"/></svg></span>Points d'action</div><div class="value" id="pAp">—</div></div>
+        </div>
+        <div class="profile-strip">
+          <button class="profile-chip active" data-profile="main" aria-pressed="true" onclick="selectProfile('main',this)">
+            <div class="chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 8 4 3 4-7 4 7 4-3-2 10H6L4 8Z"/><path d="M7 21h10"/></svg></div>
+            <div class="chip-name">Principal</div>
+            <div class="chip-sub">Actif</div>
+          </button>
+          <button class="profile-chip" data-profile="farm" aria-pressed="false" onclick="selectProfile('farm',this)">
+            <div class="chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-9M12 16C5 16 3 12 3 6c6 0 9 3 9 8M12 12c0-6 3-9 9-9 0 6-3 9-9 9"/></svg></div>
+            <div class="chip-name">Ferme 1</div>
+            <div class="chip-sub">Royaume
+#3567</div>
+          </button>
+          <button class="profile-chip" data-profile="alt" aria-pressed="false" onclick="selectProfile('alt',this)">
+            <div class="chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z"/><path d="M12 6v11"/></svg></div>
+            <div class="chip-name">Secondaire</div>
+            <div class="chip-sub">Royaume
+#3556</div>
+          </button>
+          <button class="profile-chip add" onclick="openAdd()">
+            <div class="chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16"/></svg></div>
+            <div class="chip-name">Ajouter</div>
+            <div class="chip-sub">un profil</div>
+          </button>
+        </div>
+      </section>
+
+      
+      <div class="dashboard-group cityq">
+        <div class="section-title"><h2>Aperçu de ma ville</h2><a class="todo-link" id="todoLink" href="#"></a></div>
+        <section class="mini-stats">
+          <a class="mini" href="ROK_UI_B04_02_MA_VILLE.html#progression"><div class="mi "><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M14.5 3.5 20.5 9.5 17 13 11 7Z"/><path d="M12.5 8.5 5 16a2 2 0 0 0 3 3l7.5-7.5"/></svg></div><div><div class="ml">Bâtisseurs</div><div class="mv" id="cq-bat">—</div><div class="inc" id="inc-bat"></div></div></a><a class="mini" href="ROK_UI_B04_02_MA_VILLE.html#progression"><div class="mi "><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><circle cx="12" cy="12" r="9"/><path d="M12 12l4-4"/><circle cx="12" cy="12" r="1.2"/><path d="M12 5.5v1.5M5.5 12H7m10 0h1.5"/></svg></div><div><div class="ml">Bonus de vitesse</div><div class="mv" id="cq-spd">—</div><div class="inc" id="inc-spd"></div></div></a>
+          <a class="mini" href="ROK_UI_B04_02_MA_VILLE.html#inventaire-ressources"><div class="mi c-ble"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M12 22V9"/><path d="M12 6c-2-1-2.5-3-2-4.5 2 .3 3 2 2 4.5Zm0 0c2-1 2.5-3 2-4.5-2 .3-3 2-2 4.5Z"/><path d="M12 12c-3 0-4.8-2-4.8-4.2 2.4 0 4.8 1.6 4.8 4.2Zm0 0c3 0 4.8-2 4.8-4.2-2.4 0-4.8 1.6-4.8 4.2Z"/><path d="M12 18c-3 0-4.8-2-4.8-4.2 2.4 0 4.8 1.6 4.8 4.2Zm0 0c3 0 4.8-2 4.8-4.2-2.4 0-4.8 1.6-4.8 4.2Z"/></svg></div><div><div class="ml">Total nourriture</div><div class="mv" id="cq-ble">—</div><div class="inc" id="inc-ble"></div></div></a><a class="mini" href="ROK_UI_B04_02_MA_VILLE.html#inventaire-ressources"><div class="mi c-bois"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><circle cx="7.5" cy="16.5" r="4"/><circle cx="16.5" cy="16.5" r="4"/><circle cx="12" cy="8" r="4"/><circle cx="7.5" cy="16.5" r="1.2"/><circle cx="16.5" cy="16.5" r="1.2"/><circle cx="12" cy="8" r="1.2"/></svg></div><div><div class="ml">Total bois</div><div class="mv" id="cq-bois">—</div><div class="inc" id="inc-bois"></div></div></a><a class="mini" href="ROK_UI_B04_02_MA_VILLE.html#inventaire-ressources"><div class="mi c-pierre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M2.5 20.5 4 14l6-1.5 2.5 3-1 5Z"/><path d="M12.5 20.5l1.2-6 5-1.5 2.8 2.5-.7 5Z"/><path d="M8 11.5 9 7l5-1 2 2.5-1 3.5Z"/></svg></div><div><div class="ml">Total pierre</div><div class="mv" id="cq-pierre">—</div><div class="inc" id="inc-pierre"></div></div></a><a class="mini" href="ROK_UI_B04_02_MA_VILLE.html#inventaire-ressources"><div class="mi c-or"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.6"/><path d="M9.6 10.4a3 3 0 0 1 2-1.3"/></svg></div><div><div class="ml">Total or</div><div class="mv" id="cq-or">—</div><div class="inc" id="inc-or"></div></div></a>
+        </section>
+      </div>
+
+      <div class="dashboard-group statistics">
+      <div class="section-title">
+        <h2>Mes statistiques</h2>
+        <div class="right" id="updated">Mis à jour il y a 2 min</div>
+      </div>
+
+      <section class="hero-stats">
+        <article class="stat">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="M8.5 12.5 12 9l3.5 3.5M8.5 16 12 12.5l3.5 3.5"/></svg></div>
+          <div class="label">Puissance</div>
+          <div class="value" id="power">128,4 M</div>
+          <div class="trend" id="powerTrend">▲ +2,1 M (7j)</div>
+        </article>
+
+        <article class="stat">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21v-4H5v-6a7 7 0 0 1 14 0v6h-3v4ZM10 18v3m4-3v3"/><circle cx="9" cy="11" r="1"/><circle cx="15" cy="11" r="1"/><path d="m11 15 1-2 1 2"/></svg></div>
+          <div class="label">Kills</div>
+          <div class="value" id="kills">412,8 M</div>
+          <div class="trend" id="killTrend">▲ +12,4 M (7j)</div>
+        </article>
+
+        <article class="stat">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20V9a6 6 0 0 1 12 0v11M4 21h16M12 7v8m-3-5h6"/></svg></div>
+          <div class="label">Morts</div>
+          <div class="value" id="deaths">5,6 M</div>
+          <div class="trend" id="deathTrend">▲ +320 K (7j)</div>
+        </article>
+      </section>
+
+      <section class="mini-stats">
+        <div class="mini"><div class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8h14v13M7 8V3h3v5m4 0V3h3v5M9 21v-7h6v7M8 11h1m6 0h1"/></svg></div><div><div class="ml">Hôtel de ville</div><div class="mv" id="ch">25</div></div></div>
+        <div class="mini"><div class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 8 4 3 4-7 4 7 4-3-2 10H6L4 8Z"/><path d="M7 21h10"/></svg></div><div><div class="ml">VIP</div><div class="mv" id="vip">17</div></div></div>
+        <div class="mini"><div class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8 4-5h10l4 5-9 13L3 8Zm0 0h18M7 3l2 5 3 13 3-13 2-5M9 8l3-5 3 5"/></svg></div><div><div class="ml">Gemmes</div><div class="mv" id="gems">185 430</div></div></div>
+        <div class="mini"><div class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m13 2-9 12h7l-1 8 10-13h-8l1-7Z"/></svg></div><div><div class="ml">Points d'action</div><div class="mv" id="ap">6 250</div></div></div>
+      </section>
+
+      </div>
+      <div class="dashboard-group progression">
+      <div class="section-title"><h2>Progression</h2></div>
+      <section class="panel progress-panel">
+        <div class="progress-row">
+          <div class="progress-top"><span>Troupes T4 / T5</span><span id="p1t">92 %</span></div>
+          <div class="bar"><div class="fill" id="p1" style="width:92%"></div></div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-top"><span>Recherche militaire</span><span id="p2t">87 %</span></div>
+          <div class="bar"><div class="fill" id="p2" style="width:87%"></div></div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-top"><span>Équipement principal</span><span id="p3t">78 %</span></div>
+          <div class="bar"><div class="fill" id="p3" style="width:78%"></div></div>
+        </div>
+      </section>
+
+      </div>
+      <div class="dashboard-group watch">
+      <div class="section-title"><h2>À surveiller</h2></div>
+      <section class="watch-grid">
+        <article class="panel module">
+          <div class="module-title">
+            <strong><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg> Objectifs</strong><button aria-label="Ouvrir la rubrique"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+          </div>
+          <div class="item"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 8 4 3 4-7 4 7 4-3-2 10H6L4 8Z"/><path d="M7 21h10"/></svg></div><div><b>Monter le VIP 18</b><small>Objectif principal</small></div></div>
+          <div class="item"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z"/><path d="M12 6v11"/></svg></div><div><b>Finaliser l'équipement</b><small>Cavalerie</small></div></div>
+          <div class="item"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 13 9-9 4-1-1 4-9 9Z"/><path d="m5 12 7 7m-3.5-3.5-4 4M3 18l3 3"/></svg></div><div><b>Préparer le prochain KvK</b><small>Planification</small></div></div>
+        </article>
+
+        <article class="panel module">
+          <div class="module-title">
+            <strong><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Activité</strong><button aria-label="Ouvrir la rubrique"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+          </div>
+          <div class="item"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 13 9-9 4-1-1 4-9 9Z"/><path d="m5 12 7 7m-3.5-3.5-4 4M3 18l3 3"/></svg></div><div><b>KvK : préparation terminée</b><small>Il y a 1 h</small></div></div>
+          <div class="item"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6m-5 0v6L4 19a1.3 1.3 0 0 0 1 2h14a1.3 1.3 0 0 0 1-2L14 9V3M7 15h10"/></svg></div><div><b>Recherche avancée lancée</b><small>Il y a 3 h</small></div></div>
+          <div class="item"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-9M12 16C5 16 3 12 3 6c6 0 9 3 9 8M12 12c0-6 3-9 9-9 0 6-3 9-9 9"/></svg></div><div><b>Ferme 1 synchronisée</b><small>Il y a 5 min</small></div></div>
+        </article>
+      </section>
+
+      </div>
+      <div class="dashboard-group events">
+      <div class="section-title"><h2>Prochains événements</h2></div>
+      <section class="event-row">
+        <article class="event"><div class="eico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8v7a4 4 0 0 1-8 0V3Zm0 2H4v3a4 4 0 0 0 4 4m8-7h4v3a4 4 0 0 1-4 4M12 14v7m-4 0h8"/></svg></div><b>MGE</b><span>dans 2 jours</span></article>
+        <article class="event"><div class="eico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 13 9-9 4-1-1 4-9 9Z"/><path d="m5 12 7 7m-3.5-3.5-4 4M3 18l3 3"/></svg></div><b>Ark</b><span>samedi 20h00</span></article>
+        <article class="event"><div class="eico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V3m0 1c5-4 9 4 14 0v9c-5 4-9-4-14 0"/></svg></div><b>KvK</b><span>J-11</span></article>
+      </section>
+      </div>
+      <p class="demo-feedback" id="profileStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Navigation principale"><a class="nav active" href="ROK_UI_B04_01_ACCUEIL_TABLEAU_DE_BORD.html" aria-current="page"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.7"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h5v-7h4v7h5V9"/></svg></span><span>Accueil</span></a><a class="nav" href="ROK_UI_B04_02_MA_VILLE.html"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.7"><path d="M3 21h18M5 21V9h3V6h3v3h2V6h3v3h3v12M10 21v-5h4v5"/></svg><span class="nbadge" id="navBadge" aria-label="2 valeurs à renseigner">2</span></span><span>Ma ville</span></a><button class="nav" type="button" data-demo="Optimiser"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.7"><path d="M3 7h4m5 0h9M3 17h9m5 0h4"/><circle cx="9.5" cy="7" r="2.5"/><circle cx="14.5" cy="17" r="2.5"/></svg></span><span>Optimiser</span></button><button class="nav" type="button" data-demo="Combat"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.7"><path d="m8 13 9-9 4-1-1 4-9 9Z"/><path d="m5 12 7 7m-3.5-3.5-4 4M3 18l3 3"/></svg></span><span>Combat</span></button><button class="nav" type="button" data-demo="Plus"><span class="nic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.7"><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg></span><span>Plus</span></button></nav>
+  </main>
+</div>
+</div>
+
+<div class="overlay" id="addOverlay" onclick="if(event.target===this)closeAdd()">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+    <h3 id="addTitle" tabindex="-1">Ajouter un profil</h3>
+    <div class="sheet-body">
+
+    <div class="field">
+      <label for="profileName">Nom du profil</label>
+      <input id="profileName" placeholder="Ex. Ferme 2" />
+    </div>
+
+    <div class="field">
+      <label>Type</label>
+      <div class="types">
+        <button class="type-btn selected" aria-pressed="true" onclick="pickType(this)">Principal</button>
+        <button class="type-btn" aria-pressed="false" onclick="pickType(this)">Ferme</button>
+        <button class="type-btn" aria-pressed="false" onclick="pickType(this)">Secondaire</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="playerId">ID joueur RoK — facultatif</label>
+      <input id="playerId" placeholder="Ex. 123456789" inputmode="numeric" />
+    </div>
+
+    </div>
+    <div class="sheet-actions">
+      <button class="btn" onclick="closeAdd()">Annuler</button>
+      <button class="btn primary" onclick="closeAdd();announce('Démonstration : profil créé.')">Créer le profil</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+const profiles={
+  main:{name:"Principal",icon:"<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m4 8 4 3 4-7 4 7 4-3-2 10H6L4 8Z\"/><path d=\"M7 21h10\"/></svg>",meta:"Royaume #3567 · HDV 25 · VIP 17",power:"128,4 M",kills:"412,8 M",deaths:"5,6 M",ch:"25",vip:"17",gems:"185 430",ap:"6 250",p:[92,87,78],trend:["▲ +2,1 M (7j)","▲ +12,4 M (7j)","▲ +320 K (7j)"]},
+  farm:{name:"Ferme 1",icon:"<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21v-9M12 16C5 16 3 12 3 6c6 0 9 3 9 8M12 12c0-6 3-9 9-9 0 6-3 9-9 9\"/></svg>",meta:"Royaume #3567 · HDV 25 · VIP 12",power:"64,8 M",kills:"118,2 M",deaths:"1,4 M",ch:"25",vip:"12",gems:"42 610",ap:"5 840",p:[81,74,61],trend:["▲ +860 K (7j)","▲ +3,2 M (7j)","▲ +85 K (7j)"]},
+  alt:{name:"Secondaire",icon:"<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z\"/><path d=\"M12 6v11\"/></svg>",meta:"Royaume #3556 · HDV 25 · VIP 14",power:"82,6 M",kills:"206,5 M",deaths:"2,7 M",ch:"25",vip:"14",gems:"76 920",ap:"6 010",p:[86,79,69],trend:["▲ +1,3 M (7j)","▲ +5,7 M (7j)","▲ +141 K (7j)"]}
+};
+
+function selectProfile(key,el){
+  document.querySelectorAll(".profile-chip").forEach(x=>x.classList.remove("active"));
+  el.classList.add("active");
+  document.querySelectorAll(".profile-chip[data-profile]").forEach(chip=>{
+    const selected=chip===el;
+    chip.setAttribute("aria-pressed",String(selected));
+    chip.querySelector(".chip-sub").textContent=selected?"Actif":chip.dataset.profile==="alt"?"Royaume\n#3556":"Royaume\n#3567";
+  });
+
+  const p=profiles[key];
+  heroName.textContent=p.name;
+  heroEmblem.innerHTML=p.icon;
+  heroMeta.textContent=p.meta;
+
+  power.textContent=p.power;
+  kills.textContent=p.kills;
+  deaths.textContent=p.deaths;
+  ch.textContent=p.ch;
+  vip.textContent=p.vip;
+  gems.textContent=p.gems;
+  ap.textContent=p.ap;
+
+  [p1,p2,p3].forEach((x,i)=>x.style.width=p.p[i]+"%");
+  [p1t,p2t,p3t].forEach((x,i)=>x.textContent=p.p[i]+" %");
+  powerTrend.textContent=p.trend[0];
+  killTrend.textContent=p.trend[1];
+  deathTrend.textContent=p.trend[2];
+  updated.textContent="Mis à jour à l'instant";
+}
+
+let previousFocus;
+let viewportFrame=0;
+function updateModalViewport(){
+ if(!addOverlay.classList.contains("open"))return;
+ const viewport=window.visualViewport;
+ addOverlay.style.setProperty("--modal-height",(viewport?viewport.height:window.innerHeight)+"px");
+ addOverlay.style.setProperty("--modal-width",(viewport?viewport.width:window.innerWidth)+"px");
+ addOverlay.style.setProperty("--modal-top",(viewport?viewport.offsetTop:0)+"px");
+ addOverlay.style.setProperty("--modal-left",(viewport?viewport.offsetLeft:0)+"px");
+ const active=document.activeElement;
+ const sheet=addOverlay.querySelector(".sheet-body");
+ if(active&&sheet.contains(active)&&active.matches("input,button")){
+  const bounds=sheet.getBoundingClientRect();
+  const field=active.getBoundingClientRect();
+  if(field.bottom>bounds.bottom-12)sheet.scrollTop+=field.bottom-bounds.bottom+12;
+  else if(field.top<bounds.top+12)sheet.scrollTop-=bounds.top+12-field.top;
+ }
+}
+function scheduleModalViewport(){
+ if(!addOverlay.classList.contains("open"))return;
+ cancelAnimationFrame(viewportFrame);
+ viewportFrame=requestAnimationFrame(updateModalViewport);
+}
+if(window.visualViewport){
+ window.visualViewport.addEventListener("resize",scheduleModalViewport);
+ window.visualViewport.addEventListener("scroll",scheduleModalViewport);
+}
+window.addEventListener("resize",scheduleModalViewport);
+addOverlay.addEventListener("focusin",scheduleModalViewport);
+function openAdd(){
+ previousFocus=document.activeElement;
+ addOverlay.classList.add("open");
+ document.body.classList.add("modal-open");
+ document.querySelector(".stage").inert=true;
+ updateModalViewport();
+ addOverlay.querySelector(".sheet-body").scrollTop=0;
+ document.getElementById("addTitle").focus({preventScroll:true});
+}
+function closeAdd(){
+ cancelAnimationFrame(viewportFrame);
+ addOverlay.classList.remove("open");
+ document.body.classList.remove("modal-open");
+ document.querySelector(".stage").inert=false;
+ if(previousFocus)previousFocus.focus({preventScroll:true});
+}
+function pickType(el){
+  document.querySelectorAll(".type-btn").forEach(button=>{
+    const selected=button===el;
+    button.classList.toggle("selected",selected);
+    button.setAttribute("aria-pressed",String(selected));
+  });
+}
+document.addEventListener("keydown",event=>{
+ if(!addOverlay.classList.contains("open"))return;
+ if(event.key==="Escape"){event.preventDefault();closeAdd();}
+ if(event.key==="Tab"){
+  const fields=Array.from(addOverlay.querySelectorAll("input,button"));
+  const first=fields[0],last=fields[fields.length-1];
+  if(event.shiftKey&&(document.activeElement===first||document.activeElement===document.getElementById("addTitle"))){event.preventDefault();last.focus();}
+  else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+ }
+});
+function announce(message){
+ const status=document.getElementById('profileStatus');
+ status.textContent=message;
+ if(!message)return;
+ const bounds=status.getBoundingClientRect(),nav=document.querySelector('.bottom-nav').getBoundingClientRect();
+ const bottom=Math.min(window.innerHeight,nav.top)-12;
+ if(bounds.bottom>bottom)window.scrollBy({top:bounds.bottom-bottom,behavior:'instant'});
+ else if(bounds.top<12)window.scrollBy({top:bounds.top-12,behavior:'instant'});
+}
+document.querySelectorAll('.nav:not(.active)').forEach(button=>button.addEventListener('click',()=>announce('Démonstration : ouverture de l’écran '+button.textContent.trim()+'.')));
+document.querySelectorAll('.module-title button').forEach(button=>button.addEventListener('click',()=>announce('Démonstration : ouverture de la rubrique '+button.closest('.module-title').querySelector('strong').textContent.trim()+'.')));
+
+const CITY={"main":{"bat":"2","spd":"42,5 %","ble":"143,4 M","bois":"101,4 M","pierre":"14,6 M","or":"14,9 M","badge":2,"first":"#inventaire-ressources","part":{"or":true}},"farm":{"bat":"1","spd":"30,0 %","ble":"64,2 M","bois":"31,0 M","pierre":"8,4 M","or":"1,2 M","badge":3,"first":"#progression","part":{}},"alt":{"bat":"2","spd":"36,5 %","ble":"90,1 M","bois":"40,7 M","pierre":"12,0 M","or":"3,4 M","badge":1,"first":"#progression","part":{}},"new":{"bat":"—","spd":"—","ble":"—","bois":"—","pierre":"—","or":"—","badge":61,"first":"#nouveau-profil","part":{}},"full":{"bat":"2","spd":"42,5 %","ble":"143,4 M","bois":"101,4 M","pierre":"14,6 M","or":"14,9 M","badge":0,"first":"","part":{}}};
+let cityMode='rempli',cityProfile='main';
+function paintCity(k){const c=CITY[k];const href='ROK_UI_B04_02_MA_VILLE.html';['bat','spd','ble','bois','pierre','or'].forEach(i=>{const e=document.getElementById('cq-'+i);e.textContent=c[i];e.parentElement.parentElement.style.opacity=c[i]==='—'?'.75':'';document.getElementById('inc-'+i).textContent=(c.part&&c.part[i])?'incomplet':''});
+ const lk=document.getElementById('todoLink');if(c.badge>0){lk.textContent=c.badge+' à renseigner ›';lk.href=href+c.first;lk.style.display=''}else{lk.style.display='none'}
+ const nb=document.getElementById('navBadge');if(nb){nb.textContent=c.badge>99?'99+':c.badge;nb.style.display=c.badge>0?'':'none'}}
+function paintNew(on){
+ const first=document.querySelector('.profile-chip[data-profile=main] .chip-name');
+ if(!on){first.textContent='Principal';return}
+ first.textContent='Nouveau profil';
+ heroName.textContent='Nouveau profil';heroMeta.textContent='Royaume #3567 · rien n’est encore renseigné';
+ [power,kills,deaths,ch,vip,gems,ap].forEach(x=>x.textContent='—');
+ [p1,p2,p3].forEach(x=>x.style.width='0%');[p1t,p2t,p3t].forEach(x=>x.textContent='—');
+ [powerTrend,killTrend,deathTrend].forEach(x=>x.textContent='');
+ updated.textContent='Aucune donnée pour le moment';
+ document.querySelectorAll('.watch .module').forEach(m=>{m.querySelectorAll('.item').forEach(i=>i.style.display='none');if(!m.querySelector('.empty-item')){const e=document.createElement('div');e.className='empty-item';e.textContent='Rien à afficher pour le moment';m.appendChild(e)}m.querySelector('.empty-item').style.display=''})}
+function restoreNew(){document.querySelectorAll('.watch .module').forEach(m=>{m.querySelectorAll('.item').forEach(i=>i.style.display='');const e=m.querySelector('.empty-item');if(e)e.style.display='none'})}
+function setHomeState(k){cityMode=k;
+ if(k==='nouveau'){paintNew(true);paintCity('new')}else if(k==='full'){restoreNew();const chip=document.querySelector('.profile-chip[data-profile=main]');selectProfile('main',chip);paintCity('full')}else{restoreNew();const chip=document.querySelector('.profile-chip[data-profile='+cityProfile+']');selectProfile(cityProfile,chip);paintCity(cityProfile)}}
+const _sel=selectProfile;selectProfile=function(key,el){cityProfile=key;_sel(key,el);if(cityMode!=='rempli'){cityMode='rempli';restoreNew();document.querySelector('.profile-chip[data-profile=main] .chip-name').textContent='Principal'}paintCity(key)};
+function applyHash(){const h=location.hash||'';setHomeState(h==='#nouveau-profil'?'nouveau':h==='#tout-renseigne'?'full':'rempli')}
+
+paintCity('main');applyHash();
+
+
+const isP=()=>/^(propose|pc-)/.test(document.body.dataset.view);
+
+// ---- Vue Proposé : onglets de profils et chiffres clés du bloc profil, alimentés par les mêmes données ----
+function syncPropose(){
+ [['pPower','power'],['pKills','kills'],['pDeaths','deaths'],['pPowerT','powerTrend'],['pKillsT','killTrend'],['pDeathsT','deathTrend'],['pGems','gems'],['pCh','ch'],['pAp','ap']].forEach(([a,b])=>{document.getElementById(a).textContent=document.getElementById(b).textContent});
+ document.getElementById('pMeta').textContent=document.getElementById('heroMeta').textContent.replace(/ · HDV \d+/,'');
+ document.querySelectorAll('.p-tab[data-ptab]').forEach(t=>t.setAttribute('aria-pressed',String(t.dataset.ptab===cityProfile)));
+}
+// Vue Proposé : tout le bloc du profil ouvre la fiche (démonstration)
+document.querySelector('.profile-banner').addEventListener('click',e=>{if(!isP())return;e.stopPropagation();e.preventDefault();announce('Démonstration : ouverture de la fiche profil.')},true);
+const _selP=selectProfile;selectProfile=function(key,el){_selP(key,el);syncPropose()};
+document.querySelectorAll('.p-tab[data-ptab]').forEach(t=>t.addEventListener('click',()=>selectProfile(t.dataset.ptab,document.querySelector('.profile-chip[data-profile='+t.dataset.ptab+']'))));
+// ---- Sélecteur Actuel / Proposé (#actuel, #propose) ----
+function vue(){const h=location.hash.slice(1);const v=['propose','pc-a','pc-b','pc-c'].includes(h)?h:'actuel';document.body.dataset.view=v;document.querySelectorAll('.cmp a').forEach(a=>a.setAttribute('aria-current',String(a.getAttribute('href')==='#'+v)));applyHash()}
+// Sur PC, la vue Proposé a un rail à gauche : le message de démonstration est simplement amené à l'écran.
+const _announce=announce;announce=function(m){if(isP()&&matchMedia('(min-width:1100px)').matches){const s=document.getElementById('profileStatus');s.textContent=m;if(m)s.scrollIntoView({block:'nearest'});return}_announce(m)};
+window.addEventListener('hashchange',()=>{vue();syncPropose();ajusterEchelle();window.scrollTo(0,0);document.querySelector('.stage').scrollTop=0});
+// Écran large (≥ 2400 px) : échelle qui occupe la hauteur disponible sans la dépasser.
+// PC : colonnes indépendantes. Chaque bloc d'une colonne est placé sous le précédent (hauteurs réelles mesurées).
+function colonnes(){
+ const sc=document.querySelector('.screen'),on=isP()&&innerWidth>=1100;
+ const h=s=>document.querySelector(s).offsetHeight+'px';
+ if(!on){['--bh','--ch','--ph'].forEach(v=>sc.style.removeProperty(v));return}
+ sc.style.setProperty('--bh',h('.profile-banner'));sc.style.setProperty('--ch',h('.cityq'));sc.style.setProperty('--ph',h('.progression'));
+}
+if(window.ResizeObserver){const ro=new ResizeObserver(()=>colonnes());['.profile-banner','.cityq','.progression'].forEach(s=>ro.observe(document.querySelector(s)))}
+const ZMAX=1.6; // plafond : au-delà, les blocs deviennent trop gros pour la distance d'un écran large
+function ajusterEchelle(){
+ const b=document.body,app=document.querySelector('.app');
+ if(!isP()||innerWidth<2400){b.style.removeProperty('--z');colonnes();return}
+ let z=1;b.style.setProperty('--z',1);colonnes();
+ const dispo=innerHeight-document.querySelector('.cmp').offsetHeight-60;
+ for(let k=0;k<6;k++){const h=app.getBoundingClientRect().height;z=Math.max(1,Math.min(ZMAX,z*dispo/h));b.style.setProperty('--z',z.toFixed(3));colonnes()}
+ while(z>1&&app.getBoundingClientRect().height>dispo){z-=0.01;b.style.setProperty('--z',z.toFixed(3));colonnes()}
+}
+addEventListener('resize',ajusterEchelle);document.fonts&&document.fonts.ready.then(ajusterEchelle);
+vue();syncPropose();ajusterEchelle();
+
+</script>
+</body>
+</html>

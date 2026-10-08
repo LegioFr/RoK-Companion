@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content" />
+<title>RoK Companion — Accueil</title>
+<style>
+:root{color-scheme:dark;--canvas:#05070d;--surface:#101928;--surface-2:#172234;--text:#f3ead6;--muted:#b1bbca;--gold:#d8b24c;--gold-2:#f3d982;--gold-soft:rgba(216,178,76,.12);--line:rgba(216,178,76,.22);--line-cold:rgba(154,178,211,.17);--green:#3ecf8e;--display:Georgia,"Times New Roman",serif}
+*{box-sizing:border-box}
+html{min-height:100%;scroll-padding-bottom:110px}
+body{margin:0;min-width:320px;color:var(--text);background:radial-gradient(900px 420px at 50% -8%,rgba(216,178,76,.10),transparent 64%),linear-gradient(180deg,#08111d 0%,#05070d 100%);background-attachment:fixed;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.4}
+button,input{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:3px}svg{display:block;flex:none;width:24px;height:24px}button{touch-action:manipulation}
+.stage{padding:16px 16px calc(104px + env(safe-area-inset-bottom))}
+.app{width:100%;max-width:620px;margin:0 auto}
+.screen{padding:16px 14px 18px;border:1px solid var(--line-cold);border-radius:22px;background:linear-gradient(150deg,#111b2b,#0d1522);box-shadow:0 8px 24px #0002}
+.header{margin-bottom:18px}.title-wrap h1{margin:0;color:var(--gold-2);font:700 36px/1.12 var(--display)}.title-wrap p{margin:7px 0 0;color:var(--muted);font-size:12px}
+.profile-banner{padding:14px 10px;border:1px solid #a9bdd51c;border-radius:19px;background:radial-gradient(ellipse at 0 100%,#ad86331a,transparent 70%),linear-gradient(130deg,#182337,#0e1624);box-shadow:0 8px 24px #0003}
+.profile-main{display:flex;align-items:center;gap:10px;min-width:0}.profile-info{flex:1;min-width:0}.name-row{display:flex;align-items:center;flex-wrap:wrap;gap:5px 8px}.profile-name{font:700 26px/1.12 var(--display);overflow-wrap:anywhere}.profile-meta{margin-top:7px;font-size:11px;color:var(--muted);line-height:1.5}
+.emblem{width:60px;height:60px;flex:none;display:grid;place-items:center;border:1px solid #d2b15e99;border-radius:50%;background:radial-gradient(circle at 35% 25%,#4b4028,#24251f 75%);color:#ead08a;box-shadow:0 0 0 4px #d8b24c09}.emblem svg{width:35px;height:35px}
+.active-pill{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;padding:3px 8px;border:1px solid #3ecf8e47;border-radius:30px;background:#3ecf8e14;color:var(--green);font-size:10px;font-weight:650}.active-pill i{width:6px;height:6px;background:currentColor;border-radius:50%}
+.chev{display:grid;place-items:center;width:32px;min-height:44px;flex:none;margin-right:-6px;padding:0;border:0;background:transparent;color:var(--gold-2)}.chev svg{width:20px;height:20px}
+.profile-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:16px}.profile-chip{min-width:0;padding:11px 3px 10px;border:1px solid var(--line-cold);border-radius:13px;background:#10192888;color:var(--text);display:flex;align-items:center;flex-direction:column;text-align:center}.chip-icon{width:33px;height:33px;display:grid;place-items:center;margin-bottom:6px;color:#d9bf79}.chip-icon svg{width:25px;height:25px}.chip-name{font-size:10.5px;font-weight:700;line-height:1.35}.chip-sub{margin-top:3px;max-width:100%;font-size:10.5px;line-height:1.4;color:var(--muted);white-space:pre-line;min-height:2.8em}.profile-chip.active{background:var(--gold-soft);border-color:#d8b24caa}.profile-chip.active .chip-sub{color:var(--green)}.profile-chip.add{border-color:#d8b24c44}.add .chip-icon{color:var(--gold-2)}
+.dashboard-group{min-width:0;margin-top:24px}.section-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:5px 10px;margin-bottom:12px}.section-title h2{margin:0;font:700 22px/1.15 var(--display);color:var(--text)}.section-title .right{font-size:12px;color:var(--muted)}
+.hero-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.stat,.mini,.panel,.event{border:1px solid var(--line-cold);background:linear-gradient(135deg,#1b283b,#152032);border-radius:14px}.stat{min-width:0;padding:12px 8px}.ico{color:#dfc57e;margin-bottom:8px}.ico svg{width:24px;height:24px}.label{color:var(--muted);font-size:11px}.value{margin-top:4px;white-space:nowrap;font:700 clamp(21px,5.7vw,27px)/1.15 var(--display);font-variant-numeric:tabular-nums}.trend{margin-top:10px;color:var(--green);font-size:10.5px;font-weight:650;white-space:normal;line-height:1.45}
+.mini-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}.mini{display:flex;align-items:center;gap:10px;min-width:0;padding:14px 10px}.mi{color:#dfc57e}.mi svg{width:24px;height:24px}.mini>div:last-child{min-width:0}.ml{color:var(--muted);font-size:11px}.mv{font:700 22px/1.2 var(--display);margin-top:2px;font-variant-numeric:tabular-nums}
+.progress-panel{padding:17px 14px}.progress-row+.progress-row{margin-top:18px}.progress-top{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;font-weight:600;margin-bottom:8px}.progress-top span:last-child{flex:none;color:var(--muted);font-variant-numeric:tabular-nums}.bar{height:7px;border-radius:10px;background:#29364a;overflow:hidden}.fill{height:100%;border-radius:inherit;background:linear-gradient(110deg,#b89549,#e0c477)}
+.watch-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.module{min-width:0;padding:12px 10px}.module-title{display:flex;align-items:center;justify-content:space-between;gap:3px;padding-bottom:7px}.module-title strong{display:flex;align-items:center;gap:5px;font-size:13px}.module-title strong svg{width:18px;height:18px;color:#dfc57e}.module-title button{display:grid;place-items:center;min-width:24px;min-height:36px;margin-right:-5px;padding:0;background:transparent;border:0;color:var(--muted)}.module-title button svg{width:16px;height:16px}.item{display:flex;align-items:flex-start;gap:7px;padding:12px 0;border-top:1px solid #a9bdd514}.item:last-child{padding-bottom:2px}.item>div:last-child{min-width:0}.dot{color:#dfc57e;flex:none;padding-top:2px}.dot svg{width:19px;height:19px}.item b{display:block;font-size:11px;line-height:1.45;font-weight:650;overflow-wrap:break-word}.item small{display:block;margin-top:3px;color:var(--muted);font-size:10px;line-height:1.45}
+.event-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.event{min-width:0;text-align:center;padding:14px 5px}.eico{display:flex;justify-content:center;margin-bottom:8px;color:#dfc57e}.eico svg{width:26px;height:26px}.event b{display:block;font-size:13px}.event span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));width:calc(100vw - 32px);max-width:430px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-areas:"home optimize combat more";direction:ltr;padding:6px;border-radius:19px;background:#0c1420;border:1px solid #a9bdd52b;box-shadow:0 8px 24px #0005;backdrop-filter:blur(16px);z-index:50}
+.nav{border:0;background:transparent;color:#9dadc4;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:58px;padding:7px 3px;gap:5px;border-radius:12px;font-size:11px;font-weight:600}
+.nav-home{grid-area:home}.nav-optimize{grid-area:optimize}.nav-combat{grid-area:combat}.nav-more{grid-area:more}
+.nav svg{flex:none;width:21px;height:21px}.nav.active{color:#edd28b;background:#d8b24c12}
+/* Création : mêmes surfaces, champs, états sélectionnés et boutons que Profil. */
+.overlay{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:center;padding:12px 12px max(12px,env(safe-area-inset-bottom));background:#03070dc9;backdrop-filter:blur(6px);z-index:70}
+.overlay.open{display:flex}
+.sheet{width:min(100%,430px);max-height:calc(100dvh - 24px - env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;background:var(--surface);color:var(--text);border:1px solid #d8b24c33;border-radius:22px;padding:16px 18px 18px;box-shadow:0 26px 70px #0009}
+.sheet h3{margin:0 0 14px;font-family:var(--display);font-size:18px;color:var(--gold-2);line-height:1.2}
+.field{margin-top:11px}.field label{display:block;margin-bottom:6px;color:var(--muted);font-size:12px;font-weight:800}
+.field input{width:100%;min-width:0;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--text);font-size:16px}
+.field input::placeholder{color:#98a5b8;opacity:1}.field input:focus{border-color:var(--gold);box-shadow:0 0 0 3px #d8b24c1a}
+.types{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.type-btn{min-width:0;min-height:42px;padding:8px 4px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--muted);font-size:12px;font-weight:800}
+.type-btn.selected{border-color:var(--gold);background:var(--gold-soft);color:var(--gold-2)}
+.sheet-actions{display:grid;grid-template-columns:1fr 1.4fr;gap:8px;margin-top:16px}
+.btn{min-width:0;min-height:44px;padding:8px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);color:var(--text);font-weight:800}
+.btn.primary{border:0;color:#1c1408;background:linear-gradient(110deg,#c8a44f,#dcc074);box-shadow:none}
+
+body.modal-open{overflow:hidden}.btn{font-size:16px}
+@media(min-width:700px){
+ .stage{padding:28px 32px calc(136px + env(safe-area-inset-bottom))}.app{max-width:920px}.screen{padding:26px;border-radius:28px}.header{margin-bottom:24px}.title-wrap h1{font-size:44px}.title-wrap p{font-size:15px}
+ .profile-banner{padding:22px;border-radius:24px}.profile-main{gap:18px}.emblem{width:82px;height:82px}.emblem svg{width:48px;height:48px}.profile-name{font-size:36px}.active-pill{font-size:12px;padding:4px 10px}.profile-meta{font-size:14px}.chev{width:44px}.chev svg{width:24px;height:24px}
+ .profile-strip{gap:12px;margin-top:22px}.profile-chip{padding:14px 8px;border-radius:16px}.chip-icon{width:40px;height:40px}.chip-icon svg{width:30px;height:30px}.chip-name{font-size:14px}.chip-sub{font-size:12px}
+ .dashboard-group{margin-top:28px}.section-title{margin-bottom:16px}.section-title h2{font-size:27px}.section-title .right{font-size:12px}.hero-stats{gap:12px}.stat{padding:18px}.ico svg{width:28px;height:28px}.label{font-size:14px}.value{font-size:34px}.trend{font-size:12px;margin-top:12px}.stat,.mini,.panel,.event{border-radius:19px}.mini-stats{gap:12px;margin-top:12px}.mini{padding:16px;gap:14px}.mi svg{width:28px;height:28px}.ml{font-size:14px}.mv{font-size:28px}
+ .progress-panel{padding:24px}.progress-top{font-size:15px;margin-bottom:10px}.progress-row+.progress-row{margin-top:22px}.bar{height:9px}.watch-grid{gap:14px}.module{padding:18px}.module-title strong{font-size:17px;gap:8px}.module-title strong svg{width:22px;height:22px}.item{padding:16px 0;gap:12px}.dot svg{width:24px;height:24px}.item b{font-size:14px}.item small{font-size:12px}.event-row{gap:12px}.event{padding:20px 12px}.event b{font-size:16px}.event span{font-size:13px}.eico svg{width:30px;height:30px}
+ .bottom-nav{width:calc(100vw - 64px);max-width:820px;min-height:88px;padding:8px;border-radius:25px;bottom:calc(18px + env(safe-area-inset-bottom))}.nav{font-size:14px;gap:7px;border-radius:16px}.nav svg{width:28px;height:28px}
+ .overlay{padding:24px;align-items:center}.sheet{width:min(100%,620px);max-height:calc(100dvh - 48px);padding:28px;border-radius:26px}.sheet h3{font-size:27px;margin-bottom:22px}.field{margin-top:18px}.field label{font-size:15px;margin-bottom:9px}.field input{height:54px;font-size:18px;padding:0 16px;border-radius:14px}.types{gap:10px}.type-btn{min-height:52px;font-size:15px;border-radius:14px}.sheet-actions{margin-top:24px;gap:12px}.btn{min-height:54px;font-size:18px;border-radius:14px}
+}
+/* A bounded desktop dashboard; identical sizing on standard and ultrawide screens. */
+@media(min-width:1100px){
+ .app{max-width:1160px}.screen{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:24px}.header,.profile-banner{grid-column:1/-1}.header{margin:0}.screen{padding:28px}.title-wrap h1{font-size:42px}
+ .profile-banner{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);align-items:center;gap:28px;padding:20px}.profile-strip{margin:0;gap:10px}.profile-chip{padding:10px 6px}.profile-name{font-size:34px}.profile-meta{font-size:12px}.emblem{width:76px;height:76px}.emblem svg{width:44px;height:44px}.chip-name{font-size:12px}.chip-sub{font-size:11px}
+ .dashboard-group{margin:0}.section-title{min-height:35px;margin-bottom:12px}.section-title h2{font-size:25px}.section-title .right{font-size:12px}.statistics{grid-column:1}.progression{grid-column:2}.watch{grid-column:1}.events{grid-column:2}.stat{padding:16px 12px}.value{font-size:30px}.trend{font-size:11px}.mini{padding:12px}.mv{font-size:25px}.ml{font-size:12px}.progress-panel{min-height:calc(100% - 47px);display:flex;flex-direction:column;justify-content:center;gap:26px}.progress-row+.progress-row{margin:0}
+ .module{padding:14px}.module-title strong{font-size:15px}.item{gap:9px;padding:14px 0}.item b{font-size:12px}.item small{font-size:11px}.dot svg{width:21px;height:21px}.event-row{gap:10px}.event{padding:22px 6px}.event span{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Finitions : captions stables, titres secondaires et lignes partagées. */
+.module{display:grid;grid-template-rows:auto repeat(3,1fr)}
+@supports(grid-template-rows:subgrid){
+ .watch-grid{grid-template-rows:auto repeat(3,auto);row-gap:0}
+ .module{grid-row:span 4;grid-template-rows:subgrid;row-gap:0}
+}
+@media(max-width:699px){
+ .statistics .section-title{align-items:flex-start;flex-direction:column;gap:6px}
+}
+
+/* La fenêtre suit la zone réellement visible, clavier compris. */
+.overlay{inset:auto;top:var(--modal-top,0px);left:var(--modal-left,0px);width:var(--modal-width,100%);height:var(--modal-height,100dvh)}
+.overlay .sheet{display:flex;flex-direction:column;min-height:0;max-height:100%;overflow:hidden}
+.sheet h3{flex:0 0 auto}
+.sheet-body{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;scroll-padding-block:12px;padding:3px;margin:-3px;-webkit-overflow-scrolling:touch}
+.sheet-actions{flex:0 0 auto;background:var(--surface)}
+.field input:focus,.field input:focus-visible{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px #d8b24c1a}
+#addTitle:focus{outline:none}
+
+/* PC de hauteur limitée : espaces compacts, tailles de texte conservées. */
+@media (min-width:1100px) and (max-height:1080px){
+ .stage{padding-top:12px;padding-bottom:calc(120px + env(safe-area-inset-bottom))}
+ .screen{padding:16px;row-gap:12px}
+ .title-wrap p{margin-top:4px}
+ .profile-banner{padding-block:8px}
+ .profile-chip{padding-block:6px}
+ .chip-icon{height:30px;margin-bottom:4px}
+ .profile-meta{margin-top:4px}
+ .section-title{min-height:0;margin-bottom:6px}
+ .stat{padding-block:10px}
+ .ico{margin-bottom:4px}
+ .trend{margin-top:8px}
+ .mini-stats{margin-top:8px;row-gap:8px}
+ .mini{padding-block:6px}
+ .progress-panel{min-height:calc(100% - 34.75px);padding-block:16px;gap:18px}
+ .module{padding-block:8px}
+ .module-title{padding-bottom:3px}
+ .item{padding-block:6px}
+ .item:last-child{padding-bottom:2px}
+ .event{padding-block:14px}
+}
+
+/* Navigation PC : 68 px, avec une réserve correspondant à sa hauteur réelle. */
+@media(min-width:1100px){
+ html{scroll-padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+ .stage{padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+ .bottom-nav{min-height:68px;padding:5px;border-radius:20px;bottom:calc(10px + env(safe-area-inset-bottom))}
+ .nav{min-height:56px;padding:4px 3px;gap:3px;border-radius:14px;font-size:14px;line-height:20px}
+ .nav svg{width:24px;height:24px}
+}
+.demo-feedback{grid-column:1/-1;margin:14px 0 0;padding:11px 13px;background:#d8b24c0b;border:1px solid var(--line);border-radius:12px;color:var(--gold-2);font-size:14px;line-height:1.5;overflow-wrap:anywhere}.demo-feedback:empty{display:none}
+</style>
+</head>
+<body>
+<div class="stage">
+  <main class="app" aria-label="Accueil RoK Companion — thème sombre et or">
+    <div class="screen">
+
+      <header class="header">
+        <div class="title-wrap">
+          <h1>Accueil</h1>
+          <p>Profil actif et tableau de bord</p>
+        </div>
+
+      </header>
+
+      <section class="profile-banner">
+        <div class="profile-main">
+          <div class="emblem" id="heroEmblem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 8 4 3 4-7 4 7 4-3-2 10H6L4 8Z"/><path d="M7 21h10"/></svg></div>
+
+          <div class="profile-info">
+            <div class="name-row">
+              <div class="profile-name" id="heroName">Principal</div>
+              <span class="active-pill"><i></i> Actif</span>
+            </div>
+            <div class="profile-meta" id="heroMeta">Royaume #3567 · HDV 25 · VIP 17</div>
+          </div>
+
+          <button class="chev" aria-label="Ouvrir le profil" onclick="alert('Maquette : ouverture de la fiche profil')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m9 6 6 6-6 6"/></svg>
+          </button>
+        </div>
+
+        <div class="profile-strip">
+          <button class="profile-chip active" data-profile="main" aria-pressed="true" onclick="selectProfile('main',this)">
+            <div class="chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 8 4 3 4-7 4 7 4-3-2 10H6L4 8Z"/><path d="M7 21h10"/></svg></div>
+            <div class="chip-name">Principal</div>
+            <div class="chip-sub">Actif</div>
+          </button>
+          <button class="profile-chip" data-profile="farm" aria-pressed="false" onclick="selectProfile('farm',this)">
+            <div class="chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-9M12 16C5 16 3 12 3 6c6 0 9 3 9 8M12 12c0-6 3-9 9-9 0 6-3 9-9 9"/></svg></div>
+            <div class="chip-name">Ferme 1</div>
+            <div class="chip-sub">Royaume
+#3567</div>
+          </button>
+          <button class="profile-chip" data-profile="alt" aria-pressed="false" onclick="selectProfile('alt',this)">
+            <div class="chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z"/><path d="M12 6v11"/></svg></div>
+            <div class="chip-name">Secondaire</div>
+            <div class="chip-sub">Royaume
+#3556</div>
+          </button>
+          <button class="profile-chip add" onclick="openAdd()">
+            <div class="chip-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16"/></svg></div>
+            <div class="chip-name">Ajouter</div>
+            <div class="chip-sub">un profil</div>
+          </button>
+        </div>
+      </section>
+
+      <div class="dashboard-group statistics">
+      <div class="section-title">
+        <h2>Mes statistiques</h2>
+        <div class="right" id="updated">Mis à jour il y a 2 min</div>
+      </div>
+
+      <section class="hero-stats">
+        <article class="stat">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 13 9-9 4-1-1 4-9 9Z"/><path d="m5 12 7 7m-3.5-3.5-4 4M3 18l3 3"/></svg></div>
+          <div class="label">Puissance</div>
+          <div class="value" id="power">128,4 M</div>
+          <div class="trend" id="powerTrend">▲ +2,1 M (7j)</div>
+        </article>
+
+        <article class="stat">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21v-4H5v-6a7 7 0 0 1 14 0v6h-3v4ZM10 18v3m4-3v3"/><circle cx="9" cy="11" r="1"/><circle cx="15" cy="11" r="1"/><path d="m11 15 1-2 1 2"/></svg></div>
+          <div class="label">Kills</div>
+          <div class="value" id="kills">412,8 M</div>
+          <div class="trend" id="killTrend">▲ +12,4 M (7j)</div>
+        </article>
+
+        <article class="stat">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20V9a6 6 0 0 1 12 0v11M4 21h16M12 7v8m-3-5h6"/></svg></div>
+          <div class="label">Morts</div>
+          <div class="value" id="deaths">5,6 M</div>
+          <div class="trend" id="deathTrend">▲ +320 K (7j)</div>
+        </article>
+      </section>
+
+      <section class="mini-stats">
+        <div class="mini"><div class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8h14v13M7 8V3h3v5m4 0V3h3v5M9 21v-7h6v7M8 11h1m6 0h1"/></svg></div><div><div class="ml">Hôtel de ville</div><div class="mv" id="ch">25</div></div></div>
+        <div class="mini"><div class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 8 4 3 4-7 4 7 4-3-2 10H6L4 8Z"/><path d="M7 21h10"/></svg></div><div><div class="ml">VIP</div><div class="mv" id="vip">17</div></div></div>
+        <div class="mini"><div class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 8 4-5h10l4 5-9 13L3 8Zm0 0h18M7 3l2 5 3 13 3-13 2-5M9 8l3-5 3 5"/></svg></div><div><div class="ml">Gemmes</div><div class="mv" id="gems">185 430</div></div></div>
+        <div class="mini"><div class="mi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m13 2-9 12h7l-1 8 10-13h-8l1-7Z"/></svg></div><div><div class="ml">Points d'action</div><div class="mv" id="ap">6 250</div></div></div>
+      </section>
+
+      </div>
+      <div class="dashboard-group progression">
+      <div class="section-title"><h2>Progression</h2></div>
+      <section class="panel progress-panel">
+        <div class="progress-row">
+          <div class="progress-top"><span>Troupes T4 / T5</span><span id="p1t">92 %</span></div>
+          <div class="bar"><div class="fill" id="p1" style="width:92%"></div></div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-top"><span>Recherche militaire</span><span id="p2t">87 %</span></div>
+          <div class="bar"><div class="fill" id="p2" style="width:87%"></div></div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-top"><span>Équipement principal</span><span id="p3t">78 %</span></div>
+          <div class="bar"><div class="fill" id="p3" style="width:78%"></div></div>
+        </div>
+      </section>
+
+      </div>
+      <div class="dashboard-group watch">
+      <div class="section-title"><h2>À surveiller</h2></div>
+      <section class="watch-grid">
+        <article class="panel module">
+          <div class="module-title">
+            <strong><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg> Objectifs</strong><button aria-label="Ouvrir la rubrique"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+          </div>
+          <div class="item"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 8 4 3 4-7 4 7 4-3-2 10H6L4 8Z"/><path d="M7 21h10"/></svg></div><div><b>Monter le VIP 18</b><small>Objectif principal</small></div></div>
+          <div class="item"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z"/><path d="M12 6v11"/></svg></div><div><b>Finaliser l'équipement</b><small>Cavalerie</small></div></div>
+          <div class="item"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 13 9-9 4-1-1 4-9 9Z"/><path d="m5 12 7 7m-3.5-3.5-4 4M3 18l3 3"/></svg></div><div><b>Préparer le prochain KvK</b><small>Planification</small></div></div>
+        </article>
+
+        <article class="panel module">
+          <div class="module-title">
+            <strong><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> Activité</strong><button aria-label="Ouvrir la rubrique"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+          </div>
+          <div class="item"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 13 9-9 4-1-1 4-9 9Z"/><path d="m5 12 7 7m-3.5-3.5-4 4M3 18l3 3"/></svg></div><div><b>KvK : préparation terminée</b><small>Il y a 1 h</small></div></div>
+          <div class="item"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6m-5 0v6L4 19a1.3 1.3 0 0 0 1 2h14a1.3 1.3 0 0 0 1-2L14 9V3M7 15h10"/></svg></div><div><b>Recherche avancée lancée</b><small>Il y a 3 h</small></div></div>
+          <div class="item"><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-9M12 16C5 16 3 12 3 6c6 0 9 3 9 8M12 12c0-6 3-9 9-9 0 6-3 9-9 9"/></svg></div><div><b>Ferme 1 synchronisée</b><small>Il y a 5 min</small></div></div>
+        </article>
+      </section>
+
+      </div>
+      <div class="dashboard-group events">
+      <div class="section-title"><h2>Prochains événements</h2></div>
+      <section class="event-row">
+        <article class="event"><div class="eico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h8v7a4 4 0 0 1-8 0V3Zm0 2H4v3a4 4 0 0 0 4 4m8-7h4v3a4 4 0 0 1-4 4M12 14v7m-4 0h8"/></svg></div><b>MGE</b><span>dans 2 jours</span></article>
+        <article class="event"><div class="eico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 13 9-9 4-1-1 4-9 9Z"/><path d="m5 12 7 7m-3.5-3.5-4 4M3 18l3 3"/></svg></div><b>Ark</b><span>samedi 20h00</span></article>
+        <article class="event"><div class="eico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 22V3m0 1c5-4 9 4 14 0v9c-5 4-9-4-14 0"/></svg></div><b>KvK</b><span>J-11</span></article>
+      </section>
+      </div>
+      <p class="demo-feedback" id="profileStatus" role="status" aria-live="polite" aria-atomic="true"></p>
+    </div>
+
+    <nav class="bottom-nav" aria-label="Navigation principale">
+  <button class="nav nav-home active" aria-current="page">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h5v-7h4v7h5V9"/></svg>
+    Accueil
+  </button>
+
+  <button class="nav nav-optimize">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h4m5 0h9M3 17h9m5 0h4"/><circle cx="9.5" cy="7" r="2.5"/><circle cx="14.5" cy="17" r="2.5"/></svg>
+    Optimiser
+  </button>
+
+  <button class="nav nav-combat">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 13 9-9 4-1-1 4-9 9Z"/><path d="m5 12 7 7m-3.5-3.5-4 4M3 18l3 3"/></svg>
+    Combat
+  </button>
+
+  <button class="nav nav-more">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg>
+    Plus
+  </button>
+</nav>
+  </main>
+</div>
+
+<div class="overlay" id="addOverlay" onclick="if(event.target===this)closeAdd()">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+    <h3 id="addTitle" tabindex="-1">Ajouter un profil</h3>
+    <div class="sheet-body">
+
+    <div class="field">
+      <label for="profileName">Nom du profil</label>
+      <input id="profileName" placeholder="Ex. Ferme 2" />
+    </div>
+
+    <div class="field">
+      <label>Type</label>
+      <div class="types">
+        <button class="type-btn selected" aria-pressed="true" onclick="pickType(this)">Principal</button>
+        <button class="type-btn" aria-pressed="false" onclick="pickType(this)">Ferme</button>
+        <button class="type-btn" aria-pressed="false" onclick="pickType(this)">Secondaire</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="playerId">ID joueur RoK — facultatif</label>
+      <input id="playerId" placeholder="Ex. 123456789" inputmode="numeric" />
+    </div>
+
+    </div>
+    <div class="sheet-actions">
+      <button class="btn" onclick="closeAdd()">Annuler</button>
+      <button class="btn primary" onclick="closeAdd();announce('Démonstration : profil créé.')">Créer le profil</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const profiles={
+  main:{name:"Principal",icon:"<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m4 8 4 3 4-7 4 7 4-3-2 10H6L4 8Z\"/><path d=\"M7 21h10\"/></svg>",meta:"Royaume #3567 · HDV 25 · VIP 17",power:"128,4 M",kills:"412,8 M",deaths:"5,6 M",ch:"25",vip:"17",gems:"185 430",ap:"6 250",p:[92,87,78],trend:["▲ +2,1 M (7j)","▲ +12,4 M (7j)","▲ +320 K (7j)"]},
+  farm:{name:"Ferme 1",icon:"<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21v-9M12 16C5 16 3 12 3 6c6 0 9 3 9 8M12 12c0-6 3-9 9-9 0 6-3 9-9 9\"/></svg>",meta:"Royaume #3567 · HDV 25 · VIP 12",power:"64,8 M",kills:"118,2 M",deaths:"1,4 M",ch:"25",vip:"12",gems:"42 610",ap:"5 840",p:[81,74,61],trend:["▲ +860 K (7j)","▲ +3,2 M (7j)","▲ +85 K (7j)"]},
+  alt:{name:"Secondaire",icon:"<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z\"/><path d=\"M12 6v11\"/></svg>",meta:"Royaume #3556 · HDV 25 · VIP 14",power:"82,6 M",kills:"206,5 M",deaths:"2,7 M",ch:"25",vip:"14",gems:"76 920",ap:"6 010",p:[86,79,69],trend:["▲ +1,3 M (7j)","▲ +5,7 M (7j)","▲ +141 K (7j)"]}
+};
+
+function selectProfile(key,el){
+  document.querySelectorAll(".profile-chip").forEach(x=>x.classList.remove("active"));
+  el.classList.add("active");
+  document.querySelectorAll(".profile-chip[data-profile]").forEach(chip=>{
+    const selected=chip===el;
+    chip.setAttribute("aria-pressed",String(selected));
+    chip.querySelector(".chip-sub").textContent=selected?"Actif":chip.dataset.profile==="alt"?"Royaume\n#3556":"Royaume\n#3567";
+  });
+
+  const p=profiles[key];
+  heroName.textContent=p.name;
+  heroEmblem.innerHTML=p.icon;
+  heroMeta.textContent=p.meta;
+
+  power.textContent=p.power;
+  kills.textContent=p.kills;
+  deaths.textContent=p.deaths;
+  ch.textContent=p.ch;
+  vip.textContent=p.vip;
+  gems.textContent=p.gems;
+  ap.textContent=p.ap;
+
+  [p1,p2,p3].forEach((x,i)=>x.style.width=p.p[i]+"%");
+  [p1t,p2t,p3t].forEach((x,i)=>x.textContent=p.p[i]+" %");
+  powerTrend.textContent=p.trend[0];
+  killTrend.textContent=p.trend[1];
+  deathTrend.textContent=p.trend[2];
+  updated.textContent="Mis à jour à l'instant";
+}
+
+let previousFocus;
+let viewportFrame=0;
+function updateModalViewport(){
+ if(!addOverlay.classList.contains("open"))return;
+ const viewport=window.visualViewport;
+ addOverlay.style.setProperty("--modal-height",(viewport?viewport.height:window.innerHeight)+"px");
+ addOverlay.style.setProperty("--modal-width",(viewport?viewport.width:window.innerWidth)+"px");
+ addOverlay.style.setProperty("--modal-top",(viewport?viewport.offsetTop:0)+"px");
+ addOverlay.style.setProperty("--modal-left",(viewport?viewport.offsetLeft:0)+"px");
+ const active=document.activeElement;
+ const sheet=addOverlay.querySelector(".sheet-body");
+ if(active&&sheet.contains(active)&&active.matches("input,button")){
+  const bounds=sheet.getBoundingClientRect();
+  const field=active.getBoundingClientRect();
+  if(field.bottom>bounds.bottom-12)sheet.scrollTop+=field.bottom-bounds.bottom+12;
+  else if(field.top<bounds.top+12)sheet.scrollTop-=bounds.top+12-field.top;
+ }
+}
+function scheduleModalViewport(){
+ if(!addOverlay.classList.contains("open"))return;
+ cancelAnimationFrame(viewportFrame);
+ viewportFrame=requestAnimationFrame(updateModalViewport);
+}
+if(window.visualViewport){
+ window.visualViewport.addEventListener("resize",scheduleModalViewport);
+ window.visualViewport.addEventListener("scroll",scheduleModalViewport);
+}
+window.addEventListener("resize",scheduleModalViewport);
+addOverlay.addEventListener("focusin",scheduleModalViewport);
+function openAdd(){
+ previousFocus=document.activeElement;
+ addOverlay.classList.add("open");
+ document.body.classList.add("modal-open");
+ document.querySelector(".stage").inert=true;
+ updateModalViewport();
+ addOverlay.querySelector(".sheet-body").scrollTop=0;
+ document.getElementById("addTitle").focus({preventScroll:true});
+}
+function closeAdd(){
+ cancelAnimationFrame(viewportFrame);
+ addOverlay.classList.remove("open");
+ document.body.classList.remove("modal-open");
+ document.querySelector(".stage").inert=false;
+ if(previousFocus)previousFocus.focus({preventScroll:true});
+}
+function pickType(el){
+  document.querySelectorAll(".type-btn").forEach(button=>{
+    const selected=button===el;
+    button.classList.toggle("selected",selected);
+    button.setAttribute("aria-pressed",String(selected));
+  });
+}
+document.addEventListener("keydown",event=>{
+ if(!addOverlay.classList.contains("open"))return;
+ if(event.key==="Escape"){event.preventDefault();closeAdd();}
+ if(event.key==="Tab"){
+  const fields=Array.from(addOverlay.querySelectorAll("input,button"));
+  const first=fields[0],last=fields[fields.length-1];
+  if(event.shiftKey&&(document.activeElement===first||document.activeElement===document.getElementById("addTitle"))){event.preventDefault();last.focus();}
+  else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+ }
+});
+function announce(message){
+ const status=document.getElementById('profileStatus');
+ status.textContent=message;
+ if(!message)return;
+ const bounds=status.getBoundingClientRect(),nav=document.querySelector('.bottom-nav').getBoundingClientRect();
+ const bottom=Math.min(window.innerHeight,nav.top)-12;
+ if(bounds.bottom>bottom)window.scrollBy({top:bounds.bottom-bottom,behavior:'instant'});
+ else if(bounds.top<12)window.scrollBy({top:bounds.top-12,behavior:'instant'});
+}
+document.querySelectorAll('.nav:not(.active)').forEach(button=>button.addEventListener('click',()=>announce('Démonstration : ouverture de l’écran '+button.textContent.trim()+'.')));
+document.querySelectorAll('.module-title button').forEach(button=>button.addEventListener('click',()=>announce('Démonstration : ouverture de la rubrique '+button.closest('.module-title').querySelector('strong').textContent.trim()+'.')));
+</script>
+</body>
+</html>
