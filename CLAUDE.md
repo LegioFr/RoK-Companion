@@ -1,6 +1,6 @@
 # RoK Companion — instructions pour Claude
 
-**Au début de chaque session, lis `MEMOIRE.md`** : c'est la mémoire du projet (état, décisions, prochaines étapes).
+**Au début de chaque session, lis `MEMOIRE.md`** : c'est la mémoire du projet (état, décisions, prochaines étapes). Lis aussi les notes laissées par Mickaël sur la maquette publiée (voir `MEMOIRE.md`, « Bulle d'outils de revue »).
 
 - Langue : français, tutoiement.
 - Claude pilote le projet ; Mickaël fournit (captures, choix, comptes) et valide.

@@ -467,7 +467,8 @@ function pwField(id,label){return '<div class="fld"><label for="'+id+'">'+label+
 var LABEL={ok:'Déjà fait',wip:'En cours',next:'Prochain',plan:'Prévu',ico:'Planche'};
 function stc(st){return st==='ico'?'wip':st;}
 var screens=$$('[data-screen]'),mv=$('[data-screen="ma-ville"]'),panels=$$('[data-panel]',mv);
-var visPill=$('#visPill'),visLabel=$('#visLabel'),visNote=$('#visNote');
+/* Écran affiché, transmis à la bulle d'outils (revue.js) */
+function setCur(o){window.RC_CUR=o;try{document.dispatchEvent(new CustomEvent('rc:route',{detail:o}));}catch(e){}}
 var cur='accueil';
 function route(){
   var h=(location.hash||'').slice(1)||'accueil',id=h,sub=null;
@@ -484,7 +485,7 @@ function route(){
   if(s===mv){var p=panels.filter(function(x){return x.dataset.panel===sub;})[0]||panels[0];
     panels.forEach(function(x){x.hidden=(x!==p);});
     $$('.tab',mv).forEach(function(t){t.setAttribute('aria-current',String(t.dataset.sub===p.dataset.panel));});meta=p;}
-  var st=meta.dataset.st||'plan';visPill.className='pill st-'+stc(st);visLabel.textContent=LABEL[st]+' · '+meta.dataset.b;visNote.textContent=meta.dataset.note||'';
+  var st=meta.dataset.st||'plan';setCur({id:h,screen:id,title:meta.dataset.title||s.dataset.title,st:stc(st),label:LABEL[st]+' · '+meta.dataset.b,note:meta.dataset.note||''});
   var g=s.dataset.g;$$('.bottom-nav .nav').forEach(function(n){var on=n.dataset.g===g;n.classList.toggle('active',on);if(on)n.setAttribute('aria-current','page');else n.removeAttribute('aria-current');});
   if(id!==cur||true){refreshAll();}
   if(id!==cur)window.scrollTo(0,0);cur=id;
@@ -507,12 +508,9 @@ function refreshAll(keepQuick){
 var planEl=$('#plan');
 function openPlan(){planEl.classList.add('open');planEl.setAttribute('aria-hidden','false');$('#closePlan').focus();}
 function closePlan(){planEl.classList.remove('open');planEl.setAttribute('aria-hidden','true');}
-$('#openPlan').addEventListener('click',openPlan);$('#closePlan').addEventListener('click',closePlan);
+$('#closePlan').addEventListener('click',closePlan);
 planEl.addEventListener('click',function(e){if(e.target===planEl||e.target.closest('.pl'))closePlan();});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){closePlan();closeSheet();}});
-function setClean(v){document.body.classList.toggle('clean',v);try{localStorage.setItem('rokFinalClean',v?'1':'0');}catch(e){}}
-try{if(localStorage.getItem('rokFinalClean')==='1')document.body.classList.add('clean');}catch(e){}
-$('#hideVis').addEventListener('click',function(){setClean(true);});$('#showVis').addEventListener('click',function(){setClean(false);});
 
 /* ================= Compte : connexion, création, confirmation, mot de passe ================= */
 var LOGO_N=0;
@@ -526,8 +524,7 @@ function fieldErr(id,t){var i=$('#'+id),e=$('#'+id+'Err');if(t){i.setAttribute('
 function showAuth(id){
   closeSheet();document.body.classList.add('auth-on');$('#auth').hidden=false;
   var sh=shell(id);$$('[data-auth]').forEach(function(x){x.hidden=(x!==sh);});
-  $('#aVisPill').className='pill st-ok';$('#aVisLabel').textContent=LABEL.ok+' · '+sh.dataset.b;$('#aVisNote').textContent=sh.dataset.note;
-  $('#simLink').hidden=!(id==='confirmation'||(id==='mot-de-passe-oublie'&&AUTH.reset!==null));
+  setCur({id:id,screen:id,title:sh.dataset.title,st:'ok',label:LABEL.ok+' · '+sh.dataset.b,note:sh.dataset.note,sim:id==='confirmation'||(id==='mot-de-passe-oublie'&&AUTH.reset!==null)});
   if(id==='confirmation')$('#cfEmail').textContent=AUTH.pending||'nom@exemple.fr';
   $$('#planBody .pl').forEach(function(a){a.setAttribute('aria-current',String(a.getAttribute('href')==='#'+id));});
   if(cur!=='auth:'+id){window.scrollTo(0,0);$$('input',sh).forEach(function(i){if(i.type==='text')i.type='password';});}
@@ -559,7 +556,7 @@ function submitAuth(kind){
     if(!ACC[e2])ACC[e2]={pw:p1,ok:false,data:null};
     AUTH.pending=e2;$('[data-form="signup"]').reset();location.hash='confirmation';
   }else if(kind==='forgot'){
-    AUTH.reset=$('#fgEmail').value.trim().toLowerCase();$('#simLink').hidden=false;
+    AUTH.reset=$('#fgEmail').value.trim().toLowerCase();window.RC_CUR.sim=true;setCur(window.RC_CUR);
     authMsg('mot-de-passe-oublie','Si un compte correspond à cette adresse, un e-mail de réinitialisation a été envoyé.');
   }else if(kind==='newpw'){
     var n1=$('#npPw').value,n2=$('#npPw2').value;
@@ -671,7 +668,7 @@ var ACT={
   'a-eye':function(id){var i=$('#'+id),b=$('[data-arg="'+id+'"]');var show=i.type==='password';i.type=show?'text':'password';b.setAttribute('aria-pressed',String(show));b.setAttribute('aria-label',b.getAttribute('aria-label').replace(show?'Afficher':'Masquer',show?'Masquer':'Afficher'));},
   resend:function(){authMsg('confirmation','E-mail renvoyé.');},
   'sim-link':simLink,
-  'open-plan':function(){openPlan();},'hide-vis':function(){setClean(true);},
+  'open-plan':function(){openPlan();},
   'save-lang':function(){S.lang=$('#lg').value;S.tz=$('#tz').value;closeSheet();renderPlus();say('Réglages enregistrés.');}
 };
 function updShare(){var a=S.marches[0],L=[];if($('#shName').checked)L.push('Profil : '+(A()?A().name:''));if($('#shCmd').checked)L.push('A : '+a.p+' + '+a.s+'\nB : '+a.p+' + '+S.cmpSec);if($('#shForm').checked)L.push('Formation : '+a.form);
@@ -717,6 +714,17 @@ document.addEventListener('change',function(e){
   else if(t.id==='pickReport'){var f=t.files&&t.files[0];if(f){S.reports.unshift({t:'Rapport importé',d:'8 oct. · à relire',ok:null,img:URL.createObjectURL(f),obs:'Lecture simulée dans la maquette : les valeurs lues apparaîtront ici, à corriger.',hyp:'Aucune tant que les valeurs ne sont pas relues.',abs:'À compléter après relecture.'});S.rep=0;renderCombat();say('Rapport ajouté. Il reste sur ton appareil.');}t.value='';}
 });
 
+/* Fonctions utilisées par la bulle d'outils (onglet États) */
+window.RC_API={
+  openPlan:openPlan,simLink:simLink,
+  profiles:function(){return AUTH.user?ORDER.map(function(k){return {k:k,name:P[k].name,on:k===S.active};}):[];},
+  setProfile:function(k){if(P[k]){S.active=k;S.quick=false;refreshAll();}},
+  user:function(){return AUTH.user;},
+  demo:function(){AUTH.after=null;if(!ACC[DEMO])return;login(DEMO);},
+  empty:function(){var em='nouveau'+(Object.keys(ACC).length)+'@exemple.fr';ACC[em]={pw:'rok12345',ok:true,data:null};AUTH.after=null;login(em);say('Nouveau compte sans profil : '+em+'.');},
+  logout:function(){if(AUTH.user)logout();else location.hash='connexion';},
+  quick:function(){if(AUTH.user)ACT.quick();}
+};
 paintIcons(document);
 renderShots();showStep(1);
 window.addEventListener('hashchange',route);

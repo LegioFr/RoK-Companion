@@ -12,16 +12,6 @@
 <body>
 <!-- ===================================================== COMPTE (B01-01 à 05) -->
 <div class="auth" id="auth" hidden>
-  <div class="vis a-vis">
-    <span class="vt">Maquette de l’appli finale</span>
-    <span class="pill" id="aVisPill"><i></i><span id="aVisLabel"></span></span>
-    <span class="vn" id="aVisNote"></span>
-    <span class="vb">
-      <button class="vbtn" type="button" data-act="sim-link" id="simLink" hidden>Simuler le lien de l’e-mail</button>
-      <button class="vbtn" type="button" data-act="open-plan">Plan des écrans</button>
-      <button class="vbtn" type="button" data-act="hide-vis" aria-label="Masquer le bandeau de la maquette">Masquer</button>
-    </span>
-  </div>
 
   <main class="a-shell" data-auth="connexion" data-title="Se connecter" data-b="B01-01" aria-label="Connexion RoK Companion" data-note="Écran validé (B01-01). Compte d’essai : gouverneur@exemple.fr, mot de passe rok12345. Messages d’erreur proposés par Claude, à valider." hidden>
     <header class="a-brand"></header>
@@ -106,16 +96,6 @@
 <div class="stage">
 <main class="app" aria-label="RoK Companion — maquette de l’appli finale">
 
-  <div class="vis" id="vis">
-    <span class="vt">Maquette de l’appli finale</span>
-    <span class="pill" id="visPill"><i></i><span id="visLabel"></span></span>
-    <span class="vn" id="visNote"></span>
-    <span class="vb">
-      <a class="vbtn" href="#icones">Icônes</a>
-      <button class="vbtn" type="button" id="openPlan">Plan des écrans</button>
-      <button class="vbtn" type="button" id="hideVis" aria-label="Masquer le bandeau de la maquette">Masquer</button>
-    </span>
-  </div>
 
   <div class="screen">
 
@@ -752,8 +732,6 @@
   <a class="nav" href="#plus" data-g="plus"><span class="nic"><i data-i="i-dots"></i></span><span>Plus</span></a>
 </nav>
 
-<button class="vfab" type="button" id="showVis" aria-label="Afficher le bandeau de la maquette"><i data-i="n-info"></i></button>
-
 <div class="overlay" id="plan" aria-hidden="true">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="planTitle">
     <div class="sheet-h"><h2 id="planTitle">Plan des écrans</h2><button class="xbtn" type="button" id="closePlan" aria-label="Fermer"><i data-i="i-close"></i></button></div>
@@ -773,5 +751,6 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="icones.js"></script>
 <script src="app.js"></script>
+<script src="revue.js"></script>
 </body>
 </html>
