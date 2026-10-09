@@ -5,14 +5,15 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=23,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=24,VERSION='v'+VNUM+' · 9 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
 var REEL=false;try{REEL=localStorage.getItem('rc-mode')==='reel';}catch(e){}
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
-  '*':[{sel:'',t:'Passer de « Ma version réelle » aux « Exemples » marche même si l’enregistrement ne répond pas ; l’onglet États dit si le dernier enregistrement a réussi (ta remarque).'},
+  '*':[{sel:'',t:'La maquette s’installe sur l’écran d’accueil (icône couronne, proposée par Claude) et s’ouvre sans barre du navigateur ; elle charge toujours la dernière version.'},
+    {sel:'',t:'Passer de « Ma version réelle » aux « Exemples » marche même si l’enregistrement ne répond pas ; l’onglet États dit si le dernier enregistrement a réussi (ta remarque).'},
     {sel:'',t:'Chaque version a ses propres notes : celles des tests ne s’affichent plus dans « Ma version réelle » (ta remarque).'},
     {sel:'',t:'Deux versions de la maquette (onglet États) : « Exemples », pour les tests, et « Ma version réelle », vierge, que tu remplis toi-même ; elle est gardée avec la maquette publiée.'},
     {sel:'',t:'Tous les tests, leurs résultats, les captures jointes et les notes ont été supprimés (ta demande ; une archive est gardée dans le dépôt).'}],
