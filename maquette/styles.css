@@ -482,3 +482,12 @@ body.auth-on .stage,body.auth-on .bottom-nav{display:none}
 }
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ===== Ma version réelle (2026-10-09) : aucun exemple, écrans vides tant qu'ils ne sont pas remplis ===== */
+.vide{margin:0;padding:14px 16px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:14px;line-height:1.5}
+.reel-only{display:none!important}
+html.reel .reel-only{display:block!important}
+html.reel .note.reel-only{display:flex!important}
+html.reel [data-ex]{display:none!important}
+.reel-load{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:var(--canvas);color:var(--text)}
+.reel-load .card{max-width:420px}

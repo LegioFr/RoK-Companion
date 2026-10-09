@@ -5,10 +5,13 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=19,VERSION='v'+VNUM+' · 8 oct. 2026';
+var VNUM=20,VERSION='v'+VNUM+' · 9 oct. 2026';
+/* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
+var REEL=false;try{REEL=localStorage.getItem('rc-mode')==='reel';}catch(e){}
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
-  '*':[{sel:'',t:'Onglet Tests : 60 nouveaux tests pour Ma ville (Progression, valeurs, saisie rapide, Inventaire, import, Commandants, Équipements, Armements).'}],
+  '*':[{sel:'',t:'Deux versions de la maquette (onglet États) : « Exemples », pour les tests, et « Ma version réelle », vierge, que tu remplis toi-même ; elle est gardée avec la maquette publiée.'},
+    {sel:'',t:'Onglet Tests : 60 nouveaux tests pour Ma ville (Progression, valeurs, saisie rapide, Inventaire, import, Commandants, Équipements, Armements).'}],
   'evenements':[{sel:'#evList',t:'Chaque événement a un bouton « Me prévenir » ; activé, il devient « Rappel activé » et un message dit quand tu seras prévenu (ta note 7).'}],
   'plan-c25':[{sel:'[data-screen="plan-c25"] h1',t:'Titre « Hôtel de ville 25 » au lieu de « Château 25 » (ta note 6).'}],
   'connexion':[{sel:'[data-auth="connexion"]',t:'Écran ajouté, repris de la maquette validée B01-01.'},
@@ -142,23 +145,31 @@ var hov=el('div');hov.id='rcHov';hov.hidden=true;
 document.body.appendChild(layer);document.body.appendChild(box);document.body.appendChild(hov);document.body.appendChild(bub);document.body.appendChild(pnl);
 var pb=$('rcPb');
 
-var S={tab:LS.get('tab','ecran'),scope:'ecran',pin:false,draft:null,edit:null,insp:false,sel:null,hl:null,chgOn:LS.get('chg',true),copy:null};
+var S={tab:LS.get('tab','ecran'),scope:'ecran',pin:false,draft:null,edit:null,insp:false,sel:null,hl:null,chgOn:LS.get(REEL?'chgR':'chg',!REEL),copy:null};
 TABS.forEach(function(x){var b=el('button');b.type='button';b.dataset.t=x[0];b.innerHTML=svg(x[0]);b.appendChild(el('span',null,x[1]));b.onclick=function(){S.tab=x[0];LS.set('tab',S.tab);render();};$('rcTabs').appendChild(b);});
 $('rcX').onclick=function(){showPnl(false);};
 
 /* ---------- notes : base partagée (db) ou ce navigateur ---------- */
 var db=null,dbState='attente',NOTES=[],assets=null,RES={};
-function useLocal(){db=null;dbState='local';NOTES=LS.get('notes',[]);RES=LS.get('tests',{});refresh();announceReview();}
+/* Ma version réelle : un seul document (reel/donnees) dans la base de la maquette publiée ; hors claude.ai, ce navigateur. */
+function giveStore(kind){if(window.RC_STORE)return;
+  window.RC_STORE=kind==='db'?{kind:'db',
+    load:function(){return db.doc('reel/donnees').get().then(function(x){var d=x.exists?x.data():null;return d&&typeof d.json==='string'?d.json:'';});},
+    save:function(j){return db.doc('reel/donnees').set({json:j,maj:new Date().toISOString()});}}:{kind:'local',
+    load:function(){try{return Promise.resolve(localStorage.getItem('rc-reel')||'');}catch(e){return Promise.resolve('');}},
+    save:function(j){try{localStorage.setItem('rc-reel',j);return Promise.resolve();}catch(e){return Promise.reject(e);}}};
+  try{document.dispatchEvent(new CustomEvent('rc:store'));}catch(e){}}
+function useLocal(){db=null;dbState='local';giveStore('local');NOTES=LS.get('notes',[]);RES=LS.get('tests',{});refresh();announceReview();}
 /* Une fois par version : s'il y a des tests à revoir, la bulle s'ouvre sur l'onglet Tests. */
 function announceReview(){setTimeout(announceNow,0);}
-function announceNow(){if(LS.get('seenRev',0)>=VNUM)return;var n=reviewList().length;LS.set('seenRev',VNUM);if(!n)return;S.tab='tests';LS.set('tab','tests');showPnl(true);say(n+' correction'+(n>1?'s':'')+' à vérifier : voir l’onglet Tests.');}
+function announceNow(){if(REEL||LS.get('seenRev',0)>=VNUM)return;var n=reviewList().length;LS.set('seenRev',VNUM);if(!n)return;S.tab='tests';LS.set('tab','tests');showPnl(true);say(n+' correction'+(n>1?'s':'')+' à vérifier : voir l’onglet Tests.');}
 function saveLocal(){LS.set('notes',NOTES);refresh();}
 (function initDb(tries){
   if(location.protocol==='file:'){useLocal();if(window.claude&&window.claude.use)window.claude.use('assets').then(function(a){assets=a||null;render();paintRun();},function(){});return;}
   if(window.claude&&window.claude.use){
     window.claude.use('db').then(function(d){
       if(!d){useLocal();return;}
-      db=d;dbState='ok';
+      db=d;dbState='ok';giveStore('db');
       db.collection('notes').onSnapshot(function(s){NOTES=s.docs.map(function(x){var o=Object.assign({},x.data());o.id=x.id;return o;});refresh();},function(){useLocal();});
       db.collection('tests').onSnapshot(function(s){RES={};s.docs.forEach(function(x){RES[x.id]=x.data();});refresh();paintRun();announceReview();},function(){});
     },useLocal);
@@ -265,7 +276,7 @@ function render(){
 
 /* Écran */
 function rEcran(){
-  var c=CUR();pb.appendChild(h4('Écran affiché'));pb.appendChild(el('div','ttl',c.title||c.id));
+  var c=CUR();if(REEL)pb.appendChild(hint('Version : Ma version réelle (vierge). Change de version dans l’onglet États.'));pb.appendChild(h4('Écran affiché'));pb.appendChild(el('div','ttl',c.title||c.id));
   if(c.label){var l=el('span','lab '+(c.st||'plan'),c.label);pb.appendChild(l);}
   if(c.note)pb.appendChild(el('p','txt',c.note));
   var r=row();r.style.marginTop='12px';
@@ -392,7 +403,7 @@ function chgList(){var c=CUR(),L=(CHANGES[c.id]||CHANGES[c.screen]||[]).concat(C
 function rChg(){
   pb.appendChild(h4('Ce qui a changé ici · '+VERSION));
   var L=chgList(),ol=el('ol','chg');L.forEach(function(c){var li=el('li',null,c.t);li.value=c.n;ol.appendChild(li);});pb.appendChild(ol);
-  var r=row();r.style.marginTop='10px';r.appendChild(chip(S.chgOn?'Masquer les cadres':'Montrer les cadres',S.chgOn,function(){S.chgOn=!S.chgOn;LS.set('chg',S.chgOn);draw();render();}));pb.appendChild(r);
+  var r=row();r.style.marginTop='10px';r.appendChild(chip(S.chgOn?'Masquer les cadres':'Montrer les cadres',S.chgOn,function(){S.chgOn=!S.chgOn;LS.set(REEL?'chgR':'chg',S.chgOn);draw();render();}));pb.appendChild(r);
   pb.appendChild(hint('Chaque changement est encadré en bleu sur l’écran, avec son numéro.'));
 }
 
@@ -450,6 +461,14 @@ addEventListener('scroll',function(){if(S.sel)drawSel();if(S.insp)hov.hidden=tru
 /* États */
 function rEtats(){
   var A=window.RC_API;if(!A){pb.appendChild(hint('Indisponible.'));return;}
+  pb.appendChild(h4('Version'));var rv=row();
+  rv.appendChild(chip('Exemples (tests)',!REEL,function(){if(REEL)A.setMode('demo');}));
+  rv.appendChild(chip('Ma version réelle',REEL,function(){if(!REEL)A.setMode('reel');}));pb.appendChild(rv);
+  if(REEL){var st=window.RC_STORE;
+    pb.appendChild(hint('Vierge, sans aucun exemple : tu la remplis toi-même. '+(st&&st.kind==='db'?'Tes données sont gardées avec la maquette publiée : tu les retrouves sur tous tes appareils.':'Tes données restent dans ce navigateur.')));
+    var rz=row();rz.appendChild(chip('Remettre à zéro ma version réelle',false,function(){if(confirm('Effacer toutes les données de ta version réelle ? C’est définitif.'))A.resetReel();}));pb.appendChild(rz);
+    pb.appendChild(h4('Profil actif'));var PR=A.profiles();if(!PR.length)pb.appendChild(hint('Aucun profil pour l’instant.'));else{var rp=row();PR.forEach(function(p){rp.appendChild(chip(p.name,p.on,function(){A.setProfile(p.k);render();}));});pb.appendChild(rp);}
+    return;}
   pb.appendChild(h4('Compte'));var r=row();
   r.appendChild(chip('Compte d’essai',A.user()==='gouverneur@exemple.fr',function(){A.demo();}));
   r.appendChild(chip('Nouveau compte sans profil',false,function(){A.empty();}));
@@ -551,7 +570,7 @@ function viewShots(t,i,askDel){
 function closeView(){if(view){view.remove();view=null;}}
 function problem(t){setRes(t.id,'ko');S.prefill='Test '+t.num+' : ';S.testRef=t.id;say('Touche l’endroit du problème, puis décris-le.');startPin();}
 function paintRun(){
-  run.hidden=!RUN.on;if(!RUN.on)return;
+  run.hidden=!RUN.on||REEL;if(!RUN.on||REEL)return;
   var t=FLAT[RUN.i];if(!t){stopRun();return;}var r=RES[t.id];
   run.className=(RUN.min?'min':'')+(RUN.list?' fix':'');run.innerHTML='';placeRun();
   var h=el('div','rh');h.title='Fais glisser cette ligne pour déplacer le bandeau';h.appendChild(el('span','grip','⠿'));var L=RUN.list;h.appendChild(el('span','rn',L?'🔧 Correction '+(L.indexOf(RUN.i)+1)+'/'+L.length+' · test '+t.num:'Revue complète · test '+t.num+'/'+FLAT.length));h.appendChild(el('span','rg',t.g));
@@ -578,6 +597,7 @@ function paintRun(){
   b.appendChild(k);var sh=shotsEl(t);if(sh)b.appendChild(sh);run.appendChild(b);
 }
 function rTests(){
+  if(REEL){pb.appendChild(hint('Tu es dans « Ma version réelle » : les tests se font dans la version « Exemples » (onglet États).'));var rr=row();rr.appendChild(chip('Passer aux exemples',false,function(){window.RC_API&&window.RC_API.setMode('demo');}));pb.appendChild(rr);return;}
   var st=stats();
   var RV=reviewList();
   if(RV.length){

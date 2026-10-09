@@ -23,7 +23,9 @@ function row(o){/* {href,act,data,icon,nb,title,sub,val,valSub,valCls,go,pill,cl
 var toastEl=$('#toast'),tt;
 /* Message éphémère : il reste d'autant plus longtemps qu'il est long (3 à 7 s). */
 function say(t){toastEl.textContent=t;toastEl.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toastEl.classList.remove('show');},Math.min(7000,Math.max(3000,String(t).length*70)));}
-var TODAY='8 oct. 2026';
+var TODAY='8 oct. 2026',TODAY_S='8 oct.';
+/* Dans « Ma version réelle », la date du jour est la vraie. */
+try{if(localStorage.getItem('rc-mode')==='reel'){var MO=['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'],DN=new Date();TODAY_S=(DN.getDate()===1?'1er':DN.getDate())+' '+MO[DN.getMonth()];TODAY=TODAY_S+' '+DN.getFullYear();}}catch(e){}
 
 /* ================= Données d'exemple ================= */
 var CIVS=['Grèce','Maya','Rome','Allemagne','Royaume-Uni','France','Chine','Vikings','Égypte','Japon','Corée','Espagne','Arabie','Empire ottoman','Byzance'];
@@ -110,9 +112,42 @@ var FORMS={'Coin':['n-wedge','4 armements équipés',[['Attaque de l’infanteri
   'Carré creux':['n-square','aucun armement',[['Défense','+1,0 %'],['Santé','—']]]};
 var EVENTS=[['ev1','i-trophy','Gouverneur le plus puissant','Du 11 au 17 oct.','ok','Confirmé'],['ev2','n-ankh','Arche d’Osiris','14 oct.','ok','Confirmé'],['ev3','i-flag','KvK : saison 3','Vers le 19 oct.','plan','Date estimée'],['ev4','n-gift','Fête de la moisson','Date inconnue','plan','Inconnu']];
 
+/* ================= Ma version réelle (décision de Mickaël du 2026-10-09) =================
+   Deux versions : « Exemples » (pré-remplie, pour les tests) et « Ma version réelle » (vierge, remplie par Mickaël,
+   gardée avec la maquette publiée). Dans la version réelle, aucun exemple : un écran reste vide tant qu'il n'est pas rempli. */
+var REEL=false;try{REEL=localStorage.getItem('rc-mode')==='reel';}catch(e){}
+var LOADED=!REEL;
+if(REEL){
+  P={};ORDER=[];CMD=[];EQ=[];FORMS={};EVENTS=[];
+  S.active=null;S.imported=false;S.sent=0;S.reserved=false;S.planSaved=false;S.budget=null;S.form=null;S.cmpSec=null;S.rep=0;
+  S.goals=[];S.purchases=[];S.marches=[];S.codes=[];S.reports=[];S.reminders={};S.email='';S.tDays=[];
+  ACC={};ACC.REEL={pw:'',ok:true,data:{P:P,ORDER:ORDER,active:null}};AUTH.user='REEL';
+  document.documentElement.classList.add('reel');
+}
+function vide(t){return '<p class="vide">'+t+'</p>';}
+var STORE_KEYS=['time','tDays','tMoment','tLen','notif','lang','tz','email','goals','purchases','budget','marches','codes','reports','reminders','sent','reserved','planSaved','bil','imported'];
+function snapshot(){var o={};STORE_KEYS.forEach(function(k){o[k]=S[k];});o.reports=(S.reports||[]).map(function(r){var c={};Object.keys(r).forEach(function(k){if(k!=='img')c[k]=r[k];});return c;});return JSON.stringify({v:1,P:P,ORDER:ORDER,active:S.active,S:o});}
+var saveT=null,lastSaved='';
+/* Enregistre la version réelle (avec un court délai, et seulement si quelque chose a changé). Jamais avant d'avoir chargé. */
+function saveReel(now){
+  if(!REEL||!LOADED||!window.RC_STORE)return;clearTimeout(saveT);
+  saveT=setTimeout(function(){var j=snapshot();if(j===lastSaved)return;lastSaved=j;
+    window.RC_STORE.save(j).catch(function(){lastSaved='';say('Tes données n’ont pas pu être enregistrées : vérifie ta connexion, puis refais la dernière modification.');});},now?0:600);
+}
+function applyReel(j){var d=JSON.parse(j);P=d.P||{};ORDER=d.ORDER||[];S.active=d.active&&P[d.active]?d.active:(ORDER[0]||null);
+  if(d.S)Object.keys(d.S).forEach(function(k){if(STORE_KEYS.indexOf(k)>=0)S[k]=d.S[k];});ACC.REEL.data={P:P,ORDER:ORDER,active:S.active};}
+function startReel(){
+  var ld=document.createElement('div');ld.className='reel-load';ld.innerHTML='<p>Chargement de tes données…</p>';document.body.appendChild(ld);
+  var done=false;
+  function fail(){if(done)return;done=true;ld.innerHTML='<div class="card hl"><h3>Tes données ne se chargent pas</h3><p>Vérifie ta connexion, puis réessaie. Rien n’a été effacé.</p><div class="btns"><button class="btn primary" type="button" onclick="location.reload()">Réessayer</button><button class="btn" type="button" onclick="try{localStorage.setItem(\'rc-mode\',\'demo\')}catch(e){}location.reload()">Revenir aux exemples</button></div></div>';}
+  function go(){if(done)return;window.RC_STORE.load().then(function(j){if(done)return;done=true;if(j)applyReel(j);lastSaved=j||'';LOADED=true;ld.remove();route();},fail);}
+  if(window.RC_STORE)go();else document.addEventListener('rc:store',go,{once:true});
+  setTimeout(fail,15000);
+}
+
 /* ================= Calculs ================= */
 function A(){return P[S.active];}
-function resTot(r){if(!r)return null;return r.v+r.c.reduce(function(a,c){return a+c[1]*c[2];},0);}
+function resTot(r){if(!r||(r.v==null&&!(r.c&&r.c.length)))return null;return (r.v||0)+r.c.reduce(function(a,c){return a+c[1]*c[2];},0);}
 function accTot(a){if(!a||!a.length)return 0;return a.reduce(function(s,x){return s+x[1]*x[2];},0);}
 function unknown(p){return Object.keys(FIELDS).filter(function(k){return p.v[k]==null;});}
 function bonusMain(){return P.main?P.main.v.bonus:null;}
@@ -125,7 +160,7 @@ function bind(){
   var p=A(),pl=plan();
   var K={name:p?p.name:'',meta:p?('Royaume '+p.kd+' · HDV '+(p.v.hdv==null?'—':p.v.hdv)+' · VIP '+(p.v.vip==null?'—':p.v.vip)):'',
     power:p?p.power:'',kills:p?p.kills:'',deaths:p?p.deaths:'',gems:p?p.gems:'',ap:p?p.ap:'',tr0:p?p.tr[0]:'',tr1:p?p.tr[1]:'',tr2:p?p.tr[2]:'',
-    objShort:p?p.obj.short:'',objPct:p?p.obj.pct+' %':'',objTitle:p?p.obj.title:'',
+    objShort:p?p.obj.short:'',objPct:p?(p.obj.pct==null?'—':p.obj.pct+' %'):'',objTitle:p?p.obj.title:'',
     tMur:fH(pl.mur),tHdv:fH(pl.hdv),tTotal:fH(pl.total),accBuild:fH(pl.acc),builders:P.main?P.main.v.builders:'—'};
   $$('[data-k]').forEach(function(el){var k=el.getAttribute('data-k');if(k in K)el.textContent=K[k];});
   var n=p?unknown(p).length:0;var bd=$('#navBadge');bd.hidden=!n;bd.textContent=n;bd.setAttribute('aria-label',n+' valeurs à renseigner');
@@ -148,12 +183,14 @@ function renderHome(){
     ['r-stone','Total pierre',fM(resTot(r.stone)),'#ma-ville-inventaire'],['r-gold','Total or',fM(resTot(r.gold)),'#ma-ville-inventaire']];
   $('#homeTiles').innerHTML=tiles.map(function(t){return '<a class="tile" href="'+t[3]+'"><span class="ri">'+ic(t[0])+'</span><span><span class="tl">'+t[1]+'</span><div class="tv'+(t[2]==null?' unk':'')+'">'+(t[2]==null?'—':t[2])+'</div>'+(t[2]==null?'<span class="todo">à renseigner</span>':'')+'</span></a>';}).join('');
   // objectif
-  var oc=$('#objCard');oc.setAttribute('href',p.obj.href);$('#objFill').style.width=p.obj.pct+'%';
-  $('#objText').innerHTML=S.active==='main'?('Reste : <b>Mur 24</b>, <b>Hôtel de ville 25</b> · '+(pl.miss?'il manque <b>'+fM(pl.miss)+' de pierre</b>':'<b class="ok">pierre couverte</b>')):
+  var oc=$('#objCard');oc.setAttribute('href',p.obj.href);$('#objFill').style.width=(p.obj.pct||0)+'%';
+  $('#objText').innerHTML=REEL?'Choisis ton objectif dans Optimiser (« Nouvel objectif »).':S.active==='main'?('Reste : <b>Mur 24</b>, <b>Hôtel de ville 25</b> · '+(pl.miss?'il manque <b>'+fM(pl.miss)+' de pierre</b>':'<b class="ok">pierre couverte</b>')):
     (S.active==='f1'?(S.sent?'<b class="ok">'+fM(S.sent)+' de pierre envoyés</b> au Principal':'La Ferme 1 peut envoyer de la pierre au <b>Principal</b>'):'Reste : <b>Mur 18</b> · valeurs à renseigner');
   // priorités : actions triées par importance ; on garde celles qui tiennent dans le temps choisi (décision du 2026-10-08, note 5 de Mickaël)
   var L=[];
-  if(S.active==='main'){
+  if(REEL){/* version réelle : seulement ce que l'appli sait de tes données, sans exemple */
+    L=unknown(p).map(function(k){return ['#valeur-'+k,'Renseigner : '+FIELDS[k].label,'Les priorités seront plus justes',1];});
+  }else if(S.active==='main'){
     if(n)L.push(['#valeur-'+unknown(p)[0],'Renseigner : '+FIELDS[unknown(p)[0]].label,'Le plan en a besoin pour être juste',1]);
     L.push(['#plan-c25','Lancer le Mur niveau 24','Dernier prérequis de l’Hôtel de ville 25 · '+fH(pl.mur)+(pl.acc>=pl.mur?', couverts par tes accélérateurs':''),2]);
     L.push(pl.miss?['#fermes','Récupérer '+fM(pl.miss)+' de pierre','C’est ce qui manque à l’Hôtel de ville 25 · ta Ferme 1 peut l’envoyer',5]:['#plan-c25','Préparer l’Hôtel de ville 25','La pierre est couverte : il démarre juste après le Mur',2]);
@@ -169,14 +206,15 @@ function renderHome(){
   var budget=+S.time,used=0,shown=[];
   /* 5 actions au plus, pour ne pas remplir l'écran (note 8 de Mickaël, 2026-10-09) */
   L.forEach(function(x){if(shown.length<5&&used+x[3]<=budget){shown.push(x);used+=x[3];}});
-  if(!shown.length)shown=[L[0]];
-  $('#prioList').innerHTML=shown.map(function(x,i){return row({href:x[0],nb:i+1,title:esc(x[1]),sub:esc(x[2]),pill:pill('plan','≈ '+x[3]+' min')});}).join('')+
+  if(!shown.length&&L.length)shown=[L[0]];
+  $('#prioList').innerHTML=!shown.length?vide('Rien à faire pour l’instant : l’appli te proposera des actions quand tes valeurs seront renseignées.'):shown.map(function(x,i){return row({href:x[0],nb:i+1,title:esc(x[1]),sub:esc(x[2]),pill:pill('plan','≈ '+x[3]+' min')});}).join('')+
     '<p class="prio-sum">'+shown.length+' action'+(shown.length>1?'s':'')+' · ≈ '+used+' min sur '+(budget===60?'1 h':budget+' min')+'</p>';
   $$('#timeChips .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.time===S.time));});
   // à surveiller
   var W=[];
-  unknown(p).forEach(function(k){W.push(row({href:'#valeur-'+k,icon:'i-warn',title:esc(FIELDS[k].label)+' à renseigner',sub:k==='bonus'&&S.active==='main'?'Le plan Hôtel de ville 25 l’utilise pour calculer les durées':'Valeur inconnue : elle reste « — », jamais zéro'}));});
-  if(S.active==='main'){
+  var U=unknown(p);U.slice(0,5).forEach(function(k){W.push(row({href:'#valeur-'+k,icon:'i-warn',title:esc(FIELDS[k].label)+' à renseigner',sub:k==='bonus'&&S.active==='main'?'Le plan Hôtel de ville 25 l’utilise pour calculer les durées':'Valeur inconnue : elle reste « — », jamais zéro'}));});
+  if(U.length>5)W.push(row({href:'#ma-ville-progression',icon:'i-warn',title:'Et '+(U.length-5)+' autre'+(U.length>6?'s':'')+' valeur'+(U.length>6?'s':'')+' à renseigner',sub:'Dans Ma ville › Progression'}));
+  if(S.active==='main'&&!REEL){
     S.marches.forEach(function(m,i){if(!m.eq)W.push(row({href:'#combat',icon:'i-shield2',title:'Marche '+(i+1)+' incomplète',sub:'Équipement du commandant secondaire inconnu'}));});
     if(!S.imported)W.push(row({href:'#import',icon:'n-camera',title:'Inventaire relevé il y a 6 jours',sub:'Un nouvel import rendra les priorités plus justes'}));
   }
@@ -215,29 +253,29 @@ function renderCity(){
   }).join('');}
   $('#gSet').innerHTML=rows('set');$('#gBld').innerHTML=rows('bld');
   $('#quickBar').innerHTML=S.quick?'<div class="qbar"><span id="qCount">Saisie rapide</span><div class="chips" data-single id="qMotif" hidden><button class="chip" type="button" aria-pressed="true">Changé en jeu</button><button class="chip" type="button" aria-pressed="false">Erreur de saisie</button><button class="chip" type="button" aria-pressed="false">Autre</button></div><div class="btns" style="margin-top:0"><button class="btn" type="button" data-act="quick-cancel">Annuler</button><button class="btn primary" type="button" data-act="quick-save">Enregistrer</button></div></div>':'';
-  $('#gResearch').innerHTML=p.research.map(function(r){return '<div class="prow"><div class="ptop"><span>'+r[0]+'</span><span>'+r[1]+' %</span></div><div class="bar"><div class="fill" style="width:'+r[1]+'%"></div></div></div>';}).join('');
-  $('#gTroops').innerHTML=p.troops.map(function(t){return row({icon:t[1],title:t[0],sub:'Niveau '+t[2],val:nb(t[3])});}).join('');
+  $('#gResearch').innerHTML=!p.research.length?vide('Pas encore renseignées.'):p.research.map(function(r){return '<div class="prow"><div class="ptop"><span>'+r[0]+'</span><span>'+r[1]+' %</span></div><div class="bar"><div class="fill" style="width:'+r[1]+'%"></div></div></div>';}).join('');
+  $('#gTroops').innerHTML=!p.troops.length?vide('Pas encore renseignées.'):p.troops.map(function(t){return row({icon:t[1],title:t[0],sub:'Niveau '+t[2],val:nb(t[3])});}).join('');
   // inventaire
   var RN=[['food','r-food','Nourriture'],['wood','r-wood','Bois'],['stone','r-stone','Pierre'],['gold','r-gold','Or']];
   function fold(icon,name,val,det,sub){return '<details class="fold"><summary><span class="ri">'+ic(icon)+'</span><span class="rc"><b>'+name+'</b>'+(sub?'<small>'+sub+'</small>':'')+'</span><span class="rv">'+val+'</span><span class="go">'+ic('i-next2')+'</span></summary><div class="fold-b">'+det+'</div></details>';}
   var resH=RN.map(function(x){var r=p.res[x[0]];var det='<div><span>En ville</span>'+fM(r.v)+'</div>'+r.c.map(function(c){return '<div><span>Caisses de '+c[0]+'</span>'+nb(c[1])+'</div>';}).join('');return fold(x[1],x[2],fM(resTot(r)),det);}).join('');
-  var g=p.gemsIn;resH+=fold('r-gem','Gemmes',nb(g.v+g.c.reduce(function(a,c){return a+c[1]*c[2];},0)),'<div><span>En ville</span>'+nb(g.v)+'</div>'+g.c.map(function(c){return '<div><span>Caisses de '+c[0]+'</span>'+nb(c[1])+'</div>';}).join(''));
-  $('#gRes').innerHTML='<div class="col">'+resH+'</div><div class="col"><div class="list">'+row({icon:'p-chest',title:'Coffres de ressources',sub:'À ouvrir : leur contenu n’est pas compté',val:'7'})+row({icon:'p-pack',title:'Packs de ressources',sub:'Idem',val:'2'})+'</div></div>';
+  var g=p.gemsIn,gt=g.v==null&&!g.c.length?'—':nb((g.v||0)+g.c.reduce(function(a,c){return a+c[1]*c[2];},0));resH+=fold('r-gem','Gemmes',gt,'<div><span>En ville</span>'+(g.v==null?'—':nb(g.v))+'</div>'+g.c.map(function(c){return '<div><span>Caisses de '+c[0]+'</span>'+nb(c[1])+'</div>';}).join(''));
+  $('#gRes').innerHTML='<div class="col">'+resH+'</div><div class="col"><div class="list">'+row({icon:'p-chest',title:'Coffres de ressources',sub:'À ouvrir : leur contenu n’est pas compté',val:REEL?'—':'7'})+row({icon:'p-pack',title:'Packs de ressources',sub:'Idem',val:REEL?'—':'2'})+'</div></div>';
   var AN=[['build','a-build','Construction'],['research','a-research','Recherche'],['train','a-train','Entraînement'],['heal','a-heal','Soins'],['general','a-general','Généraux']];
-  var accH=AN.map(function(x){var a=p.acc[x[0]]||[];var det=a.length?a.map(function(c){return '<div><span>'+c[0]+'</span>'+nb(c[1])+'</div>';}).join(''):'<div><span>Aucun</span>0</div>';return fold(x[1],x[2],a.length?fH(accTot(a)):'0 h',det,x[0]==='general'?'Utilisables partout':'');});
+  var accH=AN.map(function(x){var a=p.acc[x[0]]||[];var det=a.length?a.map(function(c){return '<div><span>'+c[0]+'</span>'+nb(c[1])+'</div>';}).join(''):(REEL?'<div><span>Pas encore renseigné</span>—</div>':'<div><span>Aucun</span>0</div>');return fold(x[1],x[2],a.length?fH(accTot(a)):(REEL?'—':'0 h'),det,x[0]==='general'?'Utilisables partout':'');});
   $('#gAcc').innerHTML='<div class="col">'+accH.slice(0,3).join('')+'</div><div class="col">'+accH.slice(3).join('')+'</div>';
-  $('#lastImport').textContent=S.active==='main'?(S.imported?'Import d’aujourd’hui':'Import du 2 oct.'):'';
+  $('#lastImport').textContent=REEL?'':S.active==='main'?(S.imported?'Import d’aujourd’hui':'Import du 2 oct.'):'';
   $$('#invChips .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.inv===S.inv));});
   $$('[data-invsec]').forEach(function(s){s.hidden=s.dataset.invsec!==S.inv;});
   // commandants
   var list=CMD.filter(function(c){return S.cmdF==='all'||c.t.indexOf(S.cmdF)>=0;});
-  $('#cmdGrid').innerHTML=list.length?list.map(function(c){return '<div class="cmd"><div class="cmd-h"><span class="av'+(c.r==='epic'?' epic':'')+'">'+c.n[0]+'</span><span><b>'+esc(c.n)+'</b><small class="'+(c.r==='epic'?'epi':'leg')+'">'+(c.r==='epic'?'Épique':'Légendaire')+' · '+c.role+'</small></span></div><div class="meta"><span>Niv. '+c.lvl+'</span>'+c.sk+'</div></div>';}).join(''):'<p class="muted">Aucun commandant pour ce filtre.</p>';
+  $('#cmdGrid').innerHTML=list.length?list.map(function(c){return '<div class="cmd"><div class="cmd-h"><span class="av'+(c.r==='epic'?' epic':'')+'">'+c.n[0]+'</span><span><b>'+esc(c.n)+'</b><small class="'+(c.r==='epic'?'epi':'leg')+'">'+(c.r==='epic'?'Épique':'Légendaire')+' · '+c.role+'</small></span></div><div class="meta"><span>Niv. '+c.lvl+'</span>'+c.sk+'</div></div>';}).join(''):(CMD.length?'<p class="muted">Aucun commandant pour ce filtre.</p>':vide('Aucun commandant renseigné pour l’instant.'));
   $$('#cmdChips .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.f===S.cmdF));});
   // équipements, formations
-  $('#eqList').innerHTML=EQ.map(function(e,i){return row({act:'eq',data:i,icon:e[0],title:e[1],sub:'<span class="'+e[2]+'">'+e[3]+'</span>'});}).join('');
-  $('#formList').innerHTML=Object.keys(FORMS).map(function(k){return row({act:'form',data:k,icon:FORMS[k][0],title:k,sub:'Débloquée · '+FORMS[k][1],cls:k===S.form?'sel':''});}).join('');
-  $('#formTitle').textContent='Effets de la formation '+S.form;
-  $('#formFx').innerHTML=FORMS[S.form][2].map(function(x){return '<li><span>'+x[0]+'</span><b'+(x[1]==='—'?' class="unk"':'')+'>'+x[1]+'</b></li>';}).join('');
+  $('#eqList').innerHTML=!EQ.length?vide('Aucune pièce d’équipement renseignée.'):EQ.map(function(e,i){return row({act:'eq',data:i,icon:e[0],title:e[1],sub:'<span class="'+e[2]+'">'+e[3]+'</span>'});}).join('');
+  $('#formList').innerHTML=!Object.keys(FORMS).length?vide('Aucune formation renseignée.'):Object.keys(FORMS).map(function(k){return row({act:'form',data:k,icon:FORMS[k][0],title:k,sub:'Débloquée · '+FORMS[k][1],cls:k===S.form?'sel':''});}).join('');
+  $('#formTitle').textContent=FORMS[S.form]?'Effets de la formation '+S.form:'Effets';
+  $('#formFx').innerHTML=!FORMS[S.form]?'<li><span>Choisis une formation.</span></li>':FORMS[S.form][2].map(function(x){return '<li><span>'+x[0]+'</span><b'+(x[1]==='—'?' class="unk"':'')+'>'+x[1]+'</b></li>';}).join('');
 }
 function quickCount(){var p=A(),n=0,corr=0;$$('[data-qk]').forEach(function(el){var k=el.dataset.qk,v=el.value.trim();var old=p.v[k];if(v===''&&old==null)return;if(String(old==null?'':old)!==v){n++;if(old!=null)corr++;}});
   var qc=$('#qCount');if(qc)qc.textContent=n?n+' valeur'+(n>1?'s':'')+' modifiée'+(n>1?'s':''):'Saisie rapide';var m=$('#qMotif');if(m)m.hidden=!corr;}
@@ -306,6 +344,7 @@ function renderReview(){
   $$('.q[data-q]').forEach(function(q){var v=S.q[q.dataset.q];q.classList.toggle('done',v!=null);});
 }
 function importSave(){
+  if(REEL){say('Dans ta version réelle, la lecture des captures n’est pas encore branchée : rien n’a été enregistré.');importReset();location.hash='ma-ville-inventaire';return;}
   var kept=(S.sureOk?38:0)+Object.keys(S.q).filter(function(k){return S.q[k]==='ok';}).length;
   var skipped=(S.sureOk?0:38)+Object.keys(S.q).filter(function(k){return S.q[k]!=='ok';}).length;
   if(!kept){say('Confirme au moins un élément avant d’enregistrer.');return;}
@@ -321,10 +360,10 @@ function importReset(){S.shots=[];S.q={q1:null,q2:null,q3:null};S.sureOk=false;$
 /* ================= Optimiser ================= */
 function renderOpt(){
   var p=A(),pl=plan();if(!p)return;
-  var c=$('#optCard');c.setAttribute('href',p.obj.href);$('#optFill').style.width=p.obj.pct+'%';
+  var c=$('#optCard');c.setAttribute('href',p.obj.href);$('#optFill').style.width=(p.obj.pct||0)+'%';
   $('#optText').innerHTML=S.active==='main'?('<b>62 %</b> · encore <b>'+fH(pl.total)+'</b> de construction · '+(pl.miss?'il manque <b>'+fM(pl.miss)+' de pierre</b>':'<b class="ok">pierre couverte</b>')):
-    (S.active==='f1'?'Ta ferme sert à envoyer de la pierre au Principal.':'Monte ton Mur puis ton Hôtel de ville.');
-  $('#goalList').innerHTML=S.goals.map(function(g,i){return row({icon:g.icon,title:esc(g.t),sub:esc(g.sub),val:g.pct+' %',act:'goal',data:i,go:false});}).join('');
+    (REEL?'Aucun objectif principal pour l’instant.':S.active==='f1'?'Ta ferme sert à envoyer de la pierre au Principal.':'Monte ton Mur puis ton Hôtel de ville.');
+  $('#goalList').innerHTML=!S.goals.length?vide('Aucun objectif. Touche « Nouvel objectif » pour en ajouter un.'):S.goals.map(function(g,i){return row({icon:g.icon,title:esc(g.t),sub:esc(g.sub),val:g.pct==null?'—':g.pct+' %',act:'goal',data:i,go:false});}).join('');
   $('#toolRes').textContent=S.reserved?'Ressources réservées pour l’Hôtel de ville 25':'Mettre de côté pour un objectif';
   if(!P.main)return;
   // plan
@@ -345,6 +384,7 @@ function renderOpt(){
   $('#reserveBtn').innerHTML=ic('i-lock')+(S.reserved?'Annuler la réservation':'Réserver les ressources');
 }
 function renderSpend(){
+  if(REEL)return;
   var T={research:['recherche','Tissage','Recherche terminée'],build:['construction','Mur 24','Mur terminé'],train:['entraînement','fantassins niveau 5','Troupes prêtes']}[S.spType];
   var d=S.spDays;$('#spTitle').textContent='Utiliser '+d+' jour'+(d>1?'s':'')+' d’accélérateurs de '+T[0]+' ?';$('#spDaysV').textContent=d+' j';
   var pts=nb(d*30000);
@@ -355,14 +395,20 @@ function renderSpend(){
   $$('#spType .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.sp===S.spType));});
 }
 function renderBudget(){
-  var tot=S.purchases.reduce(function(a,x){return a+x[2];},0);var pct=S.budget?Math.min(100,tot/S.budget*100):100;
+  if(REEL){var MN=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];$('#budMonth').textContent=MN[new Date().getMonth()];}
+  var tot=S.purchases.reduce(function(a,x){return a+x[2];},0);
+  if(S.budget==null){$('#budTxt').textContent=tot?tot.toFixed(2).replace('.',',')+' € dépensés · aucun budget fixé':'Aucun budget fixé';$('#budFill').style.width='0%';$('#budFill').style.background='';if(document.activeElement!==$('#budIn'))$('#budIn').value='';
+    $('#budList').innerHTML=S.purchases.length?S.purchases.map(function(x,i){return row({icon:'p-pack',title:esc(x[0]),sub:x[1],val:x[2].toFixed(2).replace('.',',')+' €',act:'del-purchase',data:i,go:false});}).join(''):vide('Aucun achat ce mois-ci.');return;}
+  if(REEL&&document.activeElement!==$('#budIn'))$('#budIn').value=S.budget;var pct=S.budget?Math.min(100,tot/S.budget*100):100;
   $('#budTxt').textContent=tot.toFixed(2).replace('.',',')+' € sur '+S.budget+' €';$('#budFill').style.width=pct+'%';
   $('#budFill').style.background=tot>S.budget?'linear-gradient(110deg,#c0503a,#ef8a74)':'';
-  $('#budList').innerHTML=S.purchases.map(function(x,i){return row({icon:'p-pack',title:esc(x[0]),sub:x[1],val:x[2].toFixed(2).replace('.',',')+' €',act:'del-purchase',data:i,go:false});}).join('')+(tot>S.budget?'<div class="note" style="margin-top:4px">'+ic('i-warn')+'<span>Budget dépassé de '+(tot-S.budget).toFixed(2).replace('.',',')+' €.</span></div>':'');
+  $('#budList').innerHTML=(S.purchases.length?'':vide('Aucun achat ce mois-ci.'))+S.purchases.map(function(x,i){return row({icon:'p-pack',title:esc(x[0]),sub:x[1],val:x[2].toFixed(2).replace('.',',')+' €',act:'del-purchase',data:i,go:false});}).join('')+(tot>S.budget?'<div class="note" style="margin-top:4px">'+ic('i-warn')+'<span>Budget dépassé de '+(tot-S.budget).toFixed(2).replace('.',',')+' €.</span></div>':'');
   $('#packFx').innerHTML=S.packSim?'Effet sur ton plan : <b class="ok">Hôtel de ville 25 atteint 6 jours plus tôt</b>, plus de pierre manquante. Budget après achat : <b>'+(tot+9.99).toFixed(2).replace('.',',')+' € sur '+S.budget+' €</b>.':'Simule-le pour voir son effet sur ton plan et ton budget.';
   $('#packBtn').textContent=S.packSim?'Arrêter la simulation':'Simuler ce pack';
 }
 function renderFarms(){
+  if(REEL){var fs=ORDER.filter(function(k){return P[k].type==='Ferme';});
+    $('#farmList').innerHTML=fs.length?fs.map(function(k){return row({act:'switch',data:k,icon:'i-sprout',title:esc(P[k].name),sub:P[k].v.hdv!=null?'Hôtel de ville '+P[k].v.hdv:'Hôtel de ville à renseigner'});}).join(''):vide('Aucune ferme. Ajoute un profil de type « Ferme » depuis l’Accueil.');return;}
   var pl=plan();
   $('#farmList').innerHTML=(P.f1?row({act:'switch',data:'f1',icon:'i-sprout',title:esc(P.f1.name),sub:'HDV 21 · relevé il y a 2 jours',val:'31 M<small>ressources</small>'}):'')+
     (P.f2?row({act:'switch',data:'f2',icon:'i-sprout',title:esc(P.f2.name),sub:'HDV 17 · relevé il y a 9 jours',val:'12 M<small>ressources</small>'}):'');
@@ -371,6 +417,7 @@ function renderFarms(){
   $('#sendTxt').innerHTML='Il manque <b>4,2 M de pierre</b> au Principal. Envoyer <b>'+fM(v)+'</b> donne <b>'+fM(r)+'</b> reçus après la taxe de 18 % : '+(cover?'<b class="ok">ça suffit</b>.':'<b class="ko">il manquera encore '+fM(4.2-r)+'</b>.')+(S.sent?' Déjà marqué comme envoyé : '+fM(S.sent)+'.':'');
 }
 function renderMig(){
+  if(REEL)return;
   var need={'3401':28,'3402':34,'2988':19}[S.kd],have=12;$('#kdSel').value=S.kd;
   $('#kdNeed').textContent=need;$('#kdHave').textContent=have;$('#kdHave').className='tv '+(have>=need?'ok':'ko');
   $('#kdTxt').innerHTML=have>=need?'<b class="ok">Tu as assez de passeports.</b>':'Il te manque <b class="ko">'+(need-have)+' passeports</b>. Ils dépendent de ta puissance (128,4 M).';
@@ -389,6 +436,12 @@ function renderTime(){
 
 /* ================= Combat ================= */
 function renderCombat(){
+  if(REEL){$('#marchList').innerHTML=vide('Aucune marche. Elles se composeront avec tes commandants, une fois renseignés dans Ma ville.');
+    $('#compList').innerHTML=vide('Renseigne d’abord tes commandants dans Ma ville › Commandants.');$('#compWarn').innerHTML='';$('#compSave').disabled=true;
+    $('#sesPill').className='pill st-plan';$('#sesPill').innerHTML='<i></i>Rien à vérifier';$('#sesList').innerHTML=vide('Rien à vérifier pour l’instant : il faut tes marches, tes accélérateurs de soins et tes points d’action.');
+    $$('#sesMode .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.v===S.sesMode));});
+    $('#repList').innerHTML=S.reports.length?S.reports.map(function(r,i){return row({act:'rep',data:i,icon:'n-camera',title:esc(r.t),sub:esc(r.d),pill:pill('wip','À relire'),cls:i===S.rep?'sel':'',go:false});}).join(''):vide('Aucun rapport. Touche « Importer » pour en ajouter un.');
+    var rr=S.reports[S.rep];$('#repTitle').textContent=rr?rr.t:'';$('#repBody').innerHTML=rr?(rr.img?'<img class="repimg" src="'+rr.img+'" alt="Capture du rapport">':'<p class="muted">Capture non conservée après rechargement de la maquette.</p>')+'<p><b>Observé :</b> '+esc(rr.obs)+'</p>':vide('Choisis un rapport pour le lire.');return;}
   $('#marchList').innerHTML=S.marches.map(function(m,i){return row({act:'march',data:i,nb:i+1,title:esc(m.p)+' et '+esc(m.s),sub:m.type+' · '+m.form,pill:m.eq?pill('ok','Complète'):pill('warn','Équipement inconnu')});}).join('');
   // composer
   var used={};S.marches.forEach(function(m){[m.p,m.s].forEach(function(n){used[n]=(used[n]||0)+1;});});
@@ -436,6 +489,7 @@ function compCheck(){
 
 /* ================= Événements, bilan, codes, plus ================= */
 function renderEvents(){
+  if(REEL){$('#evList').innerHTML=vide('Aucun événement pour l’instant.');$('#kvkPill').className='pill st-plan';$('#kvkPill').innerHTML='<i></i>Rien à vérifier';$('#kvkList').innerHTML=vide('La préparation au KvK s’appuiera sur tes marches, tes troupes et tes accélérateurs.');return;}
   /* Rappel : un bouton explicite « Me prévenir » (note 7 de Mickaël, 2026-10-09). Une date inconnue ne permet pas de rappel. */
   $('#evList').innerHTML=EVENTS.map(function(e){var on=S.reminders[e[0]],can=e[4]==='ok'||e[5]==='Date estimée';
     return '<div class="row ev-row"><span class="ri">'+ic(e[1])+'</span><span class="rc"><b>'+e[2]+'</b><small>'+e[3]+(can?' · '+pill(e[4],e[5]):' · pas de rappel possible')+'</small></span>'+
@@ -447,6 +501,7 @@ function renderEvents(){
   $('#kvkList').innerHTML=K.map(function(x){return row({href:x[3],icon:x[0]?'i-check':'i-warn',title:x[1],sub:x[2],go:!!x[3]&&!x[0]});}).join('');
 }
 function renderBilan(){
+  if(REEL){$('#bilList').innerHTML=vide('Pas encore de bilan : il faut au moins deux relevés à quelques jours d’écart.');$('#bilNotes').innerHTML=vide('Rien à signaler.');$$('#bilPer .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.v===S.bil));});return;}
   var w=S.bil==='7';
   var L=w?[['i-bolt','Puissance','+2,1 M','ok'],['i-temple','Académie 23 → 24','+1','ok'],['r-stone','Pierre','−6 M','ko'],['i-target','Hôtel de ville 25','+8 %','ok']]:
     [['i-bolt','Puissance','+7,8 M','ok'],['i-temple','Académie 22 → 24','+2','ok'],['t-swords','Caserne 22 → 23','+1','ok'],['r-stone','Pierre','−11 M','ko'],['i-target','Hôtel de ville 25','+21 %','ok']];
@@ -456,12 +511,13 @@ function renderBilan(){
 }
 function renderCodes(){
   var L={try:'À essayer',used:'Utilisé',ref:'Refusé'};
+  if(!S.codes.length){$('#codeList').innerHTML=vide('Aucun code pour l’instant.');$('#codesTxt').textContent='Aucun code à essayer';return;}
   $('#codeList').innerHTML=S.codes.map(function(c,i){return '<div class="q'+(c.st==='used'?' done':'')+'"><div class="q-h"><span class="crop">'+ic('n-gift')+'</span><span class="rc"><b class="num">'+c.c+'</b><small>'+c.sub+'</small></span><button class="btn sm" type="button" data-copy="'+c.c+'">'+ic('n-copy')+'Copier</button></div>'+
     '<div class="chips">'+Object.keys(L).map(function(k){return '<button class="chip" type="button" data-code="'+i+'" data-cst="'+k+'" aria-pressed="'+(c.st===k)+'">'+L[k]+'</button>';}).join('')+'</div></div>';}).join('');
   var n=S.codes.filter(function(c){return c.st==='try';}).length;$('#codesTxt').textContent=n?n+' code'+(n>1?'s':'')+' à essayer':'Aucun code à essayer';
 }
 function renderPlus(){
-  $('#emailTxt').textContent=S.email;$('#langTxt').textContent=S.lang+' · '+S.tz;
+  $('#emailTxt').textContent=S.email||'Non renseignée';$('#langTxt').textContent=S.lang+' · '+S.tz;
   var on=Object.keys(S.notif).filter(function(k){return S.notif[k];}).length;$('#notifTxt').textContent=on?on+' sur 4 activées':'Toutes désactivées';
 }
 
@@ -488,8 +544,9 @@ var screens=$$('[data-screen]'),mv=$('[data-screen="ma-ville"]'),panels=$$('[dat
 function setCur(o){window.RC_CUR=o;try{document.dispatchEvent(new CustomEvent('rc:route',{detail:o}));}catch(e){}}
 var cur='accueil';
 function route(){
+  if(!LOADED)return;
   var h=(location.hash||'').slice(1)||'accueil',id=h,sub=null;
-  if(AUTH_IDS.indexOf(h)>=0){showAuth(h);return;}
+  if(AUTH_IDS.indexOf(h)>=0){if(REEL&&AUTH.user&&h!=='nouveau-mot-de-passe'){location.replace('#accueil');return;}showAuth(h);return;}
   if(!AUTH.user){AUTH.after=h;location.replace('#connexion');return;}
   if(document.body.classList.contains('auth-on')){document.body.classList.remove('auth-on');$('#auth').hidden=true;cur=null;}
   if(h==='ma-ville'||h.indexOf('ma-ville-')===0){id='ma-ville';sub=h.slice(9)||'progression';}
@@ -511,7 +568,7 @@ function route(){
 }
 function refreshAll(keepQuick){
   bind();renderHome();if(ORDER.length){renderProfile();if(!keepQuick)renderCity();renderValue();renderOpt();}
-  renderSpend();renderBudget();if(P.main){renderFarms();renderMig();renderCombat();renderEvents();renderBilan();}renderTime();renderCodes();renderPlus();
+  renderSpend();renderBudget();if(P.main||REEL){renderFarms();renderMig();renderCombat();renderEvents();renderBilan();}renderTime();renderCodes();renderPlus();
 }
 /* Plan des écrans */
 (function(){
@@ -551,15 +608,22 @@ function showAuth(id){
 function saveData(){if(AUTH.user)ACC[AUTH.user].data={P:P,ORDER:ORDER,active:S.active};}
 function login(email){
   saveData();var a=ACC[email];if(!a.data)a.data={P:{},ORDER:[],active:null};
-  P=a.data.P;ORDER=a.data.ORDER;S.active=a.data.active;S.profileView=null;S.quick=false;S.email=email;AUTH.user=email;
+  P=a.data.P;ORDER=a.data.ORDER;S.active=a.data.active;S.profileView=null;S.quick=false;if(email!=='REEL')S.email=email;AUTH.user=email;
   try{if(email===DEMO)sessionStorage.setItem('rokUser',email);else sessionStorage.removeItem('rokUser');}catch(e){}
   $$('.a-shell form').forEach(function(f){f.reset();});AUTH_IDS.forEach(function(id){authMsg(id,'');});
   var to=AUTH.after&&AUTH_IDS.indexOf(AUTH.after)<0?AUTH.after:'accueil';AUTH.after=null;
   if(location.hash==='#'+to)route();else location.hash=to;
 }
-function logout(){saveData();AUTH.user=null;try{sessionStorage.removeItem('rokUser');}catch(e){}location.hash='connexion';authMsg('connexion','Tu es déconnecté. Tes profils restent enregistrés.');}
+function logout(){saveData();saveReel(true);AUTH.user=null;try{sessionStorage.removeItem('rokUser');}catch(e){}location.hash='connexion';authMsg('connexion','Tu es déconnecté. Tes profils restent enregistrés.');}
 var MAILRE=/^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 function submitAuth(kind){
+  if(REEL&&kind!=='newpw'){/* version réelle : un seul compte, le tien ; la maquette ne vérifie ni l'e-mail ni le mot de passe */
+    if(kind==='login'){S.email=$('#liEmail').value.trim();login('REEL');return;}
+    if(kind==='signup'){var se=$('#suEmail').value.trim(),q1=$('#suPw').value,q2=$('#suPw2').value;
+      fieldErr('suEmail',MAILRE.test(se)?'':'Saisis une adresse valide, par exemple nom@exemple.fr.');fieldErr('suPw',q1.length<8?'Au moins 8 caractères.':'');fieldErr('suPw2',q1!==q2?'Les mots de passe ne correspondent pas.':'');
+      if(!MAILRE.test(se)||q1.length<8||q1!==q2)return;S.email=se;AUTH.pending=se;$('[data-form="signup"]').reset();location.hash='confirmation';return;}
+    if(kind==='forgot'){var fr=$('#fgEmail').value.trim();AUTH.reset='REEL';window.RC_CUR.sim=true;setCur(window.RC_CUR);authMsg('mot-de-passe-oublie','E-mail envoyé à '+fr+' : touche le lien qu’il contient pour choisir un nouveau mot de passe.');return;}
+  }
   if(kind==='login'){
     var em=$('#liEmail').value.trim().toLowerCase(),pw=$('#liPw').value,a=ACC[em];
     if(!a||a.pw!==pw){authMsg('connexion','E-mail ou mot de passe incorrect.',true);return;}
@@ -586,11 +650,12 @@ function submitAuth(kind){
     fieldErr('npPw',n1.length<8?'Au moins 8 caractères.':'');
     fieldErr('npPw2',n1!==n2?'Les mots de passe ne correspondent pas.':'');
     if(n1.length<8||n1!==n2){var g=$('[data-auth="nouveau-mot-de-passe"] [aria-invalid="true"]');if(g)g.focus();return;}
-    var who=AUTH.reset&&ACC[AUTH.reset]?AUTH.reset:DEMO;ACC[who].pw=n1;ACC[who].ok=true;AUTH.reset=null;AUTH.after=null;
+    var who=REEL?'REEL':(AUTH.reset&&ACC[AUTH.reset]?AUTH.reset:DEMO);ACC[who].pw=n1;ACC[who].ok=true;AUTH.reset=null;AUTH.after=null;
     login(who);say('Nouveau mot de passe enregistré.');
   }
 }
 function simLink(){
+  if(REEL){if(cur==='auth:confirmation'){AUTH.pending=null;AUTH.after=null;login('REEL');say('E-mail confirmé. Bienvenue !');}else if(cur==='auth:mot-de-passe-oublie')location.hash='nouveau-mot-de-passe';return;}
   if(cur==='auth:confirmation'){var em=AUTH.pending;
     if(!em||!ACC[em]){say('Crée d’abord un compte : l’e-mail part à ce moment-là.');return;}
     if(ACC[em].ok&&ACC[em].data){location.hash='connexion';authMsg('connexion','Ce compte est déjà confirmé : connecte-toi.');return;}
@@ -603,7 +668,7 @@ function simLink(){
 document.addEventListener('submit',function(e){var f=e.target.closest('[data-form]');if(!f)return;e.preventDefault();submitAuth(f.dataset.form);});
 document.addEventListener('input',function(e){var sh=e.target.closest('.a-shell');if(!sh)return;var f=$('.a-feedback',sh);if(f&&f.classList.contains('bad'))f.hidden=true;if(e.target.getAttribute('aria-invalid'))fieldErr(e.target.id,'');});
 var FRESH=false;try{FRESH=sessionStorage.getItem('rokFresh')==='1';sessionStorage.removeItem('rokFresh');}catch(e){}
-try{var su=sessionStorage.getItem('rokUser');if(su&&ACC[su]){AUTH.user=su;S.email=su;}var sa=sessionStorage.getItem('rokActive');if(sa&&P[sa])S.active=ACC[DEMO].data.active=sa;sessionStorage.removeItem('rokActive');}catch(e){}
+try{var su=sessionStorage.getItem('rokUser');if(su&&ACC[su]){AUTH.user=su;S.email=su;}var sa=sessionStorage.getItem('rokActive');if(!REEL&&sa&&P[sa])S.active=ACC[DEMO].data.active=sa;sessionStorage.removeItem('rokActive');}catch(e){}
 
 /* ================= Actions ================= */
 function addProfileSheet(){
@@ -618,9 +683,9 @@ function createProfile(){
   var t=$('#npType .chip[aria-pressed="true"]').textContent,id='p'+Date.now();
   var v={};Object.keys(FIELDS).forEach(function(k){v[k]=null;});
   P[id]=mkProfile({name:n,type:t,icon:t==='Ferme'?'i-sprout':'i-crown',kd:'—',pid:$('#npId').value.trim(),power:'—',kills:'—',deaths:'—',gems:'—',ap:'—',tr:['','',''],releves:0,corr:0,snaps:0,v:v,
-    research:[['Économie',0],['Militaire',0]],troops:[['Infanterie','t-swords','—',0],['Cavalerie','n-horseshoe','—',0],['Archers','n-bow','—',0],['Siège','n-catapult','—',0]],
-    res:{food:{v:0,c:[]},wood:{v:0,c:[]},stone:{v:0,c:[]},gold:{v:0,c:[]}},gemsIn:{v:0,c:[]},acc:{build:[],research:[],train:[],heal:[],general:[]},
-    obj:{title:'Renseigner le profil',short:'Profil renseigné',pct:0,href:'#ma-ville-progression'}});
+    research:[],troops:[],
+    res:{food:{v:null,c:[]},wood:{v:null,c:[]},stone:{v:null,c:[]},gold:{v:null,c:[]}},gemsIn:{v:null,c:[]},acc:{build:[],research:[],train:[],heal:[],general:[]},
+    obj:REEL?{title:'Aucun objectif',short:'Objectif',pct:null,href:'#optimiser'}:{title:'Renseigner le profil',short:'Profil renseigné',pct:0,href:'#ma-ville-progression'}});
   ORDER.push(id);S.active=id;closeSheet();say('Profil « '+n+' » créé. Il est maintenant actif.');location.hash='accueil';refreshAll();
 }
 function deleteProfile(){
@@ -646,13 +711,13 @@ var ACT={
   'import-save':importSave,'import-reset':importReset,
   'add-goal':function(){openSheet('Nouvel objectif','<div class="fld"><label>Type</label><div class="chips" data-single id="ngType"><button class="chip" type="button" aria-pressed="true">Bâtiment</button><button class="chip" type="button" aria-pressed="false">Recherche</button><button class="chip" type="button" aria-pressed="false">Troupes</button></div></div><div class="fld"><label for="ngName">Objectif</label><input id="ngName" placeholder="Ex. Hôpital 25"><small class="ferr" id="ngErr" hidden></small></div>',[['Annuler','close-sheet',''],['Ajouter','save-goal','primary']]);},
   'save-goal':function(){var n=$('#ngName').value.trim();if(!n){var e=$('#ngErr');e.textContent='Décris ton objectif.';e.hidden=false;return;}var t=$('#ngType .chip[aria-pressed="true"]').textContent;
-    S.goals.push({t:n,icon:{'Bâtiment':'i-hall','Recherche':'t-flask','Troupes':'t-swords'}[t],pct:0,sub:'Ressources partagées avec l’Hôtel de ville 25 : comptées une seule fois'});closeSheet();say('Objectif ajouté.');renderOpt();},
-  goal:function(i){var g=S.goals[i];openSheet(g.t,'<p class="shp">Avancement : <b>'+g.pct+' %</b>.</p><p class="shp muted">Le détail d’un objectif suit le même modèle que le plan Hôtel de ville 25 (prévu, AJ-07).</p>',[['Supprimer l’objectif','del-goal','danger',i],['Fermer','close-sheet','primary']]);},
+    S.goals.push({t:n,icon:{'Bâtiment':'i-hall','Recherche':'t-flask','Troupes':'t-swords'}[t],pct:REEL?null:0,sub:REEL?'Le calcul de l’avancement viendra avec le plan (prévu, AJ-07).':'Ressources partagées avec l’Hôtel de ville 25 : comptées une seule fois'});closeSheet();say('Objectif ajouté.');renderOpt();},
+  goal:function(i){var g=S.goals[i];openSheet(g.t,'<p class="shp">Avancement : <b>'+(g.pct==null?'pas encore calculé':g.pct+' %')+'</b>.</p><p class="shp muted">Le détail d’un objectif suit le même modèle que le plan Hôtel de ville 25 (prévu, AJ-07).</p>',[['Supprimer l’objectif','del-goal','danger',i],['Fermer','close-sheet','primary']]);},
   'del-goal':function(i){S.goals.splice(i,1);closeSheet();renderOpt();say('Objectif supprimé.');},
   'save-plan':function(){S.planSaved=true;renderOpt();say('Plan enregistré.');},
   reserve:function(){S.reserved=!S.reserved;renderOpt();say(S.reserved?'Ressources réservées pour l’Hôtel de ville 25. Rien ne change dans le jeu.':'Réservation annulée.');},
   'add-purchase':function(){openSheet('Ajouter un achat','<div class="fld"><label for="apName">Achat</label><input id="apName" placeholder="Ex. Pack de gemmes"></div><div class="fld"><label for="apPrice">Prix (€)</label><input id="apPrice" inputmode="decimal" placeholder="Ex. 4,99"><small class="ferr" id="apErr" hidden></small></div>',[['Annuler','close-sheet',''],['Ajouter','save-purchase','primary']]);},
-  'save-purchase':function(){var n=$('#apName').value.trim()||'Achat',pr=Number($('#apPrice').value.replace(',','.'));if(!(pr>0)){var e=$('#apErr');e.textContent='Saisis un prix, par exemple 4,99.';e.hidden=false;return;}S.purchases.unshift([n,'8 oct.',pr]);closeSheet();renderBudget();say('Achat ajouté.');},
+  'save-purchase':function(){var n=$('#apName').value.trim()||'Achat',pr=Number($('#apPrice').value.replace(',','.'));if(!(pr>0)){var e=$('#apErr');e.textContent='Saisis un prix, par exemple 4,99.';e.hidden=false;return;}S.purchases.unshift([n,TODAY_S,pr]);closeSheet();renderBudget();say('Achat ajouté.');},
   'del-purchase':function(i){var x=S.purchases[i];openSheet(x[0],'<p class="shp">'+x[2].toFixed(2).replace('.',',')+' € · '+x[1]+'</p>',[['Retirer cet achat','rm-purchase','danger',i],['Fermer','close-sheet','primary']]);},
   'rm-purchase':function(i){S.purchases.splice(i,1);closeSheet();renderBudget();},
   'sim-pack':function(){S.packSim=!S.packSim;renderBudget();},
@@ -714,14 +779,14 @@ document.addEventListener('click',function(e){
   var tl=e.target.closest('#tLen .chip');if(tl){S.tLen=tl.dataset.v;renderTime();return;}
   var sm=e.target.closest('#sesMode .chip');if(sm){S.sesMode=sm.dataset.v;renderCombat();return;}
   var bp=e.target.closest('#bilPer .chip');if(bp){S.bil=bp.dataset.v;renderBilan();return;}
-  var cd=e.target.closest('[data-code]');if(cd){var co=S.codes[+cd.dataset.code];co.st=cd.dataset.cst;if(co.st==='used')co.sub=co.sub.replace(/ · utilisé.*$/,'')+' · utilisé le 8 oct.';renderCodes();return;}
+  var cd=e.target.closest('[data-code]');if(cd){var co=S.codes[+cd.dataset.code];co.st=cd.dataset.cst;if(co.st==='used')co.sub=co.sub.replace(/ · utilisé.*$/,'')+' · utilisé le '+TODAY_S;renderCodes();return;}
   var ch=e.target.closest('.chips[data-single] .chip');if(ch){$$('.chip',ch.parentNode).forEach(function(x){x.setAttribute('aria-pressed',String(x===ch));});return;}
 });
 document.addEventListener('input',function(e){
   var t=e.target;
   if(t.matches('[data-qk]'))quickCount();
   else if(t.id==='spDays'){S.spDays=+t.value;renderSpend();}
-  else if(t.id==='budIn'){S.budget=Math.max(0,Number(t.value)||0);renderBudget();}
+  else if(t.id==='budIn'){S.budget=t.value===''&&REEL?null:Math.max(0,Number(t.value)||0);renderBudget();}
   else if(t.id==='sendIn')renderFarms();
   else if(t.matches('.checks input[type=checkbox]')&&$('#shPrev'))updShare();
 });
@@ -735,7 +800,7 @@ document.addEventListener('change',function(e){
   else if(t.id==='pickShots'){var fs=[].slice.call(t.files||[]).filter(function(f){return /^image\//.test(f.type);}).slice(0,20);
     if(!fs.length){say('Choisis des images.');return;}S.shots=fs.map(function(f){return {url:URL.createObjectURL(f)};});renderShots();say(fs.length+' capture'+(fs.length>1?'s':'')+' prête'+(fs.length>1?'s':'')+'. Elles restent sur ton appareil.');t.value='';}
   else if(t.id==='pickVideo'){var v=t.files&&t.files[0];if(v)openSheet('Vidéo choisie','<p class="shp">'+esc(v.name)+'</p><p class="shp muted">La lecture d’un enregistrement d’écran est prévue plus tard (complément B03). La vidéo reste sur ton appareil.</p>',[['Fermer','close-sheet','primary']]);t.value='';}
-  else if(t.id==='pickReport'){var f=t.files&&t.files[0];if(f){S.reports.unshift({t:'Rapport importé',d:'8 oct. · à relire',ok:null,img:URL.createObjectURL(f),obs:'Lecture simulée dans la maquette : les valeurs lues apparaîtront ici, à corriger.',hyp:'Aucune tant que les valeurs ne sont pas relues.',abs:'À compléter après relecture.'});S.rep=0;renderCombat();say('Rapport ajouté. Il reste sur ton appareil.');}t.value='';}
+  else if(t.id==='pickReport'){var f=t.files&&t.files[0];if(f){S.reports.unshift({t:'Rapport importé',d:TODAY_S+' · à relire',ok:null,img:URL.createObjectURL(f),obs:'Lecture simulée dans la maquette : les valeurs lues apparaîtront ici, à corriger.',hyp:'Aucune tant que les valeurs ne sont pas relues.',abs:'À compléter après relecture.'});S.rep=0;renderCombat();say('Rapport ajouté. Il reste sur ton appareil.');}t.value='';}
 });
 
 /* Fonctions utilisées par la bulle d'outils (onglet États) */
@@ -750,7 +815,12 @@ window.RC_API={
   quick:function(){if(AUTH.user)ACT.quick();},
   /* Met la maquette dans l'état demandé puis ouvre l'écran : 'out' (déconnecté), 'demo' (compte d'essai), 'vide' (nouveau compte sans profil) ;
      'demo:f1' choisit aussi le profil actif. */
+  mode:function(){return REEL?'reel':'demo';},
+  setMode:function(m){function go(){try{localStorage.setItem('rc-mode',m);}catch(e){}location.hash='accueil';location.reload();}
+    if(REEL&&LOADED&&window.RC_STORE){clearTimeout(saveT);window.RC_STORE.save(snapshot()).then(go,go);}else go();},
+  resetReel:function(){if(!REEL||!window.RC_STORE)return;LOADED=false;window.RC_STORE.save('').then(function(){location.hash='accueil';location.reload();});},
   go:function(state,hash){
+    if(REEL){say('Les tests se font dans la version Exemples (bulle › États).');return;}
     var st=(state||'').split(':'),h=(hash||'#accueil').replace(/^#/,'');
     function nav(){if(location.hash==='#'+h)route();else location.hash=h;}
     if(st[0]==='out'){if(AUTH.user){saveData();AUTH.user=null;try{sessionStorage.removeItem('rokUser');}catch(e){}}closeSheet();nav();return;}
@@ -776,5 +846,7 @@ window.RC_API={
 paintIcons(document);
 renderShots();showStep(1);
 window.addEventListener('hashchange',route);
-route();
+if(REEL)startReel();else route();
+/* Chaque geste peut modifier les données : on enregistre la version réelle juste après (si quelque chose a changé). */
+['click','change','input'].forEach(function(t){document.addEventListener(t,function(){setTimeout(saveReel,0);});});
 })();

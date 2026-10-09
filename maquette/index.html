@@ -172,16 +172,18 @@
 
         <section class="sec">
           <div class="sec-t"><h2>Prochains événements</h2><a class="more" href="#evenements">Calendrier ›</a></div>
-          <div class="events">
+          <div class="events" data-ex>
             <a class="event" href="#evenements"><span class="ri"><i data-i="i-trophy"></i></span><b>Gouverneur le plus puissant</b><span>J-3</span></a>
             <a class="event" href="#evenements"><span class="ri"><i data-i="n-ankh"></i></span><b>Arche d’Osiris</b><span>J-6</span></a>
             <a class="event" href="#evenements"><span class="ri"><i data-i="i-flag"></i></span><b>KvK</b><span>J-11</span></a>
           </div>
+          <p class="vide reel-only">Aucun événement pour l’instant.</p>
         </section>
 
         <section class="sec">
           <div class="sec-t"><h2>Ma semaine</h2><a class="more" href="#bilan">Bilan ›</a></div>
-          <div class="list">
+          <p class="vide reel-only">Pas encore de bilan : il faut au moins deux relevés à quelques jours d’écart.</p>
+          <div class="list" data-ex>
             <a class="row" href="#bilan"><span class="ri"><i data-i="n-chart"></i></span><span class="rc"><b>+2,1 M de puissance, 3 améliorations</b><small>Hôtel de ville 25 : +8 % en 7 jours</small></span><span class="go"><i data-i="i-next2"></i></span></a>
           </div>
         </section>
@@ -258,7 +260,8 @@
       <section class="sec" data-invsec="res"><div class="sec-t"><h2>Ressources</h2><span class="muted" style="font-size:13px" id="lastImport"></span></div><div class="cols even" id="gRes"></div></section>
       <section class="sec" data-invsec="acc" hidden><div class="sec-t"><h2>Accélérateurs</h2></div><div class="cols even" id="gAcc"></div></section>
       <section class="sec" data-invsec="obj" hidden><div class="sec-t"><h2>Objets</h2><span class="pill st-plan"><i></i>Prévu · B06</span></div>
-        <div class="list multi">
+        <p class="vide reel-only">Pas encore renseignés.</p>
+        <div class="list multi" data-ex>
           <div class="row"><span class="ri"><i data-i="n-book"></i></span><span class="rc"><b>Livres d’expérience</b></span><span class="rv">1 240</span></div>
           <div class="row"><span class="ri"><i data-i="n-star"></i></span><span class="rc"><b>Sculptures légendaires</b></span><span class="rv">86</span></div>
           <div class="row"><span class="ri"><i data-i="n-map"></i></span><span class="rc"><b>Passeports</b></span><span class="rv">12</span></div>
@@ -279,7 +282,8 @@
       <div class="cmds" id="cmdGrid"></div>
       <section class="sec">
         <div class="sec-t"><h2>À améliorer en priorité</h2><span class="pill st-plan"><i></i>Prévu · AJ-04</span></div>
-        <div class="list">
+        <p class="vide reel-only">Rien pour l’instant : les conseils viendront avec tes commandants.</p>
+        <div class="list" data-ex>
           <div class="row"><span class="nb">1</span><span class="rc"><b>Constantin Ier : compétence 2 au niveau 5</b><small>Il mène ta Marche 1 · 140 sculptures légendaires, tu en as 86</small></span></div>
           <div class="row"><span class="nb">2</span><span class="rc"><b>Charles Martel : compétences 3 et 4</b><small>Utile en garnison pour le KvK</small></span></div>
         </div>
@@ -294,7 +298,8 @@
         <div class="col">
           <section class="sec">
             <div class="sec-t"><h2>Matériaux</h2></div>
-            <div class="tiles">
+            <p class="vide reel-only">Pas encore renseignés.</p>
+            <div class="tiles" data-ex>
               <div class="tile"><span class="ri"><i data-i="n-leather"></i></span><span><span class="tl">Cuir</span><div class="tv">2 140</div></span></div>
               <div class="tile"><span class="ri"><i data-i="n-ore"></i></span><span><span class="tl">Minerai</span><div class="tv">1 880</div></span></div>
               <div class="tile"><span class="ri"><i data-i="n-ebony"></i></span><span><span class="tl">Ébène</span><div class="tv">1 310</div></span></div>
@@ -341,12 +346,13 @@
     </div>
 
     <div data-steppanel="1">
+      <div class="note reel-only" style="margin-bottom:12px"><i data-i="i-warn"></i><span>Dans ta version réelle, la lecture des captures n’est pas encore disponible : rien ne sera enregistré. Renseigne tes valeurs à la main (Ma ville › « Tout renseigner »).</span></div>
       <div class="shots" id="shots"></div>
       <p class="muted" style="margin:12px 0 0" id="shotsInfo"></p>
       <div class="btns">
         <label class="btn gold" for="pickShots"><i data-i="n-camera"></i>Choisir des captures</label>
         <input id="pickShots" type="file" accept="image/*" multiple hidden>
-        <button class="btn" type="button" data-act="sample-shots">Utiliser les captures d’exemple</button>
+        <button class="btn" type="button" data-act="sample-shots" data-ex>Utiliser les captures d’exemple</button>
         <label class="btn" for="pickVideo"><i data-i="n-video"></i>Importer une vidéo</label>
         <input id="pickVideo" type="file" accept="video/*" hidden>
       </div>
@@ -416,7 +422,7 @@
           <div class="ptop"><span style="font:700 24px/1.2 var(--display);color:var(--gold-2)" data-k="objTitle"></span><span class="pill st-next"><i></i>Objectif principal</span></div>
           <div class="bar"><div class="fill" id="optFill"></div></div>
           <p id="optText"></p>
-          <div class="btns"><span class="btn primary">Ouvrir le plan</span></div>
+          <div class="btns" data-ex><span class="btn primary">Ouvrir le plan</span></div>
         </a>
         <section class="sec">
           <div class="sec-t"><h2>Mes autres objectifs</h2><span class="pill st-plan"><i></i>Prévu · AJ-07</span></div>
@@ -441,8 +447,9 @@
 
   <!-- ===================================================== PLAN CHÂTEAU 25 -->
   <section data-screen="plan-c25" data-g="optimiser" data-title="Plan Hôtel de ville 25" data-st="next" data-b="B05 · B06" data-note="Prochain (Optimiser V1, jalon A). Les durées suivent le bonus de vitesse et le nombre de bâtisseurs ; la pierre manquante suit les envois de tes fermes. Prérequis et coûts : exemples non vérifiés." hidden>
-    <header class="header"><div class="tw"><a class="back" href="#optimiser"><i data-i="i-back"></i>Optimiser</a><h1>Hôtel de ville 25</h1></div><span class="pill st-next" id="planSaved"><i></i>Plan enregistré le 6 oct.</span></header>
-    <div class="cols">
+    <header class="header"><div class="tw"><a class="back" href="#optimiser"><i data-i="i-back"></i>Optimiser</a><h1>Hôtel de ville 25</h1></div><span class="pill st-next" id="planSaved" data-ex><i></i>Plan enregistré le 6 oct.</span></header>
+    <p class="vide reel-only">Aucun plan pour l’instant. Il se construira à partir de ton objectif et de tes valeurs.</p>
+    <div class="cols" data-ex>
       <div class="col">
         <div class="card hl">
           <div class="ptop"><span>Avancement</span><span>62 %</span></div>
@@ -491,7 +498,8 @@
   <!-- ===================================================== DÉPENSER OU ATTENDRE -->
   <section data-screen="depenser" data-g="optimiser" data-title="Dépenser ou attendre" data-st="plan" data-b="AJ-03 · AJ-12" data-note="Prévu (Optimiser enrichi). Change le type et la quantité d’accélérateurs : la comparaison et le conseil se recalculent. Dates et points : exemples." hidden>
     <header class="header"><div class="tw"><a class="back" href="#optimiser"><i data-i="i-back"></i>Optimiser</a><h1>Dépenser ou attendre</h1></div></header>
-    <div class="card hl">
+    <p class="vide reel-only">Rien à comparer pour l’instant : il faut tes accélérateurs et le calendrier des événements.</p>
+    <div class="card hl" data-ex>
       <h3 id="spTitle"></h3>
       <div class="chips" role="group" aria-label="Type d’accélérateur" id="spType" style="margin-top:12px">
         <button class="chip" type="button" data-sp="research" aria-pressed="true">Recherche</button>
@@ -500,11 +508,11 @@
       </div>
       <div class="field-row"><label for="spDays">Quantité</label><input id="spDays" type="range" min="1" max="14" value="7"><b id="spDaysV"></b></div>
     </div>
-    <div class="vs" style="margin-top:12px">
+    <div class="vs" style="margin-top:12px" data-ex>
       <div class="card"><h3><span class="tag">A</span>Maintenant</h3><ul class="kvl" id="spA"></ul></div>
       <div class="card"><h3><span class="tag">B</span>Dans 3 jours</h3><ul class="kvl" id="spB"></ul></div>
     </div>
-    <section class="sec"><div class="sec-t"><h2>Conseil</h2></div><div class="note"><i data-i="n-info"></i><span id="spAdvice"></span></div></section>
+    <section class="sec" data-ex><div class="sec-t"><h2>Conseil</h2></div><div class="note"><i data-i="n-info"></i><span id="spAdvice"></span></div></section>
   </section>
 
   <!-- ===================================================== BUDGET -->
@@ -513,16 +521,17 @@
     <div class="cols">
       <div class="col">
         <div class="card hl">
-          <div class="ptop"><span>Octobre</span><span id="budTxt"></span></div>
+          <div class="ptop"><span id="budMonth">Octobre</span><span id="budTxt"></span></div>
           <div class="bar"><div class="fill" id="budFill"></div></div>
-          <div class="field-row"><label for="budIn">Budget du mois (€)</label><input id="budIn" type="number" min="0" step="1" value="30" inputmode="numeric"></div>
+          <div class="field-row"><label for="budIn">Budget du mois (€)</label><input id="budIn" type="number" min="0" step="1" value="30" inputmode="numeric" placeholder="Ex. 30"></div>
         </div>
         <section class="sec"><div class="sec-t"><h2>Achats du mois</h2></div><div class="list" id="budList"></div></section>
       </div>
       <div class="col">
         <section class="sec">
           <div class="sec-t"><h2>Avant d’acheter</h2></div>
-          <div class="card"><h3>Pack Hôtel de ville</h3><p>12 j d’accélérateurs de construction et 5 M de pierre pour 9,99 €.</p><p id="packFx"></p>
+          <p class="vide reel-only">Aucun pack à simuler pour l’instant.</p>
+          <div class="card" data-ex><h3>Pack Hôtel de ville</h3><p>12 j d’accélérateurs de construction et 5 M de pierre pour 9,99 €.</p><p id="packFx"></p>
             <div class="btns"><button class="btn" type="button" data-act="sim-pack" id="packBtn">Simuler ce pack</button></div></div>
         </section>
       </div>
@@ -535,7 +544,8 @@
     <div class="cols even">
       <div class="col"><div class="list" id="farmList"></div></div>
       <div class="col">
-        <div class="card hl" style="margin-top:0">
+        <p class="vide reel-only">Les envois de tes fermes apparaîtront ici, avec ton objectif.</p>
+        <div class="card hl" style="margin-top:0" data-ex>
           <h3>Pour l’Hôtel de ville 25</h3>
           <div class="field-row"><label for="sendIn">Pierre envoyée par la Ferme 1</label><input id="sendIn" type="range" min="0" max="14" step="0.5" value="8"><b id="sendV"></b></div>
           <p id="sendTxt"></p>
@@ -548,7 +558,8 @@
   <!-- ===================================================== MIGRATION -->
   <section data-screen="migration" data-g="optimiser" data-title="Migration" data-st="plan" data-b="B12" data-note="Prévu (B12). Choisis un royaume : les passeports nécessaires se recalculent. Valeurs : exemples." hidden>
     <header class="header"><div class="tw"><a class="back" href="#optimiser"><i data-i="i-back"></i>Optimiser</a><h1>Migration</h1></div></header>
-    <div class="cols even">
+    <p class="vide reel-only">Pas encore de données : passeports nécessaires et conditions dépendent du royaume visé et de ta puissance.</p>
+    <div class="cols even" data-ex>
       <div class="col">
         <div class="card hl">
           <div class="field-row" style="margin-top:0"><label for="kdSel">Royaume visé</label><select id="kdSel"><option value="3401">#3401</option><option value="3402">#3402</option><option value="2988">#2988</option></select></div>
@@ -617,15 +628,16 @@
 
   <!-- ===================================================== COMPARER -->
   <section data-screen="comparer" data-g="combat" data-title="Comparer deux marches" data-st="plan" data-b="B10" data-note="Prévu (Combat V1, jalon C). Change le commandant secondaire de la variante B : le résultat se recalcule. Ce qui n’est pas couvert reste affiché comme tel. Valeurs : exemples." hidden>
-    <header class="header"><div class="tw"><a class="back" href="#combat"><i data-i="i-back"></i>Combat</a><h1>Comparer deux marches</h1></div><button class="btn" type="button" data-act="share"><i data-i="n-share"></i>Partager</button></header>
-    <div class="vs">
+    <header class="header"><div class="tw"><a class="back" href="#combat"><i data-i="i-back"></i>Combat</a><h1>Comparer deux marches</h1></div><button class="btn" type="button" data-act="share" data-ex><i data-i="n-share"></i>Partager</button></header>
+    <p class="vide reel-only">Rien à comparer pour l’instant : il faut au moins une marche.</p>
+    <div class="vs" data-ex>
       <div class="card"><h3><span class="tag">A</span>Marche 1</h3><ul class="kvl" id="cmpA"></ul></div>
       <div class="card"><h3><span class="tag">B</span>Variante</h3><ul class="kvl" id="cmpB"></ul>
         <div class="field-row"><label for="cmpSel">Commandant secondaire</label><select id="cmpSel"></select></div></div>
     </div>
-    <section class="sec"><div class="sec-t"><h2>Résultat</h2></div>
+    <section class="sec" data-ex><div class="sec-t"><h2>Résultat</h2></div>
       <div class="tbl-wrap"><table class="cmp"><thead><tr><th>Effet</th><th>A</th><th>B</th><th></th></tr></thead><tbody id="cmpBody"></tbody></table></div></section>
-    <section class="sec"><div class="note"><i data-i="n-info"></i><span id="cmpVerdict"></span></div></section>
+    <section class="sec" data-ex><div class="note"><i data-i="n-info"></i><span id="cmpVerdict"></span></div></section>
   </section>
 
   <!-- ===================================================== SESSION -->
