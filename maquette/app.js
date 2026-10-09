@@ -931,7 +931,8 @@ window.RC_API={
   go:function(state,hash){
     if(REEL){say('Les tests se font dans la version Exemples (bulle › États).');return;}
     var st=(state||'').split(':'),h=(hash||'#accueil').replace(/^#/,'');
-    function nav(){if(location.hash==='#'+h)route();else location.hash=h;}
+    /* toujours en haut de l'écran, même s'il était déjà affiché (remarque de Mickaël du 2026-10-09 : « Ouvrir l'écran » semblait ne rien faire) */
+    function nav(){if(location.hash==='#'+h)route();else location.hash=h;setTimeout(function(){window.scrollTo(0,0);},60);}
     if(st[0]==='out'){if(AUTH.user){saveData();AUTH.user=null;try{sessionStorage.removeItem('rokUser');}catch(e){}}closeSheet();nav();return;}
     if(st[0]==='attente'){if(AUTH.user){saveData();AUTH.user=null;try{sessionStorage.removeItem('rokUser');}catch(e){}}
       var ea='attente'+(Object.keys(ACC).length)+'@exemple.fr';ACC[ea]={pw:'rok12345',ok:false,data:null};AUTH.pending=ea;closeSheet();nav();return;}
@@ -946,8 +947,9 @@ window.RC_API={
     if(st[0]==='demo'){
       /* profils d'exemple supprimés pendant un test : on remet les exemples (rechargement, le compte d'essai reste connecté) */
       var need=st[1]||'main';if(!(ACC[DEMO].data&&ACC[DEMO].data.P[need])){try{sessionStorage.setItem('rokUser',DEMO);sessionStorage.setItem('rokActive',need);}catch(e){}location.hash=h;location.reload();return;}
-      if(st[1]&&ACC[DEMO].data.P[st[1]])ACC[DEMO].data.active=st[1];
-      if(AUTH.user!==DEMO){AUTH.after=h;login(DEMO);}else{if(st[1]&&P[st[1]]){S.active=st[1];S.quick=false;refreshAll();}closeSheet();nav();}return;}
+      /* sans profil précisé, un test part du Principal : même point de départ à chaque fois */
+      var pf=st[1]||'main';if(ACC[DEMO].data.P[pf])ACC[DEMO].data.active=pf;
+      if(AUTH.user!==DEMO){AUTH.after=h;login(DEMO);}else{if(P[pf]&&S.active!==pf){S.active=pf;S.quick=false;refreshAll();}closeSheet();nav();}return;}
     nav();
   },
   reset:function(){try{sessionStorage.setItem('rokUser',DEMO);}catch(e){}location.hash='accueil';location.reload();}

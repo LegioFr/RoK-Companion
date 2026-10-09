@@ -5,14 +5,16 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=32,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=33,VERSION='v'+VNUM+' · 9 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
 var REEL=false;try{REEL=localStorage.getItem('rc-mode')==='reel';}catch(e){}
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
-  '*':[{sel:'',t:'On peut poser une note sur une fenêtre ouverte (par exemple « Modifier la routine ») : le repère s’affiche maintenant par-dessus (ta remarque).'},
+  '*':[{sel:'',t:'« Ouvrir l’écran » (bandeau des tests) remet l’écran du test en haut, sur le bon profil, et le dit par un message (ta remarque).'},
+    {sel:'',t:'Si la maquette rencontre une erreur, un message l’affiche : fais-en une capture pour moi.'},
+    {sel:'',t:'On peut poser une note sur une fenêtre ouverte (par exemple « Modifier la routine ») : le repère s’affiche maintenant par-dessus (ta remarque).'},
     {sel:'',t:'Plus aucune page ne défile pour rien : une planche d’icônes invisible ajoutait 24 px en bas de chaque écran (ta note 1).'},
     {sel:'',t:'Icône de l’appli installée : l’anneau doré avec RC (ta note 5). Nom de l’appli installée : « RoK Maquette », pour ne pas la confondre avec l’appli de l’autre projet.'},
     {sel:'',t:'Les notes et les résultats s’enregistrent à nouveau (ils échouaient depuis 17 h 11 avec « http 409 »). Un enregistrement raté est maintenant gardé et renvoyé tout seul.'},
@@ -51,6 +53,7 @@ var ICO={
 function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
 function $(id){return document.getElementById(id);}
 var LS={get:function(k,d){try{var v=localStorage.getItem('rc-'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set:function(k,v){try{localStorage.setItem('rc-'+k,JSON.stringify(v));}catch(e){}}};
+window.addEventListener('error',function(e){var f=String(e.filename||'');if(!/\/(app|revue|tests-revue|donnees-jeu|icones)\.js/.test(f))return;setTimeout(function(){say('Erreur de la maquette : '+e.message+' ('+f.split('/').pop()+', ligne '+e.lineno+'). Fais une capture pour Claude.');},0);});
 function say(t){var x=$('toast');if(!x)return;x.textContent=t;x.classList.add('show');clearTimeout(say.t);say.t=setTimeout(function(){x.classList.remove('show');},Math.min(7000,Math.max(3000,String(t).length*70)));}
 function svg(name){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICO[name]+'</svg>';}
 function cls(){var w=innerWidth;return w<700?'téléphone':w<1100?'tablette':'PC';}
@@ -645,7 +648,7 @@ function paintRun(){
   var k=el('div','rk');
   function bt(cls,lg,sm,fn,lab){var z=el('button',cls);z.type='button';z.innerHTML='<span class="lg">'+lg+'</span><span class="sm">'+sm+'</span>';if(lab)z.setAttribute('aria-label',lab);z.onclick=fn;k.appendChild(z);}
   bt('','‹','‹',function(){stepRun(-1);},'Test précédent');
-  bt('','Ouvrir l’écran','↻ Écran',function(){prep(t,true);},'Ouvrir l’écran du test');
+  bt('','Ouvrir l’écran','↻ Écran',function(){prep(t,true);setTimeout(function(){var c=CUR();say('Écran du test ouvert'+(c&&c.title?' : '+c.title:'')+'.');},200);},'Ouvrir l’écran du test');
   bt('ko','✗ Problème','✗ Problème',function(){problem(t);});
   bt('ok','✓ C’est bon','✓ Bon',function(){setRes(t.id,'ok');stepRun(1);});
   /* Le bouton est là dès que le test en parle ; s'il manque un e-mail envoyé, il prépare l'écran du test d'abord (compte en attente). */
