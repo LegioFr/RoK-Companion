@@ -64,6 +64,7 @@ window.RC_TESTS=[
   ['vi2','Touche « Nourriture », puis « Modifier ». Change « En ville » (par exemple 40,5 M) et le nombre d’une caisse, puis « Enregistrer ».','La fenêtre est facile à remplir, les tailles de caisses sont celles du jeu, et le total de la nourriture change.'],
   ['vi3','Dans Accélérateurs, ouvre « Généraux », puis « Modifier ».','Les durées sont celles du jeu. Celles marquées d’un * (24 h et plus) ne sont pas encore vérifiées : dis-moi si tu en as dans ton inventaire.'],
   ['vi4','Dans « Autre », touche « Ajouter un objet », ajoute un objet de ton inventaire avec sa quantité, puis touche-le pour le modifier et le supprimer.','C’est simple et clair.']]},
- {g:'Essai de lecture par l’IA',p:['demo','#import'],l:[
-  ['ia1','En bas de l’écran Importer, dans « Essai de lecture par l’IA », envoie 3 captures entières de ton Inventaire : une de l’onglet Ressources, une des Accélérateurs, une de ton choix.','Les 3 captures apparaissent en miniature, chacune avec « Retirer ». Je les utiliserai pour l’essai.']]}
+ {g:'Importer · lecture par Claude',p:['demo','#import'],l:[
+  ['im1','Choisis 3 captures entières de ton Inventaire (onglets Ressources et Accélérateurs), puis touche « Analyser ».','Tu vois la lecture avancer (environ 10 à 15 s par capture), puis la relecture : le nombre d’éléments sûrs et ceux à vérifier, avec la raison de chacun.'],
+  ['im2','Vérifie les lignes « À vérifier » (choisis le type si on te le demande), touche « Confirmer les éléments sûrs », puis « Enregistrer ».','Les nombres de tes captures arrivent dans Ma ville › Inventaire du profil Principal, comme dans le jeu ; rien d’autre n’a changé.']]}
 ];

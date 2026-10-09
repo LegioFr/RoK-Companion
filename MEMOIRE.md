@@ -45,6 +45,13 @@ Dernière mise à jour : 2026-10-08.
 - Inventaire rangé comme le jeu (Ressources, Accélérateurs, Boosts, Équipement, Attirail, Autre) ; saisie à la main dans les deux versions : ressources en ville + caisses par taille, gemmes, coffres « Choisissez un » et packs, accélérateurs par durée (`RC_JEU.caisses`, `RC_JEU.accelerateurs`), objets libres (nom + quantité) dans les 4 autres onglets. Profil : `coffres`, `items`, `invMaj` en plus.
 - Correction au passage (`revue.js`) : une ancienne version de « ma version réelle » restée en attente d'envoi ne peut plus repartir après une plus récente.
 
+### Lecture des captures (v39, 2026-10-09, Claude Opus 5.5)
+- Écran Importer, sur la maquette publiée : choix des captures, puis « Analyser ». Chaque capture est envoyée (`/api/capture`), lue par Claude Opus 5.5 (`/api/lire`, consigne v2), puis effacée.
+- Regroupement (`lectRegrouper` dans `app.js`) : une même case vue sur deux captures n'est gardée qu'une fois. Une case coupée est retrouvée sur une autre capture, sinon elle est perdue et c'est signalé. Les tailles et durées sont comparées à `RC_JEU`. Seuls les onglets Ressources et Accélérateurs sont lus ; coffres, packs et autres onglets sont comptés « pas encore pris en charge ».
+- Relecture : un bouton confirme d'un coup les éléments sûrs ; les douteux se vérifient un par un (type d'accélérateur à choisir, quantité à corriger, « C'est bon » ou « Ignorer »).
+- Enregistrement (`lectEnregistrer`) : seuls les éléments lus sont écrits (absent ≠ zéro). Les ressources en ville viennent de la barre du haut, arrondies.
+- La lecture simulée reste pour « Utiliser les captures d'exemple ». Le bloc « Essai de lecture par l'IA » est retiré. Les 3 captures de l'essai restent dans l'espace privé (`captures/`, collection `lecture`).
+
 ### Essai de lecture par l'IA (préparé le 2026-10-09)
 - Écran Importer › bloc « Essai de lecture par l'IA » (site seulement) : Mickaël envoie ses captures (privées, `/api/capture`) ; la liste est dans la collection `lecture` (`GET /api/db?col=lecture`).
 - Fonction `maquette/api/lire.js` (SDK `@anthropic-ai/sdk` 0.127.0) : `GET /api/lire` dit si la clé est en place ; `POST /api/lire {id, modele: 'haiku'|'sonnet', effort?}` lit une capture et renvoie le JSON lu, les jetons et le coût. Clé : variable `ANTHROPIC_API_KEY` du projet Vercel, rangée par Mickaël (jamais dans le dépôt). Testée en local avec une fausse API, puis **avec la vraie le 2026-10-09** : clé de Mickaël en place et acceptée ; lecture de test (capture de la maquette, pas du jeu) par Claude Haiku 5.5 : 2 379 jetons en entrée, 1 062 en sortie, 0,0008 $, 7,6 s, JSON conforme.
@@ -114,6 +121,7 @@ Dernière mise à jour : 2026-10-08.
 | 2026-10-09 | Pour l'essai d'IA, la console Anthropic propose à Mickaël 100 $ de crédits API par mois inclus dans son forfait Max (« je pense que je suis large ») ; il crée la clé et la range lui-même dans Vercel (Production). |
 | 2026-10-09 | **Noms des bâtiments = ceux du jeu** (captures de Mickaël : menu de construction et bannières de sa ville) : Réserve (et non Entrepôt), Moulin à bois, Comptoir, Centre d'alliance, Champ de tir à l'arc, Atelier d'armes de siège, Amphithéâtre de la sagesse ; groupes « Économique » et « Militaire ». Les marques ° ont été retirées (v37). |
 | 2026-10-09 | **Bâtiments de saison de KvK dans la Progression** (choix 2 de Mickaël) : 4e groupe « Saison de KvK » avec Forum d'état, Mine de cristal, Centre de recherche de cristal ; jamais comptés « à renseigner » ; les deux de cristal marqués « retiré en fin de saison ». Le Musée (sans niveau) n'y est pas. |
+| 2026-10-09 | **Lecture des captures par Claude Opus 5.5** (Mickaël, après l'essai : « On part sur opus, branche la lecture ») ; consigne v2 ; brancher la vraie lecture dans l'écran Importer. |
 
 ## 5. Questions ouvertes (à trancher plus tard)
 
@@ -131,7 +139,7 @@ Dernière mise à jour : 2026-10-08.
 1. Mickaël : passer le dépôt en privé (recommandé).
 2. Revue de la maquette : partie connexion finie (21/21 bons), Accueil fini (12/12 après v34). **Ma ville : Progression refaite en v36 (plus propre, tous les bâtiments) ; 10 tests à faire par Mickaël (vp1 à vp5, vi1 à vi4, ia1)**. Puis, selon ses notes, Ma ville, Optimiser, Combat, Plus. Mickaël doit aussi corriger sa vraie « Routine du jour » dans sa version réelle (Claude la lira dans `reel/donnees`). Données du jeu : `references/donnees-jeu.md` (à vérifier sur captures quand Mickaël en envoie).
 3. Ma version réelle : ajouter, écran par écran, la saisie de ce qui ne se remplit pas encore (ressources et accélérateurs en premier, puis commandants, équipements, armements, marches), selon ce que Mickaël demande en l'utilisant. Lire de temps en temps `reel/donnees` pour voir ce qu'il a rempli.
-4. **Essai de lecture par l'IA : fait le 2026-10-09** (`references/etude-lecture-ia-2026-10-09.md`) : quantités 41/41 pour les trois lectures ; valeurs du haut 37/37 pour l'IA et 36/37 pour la lecture gratuite ; Haiku 5.5 avec la consigne v2 aussi bon que Sonnet 5.5 (0 objet faux, 7 « inconnu ») pour environ 0,002 $ par capture contre 0,03 $. **Mickaël choisit la façon de lire** ; ensuite, vraie lecture dans l'écran Importer.
+4. **Lecture des captures branchée (v39, Opus 5.5)** : tests im1 et im2 à faire par Mickaël. Ensuite : lire les autres onglets (Boosts, Équipement, Attirail, Autre ; coffres et packs), suivre le coût réel.
 5. Recherches sur le jeu, en commençant par ce qui sert aux premiers écrans : bâtiments et prérequis jusqu'à l'Hôtel de ville 25, ressources, caisses, accélérateurs.
 
 ## 7. Journal des sessions
@@ -182,3 +190,4 @@ Dernière mise à jour : 2026-10-08.
 - **2026-10-09** (suite) : v38, groupe « Saison de KvK » ajouté (choix 2 de Mickaël). Mickaël essaie l'envoi des captures pour l'essai d'IA.
 - **2026-10-09** (suite) : essai de lecture fait sur 3 captures de Mickaël (Accélérateurs, Ressources ×2 ; 45 cases). Les nombres sont parfaits pour Haiku et Sonnet. Haiku prenait les accélérateurs de soin pour de la construction : la consigne décrit maintenant les icônes, et il les dit « inconnu ». Coût total de l'essai : 0,0998 $. Recommandation de Claude : Haiku 5.5 seul. Résultats dans `references/etude-lecture-ia-2026-10-09.md`.
 - **2026-10-09** (suite) : à la question de Mickaël, Opus 5.5 est ajouté à l'essai (consigne v2) : 45 cases sur 45, environ 0,048 $ par capture. Sonnet 5.5 avec la consigne v2 relu sur les accélérateurs : sans faute aussi, environ 0,029 $. Coût total de l'essai : 0,27 $. Choix du modèle en attente de Mickaël.
+- **2026-10-09** (suite) : v39, choix de Mickaël : Claude Opus 5.5. Lecture branchée dans l'écran Importer : envoi, lecture, regroupement, relecture, enregistrement dans l'inventaire. Testée en local en rejouant les vraies réponses de l'essai (38 éléments, dont 3 à vérifier). Bloc d'essai retiré. Tests im1 et im2 ajoutés.

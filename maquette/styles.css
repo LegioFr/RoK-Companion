@@ -622,3 +622,11 @@ button.more{border:0;background:none;cursor:pointer;font-family:inherit;min-heig
 .bgrp-n{margin:-4px 0 10px;color:var(--muted);font-size:12px;line-height:1.45}
 .bgrp.saison h3{color:var(--blue)}
 .btile.saison .bt-s{color:var(--muted);font-weight:400}
+/* Relecture de la vraie lecture des captures (2026-10-09) */
+.lect-sur{margin-top:12px}
+.lect-sur>summary{min-height:44px;display:flex;align-items:center;color:var(--gold-2);font-weight:700;cursor:pointer}
+.lect-sur .list{margin-top:8px}
+.lect-note+.lect-note{margin-top:8px}
+.lq-type{padding-left:66px}
+@media(max-width:520px){.lq-type,.field{padding-left:0}}
+.field input[data-lqv]{height:44px}

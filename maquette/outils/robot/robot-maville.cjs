@@ -64,7 +64,7 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   ok('Objet en double refusé',/déjà dans la liste/.test(await txt(p,'#shBody .ferr:not([hidden])')||''));
   await p.fill('#itN','Clés de bronze');await p.click('[data-act=item-save]');await p.waitForTimeout(150);ok('Objet ajouté',/Clés de bronze 5/.test(await txt(p,'#gItems')||''));
   await etat(p,'demo','#import');await p.waitForTimeout(1200);
-  ok('Bloc « Essai de lecture par l’IA » visible',!!(await txt(p,'#essaiIA')));R.cle=await txt(p,'#essaiCle');
+  ok('Lecture par Claude annoncée dans Importer',/Claude Opus 5\.5/.test(await txt(p,'#lectNote')||''));R.cle=await ev(p,()=>fetch('/api/lire').then(r=>r.json()).then(j=>j.cle?'clé en place':'clé absente').catch(()=>'?'));
   await p.context().close();}
 fs.writeFileSync(path.join(SORTIE,'resultat-maville.json'),JSON.stringify(R,null,1));
 const n=Object.values(R.mesures).reduce((a,c)=>a+c.length,0);

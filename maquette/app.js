@@ -579,23 +579,28 @@ function showStep(n){step=n;$$('[data-steppanel]').forEach(function(p){p.hidden=
 function renderShots(){
   var n=S.shots.length;
   $('#shots').innerHTML=n?S.shots.map(function(s,i){return '<div class="shot'+(s.url?' real':'')+'">'+(s.url?'<img src="'+s.url+'" alt="Capture '+(i+1)+'">':'')+'<span class="ck">'+ic('i-check')+'</span></div>';}).join(''):'<div class="shot empty"></div><div class="shot empty"></div><div class="shot empty"></div>';
-  $('#shotsInfo').textContent=n?n+' capture'+(n>1?'s':'')+' choisie'+(n>1?'s':'')+' · 20 Mo au plus':'Aucune capture choisie. Prends tes captures dans l’Inventaire du jeu, onglet par onglet.';
+  var vraies=S.shots.filter(function(x){return x.file;}).length;
+  $('#shotsInfo').textContent=n?n+' capture'+(n>1?'s':'')+' choisie'+(n>1?'s':'')+(vraies&&SITE_PUB?' · lecture par Claude Opus 5.5, environ '+String(Math.round(vraies*LECT_PRIX*100)/100).replace('.',',')+' $':' · 20 Mo au plus'):'Aucune capture choisie. Prends tes captures dans l’Inventaire du jeu, onglet par onglet.';
   $('#analyseBtn').disabled=!n;
 }
 function analyse(){
+  if(S.shots.some(function(x){return x.file;})){if(!SITE_PUB){say('La lecture des captures marche sur la maquette publiée (site), pas dans ce fichier.');return;}lireVraies();return;}
+  S.lect=null;$('#anaNote').textContent='Lecture simulée (captures d’exemple) : rien n’est envoyé.';
   showStep(2);var n=S.shots.length,t=0;clearInterval(anaTimer);
   anaTimer=setInterval(function(){t+=4;var pct=Math.min(100,t);var k=Math.min(n,Math.max(1,Math.ceil(pct/100*n)));
     $('#anaFill').style.width=pct+'%';$('#anaPct').textContent=pct+' %';$('#anaText').textContent='Lecture de la capture '+k+' sur '+n;
     if(pct>=100){clearInterval(anaTimer);setTimeout(function(){showStep(3);renderReview();},300);}},70);
 }
 function renderReview(){
+  $('#revReel').hidden=!S.lect;$('#revDemo').hidden=!!S.lect;if(S.lect){renderLect();return;}
   var todo=Object.keys(S.q).filter(function(k){return S.q[k]==null;}).length;
   $('#todoTxt').textContent=todo?todo+' à vérifier':'tout est vérifié';$('#sureTxt').textContent=S.sureOk?'38 sûrs confirmés':'38 sûrs';
   var b=$('#sureBtn');b.disabled=S.sureOk;b.innerHTML=ic('i-check')+(S.sureOk?'38 éléments confirmés':'Confirmer les 38 éléments sûrs');
   $$('.q[data-q]').forEach(function(q){var v=S.q[q.dataset.q];q.classList.toggle('done',v!=null);});
 }
 function importSave(){
-  if(REEL){say('Dans ta version réelle, la lecture des captures n’est pas encore branchée : rien n’a été enregistré.');importReset();location.hash='ma-ville-inventaire';return;}
+  if(S.lect){lectEnregistrer();return;}
+  if(REEL){say('Choisis tes captures dans l’Inventaire du jeu, puis touche « Analyser ».');importReset();return;}
   var kept=(S.sureOk?38:0)+Object.keys(S.q).filter(function(k){return S.q[k]==='ok';}).length;
   var skipped=(S.sureOk?0:38)+Object.keys(S.q).filter(function(k){return S.q[k]!=='ok';}).length;
   if(!kept){say('Confirme au moins un élément avant d’enregistrer.');return;}
@@ -606,36 +611,122 @@ function importSave(){
   $('#resText').textContent=(S.q.q3==='ok'?'1 correction avec un motif. Les anciennes valeurs restent dans l’historique. ':'')+(skipped?skipped+' élément'+(skipped>1?'s':'')+' non vérifié'+(skipped>1?'s':'')+' : pas enregistré'+(skipped>1?'s':'')+'.':'');
   showStep(4);refreshAll();
 }
-function importReset(){S.shots=[];S.q={q1:null,q2:null,q3:null};S.sureOk=false;$$('.q .chip').forEach(function(c){c.setAttribute('aria-pressed','false');});renderShots();renderReview();showStep(1);}
+function importReset(){S.shots=[];S.lect=null;S.q={q1:null,q2:null,q3:null};S.sureOk=false;$$('.q .chip').forEach(function(c){c.setAttribute('aria-pressed','false');});renderShots();renderReview();showStep(1);}
 
-/* ================= Essai de lecture par l'IA (décision de Mickaël du 2026-10-09) =================
-   Seulement sur la maquette publiée : les captures vont dans son espace privé (/api/capture) et leur liste dans la collection « lecture ».
-   La lecture elle-même est lancée par Claude (/api/lire), pas depuis cet écran. */
-var ESSAI_SITE=/\.vercel\.app$/.test(location.hostname)||!!window.RC_SITE;
-var ESSAI={list:null,cle:null,msg:''};
-function essaiCharger(){if(!ESSAI_SITE)return;
-  fetch('/api/db?col=lecture',{cache:'no-store'}).then(function(r){if(!r.ok)throw r;return r.json();}).then(function(j){var d=j.docs||{};ESSAI.list=Object.keys(d).map(function(k){return d[k];}).sort(function(a,b){return (a.t||0)-(b.t||0);});renderEssai();},function(){if(!ESSAI.list)ESSAI.list=[];ESSAI.msg='La liste des captures ne se charge pas : réessaie plus tard.';renderEssai();});
-  fetch('/api/lire',{cache:'no-store'}).then(function(r){return r.json();}).then(function(j){ESSAI.cle=!!j.cle;renderEssai();},function(){});}
-function renderEssai(){var box=$('#essaiIA');if(!box)return;box.hidden=!ESSAI_SITE;if(!ESSAI_SITE)return;
-  $('#essaiCle').textContent=ESSAI.cle==null?'':ESSAI.cle?'Clé de l’IA : en place.':'Clé de l’IA : pas encore en place (étapes données par Claude dans la conversation).';
-  var L=ESSAI.list;
-  $('#essaiList').innerHTML=(ESSAI.msg?'<p class="sh-note" role="status">'+esc(ESSAI.msg)+'</p>':'')+(L==null?'<p class="sh-note">Chargement…</p>':!L.length?vide('Aucune capture envoyée pour l’essai.'):
-    '<div class="essai-shots">'+L.map(function(c){return '<figure class="essai-shot"><img src="'+esc(c.url)+'" alt="'+esc(c.nom)+'" loading="lazy"><figcaption><span>'+esc(c.nom)+'</span><button class="btn danger" type="button" data-act="essai-del" data-arg="'+esc(c.id)+'">Retirer</button></figcaption></figure>';}).join('')+'</div>');}
+/* Maquette publiée : les captures y sont lues par Claude (fonctions /api/capture et /api/lire). */
+var SITE_PUB=/\.vercel\.app$/.test(location.hostname)||!!window.RC_SITE;
 /* Une capture trop lourde (plus de 3,9 Mo) ou dans un format rare est convertie en JPEG, en gardant sa taille en pixels. */
-function essaiPrep(f){if(f.size<=3.9e6&&/^image\/(png|jpeg|webp)$/.test(f.type))return Promise.resolve(f);
+function prepImage(f){if(f.size<=3.9e6&&/^image\/(png|jpeg|webp)$/.test(f.type))return Promise.resolve(f);
   return createImageBitmap(f).then(function(bm){var c=document.createElement('canvas');c.width=bm.width;c.height=bm.height;c.getContext('2d').drawImage(bm,0,0);
     return new Promise(function(res,rej){c.toBlob(function(b){if(b&&b.size<=3.9e6)res(b);else rej(new Error('trop lourde'));},'image/jpeg',0.92);});});}
-function essaiEnvoyer(files){var L=[].slice.call(files||[]).filter(function(f){return /^image\//.test(f.type);}).slice(0,6);if(!L.length){say('Choisis des images.');return;}
-  var n=0,ok=0;function suivant(){if(n>=L.length){ESSAI.msg='';say(ok+' capture'+(ok>1?'s':'')+' envoyée'+(ok>1?'s':'')+' pour l’essai.'+(ok<L.length?' '+(L.length-ok)+' n’a pas pu partir.':''));essaiCharger();return;}
-    var f=L[n++];ESSAI.msg='Envoi de la capture '+n+' sur '+L.length+'…';renderEssai();
-    essaiPrep(f).then(function(b){return fetch('/api/capture',{method:'POST',headers:{'content-type':b.type||'image/jpeg'},body:b});})
-      .then(function(r){if(!r.ok)throw r;return r.json();})
-      .then(function(c){return fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({op:'set',col:'lecture',id:c.id,data:{id:c.id,url:c.url,nom:f.name||'capture',octets:c.sizeBytes,t:Date.now(),date:dateJour()}})}).then(function(r){if(!r.ok)throw r;ok++;});})
-      .then(suivant,suivant);}
-  suivant();}
-function essaiRetirer(id){if(!id)return;fetch('/api/capture?id='+encodeURIComponent(id),{method:'DELETE'}).catch(function(){})
-  .then(function(){return fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({op:'delete',col:'lecture',id:id})});})
-  .then(function(){ESSAI.list=(ESSAI.list||[]).filter(function(c){return c.id!==id;});renderEssai();say('Capture retirée de l’essai.');},function(){say('La capture n’a pas pu être retirée : réessaie.');});}
+/* ================= Lecture des captures par Claude Opus 5.5 (décision de Mickaël du 2026-10-09) =================
+   Chaque capture part dans l'espace privé de la maquette (/api/capture), Claude la lit (/api/lire, réponse en JSON),
+   puis elle est effacée. Les cases sont regroupées (une même case peut être sur deux captures), comparées aux tailles et
+   durées du jeu (RC_JEU), puis relues : les sûres se confirment d'un coup, les douteuses une par une. Rien n'est écrit
+   pour un élément absent des captures (absent ≠ zéro). Onglets lus : Ressources et Accélérateurs (essai du 2026-10-09). */
+var LECT_MODELE='opus',LECT_PRIX=0.05;
+var TYPES_ACC={build:'construction',research:'recherche',train:'entraînement',heal:'soins',general:'généraux'};
+function lectFamille(o){o=String(o||'').toLowerCase();
+  if(/acc[ée]l/.test(o)){if(/construction/.test(o))return ['acc','build'];if(/recherche/.test(o))return ['acc','research'];if(/entra[iî]nement/.test(o))return ['acc','train'];
+    if(/soin/.test(o))return ['acc','heal'];if(/universel|g[ée]n[ée]ra/.test(o))return ['acc','general'];return ['acc',null];}
+  if(/coffre|pack/.test(o))return ['autre',null];
+  if(/gemme/.test(o))return ['res','gems'];if(/nourriture/.test(o))return ['res','food'];if(/bois/.test(o))return ['res','wood'];if(/pierre/.test(o))return ['res','stone'];
+  if(/\bd['’]or\b|\bor\b/.test(o))return ['res','gold'];return ['autre',null];}
+/* « 1m », « 60m », « 3h », « 24h », « 3j » → minutes */
+function lectDuree(t){var m=String(t||'').toLowerCase().replace(/\s/g,'').match(/^(\d+)(m|min|h|j|d)$/);if(!m)return null;var v=+m[1];return m[2][0]==='m'?v:m[2]==='h'?v*60:v*1440;}
+function lectNom(it){
+  if(it.kind==='ville')return it.type==='gems'?'Gemmes en ville':(RN.filter(function(x){return x[0]===it.type;})[0]||[,,'?'])[2]+' en ville';
+  if(it.kind==='res')return (it.type==='gems'?'Gemmes':(RN.filter(function(x){return x[0]===it.type;})[0]||[,,'Ressource'])[2])+' · caisse de '+(it.val==null?'?':nb(it.val));
+  return 'Accélérateur '+(it.type?TYPES_ACC[it.type]:'de type inconnu')+' · '+(it.val==null?'?':fDur(it.val));}
+function lectIcone(it){if(it.kind==='acc')return it.type?(AN.filter(function(x){return x[0]===it.type;})[0]||[,'a-general'])[1]:'a-general';
+  if(it.type==='gems')return 'r-gem';return (RN.filter(function(x){return x[0]===it.type;})[0]||[,'r-food'])[1];}
+/* Regroupe les lectures des captures en éléments à enregistrer */
+function lectRegrouper(L,erreurs,n){
+  var items=[],par={},pasPris=0,coupees=[],onglets={},vu=0,barre=null;
+  function ajoute(it){var k=it.kind+'|'+(it.type||'?')+'|'+it.val+(it.type?'':'|'+it.qte);var o=par[k];
+    if(o){if(o.qte!==it.qte&&it.qte!=null){o.sur=false;o.raison='Lu deux fois avec des nombres différents : '+nb(o.qte)+' et '+nb(it.qte);}return;}
+    it.id='l'+items.length;par[k]=it;items.push(it);}
+  L.forEach(function(r){var R=r.resultat;if(!R)return;onglets[R.onglet]=1;if(!barre&&R.barre)barre=R.barre;
+    (R.cases||[]).forEach(function(c){vu++;
+      if(R.onglet!=='Ressources'&&R.onglet!=='Accélérateurs'){pasPris++;return;}
+      var f=lectFamille(c.objet);if(R.onglet==='Accélérateurs'&&f[0]!=='acc')f=['acc',null];/* onglet Accélérateurs : un objet pas reconnu est un accélérateur de type inconnu */
+      if(f[0]==='autre'){pasPris++;return;}
+      if(c.coupee){coupees.push({f:f,c:c});return;}
+      var qte=parseEntier(c.quantite),it={kind:f[0],type:f[1],type0:f[1],qte:qte,sur:!!c.sur,raison:''};
+      if(f[0]==='res'){it.val=parseEntier(c.valeur_haut);var C=JEU.caisses[f[1]];
+        if(it.val==null)it.raison='Taille illisible';else if(C&&C.tailles.indexOf(it.val)<0)it.raison='Taille inconnue du jeu : '+nb(it.val);}
+      else{it.val=lectDuree(c.valeur_haut);var J=JEU.accelerateurs,LD=f[1]==='general'?J.universel:J.specialises;
+        if(!f[1])it.raison='Type d’accélérateur pas reconnu : choisis-le';
+        else if(it.val==null)it.raison='Durée illisible';else if(LD.indexOf(it.val)<0)it.raison='Durée inconnue du jeu pour ce type : '+fDur(it.val);}
+      if(qte==null)it.raison=it.raison||'Quantité illisible';else if(!c.sur)it.raison=it.raison||'Chiffre douteux : vérifie la quantité';
+      if(it.raison)it.sur=false;
+      ajoute(it);});});
+  /* une case coupée sans double entier sur une autre capture n'est pas enregistrée */
+  var perdues=coupees.filter(function(x){var f=x.f,c=x.c;var v=f[0]==='res'?parseEntier(c.valeur_haut):lectDuree(c.valeur_haut),q=parseEntier(c.quantite);
+    return !items.some(function(it){return it.kind===f[0]&&it.type===f[1]&&((v!=null&&it.val===v)||(v==null&&q!=null&&it.qte===q));});}).length;
+  if(barre){[['food','nourriture'],['wood','bois'],['stone','pierre'],['gold','or']].forEach(function(x){var u=parseQte(barre[x[1]]);if(u!=null)items.push({id:'v'+x[0],kind:'ville',type:x[0],val:u,qte:null,sur:true,raison:''});});
+    var g=parseEntier(barre.gemmes);if(g!=null)items.push({id:'vgems',kind:'ville',type:'gems',val:g,qte:null,sur:true,raison:''});}
+  return {items:items,sureOk:false,n:n,erreurs:erreurs,pasPris:pasPris,perdues:perdues,vu:vu,onglets:Object.keys(onglets)};}
+function lireUne(f){var id=null;
+  function efface(){if(id)fetch('/api/capture?id='+encodeURIComponent(id),{method:'DELETE'}).catch(function(){});}
+  return prepImage(f).then(function(b){return fetch('/api/capture',{method:'POST',headers:{'content-type':b.type||'image/jpeg'},body:b});})
+    .then(function(r){if(!r.ok)throw 'envoi impossible ('+r.status+')';return r.json();})
+    .then(function(c){id=c.id;return fetch('/api/lire',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:c.id,modele:LECT_MODELE})});})
+    .then(function(r){return r.json().catch(function(){return {};}).then(function(j){if(!r.ok||!j.resultat)throw (j&&j.error)||('lecture impossible ('+r.status+')');return j;});})
+    .then(function(j){efface();return j;},function(e){efface();throw e;});}
+function lireVraies(){
+  var L=S.shots.slice(),n=L.length,fait=0,res=[],err=[],idx=0;S.lect=null;showStep(2);
+  $('#anaNote').textContent='Tes captures sont envoyées à Claude Opus 5.5 (Anthropic) pour être lues, puis effacées de la maquette. Environ 10 à 15 s par capture.';
+  function maj(){var pct=Math.round(fait/n*100);$('#anaFill').style.width=pct+'%';$('#anaPct').textContent=pct+' %';
+    $('#anaText').textContent=fait<n?'Lecture des captures : '+fait+' sur '+n+' lues':'Lecture terminée';}
+  maj();
+  function suivant(){if(idx>=L.length)return Promise.resolve();var i=idx++;
+    return lireUne(L[i].file).then(function(r){res[i]=r;},function(e){err.push('capture '+(i+1)+' : '+e);}).then(function(){fait++;maj();return suivant();});}
+  Promise.all([suivant(),suivant(),suivant()]).then(function(){
+    S.lect=lectRegrouper(res.filter(Boolean),err,n);S.lect.cout=res.reduce(function(a,r){return a+(r&&r.cout_usd||0);},0);
+    setTimeout(function(){showStep(3);renderReview();},300);});}
+function renderLect(){
+  var X=S.lect,box=$('#revReel');
+  var sur=X.items.filter(function(it){return it.sur;}),todo=X.items.filter(function(it){return !it.sur;}),reste=todo.filter(function(it){return !it.choix;}).length;
+  var lu=function(it){return it.kind==='ville'?fQte(it.val):nb(it.qte);};
+  var notes=[];
+  if(X.erreurs.length)notes.push('<b>'+X.erreurs.length+' capture'+(X.erreurs.length>1?'s':'')+' non lue'+(X.erreurs.length>1?'s':'')+'</b> : '+esc(X.erreurs.join(' ; '))+'. Rien n’en est tiré.');
+  if(X.perdues)notes.push(X.perdues+' case'+(X.perdues>1?'s':'')+' coupée'+(X.perdues>1?'s':'')+' par le défilement, absente'+(X.perdues>1?'s':'')+' des autres captures : pas enregistrée'+(X.perdues>1?'s':'')+'. Reprends une capture où elle'+(X.perdues>1?'s sont':' est')+' entière'+(X.perdues>1?'s':'')+'.');
+  if(X.pasPris)notes.push(X.pasPris+' élément'+(X.pasPris>1?'s':'')+' d’autres onglets, ou coffres et packs, pas encore pris en charge.');
+  notes.push('Un élément absent des captures reste comme il est : l’appli n’écrit jamais zéro à sa place. Une ligne non vérifiée n’est pas enregistrée.');
+  notes.push('Ressources en ville : lues dans la barre du haut du jeu, arrondies (ex. 84,2 M).');
+  box.innerHTML='<div class="cols"><div class="col">'+
+    '<div class="card hl"><h3>'+X.items.length+' élément'+(X.items.length>1?'s':'')+' lu'+(X.items.length>1?'s':'')+' sur '+X.n+' capture'+(X.n>1?'s':'')+'</h3><p><b class="ok">'+sur.length+' sûr'+(sur.length>1?'s':'')+(X.sureOk?' confirmés':'')+'</b> · <b class="gd">'+(reste?reste+' à vérifier':'tout est vérifié')+'</b>'+(X.cout?' · coût '+String(Math.round(X.cout*1000)/1000).replace('.',',')+' $':'')+'</p>'+
+    (sur.length?'<div class="btns"><button class="btn primary" type="button" data-act="lect-sure"'+(X.sureOk?' disabled':'')+'>'+ic('i-check')+(X.sureOk?sur.length+' éléments confirmés':'Confirmer les '+sur.length+' éléments sûrs')+'</button></div>'+
+      '<details class="lect-sur"><summary>Voir les éléments sûrs</summary><div class="list">'+sur.map(function(it){return row({icon:lectIcone(it),title:esc(lectNom(it)),val:lu(it)});}).join('')+'</div></details>':'')+'</div>'+
+    (todo.length?'<section class="sec"><div class="sec-t"><h2>À vérifier</h2></div><div class="list">'+todo.map(function(it){
+      return '<div class="q'+(it.choix?' done':'')+'" data-lq="'+it.id+'"><div class="q-h"><span class="crop">'+ic(lectIcone(it))+'</span><span class="rc"><b>'+esc(lectNom(it))+'</b><small>'+esc(it.raison)+'</small></span></div>'+
+        (it.kind==='acc'&&!it.type0?'<div class="chips lq-type" role="group" aria-label="Type d’accélérateur">'+AN.map(function(a){return '<button class="chip" type="button" data-lt="'+a[0]+'" aria-pressed="'+(it.type===a[0])+'">'+a[2]+'</button>';}).join('')+'</div>':'')+
+        '<div class="field"><label for="lqv'+it.id+'">Quantité</label><input id="lqv'+it.id+'" data-lqv="'+it.id+'" inputmode="numeric" value="'+(it.qte==null?'':it.qte)+'"></div>'+
+        '<div class="chips"><button class="chip" type="button" data-lqc="ok" aria-pressed="'+(it.choix==='ok')+'">C’est bon</button><button class="chip" type="button" data-lqc="skip" aria-pressed="'+(it.choix==='skip')+'">Ignorer</button></div></div>';}).join('')+'</div></section>':'')+
+    '</div><div class="col"><section class="sec"><div class="sec-t"><h2>Bon à savoir</h2></div>'+notes.map(function(t){return '<div class="note lect-note"><i data-i="n-info"></i><span>'+t+'</span></div>';}).join('')+'</section></div></div>';
+  paintIcons(box);
+}
+function lectItem(id){return S.lect.items.filter(function(x){return x.id===id;})[0];}
+/* garde les quantités déjà corrigées avant de redessiner la relecture */
+function lectSync(){$$('[data-lqv]').forEach(function(el){var it=lectItem(el.dataset.lqv),q=parseEntier(el.value);if(it&&q!=null)it.qte=q;});}
+/* Enregistre les éléments confirmés dans l'inventaire du profil actif */
+function lectEnregistrer(){
+  var X=S.lect,p=A();if(!p){say('Ajoute d’abord un profil.');return;}
+  var ok=[],skip=0;
+  X.items.forEach(function(it){if(it.sur){if(X.sureOk)ok.push(it);else skip++;return;}
+    if(it.choix!=='ok'){skip++;return;}var q=parseEntier(($('#lqv'+it.id)||{}).value);if(q==null){skip++;return;}it.qte=q;ok.push(it);});
+  if(!ok.length){say('Confirme au moins un élément avant d’enregistrer.');return;}
+  function pose(L,label,qte,val,taille){var i=-1;L.forEach(function(c,j){if(Math.abs(c[2]-taille)<1e-9)i=j;});if(i>=0)L[i][1]=qte;else L.push([label,qte,taille]);L.sort(function(a,b){return a[2]-b[2];});}
+  ok.forEach(function(it){
+    if(it.kind==='ville'){if(it.type==='gems')p.gemsIn.v=it.val;else p.res[it.type].v=it.val/1e6;}
+    else if(it.kind==='res'){if(it.type==='gems')pose(p.gemsIn.c,nb(it.val),it.qte,it.val,it.val);else pose(p.res[it.type].c,nb(it.val),it.qte,it.val,it.val/1e6);}
+    else{if(!p.acc[it.type])p.acc[it.type]=[];pose(p.acc[it.type],fDur(it.val),it.qte,it.val,it.val/60);}});
+  p.invMaj=dateJour();p.releves+=ok.length;S.imported=true;
+  $('#resTitle').textContent=ok.length+' valeur'+(ok.length>1?'s':'')+' enregistrée'+(ok.length>1?'s':'')+' dans ton inventaire';
+  $('#resText').textContent=(skip?skip+' élément'+(skip>1?'s':'')+' non vérifié'+(skip>1?'s':'')+' ou ignoré'+(skip>1?'s':'')+' : pas enregistré'+(skip>1?'s':'')+'. ':'')+'Ce qui n’était pas sur les captures n’a pas changé.';
+  showStep(4);refreshAll();
+}
 
 /* ================= Optimiser ================= */
 function renderOpt(){
@@ -834,7 +925,6 @@ function route(){
   if(document.body.classList.contains('auth-on')){document.body.classList.remove('auth-on');$('#auth').hidden=true;cur=null;}
   if(h==='ma-ville'||h.indexOf('ma-ville-')===0){id='ma-ville';sub=h.slice(9)||'progression';}
   if(h==='import'&&step===4)importReset();
-  if(h==='import')essaiCharger();
   if(h.indexOf('valeur-')===0){id='valeur';var k=h.slice(7);if(FIELDS[k])S.valKey=k;}
   if(h.indexOf('profil-')===0){id='profil';S.profileView=h.slice(7);}else if(h==='profil'){S.profileView=null;}
   if(!ORDER.length&&['accueil','plus','codes','icones','temps'].indexOf(id)<0){id='accueil';say('Ajoute d’abord un profil.');}
@@ -990,9 +1080,9 @@ var ACT={
   quick:function(){S.quick=true;if(location.hash!=='#ma-ville-progression')location.hash='ma-ville-progression';renderCity();quickCount();},
   'quick-cancel':function(){S.quick=false;renderCity();},'quick-save':quickSave,
   correct:correctSheet,'save-correct':saveCorrect,
-  'essai-del':essaiRetirer,
   'inv-edit':invSheet,'inv-save':invSave,'item-edit':itemSheet,'item-save':itemSave,'item-del':itemDel,
-  'sample-shots':function(){S.shots=[];for(var i=0;i<15;i++)S.shots.push({});renderShots();},
+  'sample-shots':function(){S.shots=[];S.lect=null;for(var i=0;i<15;i++)S.shots.push({});renderShots();},
+  'lect-sure':function(){lectSync();S.lect.sureOk=true;renderLect();say('Éléments sûrs confirmés.');},
   analyse:analyse,'confirm-sure':function(){S.sureOk=true;renderReview();say('38 éléments sûrs confirmés.');},
   'import-save':importSave,'import-reset':importReset,
   'add-goal':function(){openSheet('Nouvel objectif','<div class="fld"><label>Type</label><div class="chips" data-single id="ngType"><button class="chip" type="button" aria-pressed="true">Bâtiment</button><button class="chip" type="button" aria-pressed="false">Recherche</button><button class="chip" type="button" aria-pressed="false">Troupes</button></div></div><div class="fld"><label for="ngName">Objectif</label><input id="ngName" placeholder="Ex. Hôpital 25"><small class="ferr" id="ngErr" hidden></small></div>',[['Annuler','close-sheet',''],['Ajouter','save-goal','primary']]);},
@@ -1096,6 +1186,11 @@ document.addEventListener('click',function(e){
   var sm=e.target.closest('#sesMode .chip');if(sm){S.sesMode=sm.dataset.v;renderCombat();return;}
   var bp=e.target.closest('#bilPer .chip');if(bp){S.bil=bp.dataset.v;renderBilan();return;}
   var cd=e.target.closest('[data-code]');if(cd){var co=S.codes[+cd.dataset.code];co.st=cd.dataset.cst;if(co.st==='used')co.sub=co.sub.replace(/ · utilisé.*$/,'')+' · utilisé le '+TODAY_S;renderCodes();return;}
+  var lqc=e.target.closest('[data-lq] [data-lqc]');if(lqc&&S.lect){lectSync();var it=lectItem(lqc.closest('[data-lq]').dataset.lq);
+    if(lqc.dataset.lqc==='ok'&&it.kind==='acc'&&!it.type){say('Choisis d’abord le type d’accélérateur.');return;}
+    if(lqc.dataset.lqc==='ok'&&parseEntier(($('#lqv'+it.id)||{}).value)==null){say('Écris la quantité (un nombre entier).');return;}
+    it.choix=lqc.dataset.lqc;renderLect();return;}
+  var lt=e.target.closest('[data-lq] [data-lt]');if(lt&&S.lect){lectSync();var it2=lectItem(lt.closest('[data-lq]').dataset.lq);it2.type=lt.dataset.lt;it2.choix=null;renderLect();return;}
   var ch=e.target.closest('.chips[data-single] .chip');if(ch){$$('.chip',ch.parentNode).forEach(function(x){x.setAttribute('aria-pressed',String(x===ch));});return;}
 });
 document.addEventListener('input',function(e){
@@ -1114,8 +1209,7 @@ document.addEventListener('change',function(e){
   else if(t.matches('[data-qk]'))quickCount();
   else if(t.matches('[data-notif]')){S.notif[t.dataset.notif]=t.checked;renderPlus();}
   else if(t.id==='pickShots'){var fs=[].slice.call(t.files||[]).filter(function(f){return /^image\//.test(f.type);}).slice(0,20);
-    if(!fs.length){say('Choisis des images.');return;}S.shots=fs.map(function(f){return {url:URL.createObjectURL(f)};});renderShots();say(fs.length+' capture'+(fs.length>1?'s':'')+' prête'+(fs.length>1?'s':'')+'. Elles restent sur ton appareil.');t.value='';}
-  else if(t.id==='pickEssai'){essaiEnvoyer(t.files);t.value='';}
+    if(!fs.length){say('Choisis des images.');return;}S.shots=fs.map(function(f){return {url:URL.createObjectURL(f),file:f};});S.lect=null;renderShots();say(fs.length+' capture'+(fs.length>1?'s':'')+' prête'+(fs.length>1?'s':'')+(SITE_PUB?'. Touche « Analyser » : Claude les lira.':'. Elles restent sur ton appareil.'));t.value='';}
   else if(t.id==='pickVideo'){var v=t.files&&t.files[0];if(v)openSheet('Vidéo choisie','<p class="shp">'+esc(v.name)+'</p><p class="shp muted">La lecture d’un enregistrement d’écran est prévue plus tard (complément B03). La vidéo reste sur ton appareil.</p>',[['Fermer','close-sheet','primary']]);t.value='';}
   else if(t.id==='pickReport'){var f=t.files&&t.files[0];if(f){S.reports.unshift({t:'Rapport importé',d:TODAY_S+' · à relire',ok:null,img:URL.createObjectURL(f),obs:'Lecture simulée dans la maquette : les valeurs lues apparaîtront ici, à corriger.',hyp:'Aucune tant que les valeurs ne sont pas relues.',abs:'À compléter après relecture.'});S.rep=0;renderCombat();say('Rapport ajouté. Il reste sur ton appareil.');}t.value='';}
 });
