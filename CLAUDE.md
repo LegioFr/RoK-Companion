@@ -9,4 +9,4 @@
 - Les écrans et icônes « proposés par Claude » ne sont pas validés tant que Mickaël ne l'a pas dit.
 - Aucun secret (clé, mot de passe, jeton) dans le dépôt.
 - Données du jeu : noter la source et la date de chaque donnée ; une valeur non vérifiée est signalée comme telle.
-- Maquette : `maquette/` ; icônes régénérées par `node maquette/outils/generer-icones.cjs` ; copie publiable par `python3 maquette/outils/assembler.py`.
+- Maquette : `maquette/` ; icônes régénérées par `node maquette/outils/generer-icones.cjs`. **Elle est publiée sur le site https://rok-companion-maquette.vercel.app** (décision du 2026-10-09) : chaque envoi sur la branche de production (voir `MEMOIRE.md`) le met à jour ; vérifier la vraie page après chaque envoi. L'ancienne copie dans claude.ai n'est plus mise à jour.
