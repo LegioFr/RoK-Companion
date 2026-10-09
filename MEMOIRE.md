@@ -9,7 +9,7 @@ Dernière mise à jour : 2026-10-08.
 
 ## 1. Le projet
 
-- **Quoi :** une appli web compagnon pour Rise of Kingdoms (« RoK Companion ») : suivre son compte (profils, bâtiments, inventaire), importer ses captures d'écran de l'Inventaire, planifier sa progression (premier objectif : Château 25), préparer ses combats.
+- **Quoi :** une appli web compagnon pour Rise of Kingdoms (« RoK Companion ») : suivre son compte (profils, bâtiments, inventaire), importer ses captures d'écran de l'Inventaire, planifier sa progression (premier objectif : Hôtel de ville 25), préparer ses combats.
 - **Pour qui :** Mickaël d'abord ; d'autres joueurs plus tard, peut-être.
 - **Indépendant du dépôt `LegioFr/RoK`** (décision du 2026-10-08) : ce dépôt-là est laissé de côté, sans modification. On n'en reprend que des références (dossier `references/`).
 
@@ -72,6 +72,9 @@ Dernière mise à jour : 2026-10-08.
 | 2026-10-08 | **Création de compte avec une adresse déjà utilisée** (note 4 de Mickaël) : l'appli le dit (« Un compte existe déjà avec cette adresse… ») au lieu de passer à la confirmation. |
 | 2026-10-08 | **Mot de passe oublié** : pareil, l'appli dit « Aucun compte avec cette adresse… » ; avec une adresse connue, « E-mail envoyé à … » (textes proposés par Claude). Remplace le message unique validé dans RoK. |
 | 2026-10-08 | **Deux séries de tests séparées** : « Corrections à vérifier » (tests modifiés par Claude, bandeau doré) et « Revue complète » (bandeau bleu), qui met de côté les tests en attente de vérification et reprend où Mickaël s'était arrêté ; un test vérifié dans les corrections compte comme fait et ne revient pas. |
+| 2026-10-09 | **« Hôtel de ville », pas « Château »** : l'objectif s'appelle « Hôtel de ville 25 » partout (note 6 de Mickaël : c'est le nom du bâtiment dans le jeu). |
+| 2026-10-09 | **Priorités du jour** : avec plus de temps, plus d'actions (note 5 : « Que 3 actions » en 1 h). Les actions sont prises dans l'ordre d'importance tant qu'elles tiennent dans le temps choisi ; le total s'affiche (« 7 actions · ≈ 42 min sur 1 h »). Durées : exemples proposés par Claude. |
+| 2026-10-09 | **Rappels des événements** : bouton « Me prévenir » / « Rappel activé » (note 7 : « à quoi sert rappel activé ? ») ; pas de rappel pour une date inconnue. |
 | 2026-10-08 | **Tests guidés dans la maquette** : liste complète des tests, chacun avec un lien qui ouvre le bon écran dans le bon état ; résultats partagés avec Claude. « Mieux vaut trop de tests que pas assez. » Agréable à faire, sans cacher l'écran. |
 
 ## 5. Questions ouvertes (à trancher plus tard)
@@ -88,9 +91,9 @@ Dernière mise à jour : 2026-10-08.
 
 0. **Début de chaque session : lire les notes et les résultats de tests de Mickaël sur la maquette** (`ArtifactData`, `list`, collections `notes` et `tests`, artefact https://claude.ai/artifact/Ku6BeFs1sgqTc8ihWTP47i), les traiter, répondre dans `reponse`.
 1. Mickaël : passer le dépôt en privé (recommandé).
-2. Revue de la maquette, écran par écran : **connexion** (intégrée, à relire par Mickaël), puis **Accueil** (revue en cours, voir le journal du 2026-10-08, 2e session).
+2. Revue de la maquette : **connexion et Accueil testés en entier** (87 tests, 2026-10-09). Reste : Mickaël vérifie les 4 corrections v17 ; points ouverts à trancher : garder ou non « Objectif en cours » et « Ma semaine » sur l'Accueil ; valider les textes proposés (messages de connexion, durées des actions). **Ensuite : tests de Ma ville** (même méthode : groupes dans `tests-revue.js`, revue guidée).
 3. Ajouter à la maquette : conservation des données dans le navigateur, vraie lecture des captures (tesseract.js), testée sur les captures de Mickaël (les 15 captures de l'étude RoK ne sont pas dans les dépôts : les redonner).
-4. Recherches sur le jeu, en commençant par ce qui sert aux premiers écrans : bâtiments et prérequis jusqu'au Château 25, ressources, caisses, accélérateurs.
+4. Recherches sur le jeu, en commençant par ce qui sert aux premiers écrans : bâtiments et prérequis jusqu'à l'Hôtel de ville 25, ressources, caisses, accélérateurs.
 
 ## 7. Journal des sessions
 
@@ -108,3 +111,4 @@ Dernière mise à jour : 2026-10-08.
 - **2026-10-08** (suite) : v14, Mickaël veut le rendu le plus proche de l'appli finale, sans la barre de Chrome ni celle de claude.ai. Ajouté : bulle › Écran › « ⛶ Plein écran » (API plein écran du navigateur ; **marche sur la tablette de Mickaël dans claude.ai**, vérifié le 2026-10-08). Solution de repli proposée si c'est refusé : publier aussi la maquette comme appli installable (Vercel), sans les notes partagées.
 - **2026-10-08** (suite) : v15, à la demande de Mickaël : bandeau des tests déplaçable (glisser la ligne de titre ⠿, position gardée). Corrigé aussi : dans la série « À revoir », un test sans écran propre (ex. test 25) ouvre maintenant son écran ; les repères de notes traitées ou dont l'élément n'existe plus ne s'affichent plus.
 - **2026-10-08** (suite) : v16, séries de tests séparées (demande de Mickaël, il avait peur de mélanger les corrections et la vraie revue).
+- **2026-10-09** : Mickaël a fini la revue complète (87 tests sur tablette) : 83 bons, 4 problèmes (n4 message trop bref, r2 et note 5 trop peu d'actions en 1 h, e1 et note 6 « Hôtel de ville » au lieu de « Château », e4 et note 7 rappel incompris). Tout corrigé en v17 ; les 4 tests sont dans « Corrections à vérifier ». Messages éphémères : 3 à 7 s selon leur longueur.

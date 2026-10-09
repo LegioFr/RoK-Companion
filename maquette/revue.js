@@ -5,10 +5,12 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=16,VERSION='v'+VNUM+' · 8 oct. 2026';
+var VNUM=17,VERSION='v'+VNUM+' · 8 oct. 2026';
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
-  '*':[{sel:'',t:'Tests : deux séries séparées. « 🔧 Corrections à vérifier » (bandeau doré) et « Revue complète » (bandeau bleu), qui saute les tests en attente de vérification.'}],
+  '*':[{sel:'',t:'Partout : « Château 25 » devient « Hôtel de ville 25 » (ta note 6). Les messages éphémères restent plus longtemps à l’écran (3 à 7 s selon leur longueur).'}],
+  'evenements':[{sel:'#evList',t:'Chaque événement a un bouton « Me prévenir » ; activé, il devient « Rappel activé » et un message dit quand tu seras prévenu (ta note 7).'}],
+  'plan-c25':[{sel:'[data-screen="plan-c25"] h1',t:'Titre « Hôtel de ville 25 » au lieu de « Château 25 » (ta note 6).'}],
   'connexion':[{sel:'[data-auth="connexion"]',t:'Écran ajouté, repris de la maquette validée B01-01.'},
     {sel:'[data-auth="connexion"] .a-primary',t:'Connexion qui marche : e-mail ou mot de passe faux → « E-mail ou mot de passe incorrect. » (texte proposé).'}],
   'inscription':[{sel:'#suEmail',t:'Adresse déjà utilisée : « Un compte existe déjà avec cette adresse… » sous E-mail, au lieu de passer à la confirmation (ta note 4).'},
@@ -16,7 +18,7 @@ var CHANGES={
   'confirmation':[{sel:'[data-auth="confirmation"]',t:'Les tests de cet écran préparent eux-mêmes un compte en attente (mot de passe rok12345) : plus besoin d’avoir fait les tests précédents.'}],
   'mot-de-passe-oublie':[{sel:'[data-auth="mot-de-passe-oublie"] .a-feedback',t:'Adresse sans compte : « Aucun compte avec cette adresse… ». Adresse connue : « E-mail envoyé à … » (ta décision).'},{sel:'[data-auth="mot-de-passe-oublie"] .a-primary',t:'Le lien de l’e-mail ne se simule que si un e-mail est vraiment parti.'}],
   'nouveau-mot-de-passe':[{sel:'[data-auth="nouveau-mot-de-passe"]',t:'Écran ajouté, repris de B01-05. Après « Enregistrer », tu es connecté.'}],
-  'accueil':[{sel:'#homeTiles',t:'Aperçu de ma ville : les 6 bulles de l’Accueil validé (Bâtisseurs, Bonus de vitesse, 4 totaux), à ta demande.'},
+  'accueil':[{sel:'#prioList',t:'Priorités du jour : le nombre d’actions dépend du temps choisi (elles doivent tenir dedans) ; le total s’affiche sous la liste (ta note 5).'},{sel:'#homeTiles',t:'Aperçu de ma ville : les 6 bulles de l’Accueil validé (Bâtisseurs, Bonus de vitesse, 4 totaux), à ta demande.'},
     {sel:'.timepick',t:'Temps de jeu plus clair : la question « Combien de temps as-tu pour jouer ? » et la durée de chaque action. Titre « Priorités du jour » (le nombre change avec le temps).'},
     {sel:'#homeEmpty',t:'Accueil sans profil repris de B01-06 (onglet États → « Nouveau compte sans profil » pour le voir).'}],
   'profil':[{sel:'[data-act="delete-profile"]',t:'On peut supprimer n’importe quel profil, même l’actif : un autre profil devient actif (ta décision).'}],
@@ -38,7 +40,7 @@ var ICO={
 function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
 function $(id){return document.getElementById(id);}
 var LS={get:function(k,d){try{var v=localStorage.getItem('rc-'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set:function(k,v){try{localStorage.setItem('rc-'+k,JSON.stringify(v));}catch(e){}}};
-function say(t){var x=$('toast');if(!x)return;x.textContent=t;x.classList.add('show');clearTimeout(say.t);say.t=setTimeout(function(){x.classList.remove('show');},2800);}
+function say(t){var x=$('toast');if(!x)return;x.textContent=t;x.classList.add('show');clearTimeout(say.t);say.t=setTimeout(function(){x.classList.remove('show');},Math.min(7000,Math.max(3000,String(t).length*70)));}
 function svg(name){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICO[name]+'</svg>';}
 function cls(){var w=innerWidth;return w<700?'téléphone':w<1100?'tablette':'PC';}
 function CUR(){return window.RC_CUR||{id:'accueil',title:'Accueil',label:'',note:''};}

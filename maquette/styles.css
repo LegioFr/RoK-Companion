@@ -395,6 +395,9 @@ body.modal-open{overflow:hidden}
 .tp-q{display:inline-flex;align-items:center;gap:6px;color:var(--text);font-size:13px;font-weight:600}
 .tp-q svg{width:20px;height:20px}
 .tile .todo{margin-top:0}
+.ev-row .rc small .pill{margin-left:4px;vertical-align:1px}
+.ev-rem{flex:none}.ev-rem.on{border-color:#3ecf8e88;color:var(--green)}.ev-rem.on svg{color:var(--green)}.ev-na{flex:none;font-size:12px}
+.prio-sum{margin:8px 2px 0;color:var(--muted);font-size:13px;font-weight:600}
 @media(min-width:700px){.tp-q{font-size:14px}}
 
 /* ---------- Accueil sans profil (B01-06 validée) ---------- */

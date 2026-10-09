@@ -21,7 +21,8 @@ function row(o){/* {href,act,data,icon,nb,title,sub,val,valSub,valCls,go,pill,cl
     (o.pill||'')+((o.href||o.act)&&o.go!==false?'<span class="go">'+ic('i-next2')+'</span>':'')+'</'+tag+'>';
 }
 var toastEl=$('#toast'),tt;
-function say(t){toastEl.textContent=t;toastEl.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toastEl.classList.remove('show');},2800);}
+/* Message éphémère : il reste d'autant plus longtemps qu'il est long (3 à 7 s). */
+function say(t){toastEl.textContent=t;toastEl.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toastEl.classList.remove('show');},Math.min(7000,Math.max(3000,String(t).length*70)));}
 var TODAY='8 oct. 2026';
 
 /* ================= Données d'exemple ================= */
@@ -50,7 +51,7 @@ var P={
     gemsIn:{v:184930,c:[['10',50,10]]},
     acc:{build:[['1 min',212,1/60],['5 min',140,5/60],['1 h',195,1],['3 h',44,3],['8 h',12,8],['1 j',3,24]],research:[['1 min',160,1/60],['1 h',176,1],['8 h',14,8],['1 j',2,24]],
          train:[['1 h',120,1],['8 h',12,8]],heal:[['1 h',52,1],['8 h',3,8]],general:[['1 h',260,1],['8 h',14,8],['1 j',3,24]]},
-    obj:{title:'Château 25',short:'Château 25',pct:62,href:'#plan-c25'}}),
+    obj:{title:'Hôtel de ville 25',short:'HDV 25',pct:62,href:'#plan-c25'}}),
   f1:mkProfile({name:'Ferme 1',type:'Ferme',icon:'i-sprout',kd:'#3567',pid:'',power:'18,2 M',kills:'1,2 M',deaths:'40 K',gems:'3 200',ap:'1 000',
     tr:['▲ +0,4 M (7j)','',''],releves:61,corr:2,snaps:3,
     v:{hdv:21,vip:8,builders:2,bonus:25,civ:'Rome',mur:21,academie:18,caserne:16,ecurie:15,tir:15,hopital:17,siege:12},
@@ -77,7 +78,7 @@ var AUTH={user:null,after:null,pending:null,reset:null};
 var AUTH_IDS=['connexion','inscription','confirmation','mot-de-passe-oublie','nouveau-mot-de-passe'];
 var S={active:'main',time:'30',imported:false,sent:0,reserved:false,planSaved:false,inv:'res',cmdF:'all',form:'Coin',
   valKey:'caserne',quick:false,profileView:null,
-  goals:[{t:'Recherche économie complète',icon:'t-flask',pct:68,sub:'Partage la pierre avec le Château 25 : l’appli ne la compte qu’une fois'},{t:'300 000 fantassins niveau 5',icon:'t-swords',pct:40,sub:''}],
+  goals:[{t:'Recherche économie complète',icon:'t-flask',pct:68,sub:'Partage la pierre avec l’Hôtel de ville 25 : l’appli ne la compte qu’une fois'},{t:'300 000 fantassins niveau 5',icon:'t-swords',pct:40,sub:''}],
   budget:30,purchases:[['Pack de bâtisseur','3 oct.',9.99],['Abonnement mensuel','1er oct.',4.99],['Pack de ressources','1er oct.',9.99]],packSim:false,
   kd:'3401',tDays:['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'],tMoment:'soir',tLen:'30',
   marches:[{p:'Richard Ier',s:'Constantin Ier',type:'Infanterie',form:'Coin',eq:true},{p:'Guan Yu',s:'Baïbars',type:'Cavalerie',form:'Arc',eq:false},
@@ -150,26 +151,31 @@ function renderHome(){
   var oc=$('#objCard');oc.setAttribute('href',p.obj.href);$('#objFill').style.width=p.obj.pct+'%';
   $('#objText').innerHTML=S.active==='main'?('Reste : <b>Mur 24</b>, <b>Hôtel de ville 25</b> · '+(pl.miss?'il manque <b>'+fM(pl.miss)+' de pierre</b>':'<b class="ok">pierre couverte</b>')):
     (S.active==='f1'?(S.sent?'<b class="ok">'+fM(S.sent)+' de pierre envoyés</b> au Principal':'La Ferme 1 peut envoyer de la pierre au <b>Principal</b>'):'Reste : <b>Mur 18</b> · valeurs à renseigner');
-  // priorités
+  // priorités : actions triées par importance ; on garde celles qui tiennent dans le temps choisi (décision du 2026-10-08, note 5 de Mickaël)
   var L=[];
   if(S.active==='main'){
-    L.push(['#plan-c25','Lancer le Mur niveau 24','Dernier prérequis du Château 25 · '+fH(pl.mur)+(pl.acc>=pl.mur?', couverts par tes accélérateurs':''),2]);
-    L.push(pl.miss?['#fermes','Récupérer '+fM(pl.miss)+' de pierre','C’est ce qui manque au Château 25 · ta Ferme 1 peut l’envoyer',5]:['#plan-c25','Préparer l’Hôtel de ville 25','La pierre est couverte : il démarre juste après le Mur',2]);
-    if(S.time==='60')L.push(['#evenements','Entraîner des fantassins','Préparation KvK : il manque 95 000 troupes niveau 5',20]);
-    else L.push(['#depenser','Garder tes accélérateurs de recherche','Gouverneur le plus puissant dans 3 j : ils y rapportent des points',1]);
-    if(n)L.unshift(['#valeur-'+unknown(p)[0],'Renseigner : '+FIELDS[unknown(p)[0]].label,'Le plan en a besoin pour être juste',1]);
+    if(n)L.push(['#valeur-'+unknown(p)[0],'Renseigner : '+FIELDS[unknown(p)[0]].label,'Le plan en a besoin pour être juste',1]);
+    L.push(['#plan-c25','Lancer le Mur niveau 24','Dernier prérequis de l’Hôtel de ville 25 · '+fH(pl.mur)+(pl.acc>=pl.mur?', couverts par tes accélérateurs':''),2]);
+    L.push(pl.miss?['#fermes','Récupérer '+fM(pl.miss)+' de pierre','C’est ce qui manque à l’Hôtel de ville 25 · ta Ferme 1 peut l’envoyer',5]:['#plan-c25','Préparer l’Hôtel de ville 25','La pierre est couverte : il démarre juste après le Mur',2]);
+    L.push(['#depenser','Garder tes accélérateurs de recherche','Gouverneur le plus puissant dans 3 j : ils y rapportent des points',1]);
+    L.push(['#evenements','Aider ton alliance','Dons et aides : tes points d’alliance servent au KvK',3]);
+    L.push(['#ma-ville-inventaire','Envoyer tes marches libres récolter','Le bois est ta ressource la plus basse',10]);
+    L.push(['#evenements','Entraîner des fantassins niveau 5','Préparation KvK : il en manque 95 000',20]);
   }else if(S.active==='f1'){
-    L=[['#fermes','Envoyer de la pierre au Principal','Il manque '+fM(pl.miss)+' au Château 25',5],['#valeur-mur','Lancer le Mur niveau 22','Avec ton bonus de 25 %',2],['#ma-ville-inventaire','Récolter du bois','Ta ferme est sous la limite de pillage',S.time==='60'?30:10]];
+    L=[['#fermes','Envoyer de la pierre au Principal','Il manque '+fM(pl.miss)+' à l’Hôtel de ville 25',5],['#valeur-mur','Lancer le Mur niveau 22','Avec ton bonus de 25 %',2],
+       ['#ma-ville-inventaire','Récolter du bois','Ta ferme est sous la limite de pillage',10],['#ma-ville-inventaire','Récolter de la pierre avec une 2e marche','Pour le prochain envoi au Principal',10],['#evenements','Aider ton alliance','Dons et aides',3]];
   }else{
-    L=[['#ma-ville-progression','Renseigner tes valeurs',n+' valeurs manquantes',5],['#valeur-mur','Lancer le Mur niveau 18','',2],['#ma-ville-inventaire','Récolter de la nourriture','',S.time==='60'?30:10]];
+    L=[['#ma-ville-progression','Renseigner tes valeurs',n+' valeurs manquantes',5],['#valeur-mur','Lancer le Mur niveau 18','',2],['#ma-ville-inventaire','Récolter de la nourriture','',10],['#evenements','Aider ton alliance','',3]];
   }
-  /* Le temps choisi décide du nombre d'actions : chacune affiche sa durée, le total tient dans le temps choisi. */
-  var max=S.time==='10'?2:3,shown=L.slice(0,max);
-  $('#prioList').innerHTML=shown.map(function(x,i){return row({href:x[0],nb:i+1,title:esc(x[1]),sub:esc(x[2]),pill:pill('plan','≈ '+x[3]+' min')});}).join('');
+  var budget=+S.time,used=0,shown=[];
+  L.forEach(function(x){if(used+x[3]<=budget){shown.push(x);used+=x[3];}});
+  if(!shown.length)shown=[L[0]];
+  $('#prioList').innerHTML=shown.map(function(x,i){return row({href:x[0],nb:i+1,title:esc(x[1]),sub:esc(x[2]),pill:pill('plan','≈ '+x[3]+' min')});}).join('')+
+    '<p class="prio-sum">'+shown.length+' action'+(shown.length>1?'s':'')+' · ≈ '+used+' min sur '+(budget===60?'1 h':budget+' min')+'</p>';
   $$('#timeChips .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.time===S.time));});
   // à surveiller
   var W=[];
-  unknown(p).forEach(function(k){W.push(row({href:'#valeur-'+k,icon:'i-warn',title:esc(FIELDS[k].label)+' à renseigner',sub:k==='bonus'&&S.active==='main'?'Le plan Château 25 l’utilise pour calculer les durées':'Valeur inconnue : elle reste « — », jamais zéro'}));});
+  unknown(p).forEach(function(k){W.push(row({href:'#valeur-'+k,icon:'i-warn',title:esc(FIELDS[k].label)+' à renseigner',sub:k==='bonus'&&S.active==='main'?'Le plan Hôtel de ville 25 l’utilise pour calculer les durées':'Valeur inconnue : elle reste « — », jamais zéro'}));});
   if(S.active==='main'){
     S.marches.forEach(function(m,i){if(!m.eq)W.push(row({href:'#combat',icon:'i-shield2',title:'Marche '+(i+1)+' incomplète',sub:'Équipement du commandant secondaire inconnu'}));});
     if(!S.imported)W.push(row({href:'#import',icon:'n-camera',title:'Inventaire relevé il y a 6 jours',sub:'Un nouvel import rendra les priorités plus justes'}));
@@ -315,7 +321,7 @@ function renderOpt(){
   $('#optText').innerHTML=S.active==='main'?('<b>62 %</b> · encore <b>'+fH(pl.total)+'</b> de construction · '+(pl.miss?'il manque <b>'+fM(pl.miss)+' de pierre</b>':'<b class="ok">pierre couverte</b>')):
     (S.active==='f1'?'Ta ferme sert à envoyer de la pierre au Principal.':'Monte ton Mur puis ton Hôtel de ville.');
   $('#goalList').innerHTML=S.goals.map(function(g,i){return row({icon:g.icon,title:esc(g.t),sub:esc(g.sub),val:g.pct+' %',act:'goal',data:i,go:false});}).join('');
-  $('#toolRes').textContent=S.reserved?'Ressources réservées pour le Château 25':'Mettre de côté pour un objectif';
+  $('#toolRes').textContent=S.reserved?'Ressources réservées pour l’Hôtel de ville 25':'Mettre de côté pour un objectif';
   if(!P.main)return;
   // plan
   $('#accBuildTile').className='tv '+(pl.acc>=pl.total?'ok':'ko');
@@ -338,9 +344,9 @@ function renderSpend(){
   var T={research:['recherche','Tissage','Recherche terminée'],build:['construction','Mur 24','Mur terminé'],train:['entraînement','fantassins niveau 5','Troupes prêtes']}[S.spType];
   var d=S.spDays;$('#spTitle').textContent='Utiliser '+d+' jour'+(d>1?'s':'')+' d’accélérateurs de '+T[0]+' ?';$('#spDaysV').textContent=d+' j';
   var pts=nb(d*30000);
-  $('#spA').innerHTML='<li><span>'+T[2]+'</span><b>8 oct.</b></li><li><span>Points d’événement</span><b>0</b></li><li><span>Château 25</span><b>'+(S.spType==='build'?'<span class="ok">avance</span>':'inchangé')+'</b></li>';
-  $('#spB').innerHTML='<li><span>'+T[2]+'</span><b>11 oct.</b></li><li><span>Points d’événement</span><b class="ok">≈ '+pts+'</b></li><li><span>Château 25</span><b>'+(S.spType==='build'?'<span class="ko">3 jours de retard</span>':'inchangé')+'</b></li>';
-  $('#spAdvice').innerHTML=S.spType==='build'?'<b>Dépenser maintenant.</b> Le Mur est sur le chemin du Château 25 : attendre le retarderait de 3 jours pour ≈ '+pts+' points. Ce que l’appli ne sait pas : les récompenses exactes de cette édition.':
+  $('#spA').innerHTML='<li><span>'+T[2]+'</span><b>8 oct.</b></li><li><span>Points d’événement</span><b>0</b></li><li><span>Hôtel de ville 25</span><b>'+(S.spType==='build'?'<span class="ok">avance</span>':'inchangé')+'</b></li>';
+  $('#spB').innerHTML='<li><span>'+T[2]+'</span><b>11 oct.</b></li><li><span>Points d’événement</span><b class="ok">≈ '+pts+'</b></li><li><span>Hôtel de ville 25</span><b>'+(S.spType==='build'?'<span class="ko">3 jours de retard</span>':'inchangé')+'</b></li>';
+  $('#spAdvice').innerHTML=S.spType==='build'?'<b>Dépenser maintenant.</b> Le Mur est sur le chemin de l’Hôtel de ville 25 : attendre le retarderait de 3 jours pour ≈ '+pts+' points. Ce que l’appli ne sait pas : les récompenses exactes de cette édition.':
     '<b>Attendre 3 jours.</b> Le Gouverneur le plus puissant commence le 11 oct. (date confirmée) et l’'+T[0]+' y rapporte ≈ '+pts+' points ; elle ne bloque aucun de tes objectifs. Ce que l’appli ne sait pas : les récompenses exactes de cette édition.';
   $$('#spType .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.sp===S.spType));});
 }
@@ -349,7 +355,7 @@ function renderBudget(){
   $('#budTxt').textContent=tot.toFixed(2).replace('.',',')+' € sur '+S.budget+' €';$('#budFill').style.width=pct+'%';
   $('#budFill').style.background=tot>S.budget?'linear-gradient(110deg,#c0503a,#ef8a74)':'';
   $('#budList').innerHTML=S.purchases.map(function(x,i){return row({icon:'p-pack',title:esc(x[0]),sub:x[1],val:x[2].toFixed(2).replace('.',',')+' €',act:'del-purchase',data:i,go:false});}).join('')+(tot>S.budget?'<div class="note" style="margin-top:4px">'+ic('i-warn')+'<span>Budget dépassé de '+(tot-S.budget).toFixed(2).replace('.',',')+' €.</span></div>':'');
-  $('#packFx').innerHTML=S.packSim?'Effet sur ton plan : <b class="ok">Château 25 atteint 6 jours plus tôt</b>, plus de pierre manquante. Budget après achat : <b>'+(tot+9.99).toFixed(2).replace('.',',')+' € sur '+S.budget+' €</b>.':'Simule-le pour voir son effet sur ton plan et ton budget.';
+  $('#packFx').innerHTML=S.packSim?'Effet sur ton plan : <b class="ok">Hôtel de ville 25 atteint 6 jours plus tôt</b>, plus de pierre manquante. Budget après achat : <b>'+(tot+9.99).toFixed(2).replace('.',',')+' € sur '+S.budget+' €</b>.':'Simule-le pour voir son effet sur ton plan et ton budget.';
   $('#packBtn').textContent=S.packSim?'Arrêter la simulation':'Simuler ce pack';
 }
 function renderFarms(){
@@ -426,7 +432,10 @@ function compCheck(){
 
 /* ================= Événements, bilan, codes, plus ================= */
 function renderEvents(){
-  $('#evList').innerHTML=EVENTS.map(function(e){var on=S.reminders[e[0]];return row({act:'remind',data:e[0],icon:e[1],title:e[2],sub:e[3]+(on?' · rappel activé':''),pill:on?pill('ok','Rappel'):pill(e[4],e[5]),go:false});}).join('');
+  /* Rappel : un bouton explicite « Me prévenir » (note 7 de Mickaël, 2026-10-09). Une date inconnue ne permet pas de rappel. */
+  $('#evList').innerHTML=EVENTS.map(function(e){var on=S.reminders[e[0]],can=e[4]==='ok'||e[5]==='Date estimée';
+    return '<div class="row ev-row"><span class="ri">'+ic(e[1])+'</span><span class="rc"><b>'+e[2]+'</b><small>'+e[3]+(can?' · '+pill(e[4],e[5]):' · pas de rappel possible')+'</small></span>'+
+      (can?'<button class="btn sm ev-rem'+(on?' on':'')+'" type="button" data-act="remind" data-arg="'+e[0]+'" aria-pressed="'+!!on+'">'+ic('i-bell')+(on?'Rappel activé':'Me prévenir')+'</button>':'')+'</div>';}).join('');
   var full=S.marches.filter(function(m){return m.eq;}).length;var t5=P.main.troops[0][3]+P.main.troops[1][3];
   var K=[[true,'Accélérateurs de soins','3 j 4 h · objectif 3 j','#ma-ville-inventaire'],[t5>=300000,'Troupes niveau 5',nb(t5)+' · objectif 300 000','#ma-ville-progression'],
     [full===4,'Marches complètes',full+' sur 4'+(full<4?' · une marche incomplète':''),'#combat'],[true,'Ressources pour soigner','Couvertes par tes réserves',null]];
@@ -435,10 +444,10 @@ function renderEvents(){
 }
 function renderBilan(){
   var w=S.bil==='7';
-  var L=w?[['i-bolt','Puissance','+2,1 M','ok'],['i-temple','Académie 23 → 24','+1','ok'],['r-stone','Pierre','−6 M','ko'],['i-target','Château 25','+8 %','ok']]:
-    [['i-bolt','Puissance','+7,8 M','ok'],['i-temple','Académie 22 → 24','+2','ok'],['t-swords','Caserne 22 → 23','+1','ok'],['r-stone','Pierre','−11 M','ko'],['i-target','Château 25','+21 %','ok']];
+  var L=w?[['i-bolt','Puissance','+2,1 M','ok'],['i-temple','Académie 23 → 24','+1','ok'],['r-stone','Pierre','−6 M','ko'],['i-target','Hôtel de ville 25','+8 %','ok']]:
+    [['i-bolt','Puissance','+7,8 M','ok'],['i-temple','Académie 22 → 24','+2','ok'],['t-swords','Caserne 22 → 23','+1','ok'],['r-stone','Pierre','−11 M','ko'],['i-target','Hôtel de ville 25','+21 %','ok']];
   $('#bilList').innerHTML=L.map(function(x){return row({icon:x[0],title:x[1],val:x[2],valCls:x[3]});}).join('');
-  $('#bilNotes').innerHTML='<div class="note">'+ic('n-info')+'<span>'+(w?'Aucun relevé du 1er au 3 oct. : l’appli ne sait pas ce qui s’est passé ces jours-là.':'3 périodes sans relevé ce mois-ci (6 jours au total) : elles ne sont pas reconstituées.')+'</span></div><div class="note" style="margin-top:8px">'+ic('i-warn')+'<span>'+(plan().miss?'Blocage : la pierre manque pour l’Hôtel de ville 25.':'Plus de blocage : la pierre du Château 25 est couverte.')+'</span></div>';
+  $('#bilNotes').innerHTML='<div class="note">'+ic('n-info')+'<span>'+(w?'Aucun relevé du 1er au 3 oct. : l’appli ne sait pas ce qui s’est passé ces jours-là.':'3 périodes sans relevé ce mois-ci (6 jours au total) : elles ne sont pas reconstituées.')+'</span></div><div class="note" style="margin-top:8px">'+ic('i-warn')+'<span>'+(plan().miss?'Blocage : la pierre manque pour l’Hôtel de ville 25.':'Plus de blocage : la pierre de l’Hôtel de ville 25 est couverte.')+'</span></div>';
   $$('#bilPer .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.v===S.bil));});
 }
 function renderCodes(){
@@ -631,11 +640,11 @@ var ACT={
   'import-save':importSave,'import-reset':importReset,
   'add-goal':function(){openSheet('Nouvel objectif','<div class="fld"><label>Type</label><div class="chips" data-single id="ngType"><button class="chip" type="button" aria-pressed="true">Bâtiment</button><button class="chip" type="button" aria-pressed="false">Recherche</button><button class="chip" type="button" aria-pressed="false">Troupes</button></div></div><div class="fld"><label for="ngName">Objectif</label><input id="ngName" placeholder="Ex. Hôpital 25"><small class="ferr" id="ngErr" hidden></small></div>',[['Annuler','close-sheet',''],['Ajouter','save-goal','primary']]);},
   'save-goal':function(){var n=$('#ngName').value.trim();if(!n){var e=$('#ngErr');e.textContent='Décris ton objectif.';e.hidden=false;return;}var t=$('#ngType .chip[aria-pressed="true"]').textContent;
-    S.goals.push({t:n,icon:{'Bâtiment':'i-hall','Recherche':'t-flask','Troupes':'t-swords'}[t],pct:0,sub:'Ressources partagées avec le Château 25 : comptées une seule fois'});closeSheet();say('Objectif ajouté.');renderOpt();},
-  goal:function(i){var g=S.goals[i];openSheet(g.t,'<p class="shp">Avancement : <b>'+g.pct+' %</b>.</p><p class="shp muted">Le détail d’un objectif suit le même modèle que le plan Château 25 (prévu, AJ-07).</p>',[['Supprimer l’objectif','del-goal','danger',i],['Fermer','close-sheet','primary']]);},
+    S.goals.push({t:n,icon:{'Bâtiment':'i-hall','Recherche':'t-flask','Troupes':'t-swords'}[t],pct:0,sub:'Ressources partagées avec l’Hôtel de ville 25 : comptées une seule fois'});closeSheet();say('Objectif ajouté.');renderOpt();},
+  goal:function(i){var g=S.goals[i];openSheet(g.t,'<p class="shp">Avancement : <b>'+g.pct+' %</b>.</p><p class="shp muted">Le détail d’un objectif suit le même modèle que le plan Hôtel de ville 25 (prévu, AJ-07).</p>',[['Supprimer l’objectif','del-goal','danger',i],['Fermer','close-sheet','primary']]);},
   'del-goal':function(i){S.goals.splice(i,1);closeSheet();renderOpt();say('Objectif supprimé.');},
   'save-plan':function(){S.planSaved=true;renderOpt();say('Plan enregistré.');},
-  reserve:function(){S.reserved=!S.reserved;renderOpt();say(S.reserved?'Ressources réservées pour le Château 25. Rien ne change dans le jeu.':'Réservation annulée.');},
+  reserve:function(){S.reserved=!S.reserved;renderOpt();say(S.reserved?'Ressources réservées pour l’Hôtel de ville 25. Rien ne change dans le jeu.':'Réservation annulée.');},
   'add-purchase':function(){openSheet('Ajouter un achat','<div class="fld"><label for="apName">Achat</label><input id="apName" placeholder="Ex. Pack de gemmes"></div><div class="fld"><label for="apPrice">Prix (€)</label><input id="apPrice" inputmode="decimal" placeholder="Ex. 4,99"><small class="ferr" id="apErr" hidden></small></div>',[['Annuler','close-sheet',''],['Ajouter','save-purchase','primary']]);},
   'save-purchase':function(){var n=$('#apName').value.trim()||'Achat',pr=Number($('#apPrice').value.replace(',','.'));if(!(pr>0)){var e=$('#apErr');e.textContent='Saisis un prix, par exemple 4,99.';e.hidden=false;return;}S.purchases.unshift([n,'8 oct.',pr]);closeSheet();renderBudget();say('Achat ajouté.');},
   'del-purchase':function(i){var x=S.purchases[i];openSheet(x[0],'<p class="shp">'+x[2].toFixed(2).replace('.',',')+' € · '+x[1]+'</p>',[['Retirer cet achat','rm-purchase','danger',i],['Fermer','close-sheet','primary']]);},
@@ -654,7 +663,7 @@ var ACT={
   eq:function(i){var e=EQ[i];openSheet(e[1],'<p class="shp"><span class="'+e[2]+'">'+e[3]+'</span></p><ul class="kvl">'+e[4].map(function(x){return '<li><span>'+x[0]+'</span><b>'+x[1]+'</b></li>';}).join('')+'</ul>',[['Fermer','close-sheet','primary']]);},
   form:function(k){S.form=k;renderCity();},
   rep:function(i){S.rep=+i;renderCombat();},
-  remind:function(k){S.reminders[k]=!S.reminders[k];renderEvents();say(S.reminders[k]?'Rappel activé.':'Rappel retiré.');},
+  remind:function(k){S.reminders[k]=!S.reminders[k];renderEvents();var e=EVENTS.filter(function(x){return x[0]===k;})[0];say(S.reminders[k]?'Rappel activé : une notification te préviendra au début de « '+e[2]+' » ('+e[3]+').':'Rappel retiré : tu ne seras pas prévenu.');},
   switch:function(k){if(!P[k])return;S.active=k;location.hash='accueil';say('Profil actif : '+P[k].name+'.');},
   eye:function(id){var i=$('#'+id),b=i.nextElementSibling;var show=i.type==='password';i.type=show?'text':'password';b.innerHTML=show?EYEOFF:EYE;b.setAttribute('aria-label',show?'Masquer le mot de passe':'Afficher le mot de passe');},
   'sheet-email':function(){openSheet('Adresse e-mail','<div class="fld"><label for="em">Nouvelle adresse e-mail</label><input id="em" type="email" value="'+esc(S.email)+'"><small class="ferr" id="emErr" hidden></small></div>',[['Annuler','close-sheet',''],['Enregistrer','save-email','primary']]);},

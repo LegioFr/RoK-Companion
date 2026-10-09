@@ -48,7 +48,7 @@ window.RC_TESTS=[
   ['n1','Écris « abc » dans les deux champs, puis « Enregistrer ».','« Au moins 8 caractères. »'],
   ['n2','Écris deux mots de passe différents.','« Les mots de passe ne correspondent pas. »'],
   ['n3','Touche les deux yeux.','Chacun affiche ou masque son champ.'],
-  ['n4','Enregistre un bon mot de passe (ex. nouveau123), écrit deux fois.','Tu arrives connecté sur l’Accueil avec « Nouveau mot de passe enregistré. »'],
+  ['n4','Enregistre un bon mot de passe (ex. nouveau123), écrit deux fois.','Tu arrives connecté sur l’Accueil ; en bas, le message « Nouveau mot de passe enregistré. » reste quelques secondes.',null,17,'Les messages restent plus longtemps à l’écran'],
   ['n5','Connecte-toi avec gouverneur@exemple.fr et l’ancien mot de passe rok12345, puis avec le nouveau.','L’ancien est refusé, le nouveau marche.',['out','#connexion']]
  ]},
  {g:'Accueil sans profil',p:['vide','#accueil'],l:[
@@ -80,7 +80,7 @@ window.RC_TESTS=[
  ]},
  {g:'Priorités du jour',p:['demo:main','#accueil'],l:[
   ['r1','Lis la ligne « Combien de temps as-tu pour jouer ? ».','Tu comprends sans aide à quoi servent 10 min, 30 min et 1 h.'],
-  ['r2','Touche 10 min, puis 30 min, puis 1 h.','10 min : 2 actions ; 30 min : 3 ; 1 h : la 3e change (Entraîner des fantassins). Chaque action affiche sa durée.'],
+  ['r2','Touche 10 min, puis 30 min, puis 1 h.','Plus tu as de temps, plus il y a d’actions : 4 en 10 min, 6 en 30 min, 7 en 1 h (dont « Entraîner des fantassins »). Chaque action a sa durée et le total s’affiche sous la liste (ex. « 7 actions · ≈ 42 min sur 1 h »).',null,17,'Le nombre d’actions dépend du temps choisi (ta note 5)'],
   ['r3','Touche chaque priorité, puis reviens.','Chacune ouvre l’écran qui permet de la faire.'],
   ['r4','Regarde les priorités de Ferme 1, puis de Ferme 2.','Elles sont propres à chaque profil.',['demo:f1','#accueil']]
  ]},
@@ -98,10 +98,10 @@ window.RC_TESTS=[
   ['a5','Compare le nombre « à renseigner » et la pastille sur Ma ville dans le menu.','C’est le même nombre.',['demo:main','#accueil']]
  ]},
  {g:'Objectif, événements, semaine',p:['demo:main','#accueil'],l:[
-  ['e1','Touche la carte « Objectif en cours ».','Le plan Château 25 s’ouvre.'],
+  ['e1','Touche la carte « Objectif en cours ».','Le plan s’ouvre, avec le titre « Hôtel de ville 25 ».',null,17,'« Château 25 » devient « Hôtel de ville 25 » (ta note 6)'],
   ['e2','Avec Ferme 1, touche « Objectif en cours ».','L’écran Fermes s’ouvre.',['demo:f1','#accueil']],
   ['e3','Touche chaque événement, puis « Calendrier › ».','Chacun ouvre Événements.',['demo:main','#accueil']],
-  ['e4','Touche un événement, puis touche-le encore.','Rappel activé (pastille « Rappel »), puis retiré.',['demo:main','#evenements']],
+  ['e4','Touche « Me prévenir » sur « Gouverneur le plus puissant », puis touche à nouveau le bouton.','Le bouton devient « Rappel activé » (vert) et un message dit quand tu seras prévenu ; au 2e appui, le rappel est retiré. « Fête de la moisson » (date inconnue) n’a pas de bouton : « pas de rappel possible ».',['demo:main','#evenements'],17,'Bouton « Me prévenir » au lieu de « rappel activé » (ta note 7)'],
   ['e5','Touche « Ma semaine ».','Le Bilan s’ouvre.',['demo:main','#accueil']],
   ['e6','Dans Bilan, touche 30 jours puis 7 jours.','Les chiffres changent ; une période sans relevé est signalée.'],
   ['e7','Touche « ‹ Accueil » depuis Bilan, puis depuis Événements.','Retour à l’Accueil à chaque fois.']
