@@ -60,7 +60,8 @@ window.RC_JEU={
     source:'wiki riseofkingdoms.fandom.com (pages « Buildings », lues le 9 oct. 2026)',
     groupes:[['Économique',['ferme','scierie','carriere','mine','academie','entrepot','alliance','comptoir']],
       ['Militaire',['caserne','tir','ecurie','siege','hopital','eclaireurs','taverne','chateau']],
-      ['Autres',['mur','tourguet']]],
+      ['Autres',['mur','tourguet']],
+      ['Saison de KvK',['forum','minecristal','cristalrech'],'Bâtiments de la saison en cours. La mine et le centre de recherche de cristal sont retirés à la fin de la saison (guides de joueurs, non officiel).']],
     instances:{ferme:[1,3,6,9],scierie:[2,5,8,11],carriere:[1,7,10,13],mine:[10,12,14,16],hopital:[1,4,9,15]}
   },
   /* Réinitialisation quotidienne : 2 h du matin heure de France (Mickaël, 9 oct. 2026), soit minuit UTC. */

@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=37,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=38,VERSION='v'+VNUM+' · 9 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -32,7 +32,8 @@ var CHANGES={
   'inscription':[{sel:'[data-auth="inscription"] .a-signup',t:'« Déjà un compte ? » retiré, comme sur « Se connecter ».'},{sel:'[data-auth="inscription"]',t:'Même taille de carte que « Se connecter » (ta note 3).'}],
   'confirmation':[{sel:'[data-auth="confirmation"] .a-intro',t:'« Un e-mail de confirmation t’a été envoyé. » (ta note 4).'}],
   'nouveau-mot-de-passe':[{sel:'[data-auth="nouveau-mot-de-passe"]',t:'Écran ajouté, repris de B01-05. Après « Enregistrer », tu es connecté.'}],
-  'ma-ville-progression':[{sel:'#pgHero',t:'Écran refait, plus propre (ta demande) : l’Hôtel de ville et son prochain niveau en haut (ce qu’il manque, coût, durée), puis des tuiles au lieu de longues lignes.'},
+  'ma-ville-progression':[{sel:'#gBld .bgrp.saison',t:'Nouveau groupe « Saison de KvK » (ton choix) : Forum d’état, Mine de cristal, Centre de recherche de cristal. Jamais comptés « à renseigner » ; les deux bâtiments de cristal sont signalés « retiré en fin de saison ».'},
+    {sel:'#pgHero',t:'Écran refait, plus propre (ta demande) : l’Hôtel de ville et son prochain niveau en haut (ce qu’il manque, coût, durée), puis des tuiles au lieu de longues lignes.'},
     {sel:'#gBld',t:'Tous les bâtiments à niveau du jeu, rangés comme dans le jeu (Économique, Militaire, Autres) : ajout des fermes, moulins à bois, carrières, mines d’or et hôpitaux (4 chacun, un niveau par exemplaire), du château, de la taverne et de la tour de guet. Un prérequis manquant est entouré d’or.'},
     {sel:'#gBld',t:'Noms du jeu repris de tes captures : Réserve (et non Entrepôt), Moulin à bois, Comptoir, Centre d’alliance, Champ de tir à l’arc, Atelier d’armes de siège. Les « ° » ont disparu : tous les noms sont vérifiés.'},
     {sel:'[data-screen="ma-ville"] [data-sync]',t:'Le faux « Synchronisé » est remplacé par le vrai état : « Enregistré », « Enregistrement… » ou « En attente d’envoi » dans ta version réelle, « Exemples, non enregistrés » ici.'},

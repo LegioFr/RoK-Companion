@@ -41,7 +41,7 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   const cols=await ev(p,()=>getComputedStyle(document.querySelector('#gBld .btiles')).gridTemplateColumns.split(' ').length);
   ok('Bâtiments en 4 colonnes de tuiles à 1028 px',cols===4,String(cols));
   ok('Carte de l’Hôtel de ville (Principal)',/Vers le niveau 25 Il te manque : Mur 24\./.test(await txt(p,'#pgHero')||''),await txt(p,'#pgHero .hh-t'));
-  ok('18 bâtiments à niveau (plus l’Hôtel de ville) en 3 groupes',(await ev(p,()=>[document.querySelectorAll('#gBld .btile').length,document.querySelectorAll('#gBld .bgrp').length].join('/')))==='18/3');
+  ok('18 bâtiments à niveau (plus l’Hôtel de ville) en 3 groupes, et 3 de saison',(await ev(p,()=>[document.querySelectorAll('#gBld .btile').length,document.querySelectorAll('#gBld .bgrp').length,document.querySelectorAll('#gBld .bgrp.saison .btile').length].join('/')))==='21/4/3');
   ok('Prérequis manquant entouré (Mur)',(await ev(p,()=>[...document.querySelectorAll('#gBld .btile.manque')].map(a=>a.getAttribute('href')).join(',')))==='#valeur-mur');
   await p.click('#gBld a[href="#valeur-comptoir"]');await p.waitForTimeout(300);ok('Comptoir ouvre sa valeur',(await txt(p,'#valTitle'))==='Comptoir');
   await etat(p,'demo','#valeur-ferme');ok('Fermes : 4 niveaux',(await txt(p,'#valBig'))==='24 · 24 · 23 · 22');

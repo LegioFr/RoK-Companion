@@ -618,3 +618,7 @@ button.more{border:0;background:none;cursor:pointer;font-family:inherit;min-heig
 .pg-plus>.sec{margin-top:0}
 .pg-plus{margin-top:24px}
 @media(min-width:700px){.inv-grid.deux{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Groupe « Saison de KvK » (choix de Mickaël du 2026-10-09) */
+.bgrp-n{margin:-4px 0 10px;color:var(--muted);font-size:12px;line-height:1.45}
+.bgrp.saison h3{color:var(--blue)}
+.btile.saison .bt-s{color:var(--muted);font-weight:400}

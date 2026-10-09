@@ -47,7 +47,10 @@ var FIELDS={
   chateau:{label:'Château',icon:'i-castle',kind:'lvl',grp:'bld'},taverne:{label:'Taverne',icon:'i-house',kind:'lvl',grp:'bld'},
   tourguet:{label:'Tour de guet',icon:'i-keep',kind:'lvl',grp:'bld'},
   ferme:{label:'Ferme',pl:'Fermes',icon:'r-food',kind:'multi',n:4,grp:'bld'},scierie:{label:'Moulin à bois',pl:'Moulins à bois',icon:'r-wood',kind:'multi',n:4,grp:'bld'},
-  carriere:{label:'Carrière',pl:'Carrières',icon:'r-stone',kind:'multi',n:4,grp:'bld'},mine:{label:'Mine d’or',pl:'Mines d’or',icon:'r-gold',kind:'multi',n:4,grp:'bld'}
+  carriere:{label:'Carrière',pl:'Carrières',icon:'r-stone',kind:'multi',n:4,grp:'bld'},mine:{label:'Mine d’or',pl:'Mines d’or',icon:'r-gold',kind:'multi',n:4,grp:'bld'},
+  /* Bâtiments de saison de KvK (choix 2 de Mickaël, 2026-10-09) : jamais comptés « à renseigner » ; fin : retirés en fin de saison (guides, non officiel) */
+  forum:{label:'Forum d’état',icon:'n-scroll',kind:'lvl',grp:'bld',saison:1},minecristal:{label:'Mine de cristal',icon:'n-ore',kind:'lvl',grp:'bld',saison:1,fin:1},
+  cristalrech:{label:'Centre de recherche de cristal',icon:'t-flask',kind:'lvl',grp:'bld',saison:1,fin:1}
 };
 var KIND={lvl:['Niveau','Nouveau niveau'],count:['Nombre','Nouveau nombre'],pct:['Bonus (en %)','Nouveau bonus (en %)'],civ:['Civilisation','Nouvelle civilisation'],multi:['Niveaux','Nouveaux niveaux']};
 /* Valeur d'un bâtiment en plusieurs exemplaires : tableau d'un niveau par exemplaire (null = pas renseigné). */
@@ -65,7 +68,8 @@ var P={
   main:mkProfile({name:'Principal',type:'Principal',icon:'i-crown',kd:'#3567',pid:'123456789',power:'128,4 M',kills:'412,8 M',deaths:'5,6 M',gems:'185 430',ap:'6 250',
     tr:['▲ +2,1 M (7j)','▲ +12,4 M (7j)','▲ +320 K (7j)'],releves:214,corr:12,snaps:6,
     v:{hdv:24,vip:17,builders:2,bonus:null,civ:'France',mur:23,academie:24,caserne:23,ecurie:22,tir:22,hopital:[23,22,22,21],siege:null,entrepot:22,eclaireurs:22,alliance:24,comptoir:24,
-      chateau:22,taverne:21,tourguet:20,ferme:[24,24,23,22],scierie:[24,23,23,22],carriere:[23,22,21,21],mine:[22,21,20,19]},
+      chateau:22,taverne:21,tourguet:20,ferme:[24,24,23,22],scierie:[24,23,23,22],carriere:[23,22,21,21],mine:[22,21,20,19],
+      forum:6,minecristal:4,cristalrech:3},
     research:[['Économie',68],['Militaire',54]],troops:[['Infanterie','t-swords',5,120000],['Cavalerie','n-horseshoe',5,85000],['Archers','n-bow',4,210000],['Siège','n-catapult',4,40000]],
     /* Exemples : tailles de caisses et durées d'accélérateurs du jeu (étude B03 du 6 oct. 2026) ; les nombres sont inventés */
     res:{food:{v:32,c:[['500 000',18,.5],['150 000',32,.15],['50 000',44,.05]]},wood:{v:27,c:[['500 000',16,.5],['150 000',28,.15],['50 000',36,.05]]},
@@ -234,7 +238,7 @@ function pillage(p){var lv=p.v.entrepot,pr=lv!=null&&JEU.entrepot.niveaux[lv];if
 function A(){return P[S.active];}
 function resTot(r){if(!r||(r.v==null&&!(r.c&&r.c.length)))return null;return (r.v||0)+r.c.reduce(function(a,c){return a+c[1]*c[2];},0);}
 function accTot(a){if(!a||!a.length)return 0;return a.reduce(function(s,x){return s+x[1]*x[2];},0);}
-function unknown(p){return Object.keys(FIELDS).filter(function(k){return isMulti(k)?vide4(p.v[k]):p.v[k]==null;});}
+function unknown(p){return Object.keys(FIELDS).filter(function(k){return !FIELDS[k].saison&&(isMulti(k)?vide4(p.v[k]):p.v[k]==null);});}
 function bonusMain(){return P.main?P.main.v.bonus:null;}
 function plan(){var m=P.main;var b=m&&m.v.bonus!=null?m.v.bonus:0;var f=1+b/100;var mur=98/f,hdv=244/f;
   var recv=Math.round(S.sent*0.82*10)/10;var miss=Math.max(0,Math.round((4.2-recv)*10)/10);
@@ -393,7 +397,7 @@ function heroHtml(p){
 function tuile(p,k,manque){var f=FIELDS[k],v=p.v[k],val=v,sub='',cls='';
   if(isMulti(k)){var L=(v||[]).filter(function(x){return x!=null;});val=L.length?Math.max.apply(null,L):null;
     if(L.length){var mi=Math.min.apply(null,L);sub=L.length<f.n?L.length+' sur '+f.n+' renseignés':mi===val?f.n+' au niveau '+val:'niveaux '+mi+' à '+val;}}
-  if(val==null){cls=' vide';sub='à renseigner';}else if(f.kind==='pct')val=String(val).replace('.',',')+' %';
+  if(val==null){cls=f.saison?' vide saison':' vide';sub=f.saison?'si tu l’as construit':'à renseigner';}else{if(f.kind==='pct')val=String(val).replace('.',',')+' %';if(f.fin)sub='retiré en fin de saison';}
   if(manque){cls+=' manque';sub='niveau '+manque+' requis';}
   return '<a class="btile'+cls+'" href="#valeur-'+k+'"><span class="bt-i">'+ic(f.icon)+'</span><span class="bt-v'+(f.kind==='civ'&&val!=null?' txt':'')+'">'+(val==null?'—':esc(val))+'</span>'+
     '<span class="bt-n">'+esc(isMulti(k)?f.pl:(f.court||f.label))+'</span>'+(sub?'<span class="bt-s">'+sub+'</span>':'')+'</a>';}
@@ -463,8 +467,8 @@ function renderCity(){
     $('#gBld').innerHTML='<div class="list">'+BLD.map(function(k){return qrow(p,k);}).join('')+'</div>';}
   else{$('#gSet').innerHTML='<div class="btiles">'+SET.filter(function(k){return k!=='hdv';}).map(function(k){return tuile(p,k);}).join('')+'</div>';
     $('#gBld').innerHTML=(JEU.batiments?JEU.batiments.groupes:[['Bâtiments',BLD]]).map(function(g){var L=g[1].filter(function(k){return FIELDS[k];});
-      return '<div class="bgrp"><h3>'+g[0]+'</h3><div class="btiles">'+L.map(function(k){return tuile(p,k,MAN[k]);}).join('')+'</div></div>';}).join('');}
-  var nu=BLD.filter(function(k){return isMulti(k)?vide4(p.v[k]):p.v[k]==null;}).length;
+      return '<div class="bgrp'+(g[2]?' saison':'')+'"><h3>'+g[0]+'</h3>'+(g[2]?'<p class="bgrp-n">'+g[2]+'</p>':'')+'<div class="btiles">'+L.map(function(k){return tuile(p,k,MAN[k]);}).join('')+'</div></div>';}).join('');}
+  var nu=BLD.filter(function(k){return !FIELDS[k].saison&&(isMulti(k)?vide4(p.v[k]):p.v[k]==null);}).length;
   $('#bldCount').textContent=nu?nu+' à renseigner':'Tous renseignés';
   $('#bldNote').textContent='Les bâtiments sans niveau (forgeron, magasin, monument…) ne sont pas suivis.';
   $('#quickBar').innerHTML=S.quick?'<div class="qbar"><span id="qCount">Saisie rapide</span><div class="chips" data-single id="qMotif" hidden><button class="chip" type="button" aria-pressed="true">Changé en jeu</button><button class="chip" type="button" aria-pressed="false">Erreur de saisie</button><button class="chip" type="button" aria-pressed="false">Autre</button></div><div class="btns" style="margin-top:0"><button class="btn" type="button" data-act="quick-cancel">Annuler</button><button class="btn primary" type="button" data-act="quick-save">Enregistrer</button></div></div>':'';
