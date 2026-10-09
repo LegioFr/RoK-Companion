@@ -611,7 +611,7 @@ function importSave(){
   $('#resText').textContent=(S.q.q3==='ok'?'1 correction avec un motif. Les anciennes valeurs restent dans l’historique. ':'')+(skipped?skipped+' élément'+(skipped>1?'s':'')+' non vérifié'+(skipped>1?'s':'')+' : pas enregistré'+(skipped>1?'s':'')+'.':'');
   showStep(4);refreshAll();
 }
-function importReset(){S.shots=[];S.lect=null;S.q={q1:null,q2:null,q3:null};S.sureOk=false;$$('.q .chip').forEach(function(c){c.setAttribute('aria-pressed','false');});renderShots();renderReview();showStep(1);}
+function importReset(){S.shots=[];S.lect=null;S.lectJob=null;S.q={q1:null,q2:null,q3:null};S.sureOk=false;$$('.q .chip').forEach(function(c){c.setAttribute('aria-pressed','false');});renderShots();renderReview();showStep(1);}
 
 /* Maquette publiée : les captures y sont lues par Claude (fonctions /api/capture et /api/lire). */
 var SITE_PUB=/\.vercel\.app$/.test(location.hostname)||!!window.RC_SITE;
@@ -641,12 +641,15 @@ function lectNom(it){
 function lectIcone(it){if(it.kind==='acc')return it.type?(AN.filter(function(x){return x[0]===it.type;})[0]||[,'a-general'])[1]:'a-general';
   if(it.type==='gems')return 'r-gem';return (RN.filter(function(x){return x[0]===it.type;})[0]||[,'r-food'])[1];}
 /* Regroupe les lectures des captures en éléments à enregistrer */
+/* Regroupe les lectures des captures en éléments à enregistrer. L[i] = lecture de la capture i (ou rien si elle a échoué),
+   avec r._i (numéro de la capture) et r._t (heure de la capture, d'après le fichier). */
+function lectHeure(t){return t?new Date(t).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}):'';}
 function lectRegrouper(L,erreurs,n){
-  var items=[],par={},pasPris=0,coupees=[],onglets={},vu=0,barre=null;
-  function ajoute(it){var k=it.kind+'|'+(it.type||'?')+'|'+it.val+(it.type?'':'|'+it.qte);var o=par[k];
-    if(o){if(o.qte!==it.qte&&it.qte!=null){o.sur=false;o.raison='Lu deux fois avec des nombres différents : '+nb(o.qte)+' et '+nb(it.qte);}return;}
-    it.id='l'+items.length;par[k]=it;items.push(it);}
-  L.forEach(function(r){var R=r.resultat;if(!R)return;onglets[R.onglet]=1;if(!barre&&R.barre)barre=R.barre;
+  var items=[],par={},pasPris=0,coupees=[],onglets={},vu=0,barres=[];
+  function ajoute(it,lu){var k=it.kind+'|'+(it.type||'?')+'|'+it.val+(it.type?'':'|'+it.qte);var o=par[k];
+    if(o){o.lus.push(lu);return;}
+    it.id='l'+items.length;it.lus=[lu];par[k]=it;items.push(it);}
+  L.forEach(function(r){if(!r||!r.resultat)return;var R=r.resultat,lu0={i:r._i,t:r._t};onglets[R.onglet]=1;if(R.barre)barres.push({b:R.barre,i:r._i,t:r._t});
     (R.cases||[]).forEach(function(c){vu++;
       if(R.onglet!=='Ressources'&&R.onglet!=='Accélérateurs'){pasPris++;return;}
       var f=lectFamille(c.objet);if(R.onglet==='Accélérateurs'&&f[0]!=='acc')f=['acc',null];/* onglet Accélérateurs : un objet pas reconnu est un accélérateur de type inconnu */
@@ -660,13 +663,25 @@ function lectRegrouper(L,erreurs,n){
         else if(it.val==null)it.raison='Durée illisible';else if(LD.indexOf(it.val)<0)it.raison='Durée inconnue du jeu pour ce type : '+fDur(it.val);}
       if(qte==null)it.raison=it.raison||'Quantité illisible';else if(!c.sur)it.raison=it.raison||'Chiffre douteux : vérifie la quantité';
       if(it.raison)it.sur=false;
-      ajoute(it);});});
+      ajoute(it,{i:r._i,t:r._t,q:qte});});});
+  /* même élément lu sur plusieurs captures avec des nombres différents : on propose celui de la capture la plus récente */
+  items.forEach(function(it){var Q=it.lus.filter(function(x){return x.q!=null;});var dif=Q.filter(function(x){return x.q!==Q[0].q;}).length;if(!dif)return;
+    Q.sort(function(a,b){return (b.t||0)-(a.t||0);});it.qte=Q[0].q;it.sur=false;
+    var rec=Q[0].t&&Q[1].t&&Math.abs(Q[0].t-Q[1].t)>=60000;
+    it.raison='Pas le même nombre selon la capture : '+Q.map(function(x){return nb(x.q)+' (capture '+(x.i+1)+(x.t?', '+lectHeure(x.t):'')+')';}).join(', ')+(rec?'. Le nombre de la plus récente est proposé.':'. Vérifie dans le jeu.');});
   /* une case coupée sans double entier sur une autre capture n'est pas enregistrée */
   var perdues=coupees.filter(function(x){var f=x.f,c=x.c;var v=f[0]==='res'?parseEntier(c.valeur_haut):lectDuree(c.valeur_haut),q=parseEntier(c.quantite);
-    return !items.some(function(it){return it.kind===f[0]&&it.type===f[1]&&((v!=null&&it.val===v)||(v==null&&q!=null&&it.qte===q));});}).length;
-  if(barre){[['food','nourriture'],['wood','bois'],['stone','pierre'],['gold','or']].forEach(function(x){var u=parseQte(barre[x[1]]);if(u!=null)items.push({id:'v'+x[0],kind:'ville',type:x[0],val:u,qte:null,sur:true,raison:''});});
-    var g=parseEntier(barre.gemmes);if(g!=null)items.push({id:'vgems',kind:'ville',type:'gems',val:g,qte:null,sur:true,raison:''});}
-  return {items:items,sureOk:false,n:n,erreurs:erreurs,pasPris:pasPris,perdues:perdues,vu:vu,onglets:Object.keys(onglets)};}
+    return !items.some(function(it){return it.kind===f[0]&&it.type===f[1]&&((v!=null&&it.val===v)||(v==null&&q!=null&&it.lus.some(function(x){return x.q===q;})));});}).length;
+  /* barre du haut : celle de la capture la plus récente ; si elle change d'une capture à l'autre, on le dit */
+  var bdif=false;barres.sort(function(a,b){return (b.t||0)-(a.t||0);});
+  if(barres.length>1){var k0=JSON.stringify(barres[0].b);bdif=barres.some(function(x){return JSON.stringify(x.b)!==k0;});}
+  if(barres.length){var barre=barres[0].b;
+    [['food','nourriture'],['wood','bois'],['stone','pierre'],['gold','or']].forEach(function(x){var u=parseQte(barre[x[1]]);if(u!=null)items.push({id:'v'+x[0],kind:'ville',type:x[0],val:u,qte:null,sur:!bdif,raison:bdif?'La barre du haut change d’une capture à l’autre : valeur de la plus récente':'',lus:[]});});
+    var g=parseEntier(barre.gemmes);if(g!=null)items.push({id:'vgems',kind:'ville',type:'gems',val:g,qte:null,sur:!bdif,raison:bdif?'La barre du haut change d’une capture à l’autre : valeur de la plus récente':'',lus:[]});}
+  return {items:items,sureOk:false,n:n,erreurs:erreurs,pasPris:pasPris,perdues:perdues,vu:vu,bdif:bdif,onglets:Object.keys(onglets)};}
+/* une coupure réseau (écran mis en veille, appli changée, wifi) donne « Failed to fetch » : on le dit simplement */
+function lectReseau(e){return e instanceof TypeError||/fetch|network|load failed/i.test(String(e));}
+function lectMessage(e){return lectReseau(e)?'connexion coupée (écran en veille, autre appli ou wifi ?)':String(e);}
 function lireUne(f){var id=null;
   function efface(){if(id)fetch('/api/capture?id='+encodeURIComponent(id),{method:'DELETE'}).catch(function(){});}
   return prepImage(f).then(function(b){return fetch('/api/capture',{method:'POST',headers:{'content-type':b.type||'image/jpeg'},body:b});})
@@ -674,23 +689,38 @@ function lireUne(f){var id=null;
     .then(function(c){id=c.id;return fetch('/api/lire',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:c.id,modele:LECT_MODELE})});})
     .then(function(r){return r.json().catch(function(){return {};}).then(function(j){if(!r.ok||!j.resultat)throw (j&&j.error)||('lecture impossible ('+r.status+')');return j;});})
     .then(function(j){efface();return j;},function(e){efface();throw e;});}
-function lireVraies(){
-  var L=S.shots.slice(),n=L.length,fait=0,res=[],err=[],idx=0;S.lect=null;showStep(2);
-  $('#anaNote').textContent='Tes captures sont envoyées à Claude Opus 5.5 (Anthropic) pour être lues, puis effacées de la maquette. Environ 10 à 15 s par capture.';
-  function maj(){var pct=Math.round(fait/n*100);$('#anaFill').style.width=pct+'%';$('#anaPct').textContent=pct+' %';
+/* Les nombres lus (pas les images) sont gardés dans la maquette (collection « lecture ») pour que Claude puisse vérifier une lecture douteuse. */
+function lectGarde(r,f){try{fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({op:'set',col:'lecture',id:'l'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+  data:{date:new Date().toISOString(),version:REEL?'reelle':'exemples',fichier:f&&f.name||'',prise:f&&f.lastModified||null,modele:r.model,cout:r.cout_usd,resultat:r.resultat}})}).catch(function(){});}catch(e){}}
+/* Lit les captures « idx » (toutes au départ ; seulement celles qui ont échoué pour « Relire ») */
+function lireVraies(relire){
+  var J=relire&&S.lectJob?S.lectJob:{files:S.shots.map(function(x){return x.file;}),res:[],echec:[]};S.lectJob=J;
+  var A_LIRE=relire?J.echec.slice():J.files.map(function(f,i){return i;}),n=A_LIRE.length,fait=0,k=0,echec=[],lock=null;
+  var avant=relire&&S.lect?S.lect.items:null;S.lect=null;showStep(2);
+  $('#anaNote').textContent='Tes captures sont envoyées à Claude Opus 5.5 (Anthropic) pour être lues, puis effacées. Environ 10 à 15 s par capture. Reste sur cette page et garde l’écran allumé pendant la lecture.';
+  try{if(navigator.wakeLock)navigator.wakeLock.request('screen').then(function(l){lock=l;},function(){});}catch(e){}
+  function maj(){var pct=n?Math.round(fait/n*100):100;$('#anaFill').style.width=pct+'%';$('#anaPct').textContent=pct+' %';
     $('#anaText').textContent=fait<n?'Lecture des captures : '+fait+' sur '+n+' lues':'Lecture terminée';}
   maj();
-  function suivant(){if(idx>=L.length)return Promise.resolve();var i=idx++;
-    return lireUne(L[i].file).then(function(r){res[i]=r;},function(e){err.push('capture '+(i+1)+' : '+e);}).then(function(){fait++;maj();return suivant();});}
-  Promise.all([suivant(),suivant(),suivant()]).then(function(){
-    S.lect=lectRegrouper(res.filter(Boolean),err,n);S.lect.cout=res.reduce(function(a,r){return a+(r&&r.cout_usd||0);},0);
+  function une(i){var f=J.files[i];
+    return lireUne(f).catch(function(e){if(lectReseau(e))return lireUne(f);throw e;})/* une seconde chance après une coupure */
+      .then(function(r){r._i=i;r._t=f.lastModified||null;J.res[i]=r;lectGarde(r,f);},function(e){echec.push({i:i,m:lectMessage(e)});});}
+  function suivant(){if(k>=A_LIRE.length)return Promise.resolve();var i=A_LIRE[k++];return une(i).then(function(){fait++;maj();return suivant();});}
+  Promise.all([suivant(),suivant(),suivant()]).then(function(){try{if(lock)lock.release();}catch(e){}
+    J.echec=echec.map(function(x){return x.i;}).sort(function(a,b){return a-b;});
+    S.lect=lectRegrouper(J.res,echec.sort(function(a,b){return a.i-b.i;}).map(function(x){return 'capture '+(x.i+1)+' : '+x.m;}),J.files.length);
+    S.lect.cout=J.res.reduce(function(a,r){return a+(r&&r.cout_usd||0);},0);
+    /* les vérifications déjà faites sont gardées après « Relire » */
+    if(avant)S.lect.items.forEach(function(it){var o=avant.filter(function(x){return x.kind===it.kind&&x.type0===it.type0&&x.val===it.val&&(x.type0||x.qte===it.qte);})[0];
+      if(o&&o.choix&&it.raison===o.raison){it.choix=o.choix;it.type=o.type;it.qte=o.qte;}});
     setTimeout(function(){showStep(3);renderReview();},300);});}
 function renderLect(){
   var X=S.lect,box=$('#revReel');
   var sur=X.items.filter(function(it){return it.sur;}),todo=X.items.filter(function(it){return !it.sur;}),reste=todo.filter(function(it){return !it.choix;}).length;
   var lu=function(it){return it.kind==='ville'?fQte(it.val):nb(it.qte);};
   var notes=[];
-  if(X.erreurs.length)notes.push('<b>'+X.erreurs.length+' capture'+(X.erreurs.length>1?'s':'')+' non lue'+(X.erreurs.length>1?'s':'')+'</b> : '+esc(X.erreurs.join(' ; '))+'. Rien n’en est tiré.');
+  if(X.erreurs.length)notes.push('<b>'+X.erreurs.length+' capture'+(X.erreurs.length>1?'s':'')+' non lue'+(X.erreurs.length>1?'s':'')+'</b> : '+esc(X.erreurs.join(' ; '))+'.<div class="btns"><button class="btn gold" type="button" data-act="lect-relire">Relire '+(X.erreurs.length>1?'ces '+X.erreurs.length+' captures':'cette capture')+'</button></div>');
+  if(X.bdif)notes.push('<b>La barre du haut n’est pas la même sur toutes les captures</b> : elles ne viennent pas toutes du même moment, ou pas du même compte. Les nombres qui changent sont à vérifier ; ne mélange pas les comptes dans un même import.');
   if(X.perdues)notes.push(X.perdues+' case'+(X.perdues>1?'s':'')+' coupée'+(X.perdues>1?'s':'')+' par le défilement, absente'+(X.perdues>1?'s':'')+' des autres captures : pas enregistrée'+(X.perdues>1?'s':'')+'. Reprends une capture où elle'+(X.perdues>1?'s sont':' est')+' entière'+(X.perdues>1?'s':'')+'.');
   if(X.pasPris)notes.push(X.pasPris+' élément'+(X.pasPris>1?'s':'')+' d’autres onglets, ou coffres et packs, pas encore pris en charge.');
   notes.push('Un élément absent des captures reste comme il est : l’appli n’écrit jamais zéro à sa place. Une ligne non vérifiée n’est pas enregistrée.');
@@ -702,20 +732,21 @@ function renderLect(){
     (todo.length?'<section class="sec"><div class="sec-t"><h2>À vérifier</h2></div><div class="list">'+todo.map(function(it){
       return '<div class="q'+(it.choix?' done':'')+'" data-lq="'+it.id+'"><div class="q-h"><span class="crop">'+ic(lectIcone(it))+'</span><span class="rc"><b>'+esc(lectNom(it))+'</b><small>'+esc(it.raison)+'</small></span></div>'+
         (it.kind==='acc'&&!it.type0?'<div class="chips lq-type" role="group" aria-label="Type d’accélérateur">'+AN.map(function(a){return '<button class="chip" type="button" data-lt="'+a[0]+'" aria-pressed="'+(it.type===a[0])+'">'+a[2]+'</button>';}).join('')+'</div>':'')+
-        '<div class="field"><label for="lqv'+it.id+'">Quantité</label><input id="lqv'+it.id+'" data-lqv="'+it.id+'" inputmode="numeric" value="'+(it.qte==null?'':it.qte)+'"></div>'+
+        '<div class="field"><label for="lqv'+it.id+'">'+(it.kind==='ville'?'En ville':'Quantité')+'</label><input id="lqv'+it.id+'" data-lqv="'+it.id+'" inputmode="'+(it.kind==='ville'?'text':'numeric')+'" value="'+(it.kind==='ville'?(it.type==='gems'?it.val:String(fQte(it.val)).replace(/\u00a0/g,' ')):(it.qte==null?'':it.qte))+'"></div>'+
         '<div class="chips"><button class="chip" type="button" data-lqc="ok" aria-pressed="'+(it.choix==='ok')+'">C’est bon</button><button class="chip" type="button" data-lqc="skip" aria-pressed="'+(it.choix==='skip')+'">Ignorer</button></div></div>';}).join('')+'</div></section>':'')+
     '</div><div class="col"><section class="sec"><div class="sec-t"><h2>Bon à savoir</h2></div>'+notes.map(function(t){return '<div class="note lect-note"><i data-i="n-info"></i><span>'+t+'</span></div>';}).join('')+'</section></div></div>';
   paintIcons(box);
 }
 function lectItem(id){return S.lect.items.filter(function(x){return x.id===id;})[0];}
+function lectLire(it,v){return it.kind==='ville'&&it.type!=='gems'?parseQte(v):parseEntier(v);}
 /* garde les quantités déjà corrigées avant de redessiner la relecture */
-function lectSync(){$$('[data-lqv]').forEach(function(el){var it=lectItem(el.dataset.lqv),q=parseEntier(el.value);if(it&&q!=null)it.qte=q;});}
+function lectSync(){$$('[data-lqv]').forEach(function(el){var it=lectItem(el.dataset.lqv);if(!it)return;var q=lectLire(it,el.value);if(q==null)return;if(it.kind==='ville')it.val=q;else it.qte=q;});}
 /* Enregistre les éléments confirmés dans l'inventaire du profil actif */
 function lectEnregistrer(){
   var X=S.lect,p=A();if(!p){say('Ajoute d’abord un profil.');return;}
   var ok=[],skip=0;
   X.items.forEach(function(it){if(it.sur){if(X.sureOk)ok.push(it);else skip++;return;}
-    if(it.choix!=='ok'){skip++;return;}var q=parseEntier(($('#lqv'+it.id)||{}).value);if(q==null){skip++;return;}it.qte=q;ok.push(it);});
+    if(it.choix!=='ok'){skip++;return;}var q=lectLire(it,($('#lqv'+it.id)||{}).value);if(q==null){skip++;return;}if(it.kind==='ville')it.val=q;else it.qte=q;ok.push(it);});
   if(!ok.length){say('Confirme au moins un élément avant d’enregistrer.');return;}
   function pose(L,label,qte,val,taille){var i=-1;L.forEach(function(c,j){if(Math.abs(c[2]-taille)<1e-9)i=j;});if(i>=0)L[i][1]=qte;else L.push([label,qte,taille]);L.sort(function(a,b){return a[2]-b[2];});}
   ok.forEach(function(it){
@@ -1081,8 +1112,9 @@ var ACT={
   'quick-cancel':function(){S.quick=false;renderCity();},'quick-save':quickSave,
   correct:correctSheet,'save-correct':saveCorrect,
   'inv-edit':invSheet,'inv-save':invSave,'item-edit':itemSheet,'item-save':itemSave,'item-del':itemDel,
-  'sample-shots':function(){S.shots=[];S.lect=null;for(var i=0;i<15;i++)S.shots.push({});renderShots();},
+  'sample-shots':function(){S.shots=[];S.lect=null;S.lectJob=null;for(var i=0;i<15;i++)S.shots.push({});renderShots();},
   'lect-sure':function(){lectSync();S.lect.sureOk=true;renderLect();say('Éléments sûrs confirmés.');},
+  'lect-relire':function(){lectSync();lireVraies(true);},
   analyse:analyse,'confirm-sure':function(){S.sureOk=true;renderReview();say('38 éléments sûrs confirmés.');},
   'import-save':importSave,'import-reset':importReset,
   'add-goal':function(){openSheet('Nouvel objectif','<div class="fld"><label>Type</label><div class="chips" data-single id="ngType"><button class="chip" type="button" aria-pressed="true">Bâtiment</button><button class="chip" type="button" aria-pressed="false">Recherche</button><button class="chip" type="button" aria-pressed="false">Troupes</button></div></div><div class="fld"><label for="ngName">Objectif</label><input id="ngName" placeholder="Ex. Hôpital 25"><small class="ferr" id="ngErr" hidden></small></div>',[['Annuler','close-sheet',''],['Ajouter','save-goal','primary']]);},
@@ -1188,7 +1220,7 @@ document.addEventListener('click',function(e){
   var cd=e.target.closest('[data-code]');if(cd){var co=S.codes[+cd.dataset.code];co.st=cd.dataset.cst;if(co.st==='used')co.sub=co.sub.replace(/ · utilisé.*$/,'')+' · utilisé le '+TODAY_S;renderCodes();return;}
   var lqc=e.target.closest('[data-lq] [data-lqc]');if(lqc&&S.lect){lectSync();var it=lectItem(lqc.closest('[data-lq]').dataset.lq);
     if(lqc.dataset.lqc==='ok'&&it.kind==='acc'&&!it.type){say('Choisis d’abord le type d’accélérateur.');return;}
-    if(lqc.dataset.lqc==='ok'&&parseEntier(($('#lqv'+it.id)||{}).value)==null){say('Écris la quantité (un nombre entier).');return;}
+    if(lqc.dataset.lqc==='ok'&&lectLire(it,($('#lqv'+it.id)||{}).value)==null){say(it.kind==='ville'?'Écris la valeur, par exemple 84,2 M.':'Écris la quantité (un nombre entier).');return;}
     it.choix=lqc.dataset.lqc;renderLect();return;}
   var lt=e.target.closest('[data-lq] [data-lt]');if(lt&&S.lect){lectSync();var it2=lectItem(lt.closest('[data-lq]').dataset.lq);it2.type=lt.dataset.lt;it2.choix=null;renderLect();return;}
   var ch=e.target.closest('.chips[data-single] .chip');if(ch){$$('.chip',ch.parentNode).forEach(function(x){x.setAttribute('aria-pressed',String(x===ch));});return;}
@@ -1209,7 +1241,7 @@ document.addEventListener('change',function(e){
   else if(t.matches('[data-qk]'))quickCount();
   else if(t.matches('[data-notif]')){S.notif[t.dataset.notif]=t.checked;renderPlus();}
   else if(t.id==='pickShots'){var fs=[].slice.call(t.files||[]).filter(function(f){return /^image\//.test(f.type);}).slice(0,20);
-    if(!fs.length){say('Choisis des images.');return;}S.shots=fs.map(function(f){return {url:URL.createObjectURL(f),file:f};});S.lect=null;renderShots();say(fs.length+' capture'+(fs.length>1?'s':'')+' prête'+(fs.length>1?'s':'')+(SITE_PUB?'. Touche « Analyser » : Claude les lira.':'. Elles restent sur ton appareil.'));t.value='';}
+    if(!fs.length){say('Choisis des images.');return;}S.shots=fs.map(function(f){return {url:URL.createObjectURL(f),file:f};});S.lect=null;S.lectJob=null;renderShots();say(fs.length+' capture'+(fs.length>1?'s':'')+' prête'+(fs.length>1?'s':'')+(SITE_PUB?'. Touche « Analyser » : Claude les lira.':'. Elles restent sur ton appareil.'));t.value='';}
   else if(t.id==='pickVideo'){var v=t.files&&t.files[0];if(v)openSheet('Vidéo choisie','<p class="shp">'+esc(v.name)+'</p><p class="shp muted">La lecture d’un enregistrement d’écran est prévue plus tard (complément B03). La vidéo reste sur ton appareil.</p>',[['Fermer','close-sheet','primary']]);t.value='';}
   else if(t.id==='pickReport'){var f=t.files&&t.files[0];if(f){S.reports.unshift({t:'Rapport importé',d:TODAY_S+' · à relire',ok:null,img:URL.createObjectURL(f),obs:'Lecture simulée dans la maquette : les valeurs lues apparaîtront ici, à corriger.',hyp:'Aucune tant que les valeurs ne sont pas relues.',abs:'À compléter après relecture.'});S.rep=0;renderCombat();say('Rapport ajouté. Il reste sur ton appareil.');}t.value='';}
 });

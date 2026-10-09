@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=39,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=40,VERSION='v'+VNUM+' · 9 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -38,7 +38,9 @@ var CHANGES={
     {sel:'#gBld',t:'Noms du jeu repris de tes captures : Réserve (et non Entrepôt), Moulin à bois, Comptoir, Centre d’alliance, Champ de tir à l’arc, Atelier d’armes de siège. Les « ° » ont disparu : tous les noms sont vérifiés.'},
     {sel:'[data-screen="ma-ville"] [data-sync]',t:'Le faux « Synchronisé » est remplacé par le vrai état : « Enregistré », « Enregistrement… » ou « En attente d’envoi » dans ta version réelle, « Exemples, non enregistrés » ici.'},
     {sel:'#gSet',t:'Réglages en tuiles. Le bonus de vitesse accepte une décimale (42,5 %), comme dans le jeu.'}],
-  'import':[{sel:'#lectNote',t:'La vraie lecture est branchée (ton choix : Claude Opus 5.5). Choisis tes captures de l’Inventaire (Ressources, Accélérateurs), touche « Analyser » : environ 10 à 15 s et 0,05 $ par capture.'},
+  'import':[{sel:'[data-steppanel="3"]',t:'Après ton premier essai : une coupure réseau (écran en veille, autre appli) relance la lecture une fois toute seule ; sinon un bouton « Relire » apparaît. Le message dit « connexion coupée » au lieu de « Failed to fetch ».'},
+    {sel:'[data-steppanel="3"]',t:'Un même objet avec des nombres différents d’une capture à l’autre : l’appli donne l’heure de chaque capture et propose la plus récente. Si la barre du haut change, elle te prévient (captures de moments ou de comptes différents).'},
+    {sel:'#lectNote',t:'La vraie lecture est branchée (ton choix : Claude Opus 5.5). Choisis tes captures de l’Inventaire (Ressources, Accélérateurs), touche « Analyser » : environ 10 à 15 s et 0,05 $ par capture.'},
     {sel:'[data-steppanel="3"]',t:'Relecture : les éléments sûrs se confirment d’un coup ; les douteux se vérifient un par un (type d’accélérateur à choisir, quantité à corriger). Rien n’est écrit pour ce qui n’est pas sur les captures.'}],
   'ma-ville-inventaire':[{sel:'#invChips',t:'Inventaire rangé comme les onglets du jeu : Ressources, Accélérateurs, Boosts, Équipement, Attirail, Autre.'},
     {sel:'#gRes',t:'Tout se remplit à la main, aussi dans ta version réelle : ouvre une ligne puis « Modifier ». Vraies tailles de caisses (1 000 à 5 000 000) et vraies durées d’accélérateurs (1 min à 15 h, jusqu’à 30 j pour les généraux).'},
