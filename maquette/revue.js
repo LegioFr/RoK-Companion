@@ -5,12 +5,13 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=20,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=21,VERSION='v'+VNUM+' · 9 oct. 2026';
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
 var REEL=false;try{REEL=localStorage.getItem('rc-mode')==='reel';}catch(e){}
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
-  '*':[{sel:'',t:'Deux versions de la maquette (onglet États) : « Exemples », pour les tests, et « Ma version réelle », vierge, que tu remplis toi-même ; elle est gardée avec la maquette publiée.'},
+  '*':[{sel:'',t:'Chaque version a ses propres notes : celles des tests ne s’affichent plus dans « Ma version réelle » (ta remarque).'},
+    {sel:'',t:'Deux versions de la maquette (onglet États) : « Exemples », pour les tests, et « Ma version réelle », vierge, que tu remplis toi-même ; elle est gardée avec la maquette publiée.'},
     {sel:'',t:'Onglet Tests : 60 nouveaux tests pour Ma ville (Progression, valeurs, saisie rapide, Inventaire, import, Commandants, Équipements, Armements).'}],
   'evenements':[{sel:'#evList',t:'Chaque événement a un bouton « Me prévenir » ; activé, il devient « Rappel activé » et un message dit quand tu seras prévenu (ta note 7).'}],
   'plan-c25':[{sel:'[data-screen="plan-c25"] h1',t:'Titre « Hôtel de ville 25 » au lieu de « Château 25 » (ta note 6).'}],
@@ -150,7 +151,10 @@ TABS.forEach(function(x){var b=el('button');b.type='button';b.dataset.t=x[0];b.i
 $('rcX').onclick=function(){showPnl(false);};
 
 /* ---------- notes : base partagée (db) ou ce navigateur ---------- */
-var db=null,dbState='attente',NOTES=[],assets=null,RES={};
+var db=null,dbState='attente',NOTES=[],ALLN=[],assets=null,RES={};
+/* Chaque version a ses notes : celles des « Exemples » (sans marque, ou mode demo) ne s'affichent pas dans « Ma version réelle », et l'inverse. */
+function ofMode(n){return REEL?n.mode==='reel':n.mode!=='reel';}
+function setNotes(a){ALLN=a;NOTES=a.filter(ofMode);}
 /* Ma version réelle : un seul document (reel/donnees) dans la base de la maquette publiée ; hors claude.ai, ce navigateur. */
 function giveStore(kind){if(window.RC_STORE)return;
   window.RC_STORE=kind==='db'?{kind:'db',
@@ -159,28 +163,28 @@ function giveStore(kind){if(window.RC_STORE)return;
     load:function(){try{return Promise.resolve(localStorage.getItem('rc-reel')||'');}catch(e){return Promise.resolve('');}},
     save:function(j){try{localStorage.setItem('rc-reel',j);return Promise.resolve();}catch(e){return Promise.reject(e);}}};
   try{document.dispatchEvent(new CustomEvent('rc:store'));}catch(e){}}
-function useLocal(){db=null;dbState='local';giveStore('local');NOTES=LS.get('notes',[]);RES=LS.get('tests',{});refresh();announceReview();}
+function useLocal(){db=null;dbState='local';giveStore('local');setNotes(LS.get('notes',[]));RES=LS.get('tests',{});refresh();announceReview();}
 /* Une fois par version : s'il y a des tests à revoir, la bulle s'ouvre sur l'onglet Tests. */
 function announceReview(){setTimeout(announceNow,0);}
 function announceNow(){if(REEL||LS.get('seenRev',0)>=VNUM)return;var n=reviewList().length;LS.set('seenRev',VNUM);if(!n)return;S.tab='tests';LS.set('tab','tests');showPnl(true);say(n+' correction'+(n>1?'s':'')+' à vérifier : voir l’onglet Tests.');}
-function saveLocal(){LS.set('notes',NOTES);refresh();}
+function saveLocal(){LS.set('notes',ALLN);setNotes(ALLN);refresh();}
 (function initDb(tries){
   if(location.protocol==='file:'){useLocal();if(window.claude&&window.claude.use)window.claude.use('assets').then(function(a){assets=a||null;render();paintRun();},function(){});return;}
   if(window.claude&&window.claude.use){
     window.claude.use('db').then(function(d){
       if(!d){useLocal();return;}
       db=d;dbState='ok';giveStore('db');
-      db.collection('notes').onSnapshot(function(s){NOTES=s.docs.map(function(x){var o=Object.assign({},x.data());o.id=x.id;return o;});refresh();},function(){useLocal();});
+      db.collection('notes').onSnapshot(function(s){setNotes(s.docs.map(function(x){var o=Object.assign({},x.data());o.id=x.id;return o;}));refresh();},function(){useLocal();});
       db.collection('tests').onSnapshot(function(s){RES={};s.docs.forEach(function(x){RES[x.id]=x.data();});refresh();paintRun();announceReview();},function(){});
     },useLocal);
     window.claude.use('assets').then(function(a){assets=a||null;render();paintRun();},function(){});
   }else if(tries<40)setTimeout(function(){initDb(tries+1);},250);
   else useLocal();
 })(0);
-function nextN(){return NOTES.reduce(function(m,n){return Math.max(m,n.n||0);},0)+1;}
-function addNote(d){if(db)return db.collection('notes').add(d);d.id='l'+Date.now();NOTES.push(d);saveLocal();return Promise.resolve();}
+function nextN(){return ALLN.reduce(function(m,n){return Math.max(m,n.n||0);},0)+1;}
+function addNote(d){d.mode=REEL?'reel':'demo';if(db)return db.collection('notes').add(d);d.id='l'+Date.now();ALLN.push(d);saveLocal();return Promise.resolve();}
 function updNote(n,patch){Object.assign(n,patch);if(db)return db.doc('notes/'+n.id).update(patch).catch(function(){say('Enregistrement impossible.');});saveLocal();}
-function delNote(n){if(db)return db.doc('notes/'+n.id).delete().catch(function(){say('Suppression impossible.');});NOTES=NOTES.filter(function(x){return x!==n;});saveLocal();}
+function delNote(n){if(db)return db.doc('notes/'+n.id).delete().catch(function(){say('Suppression impossible.');});ALLN=ALLN.filter(function(x){return x!==n;});saveLocal();}
 function notesHere(){var c=CUR().id;return NOTES.filter(function(n){return n.ecran===c;});}
 function openCount(){return notesHere().filter(function(n){return n.statut!=='traitée';}).length;}
 function sorted(L){return L.slice().sort(function(a,b){return (a.statut==='traitée')-(b.statut==='traitée')||a.n-b.n;});}
