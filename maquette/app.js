@@ -196,7 +196,11 @@ function renderProfile(){
 }
 
 /* ================= Ma ville ================= */
-function valTxt(k,v){if(v==null)return null;if(FIELDS[k].kind==='pct')return v+' %';return String(v);}
+function valTxt(k,v){if(v==null)return null;if(FIELDS[k].kind==='pct')return String(v).replace('.',',')+' %';return String(v);}
+/* Contrôle d'une saisie : renvoie le message d'erreur, ou '' si la valeur est bonne. Le bonus accepte une décimale (42,5 %). */
+function badValue(k,v){var f=FIELDS[k];var max=f.kind==='pct'?1000:(k==='builders'?5:(k==='vip'?19:25));
+  if(f.kind==='pct'){if(!isFinite(v)||v<0||v>max||Math.round(v*10)!==v*10)return 'Saisis un pourcentage entre 0 et '+max+', avec une décimale au plus (ex. 42,5).';return '';}
+  if(!isFinite(v)||v<0||Math.floor(v)!==v||v>max)return 'Saisis un nombre entier entre 0 et '+max+'.';return '';}
 function renderCity(){
   var p=A();if(!p)return;
   function rows(grp){return Object.keys(FIELDS).filter(function(k){return FIELDS[k].grp===grp;}).map(function(k){
@@ -243,7 +247,7 @@ function quickSave(){
     err.hidden=true;r.classList.remove('err');
     if(raw===''||String(old==null?'':old)===raw)return;
     var v=raw;if(f.kind!=='civ'){v=Number(raw.replace(/\s/g,'').replace(',','.'));var max=f.kind==='pct'?1000:(k==='builders'?5:(k==='vip'?19:25));
-      if(!isFinite(v)||v<0||Math.floor(v)!==v||v>max){err.textContent='Saisis un nombre entier entre 0 et '+max+'.';err.hidden=false;r.classList.add('err');bad++;return;}}
+      var be=badValue(k,v);if(be){err.textContent=be;err.hidden=false;r.classList.add('err');bad++;return;}}
     p.h[k].unshift({v:v,d:TODAY,m:old!=null?motif:'',src:'Saisie'});if(old!=null){corr++;p.corr++;}p.releves++;p.v[k]=v;ok++;});
   if(bad){say(ok+' valeur'+(ok>1?'s':'')+' enregistrée'+(ok>1?'s':'')+'. '+bad+' ligne'+(bad>1?'s':'')+' à corriger.');
     $$('.qrow').forEach(function(r){if(!r.classList.contains('err')){var k=r.dataset.row;var el=$('[data-qk]',r);el.value=p.v[k]==null?'':p.v[k];}});refreshAll(true);return;}
@@ -272,7 +276,7 @@ function saveCorrect(){
   var p=A(),k=S.valKey,f=FIELDS[k],old=p.v[k],raw=$('#cv').value.trim(),err=$('#cvErr');err.hidden=true;
   if(raw===''){err.textContent='Saisis une valeur.';err.hidden=false;return;}
   var v=raw;if(f.kind!=='civ'){v=Number(raw.replace(/\s/g,'').replace(',','.'));var max=f.kind==='pct'?1000:(k==='builders'?5:(k==='vip'?19:25));
-    if(!isFinite(v)||v<0||Math.floor(v)!==v||v>max){err.textContent='Saisis un nombre entier entre 0 et '+max+'.';err.hidden=false;return;}}
+    var be=badValue(k,v);if(be){err.textContent=be;err.hidden=false;return;}}
   if(old!=null&&String(old)===String(v)){err.textContent='C’est déjà la valeur enregistrée.';err.hidden=false;return;}
   var m=$('#cm .chip[aria-pressed="true"]');
   p.h[k].unshift({v:v,d:$('#cd').value||TODAY,m:old!=null&&m?m.textContent:'',src:'Saisie'});p.v[k]=v;p.releves++;if(old!=null)p.corr++;
@@ -489,6 +493,7 @@ function route(){
   if(!AUTH.user){AUTH.after=h;location.replace('#connexion');return;}
   if(document.body.classList.contains('auth-on')){document.body.classList.remove('auth-on');$('#auth').hidden=true;cur=null;}
   if(h==='ma-ville'||h.indexOf('ma-ville-')===0){id='ma-ville';sub=h.slice(9)||'progression';}
+  if(h==='import'&&step===4)importReset();
   if(h.indexOf('valeur-')===0){id='valeur';var k=h.slice(7);if(FIELDS[k])S.valKey=k;}
   if(h.indexOf('profil-')===0){id='profil';S.profileView=h.slice(7);}else if(h==='profil'){S.profileView=null;}
   if(!ORDER.length&&['accueil','plus','codes','icones','temps'].indexOf(id)<0){id='accueil';say('Ajoute d’abord un profil.');}
@@ -597,6 +602,7 @@ function simLink(){
 }
 document.addEventListener('submit',function(e){var f=e.target.closest('[data-form]');if(!f)return;e.preventDefault();submitAuth(f.dataset.form);});
 document.addEventListener('input',function(e){var sh=e.target.closest('.a-shell');if(!sh)return;var f=$('.a-feedback',sh);if(f&&f.classList.contains('bad'))f.hidden=true;if(e.target.getAttribute('aria-invalid'))fieldErr(e.target.id,'');});
+var FRESH=false;try{FRESH=sessionStorage.getItem('rokFresh')==='1';sessionStorage.removeItem('rokFresh');}catch(e){}
 try{var su=sessionStorage.getItem('rokUser');if(su&&ACC[su]){AUTH.user=su;S.email=su;}var sa=sessionStorage.getItem('rokActive');if(sa&&P[sa])S.active=ACC[DEMO].data.active=sa;sessionStorage.removeItem('rokActive');}catch(e){}
 
 /* ================= Actions ================= */
@@ -751,6 +757,13 @@ window.RC_API={
     if(st[0]==='attente'){if(AUTH.user){saveData();AUTH.user=null;try{sessionStorage.removeItem('rokUser');}catch(e){}}
       var ea='attente'+(Object.keys(ACC).length)+'@exemple.fr';ACC[ea]={pw:'rok12345',ok:false,data:null};AUTH.pending=ea;closeSheet();nav();return;}
     if(st[0]==='vide'){var em='nouveau'+(Object.keys(ACC).length)+'@exemple.fr';ACC[em]={pw:'rok12345',ok:true,data:null};AUTH.after=h;login(em);return;}
+    var fresh=FRESH;FRESH=false;
+    if(st[0]==='demo'&&st.indexOf('neuf')>0){
+      /* exemples tout neufs : on recharge (le compte d'essai reste connecté), sauf si la page vient justement d'être rechargée pour ça */
+      if(!fresh){try{sessionStorage.setItem('rokUser',DEMO);sessionStorage.setItem('rokFresh','1');sessionStorage.setItem('rokActive',st[1]==='neuf'?'main':st[1]);}catch(e){}location.hash=h;location.reload();return;}
+      st=['demo',st[1]==='neuf'?'main':st[1]];
+    }
+    if(h==='import')importReset();
     if(st[0]==='demo'){
       /* profils d'exemple supprimés pendant un test : on remet les exemples (rechargement, le compte d'essai reste connecté) */
       var need=st[1]||'main';if(!(ACC[DEMO].data&&ACC[DEMO].data.P[need])){try{sessionStorage.setItem('rokUser',DEMO);sessionStorage.setItem('rokActive',need);}catch(e){}location.hash=h;location.reload();return;}

@@ -120,5 +120,88 @@ window.RC_TESTS=[
   ['t2','Sur tablette, en portrait puis en paysage.','Tout reste lisible ; l’Accueil s’adapte.'],
   ['t3','Sur PC (ou sur une fenêtre très large).','Menu à gauche, deux colonnes.'],
   ['t4','Si un texte te paraît petit : touche le rond bleu avec la clé (la bulle d’outils) › Inspecter, puis touche le texte.','Sa taille en px s’affiche : pose une note si c’est trop petit.']
+ ]} ,
+ /* ---------- Ma ville (ajoutés le 2026-10-09) ---------- */
+ {g:'Ma ville · en-tête et onglets',p:['demo:neuf','#ma-ville-progression'],l:[
+  ['mv1','Regarde le haut de Ma ville.','Titre « Ma ville », « Profil Principal » dessous, pastille verte « Synchronisé », boutons « Importer » et « Tout renseigner ».'],
+  ['mv2','Touche chaque onglet : Progression, Inventaire, Commandants, Équipements, Armements.','Chaque onglet s’ouvre ; l’onglet choisi est doré. Sur téléphone, la rangée d’onglets défile sur le côté sans élargir la page.'],
+  ['mv3','Regarde « Ma ville » dans le menu.','Entrée dorée (active) avec la pastille « 2 » (2 valeurs à renseigner).'],
+  ['mv4','Regarde Ma ville avec le profil Ferme 1.','« Profil Ferme 1 » et ses propres valeurs (Hôtel de ville 21, VIP 8…).',['demo:f1','#ma-ville-progression']]
+ ]},
+ {g:'Ma ville · Progression',p:['demo:neuf','#ma-ville-progression'],l:[
+  ['pg1','Regarde « Réglages ».','Hôtel de ville 24, Niveau VIP 17, Bâtisseurs 2, Bonus de vitesse « — » avec « à renseigner », Civilisation France.'],
+  ['pg2','Regarde « Bâtiments ».','Mur, Académie, Caserne, Écurie, Champ de tir, Hôpital, Atelier de siège ; Atelier de siège affiche « — » et « à renseigner ». Sur tablette et PC, deux colonnes.'],
+  ['pg3','Regarde « Recherches » et « Troupes ».','Étiquette « Prévu · B05 » ; barres Économie 68 % et Militaire 54 % ; chaque troupe avec son niveau et son nombre.'],
+  ['pg4','Compare la pastille de Ma ville dans le menu et le nombre de « à renseigner » sur la page.','Le même nombre : 2.'],
+  ['pg5','Touche la ligne « Caserne ».','L’écran de la valeur « Caserne » s’ouvre.']
+ ]},
+ {g:'Ma ville · corriger une valeur',p:['demo:neuf','#valeur-caserne'],l:[
+  ['va1','Regarde l’écran de la Caserne.','Titre « Caserne », « Niveau », grand 23, bouton « Corriger » ; historique avec dates, motif « Changé en jeu » et pastilles « Saisie » ou « Import ».'],
+  ['va2','Touche « Corriger ».','Fenêtre « Corriger : Caserne » avec « Nouveau niveau », la date du relevé et les 3 motifs (« Changé en jeu » choisi).'],
+  ['va3','Touche « Enregistrer la correction » sans changer la valeur.','« C’est déjà la valeur enregistrée. »'],
+  ['va4','Écris « abc », enregistre ; puis 30, enregistre.','« Saisis un nombre entier entre 0 et 25. » les deux fois.'],
+  ['va5','Vide le champ et enregistre.','« Saisis une valeur. »'],
+  ['va6','Mets 24, choisis le motif « Erreur de saisie », enregistre.','Message « Correction enregistrée. L’ancienne valeur reste dans l’historique. » ; grand 24 ; en tête de l’historique 24 · Erreur de saisie ; l’ancien 23 reste en dessous.'],
+  ['va7','Touche « ‹ Ma ville ».','La Caserne affiche 24 dans la liste.'],
+  ['va8','Rouvre « Corriger », change la valeur, puis ferme sans enregistrer (« Annuler », toucher à côté ou Échap).','Rien n’a changé.',['demo','#valeur-caserne']]
+ ]},
+ {g:'Ma ville · renseigner une valeur',p:['demo:neuf','#valeur-bonus'],l:[
+  ['vr1','Regarde l’écran « Bonus de vitesse de construction ».','Grand « — », bouton « Renseigner », historique « Aucun relevé ».'],
+  ['vr2','Touche « Renseigner ».','Fenêtre « Renseigner : Bonus de vitesse de construction », champ « Bonus (en %) », pas de motif (première saisie).'],
+  ['vr3','Écris 42,57 puis enregistre ; puis 2000.','Un message demande un pourcentage entre 0 et 1000, avec une décimale au plus.'],
+  ['vr4','Écris 42,5 et enregistre.','« Valeur enregistrée. » ; grand « 42,5 % » ; un relevé dans l’historique.'],
+  ['vr5','Reviens à l’Accueil.','La bulle Bonus de vitesse affiche 42,5 % ; la pastille de Ma ville passe à 1 ; la 1re priorité devient « Renseigner : Atelier de siège » (la valeur suivante qui manque).'],
+  ['vr6','Ouvre la Civilisation, « Corriger », choisis Rome, enregistre.','Une liste des 15 civilisations ; ensuite « Rome » s’affiche et « France » reste dans l’historique.',['demo','#valeur-civ']]
+ ]},
+ {g:'Ma ville · saisie rapide',p:['demo:neuf','#ma-ville-progression'],l:[
+  ['sr1','Touche « Tout renseigner ».','Chaque ligne devient un champ ; une barre en bas montre « Saisie rapide », « Annuler » et « Enregistrer ».'],
+  ['sr2','Écris 40 dans « Bonus de vitesse ».','La barre affiche « 1 valeur modifiée » ; pas de motif (c’est une première saisie).'],
+  ['sr3','Change aussi le VIP de 17 à 18.','« 2 valeurs modifiées » ; les 3 motifs apparaissent (c’est une correction).'],
+  ['sr4','Mets 30 au VIP, puis « Enregistrer ».','La ligne VIP passe en rouge avec « Saisis un nombre entier entre 0 et 19. » ; message « 1 valeur enregistrée. 1 ligne à corriger. » ; le bonus est gardé.'],
+  ['sr5','Mets 18 au VIP, puis « Enregistrer ».','« 1 valeur enregistrée. » ; retour à l’affichage normal avec VIP 18.'],
+  ['sr6','« Tout renseigner », change une valeur, puis « Annuler ».','Retour à l’affichage normal ; rien n’a changé.',['demo:neuf','#ma-ville-progression']],
+  ['sr7','En saisie rapide, regarde la ligne Civilisation.','Une liste déroulante des civilisations.'],
+  ['sr8','Va sur l’onglet Inventaire, puis touche « Tout renseigner ».','Ma ville repasse sur Progression, en saisie rapide.',['demo','#ma-ville-inventaire']]
+ ]},
+ {g:'Ma ville · Inventaire',p:['demo:neuf','#ma-ville-inventaire'],l:[
+  ['in1','Regarde le haut de l’Inventaire.','Boutons Ressources (doré), Accélérateurs, Objets ; « Import du 2 oct. » à droite de « Ressources ».'],
+  ['in2','Regarde « Ressources ».','Nourriture, Bois, Pierre, Or et Gemmes avec leur total ; à côté, Coffres de ressources 7 et Packs 2 (« leur contenu n’est pas compté »).'],
+  ['in3','Touche « Nourriture », puis touche-la encore.','Elle se déplie : En ville 32 M, puis le nombre de caisses de chaque valeur ; puis elle se replie.'],
+  ['in4','Touche « Accélérateurs ».','Construction, Recherche, Entraînement, Soins, Généraux avec leur total en jours et heures ; Généraux « Utilisables partout ».'],
+  ['in5','Déplie « Construction ».','Le nombre d’accélérateurs de chaque durée (1 min : 212, 5 min : 140, 1 h : 195…).'],
+  ['in6','Touche « Objets ».','Étiquette « Prévu · B06 » et 4 objets avec leur nombre.'],
+  ['in7','Regarde l’Inventaire de Ferme 1.','Ses propres valeurs ; un type sans accélérateur affiche « 0 h » et « Aucun » une fois déplié.',['demo:f1','#ma-ville-inventaire']]
+ ]},
+ {g:'Ma ville · importer des captures',p:['demo:neuf','#import'],l:[
+  ['im1','Regarde l’écran « Importer ».','4 étapes en haut (Captures, Analyse, Relecture, Résultat), la 1re en doré ; 3 cases vides ; « Aucune capture choisie… » ; « Analyser » grisé.'],
+  ['im2','Touche « Choisir des captures » et prends 2 ou 3 images de ta galerie.','Tes images en miniature, « N captures choisies · 20 Mo au plus », message « Elles restent sur ton appareil. » ; « Analyser » devient actif.'],
+  ['im3','Touche « Importer une vidéo » et choisis une vidéo.','Fenêtre « Vidéo choisie » avec son nom : la lecture des vidéos est prévue plus tard.'],
+  ['im4','Touche « Utiliser les captures d’exemple ».','15 captures d’exemple ; « Analyser » actif.',['demo','#import']],
+  ['im5','Touche « Analyser ».','Étape 2 : barre « Lecture de la capture k sur 15 » qui avance, puis passage tout seul à la Relecture.'],
+  ['im6','Regarde la Relecture.','« 41 éléments lus », « 38 sûrs · 3 à vérifier », 3 cartes à vérifier (accélérateur 1 h, caisse de nourriture, pierre en ville).'],
+  ['im7','Touche « Enregistrer » sans rien confirmer.','« Confirme au moins un élément avant d’enregistrer. »'],
+  ['im8','Touche « Confirmer les 38 éléments sûrs ».','Le bouton devient « 38 éléments confirmés » (grisé) ; « 38 sûrs confirmés ».'],
+  ['im9','Carte 1 : mets 1 300 puis « C’est bon » ; carte 2 : « Ignorer » ; carte 3 : « Changé en jeu ».','Chaque carte traitée s’estompe ; en haut, « tout est vérifié ».'],
+  ['im10','Touche « Enregistrer ».','Étape 4 : « 40 valeurs enregistrées », « 1 correction avec un motif… », « 1 élément non vérifié : pas enregistré. »'],
+  ['im11','Touche « Voir l’inventaire ».','« Import d’aujourd’hui » ; Pierre : En ville 12 M ; Accélérateurs › Construction › 1 h : 1 300.'],
+  ['im12','Touche « Importer » en haut de Ma ville.','L’import reprend à l’étape 1, vide, prêt pour un nouvel import.'],
+  ['im13','Pendant un import, touche « ‹ Ma ville ».','Retour à l’Inventaire.',['demo','#import']]
+ ]},
+ {g:'Ma ville · Commandants',p:['demo','#ma-ville-commandants'],l:[
+  ['cm1','Regarde la liste.','8 commandants : initiale, nom, « Légendaire » (doré) ou « Épique » (violet), rôle, niveau et compétences (5-5-5-5).'],
+  ['cm2','Touche les filtres Infanterie, Cavalerie, Archers, Rassemblement, Garnison, puis Tous.','La liste suit chaque filtre ; le filtre choisi est doré ; « Tous » remet les 8.'],
+  ['cm3','Lis « À améliorer en priorité ».','Étiquette « Prévu · AJ-04 » ; 2 conseils numérotés, clairs.']
+ ]},
+ {g:'Ma ville · Équipements',p:['demo','#ma-ville-equipements'],l:[
+  ['eq1','Regarde l’écran.','6 pièces avec leur rareté en couleur ; « Matériaux » : Cuir, Minerai, Ébène, Os de bête avec leur nombre.'],
+  ['eq2','Touche chaque pièce.','Une fenêtre montre sa rareté et ses effets ; « Accessoires » : un emplacement vide.']
+ ]},
+ {g:'Ma ville · Armements',p:['demo','#ma-ville-armements'],l:[
+  ['ar1','Regarde l’écran.','3 formations (Coin, Arc, Carré creux) ; Coin est choisie ; « Effets de la formation Coin » à côté.'],
+  ['ar2','Touche Arc, puis Carré creux.','La formation choisie est encadrée en doré et ses effets s’affichent ; un effet inconnu affiche « — » en gris.']
+ ]},
+ {g:'Ma ville · tailles',p:['demo','#ma-ville-progression'],l:[
+  ['mt1','Sur téléphone, ouvre chaque onglet de Ma ville et fais défiler.','Une colonne, rien ne dépasse à droite, rien n’est caché sous le menu ; en saisie rapide, la barre reste au-dessus du menu.'],
+  ['mt2','Sur tablette en paysage ou sur PC.','Deux colonnes ; les onglets gardent une largeur fixe.']
  ]}
 ];

@@ -75,6 +75,7 @@ Dernière mise à jour : 2026-10-08.
 | 2026-10-09 | **« Hôtel de ville », pas « Château »** : l'objectif s'appelle « Hôtel de ville 25 » partout (note 6 de Mickaël : c'est le nom du bâtiment dans le jeu). |
 | 2026-10-09 | **Priorités du jour** : avec plus de temps, plus d'actions (note 5 : « Que 3 actions » en 1 h). Les actions sont prises dans l'ordre d'importance tant qu'elles tiennent dans le temps choisi ; le total s'affiche (« 7 actions · ≈ 42 min sur 1 h »). Durées : exemples proposés par Claude. |
 | 2026-10-09 | **Priorités du jour : 5 actions au plus**, quel que soit le temps choisi (note 8 de Mickaël : ne pas remplir l'écran). |
+| 2026-10-09 | **Accueil : on garde « Objectif en cours » et « Ma semaine »** (Mickaël). L'Accueil est bouclé ; on passe aux tests de Ma ville. |
 | 2026-10-09 | **Rappels des événements** : bouton « Me prévenir » / « Rappel activé » (note 7 : « à quoi sert rappel activé ? ») ; pas de rappel pour une date inconnue. |
 | 2026-10-08 | **Tests guidés dans la maquette** : liste complète des tests, chacun avec un lien qui ouvre le bon écran dans le bon état ; résultats partagés avec Claude. « Mieux vaut trop de tests que pas assez. » Agréable à faire, sans cacher l'écran. |
 
@@ -92,7 +93,7 @@ Dernière mise à jour : 2026-10-08.
 
 0. **Début de chaque session : lire les notes et les résultats de tests de Mickaël sur la maquette** (`ArtifactData`, `list`, collections `notes` et `tests`, artefact https://claude.ai/artifact/Ku6BeFs1sgqTc8ihWTP47i), les traiter, répondre dans `reponse`.
 1. Mickaël : passer le dépôt en privé (recommandé).
-2. Revue de la maquette : **connexion et Accueil testés en entier** (87 tests, 2026-10-09). Reste : Mickaël vérifie les 4 corrections v17 ; points ouverts à trancher : garder ou non « Objectif en cours » et « Ma semaine » sur l'Accueil ; valider les textes proposés (messages de connexion, durées des actions). **Ensuite : tests de Ma ville** (même méthode : groupes dans `tests-revue.js`, revue guidée).
+2. Revue de la maquette : **connexion et Accueil testés en entier** (87 tests, 2026-10-09), Accueil bouclé. **En cours : tests de Ma ville** (60 tests ajoutés en v19 : en-tête, Progression, corriger et renseigner une valeur, saisie rapide, Inventaire, import, Commandants, Équipements, Armements, tailles). Ensuite : Optimiser, puis Combat, puis Plus. Textes proposés par Claude encore à valider (messages de connexion, durées des actions).
 3. Ajouter à la maquette : conservation des données dans le navigateur, vraie lecture des captures (tesseract.js), testée sur les captures de Mickaël (les 15 captures de l'étude RoK ne sont pas dans les dépôts : les redonner).
 4. Recherches sur le jeu, en commençant par ce qui sert aux premiers écrans : bâtiments et prérequis jusqu'à l'Hôtel de ville 25, ressources, caisses, accélérateurs.
 
@@ -114,3 +115,4 @@ Dernière mise à jour : 2026-10-08.
 - **2026-10-08** (suite) : v16, séries de tests séparées (demande de Mickaël, il avait peur de mélanger les corrections et la vraie revue).
 - **2026-10-09** : Mickaël a fini la revue complète (87 tests sur tablette) : 83 bons, 4 problèmes (n4 message trop bref, r2 et note 5 trop peu d'actions en 1 h, e1 et note 6 « Hôtel de ville » au lieu de « Château », e4 et note 7 rappel incompris). Tout corrigé en v17 ; les 4 tests sont dans « Corrections à vérifier ». Messages éphémères : 3 à 7 s selon leur longueur.
 - **2026-10-09** (suite) : corrections v17 vérifiées par Mickaël : 3 bonnes (Hôtel de ville 25, rappels, message du mot de passe), 1 reprise (priorités : 5 actions au plus, note 8) → v18.
+- **2026-10-09** (suite) : Mickaël garde « Objectif en cours » et « Ma semaine ». v19 : 60 tests de Ma ville (vérifiés automatiquement par Claude avant envoi : 0 écart après corrections). Corrigé au passage : le bonus de vitesse accepte une décimale (42,5 %) ; « Importer » après un import terminé repart sur un nouvel import. Nouvel état de test `demo:neuf` (exemples tout neufs, par rechargement).

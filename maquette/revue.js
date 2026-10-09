@@ -5,10 +5,10 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=18,VERSION='v'+VNUM+' · 8 oct. 2026';
+var VNUM=19,VERSION='v'+VNUM+' · 8 oct. 2026';
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
-  '*':[{sel:'',t:'Partout : « Château 25 » devient « Hôtel de ville 25 » (ta note 6). Les messages éphémères restent plus longtemps à l’écran (3 à 7 s selon leur longueur).'}],
+  '*':[{sel:'',t:'Onglet Tests : 60 nouveaux tests pour Ma ville (Progression, valeurs, saisie rapide, Inventaire, import, Commandants, Équipements, Armements).'}],
   'evenements':[{sel:'#evList',t:'Chaque événement a un bouton « Me prévenir » ; activé, il devient « Rappel activé » et un message dit quand tu seras prévenu (ta note 7).'}],
   'plan-c25':[{sel:'[data-screen="plan-c25"] h1',t:'Titre « Hôtel de ville 25 » au lieu de « Château 25 » (ta note 6).'}],
   'connexion':[{sel:'[data-auth="connexion"]',t:'Écran ajouté, repris de la maquette validée B01-01.'},
@@ -18,6 +18,7 @@ var CHANGES={
   'confirmation':[{sel:'[data-auth="confirmation"]',t:'Les tests de cet écran préparent eux-mêmes un compte en attente (mot de passe rok12345) : plus besoin d’avoir fait les tests précédents.'}],
   'mot-de-passe-oublie':[{sel:'[data-auth="mot-de-passe-oublie"] .a-feedback',t:'Adresse sans compte : « Aucun compte avec cette adresse… ». Adresse connue : « E-mail envoyé à … » (ta décision).'},{sel:'[data-auth="mot-de-passe-oublie"] .a-primary',t:'Le lien de l’e-mail ne se simule que si un e-mail est vraiment parti.'}],
   'nouveau-mot-de-passe':[{sel:'[data-auth="nouveau-mot-de-passe"]',t:'Écran ajouté, repris de B01-05. Après « Enregistrer », tu es connecté.'}],
+  'ma-ville-progression':[{sel:'#gSet',t:'Le bonus de vitesse accepte une décimale (42,5 %), comme dans le jeu.'}],
   'accueil':[{sel:'#prioList',t:'Priorités du jour : 5 actions au plus (ta note 8) ; elles tiennent dans le temps choisi et le total s’affiche sous la liste.'},{sel:'#homeTiles',t:'Aperçu de ma ville : les 6 bulles de l’Accueil validé (Bâtisseurs, Bonus de vitesse, 4 totaux), à ta demande.'},
     {sel:'.timepick',t:'Temps de jeu plus clair : la question « Combien de temps as-tu pour jouer ? » et la durée de chaque action. Titre « Priorités du jour » (le nombre change avec le temps).'},
     {sel:'#homeEmpty',t:'Accueil sans profil repris de B01-06 (onglet États → « Nouveau compte sans profil » pour le voir).'}],
@@ -587,7 +588,7 @@ function rTests(){
     var rr=row();rr.style.marginTop='8px';rr.appendChild(chip(RUN.on&&RUN.list?'Vérification en cours':'▶ Vérifier ces '+RV.length+' correction'+(RV.length>1?'s':''),true,function(){var L=RV.map(function(t){return t.i;});startRun(L[0],L);}));box.appendChild(rr);
     pb.appendChild(box);
   }
-  pb.appendChild(h4((RV.length?'2 · ':'')+'Revue complète · jusqu’à l’Accueil · '+VERSION));
+  pb.appendChild(h4((RV.length?'2 · ':'')+'Revue complète · connexion, Accueil, Ma ville · '+VERSION));
   pb.appendChild(el('p','txt',st.done+' sur '+st.all+' faits · '+st.ok+' bon'+(st.ok>1?'s':'')+' · '+st.ko+' problème'+(st.ko>1?'s':'')));
   var pg=el('div','prog');var bar=el('i');bar.style.width=Math.round(st.done/st.all*100)+'%';pg.appendChild(bar);pb.appendChild(pg);
   var r=row();r.style.marginTop='8px';
