@@ -132,7 +132,7 @@ var saveT=null,lastSaved='';
 function saveReel(now){
   if(!REEL||!LOADED||!window.RC_STORE)return;clearTimeout(saveT);
   saveT=setTimeout(function(){var j=snapshot();if(j===lastSaved)return;lastSaved=j;
-    window.RC_STORE.save(j).catch(function(){lastSaved='';say('Tes données n’ont pas pu être enregistrées : vérifie ta connexion, puis refais la dernière modification.');});},now?0:600);
+    var pr;try{pr=window.RC_STORE.save(j);}catch(e){pr=Promise.reject(e);}pr.catch(function(){lastSaved='';say('Tes données n’ont pas pu être enregistrées dans la maquette publiée. Une copie est gardée sur cet appareil ; l’envoi sera retenté à ta prochaine modification.');});},now?0:600);
 }
 function applyReel(j){var d=JSON.parse(j);P=d.P||{};ORDER=d.ORDER||[];S.active=d.active&&P[d.active]?d.active:(ORDER[0]||null);
   if(d.S)Object.keys(d.S).forEach(function(k){if(STORE_KEYS.indexOf(k)>=0)S[k]=d.S[k];});ACC.REEL.data={P:P,ORDER:ORDER,active:S.active};}
@@ -140,7 +140,9 @@ function startReel(){
   var ld=document.createElement('div');ld.className='reel-load';ld.innerHTML='<p>Chargement de tes données…</p>';document.body.appendChild(ld);
   var done=false;
   function fail(){if(done)return;done=true;ld.innerHTML='<div class="card hl"><h3>Tes données ne se chargent pas</h3><p>Vérifie ta connexion, puis réessaie. Rien n’a été effacé.</p><div class="btns"><button class="btn primary" type="button" onclick="location.reload()">Réessayer</button><button class="btn" type="button" onclick="try{localStorage.setItem(\'rc-mode\',\'demo\')}catch(e){}location.reload()">Revenir aux exemples</button></div></div>';}
-  function go(){if(done)return;window.RC_STORE.load().then(function(j){if(done)return;done=true;if(j)applyReel(j);lastSaved=j||'';LOADED=true;ld.remove();route();},fail);}
+  function go(){if(done)return;window.RC_STORE.load().then(function(j){if(done)return;done=true;if(j)applyReel(j);lastSaved=j||'';LOADED=true;ld.remove();route();
+    /* la copie de ce navigateur était plus récente que la maquette publiée : on la renvoie */
+    if(window.RC_STORE.st&&window.RC_STORE.st.pending){window.RC_STORE.st.pending=false;lastSaved='';saveReel(true);}},fail);}
   if(window.RC_STORE)go();else document.addEventListener('rc:store',go,{once:true});
   setTimeout(fail,15000);
 }
@@ -816,8 +818,12 @@ window.RC_API={
   /* Met la maquette dans l'état demandé puis ouvre l'écran : 'out' (déconnecté), 'demo' (compte d'essai), 'vide' (nouveau compte sans profil) ;
      'demo:f1' choisit aussi le profil actif. */
   mode:function(){return REEL?'reel':'demo';},
-  setMode:function(m){function go(){try{localStorage.setItem('rc-mode',m);}catch(e){}location.hash='accueil';location.reload();}
-    if(REEL&&LOADED&&window.RC_STORE){clearTimeout(saveT);window.RC_STORE.save(snapshot()).then(go,go);}else go();},
+  /* Changer de version ne dépend jamais de l'enregistrement : on essaie d'enregistrer 2,5 s au plus (une copie reste dans ce navigateur), puis on recharge. */
+  setMode:function(m){var done=false;function go(){if(done)return;done=true;try{localStorage.setItem('rc-mode',m);if(m==='demo')sessionStorage.setItem('rokUser',DEMO);}catch(e){}location.hash='accueil';location.reload();}
+    try{localStorage.setItem('rc-mode',m);}catch(e){}
+    if(REEL&&LOADED&&window.RC_STORE){clearTimeout(saveT);var j=null;try{j=snapshot();}catch(e){}
+      if(j&&j!==lastSaved){try{window.RC_STORE.save(j).then(go,go);}catch(e){go();}setTimeout(go,2500);return;}}
+    go();},
   resetReel:function(){if(!REEL||!window.RC_STORE)return;LOADED=false;window.RC_STORE.save('').then(function(){location.hash='accueil';location.reload();});},
   go:function(state,hash){
     if(REEL){say('Les tests se font dans la version Exemples (bulle › États).');return;}

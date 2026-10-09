@@ -1,0 +1,870 @@
+{
+ "source": "base de la maquette publiée https://claude.ai/artifact/Ku6BeFs1sgqTc8ihWTP47i",
+ "archive_le": "2026-10-09",
+ "raison": "Mickaël a demandé de supprimer tous les tests et les notes (2026-10-09)",
+ "notes": {
+  "02gm83k40nahjls9bcs6": {
+   "ancre": "#timeChips > button:nth-of-type(1)",
+   "cible": "bouton « 10 min » · section « Trois priorités du jour »",
+   "cree": "2026-10-08T20:36:51.213Z",
+   "ecran": "accueil",
+   "fx": 0.515,
+   "fy": 0.497,
+   "h": 1431,
+   "n": 2,
+   "reponse": "Fait (v6), à valider : la question « Combien de temps as-tu pour jouer ? » au-dessus des boutons, la durée affichée sur chaque action (≈ 2 min…), et le titre devient « Priorités du jour » (le nombre change avec le temps). Test r1 pour me dire si c’est clair.",
+   "statut": "traitée",
+   "taille": "tablette",
+   "texte": "A quoi correspond ces icones ?",
+   "titre": "Accueil",
+   "version": "v5 · 8 oct. 2026",
+   "w": 1029,
+   "x": 780,
+   "y": 371
+  },
+  "94uxhxek0ry88z1lemup": {
+   "ancre": "#evList > button:nth-of-type(1) > span:nth-of-type(2) > small:nth-of-type(1)",
+   "cible": "bouton « Gouverneur le plus puissant Du 11 au 17 oct. · rappel activé Rappel » · section « Calendrier »",
+   "cree": "2026-10-09T11:21:13.446Z",
+   "ecran": "evenements",
+   "fx": 0.236,
+   "fy": 0.808,
+   "h": 1431,
+   "n": 7,
+   "reponse": "C’était un rappel : l’appli t’envoie une notification au début de l’événement. Ce n’était pas clair, donc (v17) chaque événement a un bouton « Me prévenir » ; une fois touché, il devient « Rappel activé » (vert) et un message dit quand tu seras prévenu. Pas de bouton pour une date inconnue.",
+   "statut": "traitée",
+   "taille": "tablette",
+   "test": "e4",
+   "texte": "Test 73 : a quoi sert ”rappel activer’ ?",
+   "titre": "Événements et KvK",
+   "version": "v16 · 8 oct. 2026",
+   "w": 1029,
+   "x": 313,
+   "y": 257
+  },
+  "h00veaq2b6iu965i52m7": {
+   "ancre": "#timeChips > button:nth-of-type(3)",
+   "cible": "bouton « 1 h » · section « Priorités du jour »",
+   "cree": "2026-10-09T11:14:48.922Z",
+   "ecran": "accueil",
+   "fx": 0.628,
+   "fy": 0.358,
+   "h": 1431,
+   "n": 5,
+   "reponse": "Corrigé (v17) : les actions sont prises par ordre d’importance tant qu’elles tiennent dans le temps choisi. 10 min → 4 actions, 30 min → 6, 1 h → 7 (dont « Entraîner des fantassins »), et le total s’affiche sous la liste (« 7 actions · ≈ 42 min sur 1 h »). À vérifier dans « Corrections à vérifier ».",
+   "statut": "traitée",
+   "taille": "tablette",
+   "texte": "Que 3 actions",
+   "titre": "Accueil",
+   "version": "v16 · 8 oct. 2026",
+   "w": 1029,
+   "x": 538,
+   "y": 420
+  },
+  "m4f2vgmju6259700qa29": {
+   "ancre": "#suEmail",
+   "cible": "champ « nom@exemple.fr »",
+   "cree": "2026-10-08T21:14:11.213Z",
+   "ecran": "inscription",
+   "fx": 0.767,
+   "fy": 0.594,
+   "h": 1431,
+   "n": 4,
+   "reponse": "Oui, tu as raison : fait en v8. Avec une adresse qui a déjà un compte, « Un compte existe déjà avec cette adresse… » s’affiche sous E-mail et tu restes sur l’écran. C’est aussi ce qui bloquait ton test 22 : le compte n’avait pas été créé. Refais les tests 19 et 22 (ils sont repartis à zéro).",
+   "statut": "traitée",
+   "taille": "tablette",
+   "test": "i8",
+   "texte": "Test 19 : il devrais pas dire justement que cette adresse mail existe deja ?",
+   "titre": "Créer un compte",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029,
+   "x": 630,
+   "y": 628
+  },
+  "oi8i5y9uqpck7nmiqboi": {
+   "ancre": "[data-screen=\"plan-c25\"] > header:nth-of-type(1) > div:nth-of-type(1) > h1:nth-of-type(1)",
+   "cible": "bloc « Château 25 »",
+   "cree": "2026-10-09T11:19:59.482Z",
+   "ecran": "plan-c25",
+   "fx": 0.595,
+   "fy": 0.333,
+   "h": 1431,
+   "n": 6,
+   "reponse": "Tu as raison, c’est le nom du bâtiment dans le jeu. Corrigé partout (v17) : « Hôtel de ville 25 » (titre du plan, Accueil, Optimiser, Fermes, Bilan…). Sur la case de l’Accueil, faute de place : « HDV 25 », comme « HDV 24 » sous ton nom.",
+   "statut": "traitée",
+   "taille": "tablette",
+   "test": "e1",
+   "texte": "Test 70 : normalement c’est l’hotel de ville et non le chateau",
+   "titre": "Plan Château 25",
+   "version": "v16 · 8 oct. 2026",
+   "w": 1029,
+   "x": 227,
+   "y": 109
+  },
+  "tu02vhb9ugwi9claz446": {
+   "ancre": "#pTabs > button:nth-of-type(3)",
+   "cible": "bouton « Ferme 2 »",
+   "cree": "2026-10-08T20:36:06.738Z",
+   "ecran": "accueil",
+   "fx": 0.659,
+   "fy": 0.542,
+   "h": 1431,
+   "n": 1,
+   "reponse": "Fait (v6) : tu peux supprimer n’importe quel profil, même l’actif. La confirmation dit quel profil deviendra actif. Tests b6 à b8 pour vérifier.",
+   "statut": "traitée",
+   "taille": "tablette",
+   "texte": "Je peux pas supprimer un profil actif",
+   "titre": "Accueil",
+   "version": "v5 · 8 oct. 2026",
+   "w": 1029,
+   "x": 765,
+   "y": 83
+  },
+  "tz24l0176vekr2bk2up4": {
+   "ancre": "#prioList > a:nth-of-type(6) > span:nth-of-type(2) > small:nth-of-type(1)",
+   "cible": "lien « 6 Envoyer tes marches libres récolter Le bois est ta ressource la plus » · section « Priorités du jour »",
+   "cree": "2026-10-09T11:32:30.238Z",
+   "ecran": "accueil",
+   "fx": 0.54,
+   "fy": 0.789,
+   "h": 1431,
+   "n": 8,
+   "reponse": "Fait (v18) : jamais plus de 5 actions. 10 min → 3 actions, 30 min → 5, 1 h → 5 dont « Entraîner des fantassins » (les actions longues entrent quand tu as plus de temps). Test 58 à revérifier.",
+   "statut": "traitée",
+   "taille": "tablette",
+   "test": "r2",
+   "texte": "Test 58 : faudrais bloquer a 5 action sur 1h pour pas que ca remplisse trop l’ecran",
+   "titre": "Accueil",
+   "version": "v17 · 8 oct. 2026",
+   "w": 1029,
+   "x": 503,
+   "y": 914
+  },
+  "uupv686cxcc4d8x8zh5y": {
+   "ancre": "#homeTiles > a:nth-of-type(5) > span:nth-of-type(2)",
+   "cible": "lien « Construction 21 j 6 h » · section « Aperçu de ma ville »",
+   "cree": "2026-10-08T20:39:52.822Z",
+   "ecran": "accueil",
+   "fx": 0.919,
+   "fy": 0.098,
+   "h": 1431,
+   "n": 3,
+   "reponse": "Fait (v6) : Bâtisseurs, Bonus de vitesse, Total nourriture, Total bois, Total pierre, Total or. Une valeur inconnue affiche « — » et « à renseigner ». Tests a1 à a3.",
+   "statut": "traitée",
+   "taille": "tablette",
+   "texte": "Je pense qu’il faut garder 6 bulles mais tu verrais quoi de plus important pour remplacer ”construction” et ”recherche” ?",
+   "titre": "Accueil",
+   "version": "v5 · 8 oct. 2026",
+   "w": 1029,
+   "x": 516,
+   "y": 1229
+  }
+ },
+ "tests": {
+  "a1": {
+   "date": "2026-10-09T11:17:43.163Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "a2": {
+   "date": "2026-10-09T11:18:27.131Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "a3": {
+   "date": "2026-10-09T11:18:57.253Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "a4": {
+   "date": "2026-10-09T11:19:15.305Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "a5": {
+   "date": "2026-10-09T11:19:22.732Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "b1": {
+   "date": "2026-10-09T05:07:13.507Z",
+   "etat": "ok",
+   "taille": "téléphone",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 411
+  },
+  "b2": {
+   "date": "2026-10-09T05:07:20.140Z",
+   "etat": "ok",
+   "taille": "téléphone",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 411
+  },
+  "b3": {
+   "date": "2026-10-09T05:08:29.498Z",
+   "etat": "ok",
+   "taille": "téléphone",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 411
+  },
+  "b4": {
+   "date": "2026-10-09T05:08:55.847Z",
+   "etat": "ok",
+   "taille": "téléphone",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 411
+  },
+  "b5": {
+   "date": "2026-10-09T05:09:06.735Z",
+   "etat": "ok",
+   "taille": "téléphone",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 411
+  },
+  "b6": {
+   "date": "2026-10-09T05:09:33.617Z",
+   "etat": "ok",
+   "taille": "téléphone",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 411
+  },
+  "b7": {
+   "date": "2026-10-09T05:09:59.609Z",
+   "etat": "ok",
+   "taille": "téléphone",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 411
+  },
+  "b8": {
+   "date": "2026-10-09T05:10:21.847Z",
+   "etat": "ok",
+   "taille": "téléphone",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 411
+  },
+  "b9": {
+   "date": "2026-10-09T11:13:52.736Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "c1": {
+   "date": "2026-10-08T21:06:13.437Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "c10": {
+   "date": "2026-10-08T21:09:35.643Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "c11": {
+   "date": "2026-10-08T21:09:57.212Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "c2": {
+   "date": "2026-10-08T21:07:12.619Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "c3": {
+   "date": "2026-10-08T21:07:37.271Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "c4": {
+   "date": "2026-10-08T21:07:48.503Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "c5": {
+   "date": "2026-10-08T21:08:01.910Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "c6": {
+   "date": "2026-10-08T21:08:09.946Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "c7": {
+   "date": "2026-10-08T21:08:18.105Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "c8": {
+   "date": "2026-10-08T21:09:02.770Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "c9": {
+   "date": "2026-10-08T21:09:12.177Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "e1": {
+   "date": "2026-10-09T11:32:51.841Z",
+   "etat": "ok",
+   "note": 6,
+   "taille": "tablette",
+   "version": "v17 · 8 oct. 2026",
+   "vn": 17,
+   "w": 1029
+  },
+  "e2": {
+   "date": "2026-10-09T11:20:16.910Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "e3": {
+   "date": "2026-10-09T11:20:40.947Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "e4": {
+   "date": "2026-10-09T11:33:22.964Z",
+   "etat": "ok",
+   "note": 7,
+   "taille": "tablette",
+   "version": "v17 · 8 oct. 2026",
+   "vn": 17,
+   "w": 1029
+  },
+  "e5": {
+   "date": "2026-10-09T11:21:22.684Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "e6": {
+   "date": "2026-10-09T11:21:32.172Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "e7": {
+   "date": "2026-10-09T11:21:53.554Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "f1": {
+   "date": "2026-10-08T21:39:11.063Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v11 · 8 oct. 2026",
+   "vn": 11,
+   "w": 1029
+  },
+  "f2": {
+   "date": "2026-10-08T21:39:21.477Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v11 · 8 oct. 2026",
+   "vn": 11,
+   "w": 1029
+  },
+  "f3": {
+   "captures": [
+    "1e875e723de24485f0326341a6127836",
+    "638df315823f5480a0d01098738c6c65",
+    "a6c46de4547fb859dfd8d087b72692ef"
+   ],
+   "date": "2026-10-08T21:21:19.912Z",
+   "etat": "ko",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "f3b": {
+   "date": "2026-10-08T21:39:58.650Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v11 · 8 oct. 2026",
+   "vn": 11,
+   "w": 1029
+  },
+  "f4": {
+   "date": "2026-10-08T21:49:58.331Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v14 · 8 oct. 2026",
+   "vn": 14,
+   "w": 1029
+  },
+  "i1": {
+   "date": "2026-10-08T21:10:39.836Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "i2": {
+   "date": "2026-10-08T21:10:58.896Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "i3": {
+   "date": "2026-10-08T21:11:24.848Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "i4": {
+   "date": "2026-10-08T21:11:38.885Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "i5": {
+   "date": "2026-10-08T21:11:49.508Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "i6": {
+   "date": "2026-10-08T21:12:04.396Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "i7": {
+   "date": "2026-10-08T21:12:25.076Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "i8": {
+   "date": "2026-10-08T21:13:33.110Z",
+   "etat": "ko",
+   "note": 4,
+   "taille": "tablette",
+   "version": "v7 · 8 oct. 2026",
+   "w": 1029
+  },
+  "i8b": {
+   "date": "2026-10-08T21:38:48.401Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v11 · 8 oct. 2026",
+   "vn": 11,
+   "w": 1029
+  },
+  "m1": {
+   "date": "2026-10-09T11:21:58.360Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "m2": {
+   "date": "2026-10-09T11:22:12.924Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "m3": {
+   "date": "2026-10-09T11:22:18.341Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "m4": {
+   "date": "2026-10-09T11:22:35.845Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "m5": {
+   "date": "2026-10-09T11:23:16.131Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "m6": {
+   "date": "2026-10-09T11:23:23.617Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "m7": {
+   "date": "2026-10-09T11:23:34.531Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "n1": {
+   "date": "2026-10-08T22:04:38.781Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "n2": {
+   "date": "2026-10-08T22:04:48.769Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "n3": {
+   "date": "2026-10-08T22:04:54.763Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "n4": {
+   "captures": [
+    "d130f3df9a901328dc6b4aac0a1dce32"
+   ],
+   "date": "2026-10-09T11:31:20.079Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v17 · 8 oct. 2026",
+   "vn": 17,
+   "w": 1029
+  },
+  "n5": {
+   "date": "2026-10-08T22:08:58.471Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "o1": {
+   "date": "2026-10-08T22:02:41.312Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "o2b": {
+   "date": "2026-10-08T22:02:53.178Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "o3b": {
+   "date": "2026-10-08T22:03:05.966Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "o4b": {
+   "date": "2026-10-08T22:03:10.490Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "o5": {
+   "date": "2026-10-08T22:03:32.263Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "o6": {
+   "date": "2026-10-08T22:03:48.096Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "o7": {
+   "date": "2026-10-08T22:04:29.234Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "p1": {
+   "date": "2026-10-08T22:11:42.253Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "p2": {
+   "date": "2026-10-08T22:11:58.604Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "p3": {
+   "date": "2026-10-08T22:12:20.390Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "p4": {
+   "date": "2026-10-09T11:13:28.731Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "r1": {
+   "date": "2026-10-09T11:14:00.753Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "r2": {
+   "captures": [],
+   "date": "2026-10-09T11:32:03.030Z",
+   "etat": "ko",
+   "note": 8,
+   "taille": "tablette",
+   "version": "v17 · 8 oct. 2026",
+   "vn": 17,
+   "w": 1029
+  },
+  "r3": {
+   "date": "2026-10-09T11:15:20.133Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "r4": {
+   "date": "2026-10-09T11:15:33.055Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "t1": {
+   "date": "2026-10-09T11:23:41.312Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "t2": {
+   "date": "2026-10-09T11:23:53.212Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "t3": {
+   "date": "2026-10-09T11:23:56.840Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "t4": {
+   "date": "2026-10-09T11:24:04.530Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "v1": {
+   "date": "2026-10-08T22:09:19.068Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "v2": {
+   "date": "2026-10-08T22:09:51.932Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "v3": {
+   "date": "2026-10-08T22:10:06.094Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "v4": {
+   "date": "2026-10-08T22:10:24.194Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "v5": {
+   "date": "2026-10-08T22:10:28.636Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "v6": {
+   "date": "2026-10-08T22:11:07.889Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "v7": {
+   "date": "2026-10-08T22:11:23.879Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "v8": {
+   "date": "2026-10-08T22:11:30.847Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "w1": {
+   "date": "2026-10-09T11:16:02.154Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "w2": {
+   "date": "2026-10-09T11:16:37.257Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "w3": {
+   "date": "2026-10-09T11:16:48.310Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  },
+  "w4": {
+   "date": "2026-10-09T11:17:31.288Z",
+   "etat": "ok",
+   "taille": "tablette",
+   "version": "v16 · 8 oct. 2026",
+   "vn": 16,
+   "w": 1029
+  }
+ }
+}

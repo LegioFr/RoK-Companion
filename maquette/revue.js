@@ -5,14 +5,15 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=21,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=22,VERSION='v'+VNUM+' · 9 oct. 2026';
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
 var REEL=false;try{REEL=localStorage.getItem('rc-mode')==='reel';}catch(e){}
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
-  '*':[{sel:'',t:'Chaque version a ses propres notes : celles des tests ne s’affichent plus dans « Ma version réelle » (ta remarque).'},
+  '*':[{sel:'',t:'Passer de « Ma version réelle » aux « Exemples » marche même si l’enregistrement ne répond pas ; l’onglet États dit si le dernier enregistrement a réussi (ta remarque).'},
+    {sel:'',t:'Chaque version a ses propres notes : celles des tests ne s’affichent plus dans « Ma version réelle » (ta remarque).'},
     {sel:'',t:'Deux versions de la maquette (onglet États) : « Exemples », pour les tests, et « Ma version réelle », vierge, que tu remplis toi-même ; elle est gardée avec la maquette publiée.'},
-    {sel:'',t:'Onglet Tests : 60 nouveaux tests pour Ma ville (Progression, valeurs, saisie rapide, Inventaire, import, Commandants, Équipements, Armements).'}],
+    {sel:'',t:'Tous les tests, leurs résultats, les captures jointes et les notes ont été supprimés (ta demande ; une archive est gardée dans le dépôt).'}],
   'evenements':[{sel:'#evList',t:'Chaque événement a un bouton « Me prévenir » ; activé, il devient « Rappel activé » et un message dit quand tu seras prévenu (ta note 7).'}],
   'plan-c25':[{sel:'[data-screen="plan-c25"] h1',t:'Titre « Hôtel de ville 25 » au lieu de « Château 25 » (ta note 6).'}],
   'connexion':[{sel:'[data-auth="connexion"]',t:'Écran ajouté, repris de la maquette validée B01-01.'},
@@ -156,13 +157,23 @@ var db=null,dbState='attente',NOTES=[],ALLN=[],assets=null,RES={};
 function ofMode(n){return REEL?n.mode==='reel':n.mode!=='reel';}
 function setNotes(a){ALLN=a;NOTES=a.filter(ofMode);}
 /* Ma version réelle : un seul document (reel/donnees) dans la base de la maquette publiée ; hors claude.ai, ce navigateur. */
-function giveStore(kind){if(window.RC_STORE)return;
-  window.RC_STORE=kind==='db'?{kind:'db',
-    load:function(){return db.doc('reel/donnees').get().then(function(x){var d=x.exists?x.data():null;return d&&typeof d.json==='string'?d.json:'';});},
-    save:function(j){return db.doc('reel/donnees').set({json:j,maj:new Date().toISOString()});}}:{kind:'local',
-    load:function(){try{return Promise.resolve(localStorage.getItem('rc-reel')||'');}catch(e){return Promise.resolve('');}},
-    save:function(j){try{localStorage.setItem('rc-reel',j);return Promise.resolve();}catch(e){return Promise.reject(e);}}};
+/* Ma version réelle : un seul document (reel/donnees) dans la base de la maquette publiée ; hors claude.ai, ce navigateur.
+   Chaque enregistrement est aussi copié dans ce navigateur (rc-reel-copie) : au chargement, la copie la plus récente gagne,
+   pour ne rien perdre si la base n'a pas répondu. Un appel qui ne répond pas échoue au bout de 8 s au lieu de tout bloquer. */
+var STORE_ST={ok:null,err:null};
+function withDelay(f){return new Promise(function(res,rej){var t=setTimeout(function(){rej({code:'délai dépassé'});},8000);
+  try{Promise.resolve(f()).then(function(v){clearTimeout(t);res(v);},function(e){clearTimeout(t);rej(e);});}catch(e){clearTimeout(t);rej(e);}});}
+function copie(){try{var c=JSON.parse(localStorage.getItem('rc-reel-copie')||'null');return c&&typeof c.j==='string'?c:null;}catch(e){return null;}}
+function giveStore(kind){if(window.RC_STORE)return;var d=db;
+  function keep(j){try{localStorage.setItem('rc-reel-copie',JSON.stringify({j:j,t:new Date().toISOString()}));}catch(e){}}
+  function loadDb(){return withDelay(function(){return d.doc('reel/donnees').get().then(function(x){var o=x.exists?x.data():null;return o&&typeof o.json==='string'?{j:o.json,t:o.maj||''}:null;});});}
+  function newest(a){var c=copie();if(!a){if(c&&c.j&&kind==='db')STORE_ST.pending=true;return c?c.j:'';}if(c&&c.t>a.t&&c.j!==a.j){STORE_ST.pending=true;return c.j;}return a.j;}
+  window.RC_STORE={kind:kind,st:STORE_ST,
+    load:function(){if(kind==='db')return loadDb().then(newest,function(e){STORE_ST.err=errTxt(e);var c=copie();if(c)return c.j;throw e;});return Promise.resolve(newest(null));},
+    save:function(j){keep(j);if(kind!=='db'){STORE_ST.ok=new Date();STORE_ST.err=null;return Promise.resolve();}
+      return withDelay(function(){return d.doc('reel/donnees').set({json:j,maj:new Date().toISOString()});}).then(function(){STORE_ST.ok=new Date();STORE_ST.err=null;},function(e){STORE_ST.err=errTxt(e);throw e;});}};
   try{document.dispatchEvent(new CustomEvent('rc:store'));}catch(e){}}
+function errTxt(e){return e?(e.code||e.message||String(e)):'inconnue';}
 function useLocal(){db=null;dbState='local';giveStore('local');setNotes(LS.get('notes',[]));RES=LS.get('tests',{});refresh();announceReview();}
 /* Une fois par version : s'il y a des tests à revoir, la bulle s'ouvre sur l'onglet Tests. */
 function announceReview(){setTimeout(announceNow,0);}
@@ -470,6 +481,7 @@ function rEtats(){
   rv.appendChild(chip('Ma version réelle',REEL,function(){if(!REEL)A.setMode('reel');}));pb.appendChild(rv);
   if(REEL){var st=window.RC_STORE;
     pb.appendChild(hint('Vierge, sans aucun exemple : tu la remplis toi-même. '+(st&&st.kind==='db'?'Tes données sont gardées avec la maquette publiée : tu les retrouves sur tous tes appareils.':'Tes données restent dans ce navigateur.')));
+    if(st&&st.st){var q=st.st;pb.appendChild(hint(q.err?'⚠ Dernier enregistrement dans la maquette publiée : échec ('+q.err+'). Une copie est gardée dans ce navigateur.':q.ok?'Dernier enregistrement : '+q.ok.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'.':'Rien d’enregistré depuis l’ouverture de la page.'));}
     var rz=row();rz.appendChild(chip('Remettre à zéro ma version réelle',false,function(){if(confirm('Effacer toutes les données de ta version réelle ? C’est définitif.'))A.resetReel();}));pb.appendChild(rz);
     pb.appendChild(h4('Profil actif'));var PR=A.profiles();if(!PR.length)pb.appendChild(hint('Aucun profil pour l’instant.'));else{var rp=row();PR.forEach(function(p){rp.appendChild(chip(p.name,p.on,function(){A.setProfile(p.k);render();}));});pb.appendChild(rp);}
     return;}
@@ -602,6 +614,7 @@ function paintRun(){
 }
 function rTests(){
   if(REEL){pb.appendChild(hint('Tu es dans « Ma version réelle » : les tests se font dans la version « Exemples » (onglet États).'));var rr=row();rr.appendChild(chip('Passer aux exemples',false,function(){window.RC_API&&window.RC_API.setMode('demo');}));pb.appendChild(rr);return;}
+  if(!FLAT.length){pb.appendChild(h4('Tests'));pb.appendChild(hint('Aucun test pour l’instant : la liste a été vidée le 9 oct. à ta demande. Les nouveaux tests arriveront ici quand on aura choisi ensemble ce qu’on teste.'));return;}
   var st=stats();
   var RV=reviewList();
   if(RV.length){
