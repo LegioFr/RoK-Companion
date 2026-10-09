@@ -184,6 +184,8 @@ function parseDuree(t){t=String(t||'').trim().toLowerCase().replace(',','.');if(
 /* Jour de jeu : il change à la réinitialisation quotidienne (minuit UTC, soit 2 h en France en été). */
 function jourJeu(){return new Date(Date.now()-JEU.reset.heureUTC*H1).toISOString().slice(0,10);}
 function prochainReset(){var d=new Date();d.setUTCHours(JEU.reset.heureUTC,0,0,0);if(d.getTime()<=Date.now())d=new Date(d.getTime()+24*H1);return d.getTime();}
+/* Heure de la remise à zéro, en heure UTC (note 10 de Mickaël, 2026-10-09) : « minuit UTC » */
+function heureReset(){var h=JEU.reset.heureUTC;return h===0?'minuit UTC':h+' h UTC';}
 function rtFait(id){return S.routine.done[(S.active||'')+'|'+id]===jourJeu();}
 /* Ressources en ville au-dessus de la protection de l'entrepôt (données de la source, non vérifiées) */
 function pillage(p){var lv=p.v.entrepot,pr=lv!=null&&JEU.entrepot.niveaux[lv];if(!pr)return null;
@@ -251,8 +253,7 @@ function renderHome(){
   /* 5 actions au plus, pour ne pas remplir l'écran (note 8 de Mickaël, 2026-10-09) */
   L.forEach(function(x){if(shown.length<5&&used+x[3]<=budget){shown.push(x);used+=x[3];}});
   if(!shown.length&&L.length)shown=[L[0]];
-  $('#prioList').innerHTML=!shown.length?vide(n?'Rien d’autre pour l’instant : renseigne d’abord ta ville, l’appli te proposera ensuite des actions.':'Rien à faire pour l’instant.'):shown.map(function(x,i){return row({href:x[0],nb:i+1,title:esc(x[1]),sub:esc(x[2]),pill:pill('plan','≈ '+x[3]+' min')});}).join('')+
-    '<p class="prio-sum">'+shown.length+' action'+(shown.length>1?'s':'')+' · ≈ '+used+' min sur '+(budget===60?'1 h':budget+' min')+'</p>';
+  $('#prioList').innerHTML=!shown.length?vide(n?'Rien d’autre pour l’instant : renseigne d’abord ta ville, l’appli te proposera ensuite des actions.':'Rien à faire pour l’instant.'):shown.map(function(x,i){return row({href:x[0],nb:i+1,title:esc(x[1]),sub:esc(x[2]),pill:pill('plan','≈ '+x[3]+' min')});}).join('');
   $$('#timeChips .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.time===S.time));});
   // à surveiller
   var W=[];
@@ -284,7 +285,7 @@ function renderEnCours(p){
 }
 function renderRoutine(){
   var I=S.routine.items,done=I.filter(function(x){return rtFait(x.id);}).length,rest=I.filter(function(x){return !rtFait(x.id);});
-  var rz=prochainReset(),hz=new Date(rz).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  var rz=prochainReset(),hz=heureReset();
   $('#rtCard').innerHTML=!I.length?vide('Ta liste est vide : touche « Tout voir » pour l’écrire.'):
     '<div class="ptop"><span><b>'+done+' sur '+I.length+'</b> faites aujourd’hui</span><span class="muted">Remise à zéro à '+hz+' (dans '+fDuree(rz-Date.now())+')</span></div><div class="bar"><div class="fill" style="width:'+Math.round(done/I.length*100)+'%"></div></div>'+
     (rest.length?'<div class="rt-list">'+rest.slice(0,3).map(rtItem).join('')+'</div>'+(rest.length>3?'<p class="rt-more">Et '+(rest.length-3)+' autre'+(rest.length>4?'s':'')+' à faire.</p>':''):'<p class="rt-ok">'+ic('i-check')+'Tout est fait pour aujourd’hui.</p>');
@@ -824,9 +825,14 @@ var ACT={
   encours:function(i){var x=A().encours[i],T=TYPES_EC[x.t]||TYPES_EC.build,fini=x.fin<=Date.now();openSheet(x.q||T[1],'<p class="shp">'+T[1]+' · '+(fini?'terminé le ':'se termine le ')+fQuand(x.fin)+(fini?'':' (dans '+fDuree(x.fin-Date.now())+')')+'.</p>',[['Retirer','del-encours','danger',i],['Fermer','close-sheet','primary']]);},
   'del-encours':function(i){A().encours.splice(+i,1);closeSheet();renderHome();},
   /* ----- Routine du jour ----- */
-  'rt-toggle':function(id){var k=(S.active||'')+'|'+id;if(S.routine.done[k]===jourJeu())delete S.routine.done[k];else S.routine.done[k]=jourJeu();renderRoutine();if(sheet.classList.contains('open')&&$('#rtAll')){$('#rtAll').innerHTML=S.routine.items.map(rtItem).join('');paintIcons($('#rtAll'));}},
-  'routine-all':function(){var I=S.routine.items;openSheet('Routine du jour','<p class="shp muted">Coche ce que tu as fait. Tout se décoche à la remise à zéro du jeu, à '+new Date(prochainReset()).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'.'+(S.routine.propose?' Liste proposée par Claude : corrige-la avec « Modifier la liste ».':'')+'</p><div class="rt-list" id="rtAll">'+I.map(rtItem).join('')+'</div>',[['Modifier la liste','routine-edit',''],['Fermer','close-sheet','primary']]);},
-  'routine-edit':function(){openSheet('Modifier la routine','<p class="shp muted">Renomme, retire (✕) ou ajoute des lignes. Le détail est facultatif.</p><div id="rtEd">'+S.routine.items.map(function(x){return rtLigne(x.t,x.d,x.id);}).join('')+'</div><button class="btn sm" type="button" data-act="routine-line">'+ic('i-plus')+'Ajouter une ligne</button>',[['Annuler','close-sheet',''],['Enregistrer','routine-save','primary']]);},
+  'rt-toggle':function(id){var e0=$('#rtCard [data-arg="'+id+'"]');if(e0&&e0.classList.contains('leaving'))return;/* déjà en train de s'effacer : un 2e toucher ne la décoche pas */
+    var k=(S.active||'')+'|'+id,on=S.routine.done[k]!==jourJeu();if(on)S.routine.done[k]=jourJeu();else delete S.routine.done[k];
+    /* effet de fondu (note 9 de Mickaël, 2026-10-09) : la case se coche, puis la tâche s'efface de la liste courte */
+    var el=$('#rtCard [data-arg="'+id+'"]');
+    if(el&&on){el.classList.add('done','leaving');el.setAttribute('aria-pressed','true');$('.rt-box',el).innerHTML=ic('i-check');setTimeout(renderRoutine,420);}else renderRoutine();
+    if(sheet.classList.contains('open')&&$('#rtAll')){$('#rtAll').innerHTML=S.routine.items.map(rtItem).join('');var b=$('#rtAll [data-arg="'+id+'"]');if(b&&on)b.classList.add('pop');}},
+  'routine-all':function(){var I=S.routine.items;openSheet('Routine du jour','<p class="shp muted">Coche ce que tu as fait. Tout se décoche à la remise à zéro du jeu, à '+heureReset()+'.</p><div class="rt-list" id="rtAll">'+I.map(rtItem).join('')+'</div>',[['Modifier la liste','routine-edit',''],['Fermer','close-sheet','primary']]);},
+  'routine-edit':function(){openSheet('Modifier la routine','<div id="rtEd">'+S.routine.items.map(function(x){return rtLigne(x.t,x.d,x.id);}).join('')+'</div><button class="btn sm" type="button" data-act="routine-line">'+ic('i-plus')+'Ajouter une ligne</button>',[['Annuler','close-sheet',''],['Enregistrer','routine-save','primary']]);},
   'routine-line':function(){$('#rtEd').insertAdjacentHTML('beforeend',rtLigne('','',''));var L=$$('#rtEd input.rt-t');L[L.length-1].focus();},
   'routine-rm':function(k){var r=document.getElementById(k);if(r)r.remove();},
   'routine-save':function(){var L=[];$$('#rtEd .rt-ed').forEach(function(r){var t=$('.rt-t',r).value.trim();if(!t)return;L.push({id:r.dataset.id||('r'+Date.now().toString(36)+L.length),t:t,d:$('.rt-d',r).value.trim()});});
