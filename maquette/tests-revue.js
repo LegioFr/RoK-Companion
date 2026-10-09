@@ -35,5 +35,20 @@ window.RC_TESTS=[
   ['mo4','Touche « ✉ Simuler le lien de l’e-mail » dans le bandeau, choisis un nouveau mot de passe (deux fois le même, 8 caractères ou plus), puis « Enregistrer ».','Tu es connecté et le message « Nouveau mot de passe enregistré. » reste affiché assez longtemps pour être lu.']]},
  {g:'Déconnexion et appli installée',p:['demo','#plus'],l:[
   ['dx1','Dans Plus, touche « Se déconnecter », puis confirme.','Tu reviens sur « Se connecter » avec « Tu es déconnecté. Tes profils restent enregistrés. » : c’est clair.'],
-  ['dx2','Supprime l’icône de la maquette déjà installée (appui long › Désinstaller), puis réinstalle-la depuis Chrome (menu ⋮ › Installer l’application) et ouvre-la depuis la nouvelle icône.','L’icône est l’anneau doré avec RC au milieu, son nom est « RoK Maquette », et elle s’ouvre sans barre du navigateur.',null,28,'icône RC (anneau doré) au lieu de la couronne (ta note 5) et nom « RoK Maquette » ; réinstalle la maquette pour les voir']]}
+  ['dx2','Supprime l’icône de la maquette déjà installée (appui long › Désinstaller), puis réinstalle-la depuis Chrome (menu ⋮ › Installer l’application) et ouvre-la depuis la nouvelle icône.','L’icône est l’anneau doré avec RC au milieu, son nom est « RoK Maquette », et elle s’ouvre sans barre du navigateur.',null,28,'icône RC (anneau doré) au lieu de la couronne (ta note 5) et nom « RoK Maquette » ; réinstalle la maquette pour les voir']]},
+ {g:'Accueil · vue d’ensemble',p:['demo','#accueil'],l:[
+  ['ac1','Regarde l’Accueil sur ta tablette, en portrait.','Les deux colonnes te conviennent : tout se lit bien, rien n’est serré. L’ordre des blocs te paraît logique (à gauche : profil, priorités, routine, à surveiller ; à droite : en cours, aperçu, objectif, événements, semaine).'],
+  ['ac2','Tourne la tablette en paysage, puis remets-la en portrait.','L’Accueil reste lisible dans les deux sens et se remet en place.'],
+  ['ac3','Passe d’un profil à l’autre avec les onglets en haut (Principal, Ferme 1, Ferme 2).','Tout suit le profil choisi, y compris « En cours », « À surveiller » et « Ma semaine ».']]},
+ {g:'Accueil · priorités et routine',p:['demo','#accueil'],l:[
+  ['ac4','Change le temps de jeu (10 min, 30 min, 1 h) au-dessus des priorités.','La liste s’adapte au temps choisi et tu comprends pourquoi certaines actions apparaissent ou disparaissent.'],
+  ['ac5','Dans « Routine du jour », coche deux tâches.','Les cases sont faciles à toucher, les tâches cochées laissent la place aux suivantes et le compteur avance.'],
+  ['ac6','Touche « Tout voir », puis « Modifier la liste » : renomme une ligne, retires-en une, ajoutes-en une, puis « Enregistrer ».','La modification est facile et la liste change bien sur l’Accueil.']]},
+ {g:'Accueil · en cours et alertes',p:['demo','#accueil'],l:[
+  ['ac7','Dans « En cours », touche « + Ajouter » et ajoute une recherche avec un temps restant écrit comme dans le jeu (par exemple 1j 4h 30m).','C’est facile à saisir et l’heure de fin affichée est juste.'],
+  ['ac8','Lis « À surveiller ».','Chaque alerte est claire et tu sais quoi faire : ressources exposées au pillage, bâtisseur libre, valeurs à renseigner, marche incomplète, inventaire ancien.'],
+  ['ac9','Touche « 1 bâtisseur libre ».','La fenêtre d’ajout s’ouvre, déjà réglée sur « Construction ».']]},
+ {g:'Accueil · événements',p:['demo','#accueil'],l:[
+  ['ac10','Regarde « Prochains événements », puis touche « Calendrier ».','Les dates et les heures (heure de France) sont claires, et un événement en cours se repère tout de suite.'],
+  ['ac11','Dans le calendrier, touche « Ajouter » et ajoute un événement avec une date dans quelques jours.','C’est facile ; il apparaît à sa place dans le calendrier et sur l’Accueil.']]}
 ];

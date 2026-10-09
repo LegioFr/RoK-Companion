@@ -159,12 +159,22 @@
         </section>
 
         <section class="sec">
+          <div class="sec-t"><h2>Routine du jour</h2><button class="more" type="button" data-act="routine-all">Tout voir ›</button></div>
+          <div class="card" id="rtCard"></div>
+        </section>
+
+        <section class="sec">
           <div class="sec-t"><h2>À surveiller</h2></div>
           <div class="list" id="watchList"></div>
         </section>
       </div>
 
       <div class="col">
+        <section class="sec">
+          <div class="sec-t"><h2>En cours</h2><button class="more" type="button" data-act="add-encours">+ Ajouter</button></div>
+          <div class="list" id="ecList"></div>
+        </section>
+
         <section class="sec">
           <div class="sec-t"><h2>Aperçu de ma ville</h2><a class="more" href="#ma-ville-progression" id="todoLink"></a></div>
           <div class="tiles" id="homeTiles"></div>
@@ -181,12 +191,7 @@
 
         <section class="sec">
           <div class="sec-t"><h2>Prochains événements</h2><a class="more" href="#evenements">Calendrier ›</a></div>
-          <div class="events" data-ex>
-            <a class="event" href="#evenements"><span class="ri"><i data-i="i-trophy"></i></span><b>Gouverneur le plus puissant</b><span>J-3</span></a>
-            <a class="event" href="#evenements"><span class="ri"><i data-i="n-ankh"></i></span><b>Arche d’Osiris</b><span>J-6</span></a>
-            <a class="event" href="#evenements"><span class="ri"><i data-i="i-flag"></i></span><b>KvK</b><span>J-11</span></a>
-          </div>
-          <p class="vide reel-only">Aucun événement pour l’instant.</p>
+          <div class="events" id="evHome"></div>
         </section>
 
         <section class="sec">
@@ -666,7 +671,7 @@
 
   <!-- ===================================================== ÉVÉNEMENTS -->
   <section data-screen="evenements" data-g="accueil" data-title="Événements et KvK" data-st="plan" data-b="B11" data-note="Prévu (B11). Touche un événement pour activer un rappel. La préparation au KvK suit tes marches et tes troupes. Dates : exemples." hidden>
-    <header class="header"><div class="tw"><a class="back" href="#accueil"><i data-i="i-back"></i>Accueil</a><h1>Événements</h1></div></header>
+    <header class="header"><div class="tw"><a class="back" href="#accueil"><i data-i="i-back"></i>Accueil</a><h1>Événements</h1></div><button class="btn gold" type="button" data-act="add-event"><i data-i="i-plus"></i>Ajouter</button></header>
     <div class="cols">
       <div class="col"><section class="sec"><div class="sec-t"><h2>Calendrier</h2></div><div class="list" id="evList"></div></section></div>
       <div class="col"><section class="sec"><div class="sec-t"><h2>Préparer le KvK</h2><span class="pill" id="kvkPill"><i></i></span></div><div class="list" id="kvkList"></div></section></div>
@@ -771,6 +776,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="icones.js"></script>
+<script src="donnees-jeu.js"></script>
 <script src="app.js"></script>
 <script src="tests-revue.js"></script>
 <script src="revue.js"></script>

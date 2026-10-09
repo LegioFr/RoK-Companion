@@ -36,17 +36,18 @@ var FIELDS={
   mur:{label:'Mur',icon:'i-wall',kind:'lvl',grp:'bld'},academie:{label:'Académie',icon:'i-temple',kind:'lvl',grp:'bld'},
   caserne:{label:'Caserne',icon:'t-swords',kind:'lvl',grp:'bld'},ecurie:{label:'Écurie',icon:'n-horseshoe',kind:'lvl',grp:'bld'},
   tir:{label:'Champ de tir',icon:'n-bow',kind:'lvl',grp:'bld'},hopital:{label:'Hôpital',icon:'i-hosp',kind:'lvl',grp:'bld'},
-  siege:{label:'Atelier de siège',icon:'n-catapult',kind:'lvl',grp:'bld'}
+  siege:{label:'Atelier de siège',icon:'n-catapult',kind:'lvl',grp:'bld'},
+  entrepot:{label:'Entrepôt',icon:'i-chest',kind:'lvl',grp:'bld'}
 };
 var KIND={lvl:['Niveau','Nouveau niveau'],count:['Nombre','Nouveau nombre'],pct:['Bonus (en %)','Nouveau bonus (en %)'],civ:['Civilisation','Nouvelle civilisation']};
 function hist(v){if(v==null)return [];if(typeof v==='string')return [{v:v,d:'4 oct. 2026',m:'',src:'Saisie'}];return [{v:v,d:'5 oct. 2026',m:'Changé en jeu',src:'Saisie'},{v:Math.max(0,v-1),d:'12 sept. 2026',m:'',src:'Import'}];}
 function mkProfile(o){
-  o.h={};Object.keys(FIELDS).forEach(function(k){o.h[k]=hist(o.v[k]);});return o;
+  if(!o.encours)o.encours=[];o.h={};Object.keys(FIELDS).forEach(function(k){o.h[k]=hist(o.v[k]);});return o;
 }
 var P={
   main:mkProfile({name:'Principal',type:'Principal',icon:'i-crown',kd:'#3567',pid:'123456789',power:'128,4 M',kills:'412,8 M',deaths:'5,6 M',gems:'185 430',ap:'6 250',
     tr:['▲ +2,1 M (7j)','▲ +12,4 M (7j)','▲ +320 K (7j)'],releves:214,corr:12,snaps:6,
-    v:{hdv:24,vip:17,builders:2,bonus:null,civ:'France',mur:23,academie:24,caserne:23,ecurie:22,tir:22,hopital:23,siege:null},
+    v:{hdv:24,vip:17,builders:2,bonus:null,civ:'France',mur:23,academie:24,caserne:23,ecurie:22,tir:22,hopital:23,siege:null,entrepot:22},
     research:[['Économie',68],['Militaire',54]],troops:[['Infanterie','t-swords',5,120000],['Cavalerie','n-horseshoe',5,85000],['Archers','n-bow',4,210000],['Siège','n-catapult',4,40000]],
     res:{food:{v:32,c:[['1 M',9,1],['150 K',32,.15],['50 K',44,.05]]},wood:{v:27,c:[['1 M',8,1],['150 K',28,.15],['50 K',36,.05]]},
          stone:{v:12,c:[['750 K',4,.75],['112 K',20,.1125],['37 K',21,.0375]]},gold:{v:6.1,c:[['500 K',4,.5],['75 K',13,.075],['25 K',5,.025]]}},
@@ -56,14 +57,14 @@ var P={
     obj:{title:'Hôtel de ville 25',short:'HDV 25',pct:62,href:'#plan-c25'}}),
   f1:mkProfile({name:'Ferme 1',type:'Ferme',icon:'i-sprout',kd:'#3567',pid:'',power:'18,2 M',kills:'1,2 M',deaths:'40 K',gems:'3 200',ap:'1 000',
     tr:['▲ +0,4 M (7j)','',''],releves:61,corr:2,snaps:3,
-    v:{hdv:21,vip:8,builders:2,bonus:25,civ:'Rome',mur:21,academie:18,caserne:16,ecurie:15,tir:15,hopital:17,siege:12},
+    v:{hdv:21,vip:8,builders:2,bonus:25,civ:'Rome',mur:21,academie:18,caserne:16,ecurie:15,tir:15,hopital:17,siege:12,entrepot:19},
     research:[['Économie',41],['Militaire',22]],troops:[['Infanterie','t-swords',4,30000],['Cavalerie','n-horseshoe',3,10000],['Archers','n-bow',3,20000],['Siège','n-catapult',2,5000]],
     res:{food:{v:6,c:[]},wood:{v:7,c:[]},stone:{v:14,c:[]},gold:{v:4,c:[]}},gemsIn:{v:3200,c:[]},
     acc:{build:[['1 h',40,1]],research:[['1 h',22,1]],train:[],heal:[],general:[['1 h',30,1]]},
     obj:{title:'Envoyer de la pierre',short:'Envoi au Principal',pct:0,href:'#fermes'}}),
   f2:mkProfile({name:'Ferme 2',type:'Ferme',icon:'i-sprout',kd:'#3567',pid:'',power:'6,4 M',kills:'210 K',deaths:'8 K',gems:'450',ap:'420',
     tr:['','',''],releves:18,corr:0,snaps:1,
-    v:{hdv:17,vip:6,builders:1,bonus:null,civ:null,mur:17,academie:null,caserne:12,ecurie:null,tir:11,hopital:12,siege:null},
+    v:{hdv:17,vip:6,builders:1,bonus:null,civ:null,mur:17,academie:null,caserne:12,ecurie:null,tir:11,hopital:12,siege:null,entrepot:null},
     research:[['Économie',20],['Militaire',8]],troops:[['Infanterie','t-swords',2,8000],['Cavalerie','n-horseshoe',1,2000],['Archers','n-bow',2,6000],['Siège','n-catapult',1,0]],
     res:{food:{v:4,c:[]},wood:{v:4,c:[]},stone:{v:2,c:[]},gold:{v:2,c:[]}},gemsIn:{v:450,c:[]},
     acc:{build:[['1 h',8,1]],research:[],train:[],heal:[],general:[]},
@@ -110,9 +111,22 @@ var EQ=[['n-helmet','Casque','leg','Légendaire · Infanterie',[['Attaque de l�
 var FORMS={'Coin':['n-wedge','4 armements équipés',[['Attaque de l’infanterie','+3,5 %'],['Défense de l’infanterie','+2,0 %'],['Dégâts de compétence','+1,5 %'],['Vitesse de marche','—']]],
   'Arc':['n-arch','2 armements équipés',[['Attaque des archers','+2,5 %'],['Santé','+1,0 %'],['Vitesse de marche','—']]],
   'Carré creux':['n-square','aucun armement',[['Défense','+1,0 %'],['Santé','—']]]};
+/* En cours (exemples) : fin relative à l'ouverture de la page. t : build, research, train, heal. */
+var H1=3600e3,NOW0=Date.now();
+P.main.encours=[{t:'build',q:'Caserne 24',fin:NOW0+3*24*H1+5*H1},{t:'research',q:'Tissage',fin:NOW0+27*H1+12*60e3},{t:'train',q:'Fantassins niveau 5 (12 000)',fin:NOW0+5*H1+20*60e3}];
+P.f1.encours=[{t:'build',q:'Mur 22',fin:NOW0+20*H1},{t:'build',q:'Ferme 20',fin:NOW0+2*H1+10*60e3}];
+P.f2.encours=[];
 /* Bilan de la semaine d'exemple, par profil (exemples) */
 var WEEK={main:['+2,1 M de puissance, 3 améliorations','Hôtel de ville 25\u00a0: +8 % en 7 jours'],f1:['+0,4 M de puissance, 1 amélioration','Mur 21 terminé']};
-var EVENTS=[['ev1','i-trophy','Gouverneur le plus puissant','Du 11 au 17 oct.','ok','Confirmé'],['ev2','n-ankh','Arche d’Osiris','14 oct.','ok','Confirmé'],['ev3','i-flag','KvK : saison 3','Vers le 19 oct.','plan','Date estimée'],['ev4','n-gift','Fête de la moisson','Date inconnue','plan','Inconnu']];
+/* Événements (exemples, noms et dates inventés pour la démonstration) : début et fin en millisecondes, null si inconnus.
+   st : ok (confirmé), plan (date estimée), unk (inconnu). */
+function resetApres(jours,h){var d=new Date(NOW0);d.setUTCHours(0,0,0,0);return d.getTime()+jours*24*H1+(h||0)*H1;}
+var EVENTS=[
+  {id:'ev5',icon:'i-sword',n:'Assaut des Ceroli',debut:resetApres(-1),fin:resetApres(2),st:'ok'},
+  {id:'ev1',icon:'i-trophy',n:'Gouverneur le plus puissant',debut:resetApres(2),fin:resetApres(8),st:'ok'},
+  {id:'ev2',icon:'n-ankh',n:'Arche d’Osiris',debut:resetApres(5,12),fin:resetApres(5,13),st:'ok'},
+  {id:'ev3',icon:'i-flag',n:'KvK : saison 3',debut:resetApres(10),fin:null,st:'plan'},
+  {id:'ev4',icon:'n-gift',n:'Fête de la moisson',debut:null,fin:null,st:'unk'}];
 
 /* ================= Ma version réelle (décision de Mickaël du 2026-10-09) =================
    Deux versions : « Exemples » (pré-remplie, pour les tests) et « Ma version réelle » (vierge, remplie par Mickaël,
@@ -123,11 +137,11 @@ if(REEL){
   P={};ORDER=[];CMD=[];EQ=[];FORMS={};EVENTS=[];
   S.active=null;S.imported=false;S.sent=0;S.reserved=false;S.planSaved=false;S.budget=null;S.form=null;S.cmpSec=null;S.rep=0;
   S.goals=[];S.purchases=[];S.marches=[];S.codes=[];S.reports=[];S.reminders={};S.email='';S.tDays=[];
-  ACC={};ACC.REEL={pw:'',ok:true,data:{P:P,ORDER:ORDER,active:null}};AUTH.user='REEL';
+  ACC={};ACC.REEL={pw:'',ok:true,data:{P:P,ORDER:ORDER,active:null}};AUTH.user='REEL';S.events=[];
   document.documentElement.classList.add('reel');
 }
 function vide(t){return '<p class="vide">'+t+'</p>';}
-var STORE_KEYS=['time','tDays','tMoment','tLen','notif','lang','tz','email','goals','purchases','budget','marches','codes','reports','reminders','sent','reserved','planSaved','bil','imported'];
+var STORE_KEYS=['routine','events','time','tDays','tMoment','tLen','notif','lang','tz','email','goals','purchases','budget','marches','codes','reports','reminders','sent','reserved','planSaved','bil','imported'];
 function snapshot(){var o={};STORE_KEYS.forEach(function(k){o[k]=S[k];});o.reports=(S.reports||[]).map(function(r){var c={};Object.keys(r).forEach(function(k){if(k!=='img')c[k]=r[k];});return c;});return JSON.stringify({v:1,P:P,ORDER:ORDER,active:S.active,S:o});}
 var saveT=null,lastSaved='';
 /* Enregistre la version réelle (avec un court délai, et seulement si quelque chose a changé). Jamais avant d'avoir chargé. */
@@ -136,7 +150,7 @@ function saveReel(now){
   saveT=setTimeout(function(){var j=snapshot();if(j===lastSaved)return;lastSaved=j;
     var pr;try{pr=window.RC_STORE.save(j);}catch(e){pr=Promise.reject(e);}pr.catch(function(){lastSaved='';say('Tes données n’ont pas pu être enregistrées dans la maquette publiée. Une copie est gardée sur cet appareil ; l’envoi sera retenté à ta prochaine modification.');});},now?0:600);
 }
-function applyReel(j){var d=JSON.parse(j);P=d.P||{};ORDER=d.ORDER||[];S.active=d.active&&P[d.active]?d.active:(ORDER[0]||null);
+function applyReel(j){var d=JSON.parse(j);P=d.P||{};ORDER=d.ORDER||[];Object.keys(P).forEach(function(k){normProfile(P[k]);});S.active=d.active&&P[d.active]?d.active:(ORDER[0]||null);
   if(d.S)Object.keys(d.S).forEach(function(k){if(STORE_KEYS.indexOf(k)>=0)S[k]=d.S[k];});ACC.REEL.data={P:P,ORDER:ORDER,active:S.active};}
 function startReel(){
   var ld=document.createElement('div');ld.className='reel-load';ld.innerHTML='<p>Chargement de tes données…</p>';document.body.appendChild(ld);
@@ -148,6 +162,33 @@ function startReel(){
   if(window.RC_STORE)go();else document.addEventListener('rc:store',go,{once:true});
   setTimeout(fail,15000);
 }
+
+/* ================= Temps, routine, pillage, événements (décisions de Mickaël du 2026-10-09) ================= */
+/* Un profil créé avant l'ajout d'un champ reçoit ce champ vide (jamais zéro). */
+function normProfile(p){Object.keys(FIELDS).forEach(function(k){if(!(k in p.v))p.v[k]=null;if(!p.h[k])p.h[k]=[];});if(!p.encours)p.encours=[];return p;}
+var JEU=window.RC_JEU||{entrepot:{niveaux:{}},reset:{heureUTC:0},routine:[]};
+if(!S.routine)S.routine={items:JEU.routine.map(function(x){return {id:x.id,t:x.t,d:x.d};}),done:{},propose:true};
+if(!S.events)S.events=[];
+function evList(){return REEL?S.events:EVENTS;}
+/* Durée lisible : 2 j 4 h, 5 h 20 min, 12 min */
+function fDuree(ms){var m=Math.max(0,Math.round(ms/60000)),j=Math.floor(m/1440),h=Math.floor(m%1440/60),mn=m%60;
+  return j?j+' j'+(h?' '+h+' h':''):h?h+' h'+(mn?' '+mn+' min':''):mn+' min';}
+function fQuand(t){var d=new Date(t);return d.toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'})+' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
+/* « 2j 4h 30m », « 4 h », « 45 min », « 1:30:00 » (h:min:s) ou « 2:04:30:00 » (j:h:min:s) → millisecondes */
+function parseDuree(t){t=String(t||'').trim().toLowerCase().replace(',','.');if(!t)return null;
+  var m=t.match(/^(\d+):(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?$/);
+  if(m){var a=m.slice(1).filter(function(x){return x!=null;}).map(Number);if(a.length===3)return ((a[0]*60+a[1])*60+a[2])*1000;return (((a[0]*24+a[1])*60+a[2])*60+a[3])*1000;}
+  var tot=0,ok=false,re=/(\d+(?:\.\d+)?)\s*(j|jours?|d|h|heures?|m|min|minutes?|s|sec)\b/g,x,rest=t;
+  while((x=re.exec(t))){ok=true;var v=+x[1],u=x[2][0];tot+=v*(u==='j'||u==='d'?86400:u==='h'?3600:u==='m'?60:1)*1000;rest=rest.replace(x[0],'');}
+  if(!ok||rest.replace(/[\s,et]/g,'').length)return null;return tot;}
+/* Jour de jeu : il change à la réinitialisation quotidienne (minuit UTC, soit 2 h en France en été). */
+function jourJeu(){return new Date(Date.now()-JEU.reset.heureUTC*H1).toISOString().slice(0,10);}
+function prochainReset(){var d=new Date();d.setUTCHours(JEU.reset.heureUTC,0,0,0);if(d.getTime()<=Date.now())d=new Date(d.getTime()+24*H1);return d.getTime();}
+function rtFait(id){return S.routine.done[(S.active||'')+'|'+id]===jourJeu();}
+/* Ressources en ville au-dessus de la protection de l'entrepôt (données de la source, non vérifiées) */
+function pillage(p){var lv=p.v.entrepot,pr=lv!=null&&JEU.entrepot.niveaux[lv];if(!pr)return null;
+  var R=[['food','Nourriture'],['wood','Bois'],['stone','Pierre'],['gold','Or']],L=[];
+  R.forEach(function(r,i){var x=p.res[r[0]];if(!x||x.v==null)return;var e=x.v-pr[i]/1e6;if(e>=0.05)L.push(r[1]+' '+fM(e));});return L;}
 
 /* ================= Calculs ================= */
 function A(){return P[S.active];}
@@ -222,11 +263,39 @@ function renderHome(){
     S.marches.forEach(function(m,i){if(!m.eq)W.push(row({href:'#combat',icon:'i-shield2',title:'Marche '+(i+1)+' incomplète',sub:'Équipement du commandant secondaire inconnu'}));});
     if(!S.imported)W.push(row({href:'#import',icon:'n-camera',title:'Inventaire relevé il y a 6 jours',sub:'Un nouvel import rendra les priorités plus justes'}));
   }
+  /* Bâtisseurs libres (d'après « En cours ») et ressources exposées au pillage (décisions du 2026-10-09) */
+  var nb2=p.encours.filter(function(x){return x.t==='build'&&x.fin>Date.now();}).length;
+  if(p.v.builders!=null&&nb2<p.v.builders){var lib=p.v.builders-nb2;W.unshift(row({act:'add-encours',data:'build',icon:'t-hammer',title:lib+' bâtisseur'+(lib>1?'s':'')+' libre'+(lib>1?'s':''),sub:'Aucune construction en cours pour '+(lib>1?'eux':'lui')+' · touche pour en ajouter une',go:true}));}
+  var pg=pillage(p);if(pg&&pg.length)W.unshift(row({href:'#ma-ville-inventaire',icon:'i-shield',title:'Ressources exposées au pillage',sub:pg.join(' · ')+' au-dessus de la protection de l’entrepôt '+p.v.entrepot+(JEU.entrepot.verifie?'':' (protection d’après un guide, non vérifiée)')}));
   $('#watchList').innerHTML=W.length?W.join(''):row({icon:'i-check',title:'Rien à surveiller',sub:'Tout est à jour'});
+  renderEnCours(p);renderRoutine();renderEvHome();
   /* Ma semaine : propre à chaque profil (le bilan du Principal s'affichait aussi sur les fermes, constaté le 2026-10-09) */
   var wk=!REEL&&WEEK[S.active];
   $('#weekList').innerHTML=wk?row({href:'#bilan',icon:'n-chart',title:esc(wk[0]),sub:esc(wk[1])}):vide('Pas encore de bilan\u00a0: il faut au moins deux relevés à quelques jours d’écart.');
 }
+
+var TYPES_EC={build:['a-build','Construction'],research:['a-research','Recherche'],train:['a-train','Entraînement'],heal:['a-heal','Soins']};
+function renderEnCours(p){
+  var L=p.encours.slice().sort(function(a,b){return a.fin-b.fin;}),now=Date.now();
+  $('#ecList').innerHTML=L.length?L.map(function(x){var i=p.encours.indexOf(x),T=TYPES_EC[x.t]||TYPES_EC.build,fini=x.fin<=now;
+    return row({act:'encours',data:i,icon:T[0],title:esc(x.q||T[1]),sub:T[1]+' · '+(fini?'terminé':'se termine dans '+fDuree(x.fin-now)+' ('+fQuand(x.fin)+')'),pill:fini?pill('ok','Terminé'):'',go:false});}).join(''):
+    vide('Rien en cours. Ajoute ce qui se construit, se recherche ou s’entraîne : l’Accueil te dira quand c’est fini.');
+}
+function renderRoutine(){
+  var I=S.routine.items,done=I.filter(function(x){return rtFait(x.id);}).length,rest=I.filter(function(x){return !rtFait(x.id);});
+  var rz=prochainReset(),hz=new Date(rz).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  $('#rtCard').innerHTML=!I.length?vide('Ta liste est vide : touche « Tout voir » pour l’écrire.'):
+    '<div class="ptop"><span><b>'+done+' sur '+I.length+'</b> faites aujourd’hui</span><span class="muted">Remise à zéro à '+hz+' (dans '+fDuree(rz-Date.now())+')</span></div><div class="bar"><div class="fill" style="width:'+Math.round(done/I.length*100)+'%"></div></div>'+
+    (rest.length?'<div class="rt-list">'+rest.slice(0,3).map(rtItem).join('')+'</div>'+(rest.length>3?'<p class="rt-more">Et '+(rest.length-3)+' autre'+(rest.length>4?'s':'')+' à faire.</p>':''):'<p class="rt-ok">'+ic('i-check')+'Tout est fait pour aujourd’hui.</p>');
+}
+function rtItem(x){var f=rtFait(x.id);return '<button class="rt-item'+(f?' done':'')+'" type="button" data-act="rt-toggle" data-arg="'+esc(x.id)+'" aria-pressed="'+f+'"><span class="rt-box">'+(f?ic('i-check'):'')+'</span><span class="rc"><b>'+esc(x.t)+'</b>'+(x.d?'<small>'+esc(x.d)+'</small>':'')+'</span></button>';}
+function evTexte(e,now){if(e.debut==null)return 'date inconnue';if(e.debut<=now&&(e.fin==null||e.fin>now))return e.fin?'en cours · se termine dans '+fDuree(e.fin-now):'en cours';
+  if(e.fin!=null&&e.fin<=now)return 'terminé';return (e.st==='plan'?'vers le ':'')+fQuand(e.debut)+' · dans '+fDuree(e.debut-now);}
+function evTri(L){var now=Date.now();return L.filter(function(e){return e.fin==null||e.fin>now;}).sort(function(a,b){var x=a.debut==null?1e15:a.debut,y=b.debut==null?1e15:b.debut;return x-y;});}
+function renderEvHome(){var L=evTri(evList()).slice(0,3),now=Date.now();
+  $('#evHome').innerHTML=L.length?L.map(function(e){var enc=e.debut!=null&&e.debut<=now;return '<a class="event'+(enc?' now':'')+'" href="#evenements"><span class="ri">'+ic(e.icon||'i-flag')+'</span><b>'+esc(e.n)+'</b><span>'+esc(evTexte(e,now))+'</span></a>';}).join(''):vide('Aucun événement pour l’instant. Ajoute ceux de ton royaume dans le calendrier.');}
+/* L'Accueil se met à jour toutes les minutes (temps restants, routine) */
+setInterval(function(){if(cur==='accueil'&&ORDER.length&&LOADED&&AUTH.user)renderHome();},60000);
 
 /* ================= Fiche profil ================= */
 function renderProfile(){
@@ -496,11 +565,12 @@ function compCheck(){
 
 /* ================= Événements, bilan, codes, plus ================= */
 function renderEvents(){
-  if(REEL){$('#evList').innerHTML=vide('Aucun événement pour l’instant.');$('#kvkPill').className='pill st-plan';$('#kvkPill').innerHTML='<i></i>Rien à vérifier';$('#kvkList').innerHTML=vide('La préparation au KvK s’appuiera sur tes marches, tes troupes et tes accélérateurs.');return;}
   /* Rappel : un bouton explicite « Me prévenir » (note 7 de Mickaël, 2026-10-09). Une date inconnue ne permet pas de rappel. */
-  $('#evList').innerHTML=EVENTS.map(function(e){var on=S.reminders[e[0]],can=e[4]==='ok'||e[5]==='Date estimée';
-    return '<div class="row ev-row"><span class="ri">'+ic(e[1])+'</span><span class="rc"><b>'+e[2]+'</b><small>'+e[3]+(can?' · '+pill(e[4],e[5]):' · pas de rappel possible')+'</small></span>'+
-      (can?'<button class="btn sm ev-rem'+(on?' on':'')+'" type="button" data-act="remind" data-arg="'+e[0]+'" aria-pressed="'+!!on+'">'+ic('i-bell')+(on?'Rappel activé':'Me prévenir')+'</button>':'')+'</div>';}).join('');
+  var now=Date.now(),L=evTri(evList()),ST={ok:['ok','Confirmé'],plan:['plan','Date estimée'],unk:['plan','Inconnu']};
+  $('#evList').innerHTML=L.length?L.map(function(e){var on=S.reminders[e.id],can=e.debut!=null&&e.debut>now,st=ST[e.st]||ST.unk;
+    return '<div class="row ev-row"><span class="ri">'+ic(e.icon||'i-flag')+'</span><span class="rc"><b>'+esc(e.n)+'</b><small>'+esc(evTexte(e,now))+(e.fin&&e.debut&&e.debut>now?' · jusqu’au '+fQuand(e.fin):'')+' · '+pill(st[0],st[1])+'</small></span>'+
+      (can?'<button class="btn sm ev-rem'+(on?' on':'')+'" type="button" data-act="remind" data-arg="'+e.id+'" aria-pressed="'+!!on+'">'+ic('i-bell')+(on?'Rappel activé':'Me prévenir')+'</button>':'')+'</div>';}).join(''):vide('Aucun événement pour l’instant. Touche « Ajouter » pour noter ceux de ton royaume.');
+  if(REEL){$('#kvkPill').className='pill st-plan';$('#kvkPill').innerHTML='<i></i>Rien à vérifier';$('#kvkList').innerHTML=vide('La préparation au KvK s’appuiera sur tes marches, tes troupes et tes accélérateurs.');return;}
   var full=S.marches.filter(function(m){return m.eq;}).length;var t5=P.main.troops[0][3]+P.main.troops[1][3];
   var K=[[true,'Accélérateurs de soins','3 j 4 h · objectif 3 j','#ma-ville-inventaire'],[t5>=300000,'Troupes niveau 5',nb(t5)+' · objectif 300 000','#ma-ville-progression'],
     [full===4,'Marches complètes',full+' sur 4'+(full<4?' · une marche incomplète':''),'#combat'],[true,'Ressources pour soigner','Couvertes par tes réserves',null]];
@@ -537,6 +607,8 @@ function openSheet(title,body,actions){
   sheet.classList.add('open');sheet.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
   var f=$('#shBody input,#shBody select,#shActions .btn');if(f)f.focus();
 }
+var RTL=0;
+function rtLigne(t,d,id){var k='rtl'+(++RTL);return '<div class="rt-ed" id="'+k+'" data-id="'+esc(id)+'"><input class="rt-t" value="'+esc(t)+'" placeholder="Ex. Coffre VIP quotidien" aria-label="Tâche"><input class="rt-d" value="'+esc(d)+'" placeholder="Détail (facultatif)" aria-label="Détail"><button class="xbtn" type="button" aria-label="Retirer cette ligne" data-act="routine-rm" data-arg="'+k+'">✕</button></div>';}
 function closeSheet(){sheet.classList.remove('open');sheet.setAttribute('aria-hidden','true');document.body.classList.remove('modal-open');if(lastFocus&&lastFocus.focus)lastFocus.focus();}
 sheet.addEventListener('click',function(e){if(e.target===sheet)closeSheet();});
 var EYE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
@@ -741,7 +813,32 @@ var ACT={
   eq:function(i){var e=EQ[i];openSheet(e[1],'<p class="shp"><span class="'+e[2]+'">'+e[3]+'</span></p><ul class="kvl">'+e[4].map(function(x){return '<li><span>'+x[0]+'</span><b>'+x[1]+'</b></li>';}).join('')+'</ul>',[['Fermer','close-sheet','primary']]);},
   form:function(k){S.form=k;renderCity();},
   rep:function(i){S.rep=+i;renderCombat();},
-  remind:function(k){S.reminders[k]=!S.reminders[k];renderEvents();var e=EVENTS.filter(function(x){return x[0]===k;})[0];say(S.reminders[k]?'Rappel activé : une notification te préviendra au début de « '+e[2]+' » ('+e[3]+').':'Rappel retiré : tu ne seras pas prévenu.');},
+  remind:function(k){S.reminders[k]=!S.reminders[k];renderEvents();var e=evList().filter(function(x){return x.id===k;})[0];say(S.reminders[k]?'Rappel activé : une notification te préviendra au début de « '+e.n+' » ('+fQuand(e.debut)+').':'Rappel retiré : tu ne seras pas prévenu.');},
+  /* ----- En cours ----- */
+  'add-encours':function(t){t=TYPES_EC[t]?t:'build';openSheet('Ajouter en cours','<div class="fld"><label>Type</label><div class="chips" data-single id="ecType">'+Object.keys(TYPES_EC).map(function(k){return '<button class="chip" type="button" data-v="'+k+'" aria-pressed="'+(k===t)+'">'+TYPES_EC[k][1]+'</button>';}).join('')+'</div></div>'+
+    '<div class="fld"><label for="ecQ">Quoi</label><input id="ecQ" placeholder="Ex. Caserne 24, Tissage, Fantassins niveau 5"></div>'+
+    '<div class="fld"><label for="ecT">Temps restant (comme dans le jeu)</label><input id="ecT" placeholder="Ex. 2j 4h 30m ou 04:30:00"><small class="ferr" id="ecErr" hidden></small></div>',[['Annuler','close-sheet',''],['Ajouter','save-encours','primary']]);},
+  'save-encours':function(){var d=parseDuree($('#ecT').value),e=$('#ecErr');if(!d||d>400*24*H1){e.textContent='Saisis le temps restant, par exemple 2j 4h 30m ou 04:30:00.';e.hidden=false;return;}
+    var t=$('#ecType .chip[aria-pressed="true"]').dataset.v,q=$('#ecQ').value.trim();A().encours.push({t:t,q:q||TYPES_EC[t][1],fin:Date.now()+d});closeSheet();renderHome();say('Ajouté : fin le '+fQuand(Date.now()+d)+'.');},
+  encours:function(i){var x=A().encours[i],T=TYPES_EC[x.t]||TYPES_EC.build,fini=x.fin<=Date.now();openSheet(x.q||T[1],'<p class="shp">'+T[1]+' · '+(fini?'terminé le ':'se termine le ')+fQuand(x.fin)+(fini?'':' (dans '+fDuree(x.fin-Date.now())+')')+'.</p>',[['Retirer','del-encours','danger',i],['Fermer','close-sheet','primary']]);},
+  'del-encours':function(i){A().encours.splice(+i,1);closeSheet();renderHome();},
+  /* ----- Routine du jour ----- */
+  'rt-toggle':function(id){var k=(S.active||'')+'|'+id;if(S.routine.done[k]===jourJeu())delete S.routine.done[k];else S.routine.done[k]=jourJeu();renderRoutine();if(sheet.classList.contains('open')&&$('#rtAll')){$('#rtAll').innerHTML=S.routine.items.map(rtItem).join('');paintIcons($('#rtAll'));}},
+  'routine-all':function(){var I=S.routine.items;openSheet('Routine du jour','<p class="shp muted">Coche ce que tu as fait. Tout se décoche à la remise à zéro du jeu, à '+new Date(prochainReset()).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'.'+(S.routine.propose?' Liste proposée par Claude : corrige-la avec « Modifier la liste ».':'')+'</p><div class="rt-list" id="rtAll">'+I.map(rtItem).join('')+'</div>',[['Modifier la liste','routine-edit',''],['Fermer','close-sheet','primary']]);},
+  'routine-edit':function(){openSheet('Modifier la routine','<p class="shp muted">Renomme, retire (✕) ou ajoute des lignes. Le détail est facultatif.</p><div id="rtEd">'+S.routine.items.map(function(x){return rtLigne(x.t,x.d,x.id);}).join('')+'</div><button class="btn sm" type="button" data-act="routine-line">'+ic('i-plus')+'Ajouter une ligne</button>',[['Annuler','close-sheet',''],['Enregistrer','routine-save','primary']]);},
+  'routine-line':function(){$('#rtEd').insertAdjacentHTML('beforeend',rtLigne('','',''));var L=$$('#rtEd input.rt-t');L[L.length-1].focus();},
+  'routine-rm':function(k){var r=document.getElementById(k);if(r)r.remove();},
+  'routine-save':function(){var L=[];$$('#rtEd .rt-ed').forEach(function(r){var t=$('.rt-t',r).value.trim();if(!t)return;L.push({id:r.dataset.id||('r'+Date.now().toString(36)+L.length),t:t,d:$('.rt-d',r).value.trim()});});
+    S.routine.items=L;S.routine.propose=false;closeSheet();renderRoutine();say('Routine enregistrée : '+L.length+' ligne'+(L.length>1?'s':'')+'.');},
+  /* ----- Événements ----- */
+  'add-event':function(){openSheet('Ajouter un événement','<div class="fld"><label for="evN">Nom</label><input id="evN" placeholder="Ex. Gouverneur le plus puissant"></div>'+
+    '<div class="fld"><label for="evD">Début (heure de France)</label><div class="ev-dt"><input id="evD" type="date"><input id="evDh" type="time" value="02:00" aria-label="Heure de début"></div></div>'+
+    '<div class="fld"><label for="evF">Fin (facultative)</label><div class="ev-dt"><input id="evF" type="date"><input id="evFh" type="time" value="02:00" aria-label="Heure de fin"></div></div>'+
+    '<div class="fld"><label>Date</label><div class="chips" data-single id="evSt"><button class="chip" type="button" data-v="ok" aria-pressed="true">Confirmée</button><button class="chip" type="button" data-v="plan" aria-pressed="false">Estimée</button></div><small class="ferr" id="evErr" hidden></small></div>',[['Annuler','close-sheet',''],['Ajouter','save-event','primary']]);},
+  'save-event':function(){var n=$('#evN').value.trim(),e=$('#evErr');function dt(d,h){if(!d)return null;var x=new Date(d+'T'+(h||'00:00'));return isNaN(x)?null:x.getTime();}
+    var a=dt($('#evD').value,$('#evDh').value),b=dt($('#evF').value,$('#evFh').value);
+    if(!n){e.textContent='Donne un nom à l’événement.';e.hidden=false;return;}if(b!=null&&a!=null&&b<=a){e.textContent='La fin doit venir après le début.';e.hidden=false;return;}
+    evList().push({id:'e'+Date.now().toString(36),icon:'i-flag',n:n,debut:a,fin:b,st:a==null?'unk':$('#evSt .chip[aria-pressed="true"]').dataset.v});closeSheet();renderEvents();if(ORDER.length)renderHome();say('Événement ajouté.');},
   switch:function(k){if(!P[k])return;S.active=k;location.hash='accueil';say('Profil actif : '+P[k].name+'.');},
   eye:function(id){var i=$('#'+id),b=i.nextElementSibling;var show=i.type==='password';i.type=show?'text':'password';b.innerHTML=show?EYEOFF:EYE;b.setAttribute('aria-label',show?'Masquer le mot de passe':'Afficher le mot de passe');},
   'sheet-email':function(){openSheet('Adresse e-mail','<div class="fld"><label for="em">Nouvelle adresse e-mail</label><input id="em" type="email" value="'+esc(S.email)+'"><small class="ferr" id="emErr" hidden></small></div>',[['Annuler','close-sheet',''],['Enregistrer','save-email','primary']]);},

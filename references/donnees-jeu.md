@@ -70,8 +70,11 @@ Règle du projet : chaque donnée a sa source et sa date ; tant qu’elle n’es
 | 24 | Mur 23 Siege Workshop 23 | nourriture 54,8 M bois 54,8 M pierre 24,0 M | 36j |
 | 25 | Mur 24 Trading Post 24 | nourriture 82,2 M bois 82,2 M pierre 36,0 M Plan de maître | 126j 8h |
 
+## Réinitialisation quotidienne
+
+- **2 h du matin, heure de France** (Mickaël, 2026-10-09), soit minuit UTC ; en heure d’hiver, ce serait 1 h : à vérifier après le changement d’heure.
+
 ## Encore à trouver
 
-- Heure de la réinitialisation quotidienne du jeu (pour la « Routine du jour ») : pas trouvée dans les guides consultés ; à confirmer par Mickaël ou par une source.
 - Liste des activités quotidiennes (« Routine du jour ») : à établir avec Mickaël.
 - Calendrier des événements : propre au royaume de Mickaël ; il le renseigne dans sa version réelle.
