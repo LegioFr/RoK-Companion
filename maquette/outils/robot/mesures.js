@@ -1,7 +1,8 @@
 // Mesures du graphisme, exécutées dans la page. Renvoie la liste des constats pour la zone donnée.
 window.__mesurer = function (rootSel) {
   const root = document.querySelector(rootSel) || document.body, out = [], W = innerWidth;
-  const vis = e => { const r = e.getBoundingClientRect(), s = getComputedStyle(e); return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && s.display !== 'none' && !e.closest('[hidden]'); };
+  // le contenu d'un <details> fermé garde des dimensions dans Chromium mais ne se voit pas (2026-10-09, inventaire de Ma ville)
+  const vis = e => { const r = e.getBoundingClientRect(), s = getComputedStyle(e), d = e.closest('details:not([open])'); return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && s.display !== 'none' && !e.closest('[hidden]') && !(d && !e.closest('summary')); };
   const nom = e => { const t = (e.getAttribute('aria-label') || e.textContent || e.placeholder || e.id || e.tagName).replace(/\s+/g, ' ').trim(); return e.tagName.toLowerCase() + ' « ' + t.slice(0, 40) + ' »'; };
   if (document.documentElement.scrollWidth > W + 1) out.push(['débordement', 'La page est plus large que l’écran (' + document.documentElement.scrollWidth + ' px pour ' + W + ' px).']);
   // défilement inutile : la page défile alors que tout ce qui se voit tient dans l'écran (note 1 de Mickaël, 2026-10-09)
