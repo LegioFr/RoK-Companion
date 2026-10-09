@@ -5,14 +5,15 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=25,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=26,VERSION='v'+VNUM+' · 9 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
 var REEL=false;try{REEL=localStorage.getItem('rc-mode')==='reel';}catch(e){}
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
-  '*':[{sel:'',t:'Onglet Tests : 21 tests courts pour toute la partie connexion, seulement ce que toi seul peux juger (graphisme, ta tablette, textes, prise en main). Le reste a été vérifié par mon robot sur le vrai site.'},
+  '*':[{sel:'',t:'Les notes et les résultats s’enregistrent à nouveau (ils échouaient depuis 17 h 11 avec « http 409 »). Un enregistrement raté est maintenant gardé et renvoyé tout seul.'},
+    {sel:'',t:'Onglet Tests : 21 tests courts pour toute la partie connexion, seulement ce que toi seul peux juger (graphisme, ta tablette, textes, prise en main). Le reste a été vérifié par mon robot sur le vrai site.'},
     {sel:'',t:'Espaces insécables avant « ? », « ! », « : » et dans les guillemets : un « ? » ne se retrouve plus seul en début de ligne.'},
     {sel:'',t:'La maquette s’installe sur l’écran d’accueil (icône couronne, proposée par Claude) et s’ouvre sans barre du navigateur ; elle charge toujours la dernière version.'},
     {sel:'',t:'Passer de « Ma version réelle » aux « Exemples » marche même si l’enregistrement ne répond pas ; l’onglet États dit si le dernier enregistrement a réussi (ta remarque).'},
@@ -194,14 +195,21 @@ function siteDb(){
   function snap(d){return {docs:Object.keys(d).map(function(id){return {id:id,data:function(){return d[id];}};})};}
   function tell(col){(subs[col]||[]).forEach(function(f){f(snap(cache[col]||{}));});}
   function pull(col){return fetch('/api/db?col='+col,{cache:'no-store'}).then(function(r){if(!r.ok)throw httpErr(r);return r.json();}).then(function(j){cache[col]=j.docs||{};tell(col);return cache[col];});}
-  function send(o){var p=q.then(function(){return fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(o)}).then(function(r){if(!r.ok)throw httpErr(r);return r.json();});});q=p.catch(function(){});return p;}
+  /* Un enregistrement raté n'est pas perdu : il est gardé dans ce navigateur (rc-attente) et renvoyé tout seul
+     (au chargement, quand la page revient au premier plan, toutes les 30 s, et après chaque enregistrement réussi). */
+  var WAIT=LS.get('attente',[]);
+  function post(o){return fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(o)}).then(function(r){if(!r.ok)throw httpErr(r);return r.json();});}
+  function flush(){if(!WAIT.length)return q;var p=q.then(function(){var L=WAIT.slice();return L.reduce(function(a,o){return a.then(function(){return post(o).then(function(){WAIT=WAIT.filter(function(x){return x!==o&&!(x.col===o.col&&x.id===o.id&&x.t===o.t);});LS.set('attente',WAIT);},function(e){if(e&&/40[04]/.test(e.code)){WAIT=WAIT.filter(function(x){return x!==o;});LS.set('attente',WAIT);return;}throw e;});});},Promise.resolve());});q=p.catch(function(){});return p;}
+  function send(o){o.t=Date.now();var p=q.then(function(){return post(o);});q=p.then(function(){if(WAIT.length)flush();},function(){WAIT.push(o);LS.set('attente',WAIT);say('Pas encore enregistré : nouvel essai automatique dans 30 s.');});return p.catch(function(){});}
+  setInterval(function(){if(WAIT.length)flush();},30000);
+  if(WAIT.length)setTimeout(flush,1500);
   function write(o){var d=cache[o.col]=cache[o.col]||{};if(o.op==='set')d[o.id]=o.data;else if(o.op==='update')d[o.id]=Object.assign({},d[o.id],o.data);else delete d[o.id];tell(o.col);return send(o).then(function(){});}
   function doc(path){var a=path.split('/'),col=a[0],id=a[1];return {
     get:function(){return pull(col).then(function(d){return {exists:Object.prototype.hasOwnProperty.call(d,id),data:function(){return d[id];}};});},
     set:function(data){return write({op:'set',col:col,id:id,data:data});},
     update:function(data){return write({op:'update',col:col,id:id,data:data});},
     delete:function(){return write({op:'delete',col:col,id:id});}};}
-  window.addEventListener('focus',function(){Object.keys(subs).forEach(function(c){pull(c).catch(function(){});});});
+  window.addEventListener('focus',function(){if(WAIT.length)flush();Object.keys(subs).forEach(function(c){pull(c).catch(function(){});});});
   return {doc:doc,collection:function(col){return {
     onSnapshot:function(f,err){(subs[col]=subs[col]||[]).push(f);pull(col).catch(function(e){if(err)err(e);});return function(){};},
     add:function(data){var id='n'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);return write({op:'set',col:col,id:id,data:data}).then(function(){return {id:id};});}};}};

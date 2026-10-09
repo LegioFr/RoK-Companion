@@ -3,7 +3,7 @@
    Lecture toujours à jour (sans cache) ; écriture conditionnelle (ifMatch) refaite si quelqu'un a écrit entre-temps. */
 import { get, put, BlobPreconditionFailedError } from '@vercel/blob';
 
-const COLS = ['notes', 'tests', 'reel'];
+const COLS = ['notes', 'tests', 'reel', 'essai']; // essai : réservé au robot de Claude, jamais aux données de Mickaël
 const ID = /^[A-Za-z0-9_.:-]{1,120}$/;
 const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
 
@@ -11,7 +11,9 @@ async function read(col) {
   const r = await get(`db/${col}.json`, { access: 'private', useCache: false });
   if (!r || r.statusCode !== 200) return { docs: {}, etag: null };
   const txt = await new Response(r.stream).text();
-  return { docs: txt ? JSON.parse(txt) : {}, etag: r.blob.etag };
+  // Au-delà d'environ 1 Ko, le fichier arrive compressé et son empreinte est dite « faible » (W/"…") ; l'écriture
+  // conditionnelle attend l'empreinte sans ce préfixe (même valeur). Sans ce nettoyage, toute écriture échouait (409).
+  return { docs: txt ? JSON.parse(txt) : {}, etag: r.blob.etag ? r.blob.etag.replace(/^W\//, '') : null };
 }
 function write(col, docs, etag) {
   const o = { access: 'private', addRandomSuffix: false, allowOverwrite: true, contentType: 'application/json', cacheControlMaxAge: 60 };
