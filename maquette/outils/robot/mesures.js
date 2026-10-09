@@ -4,6 +4,11 @@ window.__mesurer = function (rootSel) {
   const vis = e => { const r = e.getBoundingClientRect(), s = getComputedStyle(e); return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && s.display !== 'none' && !e.closest('[hidden]'); };
   const nom = e => { const t = (e.getAttribute('aria-label') || e.textContent || e.placeholder || e.id || e.tagName).replace(/\s+/g, ' ').trim(); return e.tagName.toLowerCase() + ' « ' + t.slice(0, 40) + ' »'; };
   if (document.documentElement.scrollWidth > W + 1) out.push(['débordement', 'La page est plus large que l’écran (' + document.documentElement.scrollWidth + ' px pour ' + W + ' px).']);
+  // défilement inutile : la page défile alors que tout ce qui se voit tient dans l'écran (note 1 de Mickaël, 2026-10-09)
+  const H = innerHeight, sh = document.documentElement.scrollHeight;
+  if (sh > H + 1) { let bas = 0; document.querySelectorAll('body *').forEach(e => { const s = getComputedStyle(e); if (s.position === 'fixed' || !vis(e)) return; const r = e.getBoundingClientRect(); if (r.height > 0 && e.closest('#rcRun,#rcPnl,#rcBub,#toast') === null) bas = Math.max(bas, r.bottom + scrollY); });
+    const grand = [...document.querySelectorAll('body *')].filter(e => getComputedStyle(e).position !== 'fixed' && e.getBoundingClientRect().bottom + scrollY >= sh - 1).map(e => (e.id || e.tagName.toLowerCase())).slice(0, 3);
+    if (bas <= H + 1 || grand.some(x => x === 'svg')) out.push(['défilement inutile', 'La page défile de ' + (sh - H) + ' px alors que le contenu tient dans l’écran (élément le plus bas : ' + grand.join(', ') + ').']); }
   const actifs = [...root.querySelectorAll('a,button,input,select,textarea')].filter(vis);
   // zone de toucher réelle : un ::after placé en absolu (ex. « Mot de passe oublié ? ») agrandit la cible
   const zone = e => { const r = e.getBoundingClientRect(), a = getComputedStyle(e, '::after'); let w = r.width, h = r.height;

@@ -460,11 +460,13 @@ body.auth-on .stage,body.auth-on .bottom-nav{display:none}
 @media(max-width:389px){.a-panel{margin-inline:12px;padding-inline:14px}}
 @media(min-width:600px){
   .auth{padding:24px max(20px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left))}
-  .a-shell{--u:1.3px}.a-shell[data-auth="connexion"],.a-shell[data-auth="mot-de-passe-oublie"]{--u:1.4px}
+  /* Même échelle pour les 5 écrans de compte (note 3 de Mickaël, 2026-10-09 : la carte changeait de taille d’un écran à l’autre).
+     Plafonnée par la hauteur de l’écran pour que le plus haut (« Créer un compte », environ 660 unités) tienne sans défiler. */
+  .a-shell,.a-shell[data-auth="connexion"],.a-shell[data-auth="mot-de-passe-oublie"]{--u:min(1.4px,calc((100svh - 64px) / 660))}
   .a-panel .a-t1{font-size:calc(26 * var(--u))}
   .a-feedback{font-size:15px}.a-err{font-size:14px}
 }
-@media(min-width:600px) and (max-height:900px){.a-shell{--u:1.15px}.a-shell[data-auth="connexion"],.a-shell[data-auth="mot-de-passe-oublie"]{--u:1.2px}}
+@media(min-width:600px) and (max-height:900px){.a-shell,.a-shell[data-auth="connexion"],.a-shell[data-auth="mot-de-passe-oublie"]{--u:1.15px}}
 @media(min-width:1100px){
   .a-shell,.a-shell[data-auth="connexion"],.a-shell[data-auth="mot-de-passe-oublie"]{--u:1.15px}
   .a-panel h2,.a-panel .a-t1{font-size:26px}

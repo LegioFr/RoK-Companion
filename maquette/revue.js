@@ -5,29 +5,29 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=26,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=27,VERSION='v'+VNUM+' · 9 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
 var REEL=false;try{REEL=localStorage.getItem('rc-mode')==='reel';}catch(e){}
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
-  '*':[{sel:'',t:'Les notes et les résultats s’enregistrent à nouveau (ils échouaient depuis 17 h 11 avec « http 409 »). Un enregistrement raté est maintenant gardé et renvoyé tout seul.'},
+  '*':[{sel:'',t:'Plus aucune page ne défile pour rien : une planche d’icônes invisible ajoutait 24 px en bas de chaque écran (ta note 1).'},
+    {sel:'',t:'Icône de l’appli installée : l’anneau doré avec RC (ta note 5).'},
+    {sel:'',t:'Les notes et les résultats s’enregistrent à nouveau (ils échouaient depuis 17 h 11 avec « http 409 »). Un enregistrement raté est maintenant gardé et renvoyé tout seul.'},
     {sel:'',t:'Onglet Tests : 21 tests courts pour toute la partie connexion, seulement ce que toi seul peux juger (graphisme, ta tablette, textes, prise en main). Le reste a été vérifié par mon robot sur le vrai site.'},
     {sel:'',t:'Espaces insécables avant « ? », « ! », « : » et dans les guillemets : un « ? » ne se retrouve plus seul en début de ligne.'},
-    {sel:'',t:'La maquette s’installe sur l’écran d’accueil (icône couronne, proposée par Claude) et s’ouvre sans barre du navigateur ; elle charge toujours la dernière version.'},
+    {sel:'',t:'La maquette s’installe sur l’écran d’accueil et s’ouvre sans barre du navigateur ; elle charge toujours la dernière version.'},
     {sel:'',t:'Passer de « Ma version réelle » aux « Exemples » marche même si l’enregistrement ne répond pas ; l’onglet États dit si le dernier enregistrement a réussi (ta remarque).'},
     {sel:'',t:'Chaque version a ses propres notes : celles des tests ne s’affichent plus dans « Ma version réelle » (ta remarque).'},
     {sel:'',t:'Deux versions de la maquette (onglet États) : « Exemples », pour les tests, et « Ma version réelle », vierge, que tu remplis toi-même ; elle est gardée avec la maquette publiée.'},
     {sel:'',t:'Tous les tests, leurs résultats, les captures jointes et les notes ont été supprimés (ta demande ; une archive est gardée dans le dépôt).'}],
   'evenements':[{sel:'#evList',t:'Chaque événement a un bouton « Me prévenir » ; activé, il devient « Rappel activé » et un message dit quand tu seras prévenu (ta note 7).'}],
   'plan-c25':[{sel:'[data-screen="plan-c25"] h1',t:'Titre « Hôtel de ville 25 » au lieu de « Château 25 » (ta note 6).'}],
-  'connexion':[{sel:'[data-auth="connexion"]',t:'Écran ajouté, repris de la maquette validée B01-01.'},
-    {sel:'[data-auth="connexion"] .a-primary',t:'Connexion qui marche : e-mail ou mot de passe faux → « E-mail ou mot de passe incorrect. » (texte proposé).'}],
-  'inscription':[{sel:'#suEmail',t:'Adresse déjà utilisée : « Un compte existe déjà avec cette adresse… » sous E-mail, au lieu de passer à la confirmation (ta note 4).'},
-    {sel:'#suPw',t:'Texte proposé sous le champ : « Au moins 8 caractères. »'}],
-  'confirmation':[{sel:'[data-auth="confirmation"]',t:'Les tests de cet écran préparent eux-mêmes un compte en attente (mot de passe rok12345) : plus besoin d’avoir fait les tests précédents.'}],
   'mot-de-passe-oublie':[{sel:'[data-auth="mot-de-passe-oublie"] .a-feedback',t:'Adresse sans compte : « Aucun compte avec cette adresse… ». Adresse connue : « E-mail envoyé à … » (ta décision).'},{sel:'[data-auth="mot-de-passe-oublie"] .a-primary',t:'Le lien de l’e-mail ne se simule que si un e-mail est vraiment parti.'}],
+  'connexion':[{sel:'[data-auth="connexion"] .a-signup',t:'« Pas encore de compte ? » retiré : le bouton « Créer un compte » suffit (ta note 2).'},{sel:'[data-auth="connexion"]',t:'Même taille de carte sur les 5 écrans de compte (ta note 3).'}],
+  'inscription':[{sel:'[data-auth="inscription"] .a-signup',t:'« Déjà un compte ? » retiré, comme sur « Se connecter ».'},{sel:'[data-auth="inscription"]',t:'Même taille de carte que « Se connecter » (ta note 3).'}],
+  'confirmation':[{sel:'[data-auth="confirmation"] .a-intro',t:'« Un e-mail de confirmation t’a été envoyé. » (ta note 4).'}],
   'nouveau-mot-de-passe':[{sel:'[data-auth="nouveau-mot-de-passe"]',t:'Écran ajouté, repris de B01-05. Après « Enregistrer », tu es connecté.'}],
   'ma-ville-progression':[{sel:'#gSet',t:'Le bonus de vitesse accepte une décimale (42,5 %), comme dans le jeu.'}],
   'accueil':[{sel:'#prioList',t:'Priorités du jour : 5 actions au plus (ta note 8) ; elles tiennent dans le temps choisi et le total s’affiche sous la liste.'},{sel:'#homeTiles',t:'Aperçu de ma ville : les 6 bulles de l’Accueil validé (Bâtisseurs, Bonus de vitesse, 4 totaux), à ta demande.'},
