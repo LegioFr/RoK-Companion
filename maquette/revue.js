@@ -5,7 +5,9 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=22,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=23,VERSION='v'+VNUM+' · 9 oct. 2026';
+/* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
+(function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
 var REEL=false;try{REEL=localStorage.getItem('rc-mode')==='reel';}catch(e){}
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
@@ -28,7 +30,7 @@ var CHANGES={
     {sel:'.timepick',t:'Temps de jeu plus clair : la question « Combien de temps as-tu pour jouer ? » et la durée de chaque action. Titre « Priorités du jour » (le nombre change avec le temps).'},
     {sel:'#homeEmpty',t:'Accueil sans profil repris de B01-06 (onglet États → « Nouveau compte sans profil » pour le voir).'}],
   'profil':[{sel:'[data-act="delete-profile"]',t:'On peut supprimer n’importe quel profil, même l’actif : un autre profil devient actif (ta décision).'}],
-  'plus':[{sel:'[data-act="sheet-logout"]',t:'Se déconnecter mène à l’écran de connexion.'},{sel:'[data-act="sheet-password"]',t:'Le mot de passe actuel est vérifié.'}]
+  'plus':[{sel:'#verRow',t:'Numéro de version de la maquette affiché dans « L’appli » (ta demande).'},{sel:'[data-act="sheet-logout"]',t:'Se déconnecter mène à l’écran de connexion.'},{sel:'[data-act="sheet-password"]',t:'Le mot de passe actuel est vérifié.'}]
 };
 var TABS=[['ecran','Écran'],['tests','Tests'],['notes','Notes'],['chg','Modifs'],['insp','Inspecter'],['etats','États']];
 var ICO={
