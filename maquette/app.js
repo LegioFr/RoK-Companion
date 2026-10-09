@@ -157,10 +157,9 @@ function renderHome(){
     if(n)L.push(['#valeur-'+unknown(p)[0],'Renseigner : '+FIELDS[unknown(p)[0]].label,'Le plan en a besoin pour être juste',1]);
     L.push(['#plan-c25','Lancer le Mur niveau 24','Dernier prérequis de l’Hôtel de ville 25 · '+fH(pl.mur)+(pl.acc>=pl.mur?', couverts par tes accélérateurs':''),2]);
     L.push(pl.miss?['#fermes','Récupérer '+fM(pl.miss)+' de pierre','C’est ce qui manque à l’Hôtel de ville 25 · ta Ferme 1 peut l’envoyer',5]:['#plan-c25','Préparer l’Hôtel de ville 25','La pierre est couverte : il démarre juste après le Mur',2]);
-    L.push(['#depenser','Garder tes accélérateurs de recherche','Gouverneur le plus puissant dans 3 j : ils y rapportent des points',1]);
-    L.push(['#evenements','Aider ton alliance','Dons et aides : tes points d’alliance servent au KvK',3]);
     L.push(['#ma-ville-inventaire','Envoyer tes marches libres récolter','Le bois est ta ressource la plus basse',10]);
     L.push(['#evenements','Entraîner des fantassins niveau 5','Préparation KvK : il en manque 95 000',20]);
+    L.push(['#evenements','Aider ton alliance','Dons et aides : tes points d’alliance servent au KvK',3]);
   }else if(S.active==='f1'){
     L=[['#fermes','Envoyer de la pierre au Principal','Il manque '+fM(pl.miss)+' à l’Hôtel de ville 25',5],['#valeur-mur','Lancer le Mur niveau 22','Avec ton bonus de 25 %',2],
        ['#ma-ville-inventaire','Récolter du bois','Ta ferme est sous la limite de pillage',10],['#ma-ville-inventaire','Récolter de la pierre avec une 2e marche','Pour le prochain envoi au Principal',10],['#evenements','Aider ton alliance','Dons et aides',3]];
@@ -168,7 +167,8 @@ function renderHome(){
     L=[['#ma-ville-progression','Renseigner tes valeurs',n+' valeurs manquantes',5],['#valeur-mur','Lancer le Mur niveau 18','',2],['#ma-ville-inventaire','Récolter de la nourriture','',10],['#evenements','Aider ton alliance','',3]];
   }
   var budget=+S.time,used=0,shown=[];
-  L.forEach(function(x){if(used+x[3]<=budget){shown.push(x);used+=x[3];}});
+  /* 5 actions au plus, pour ne pas remplir l'écran (note 8 de Mickaël, 2026-10-09) */
+  L.forEach(function(x){if(shown.length<5&&used+x[3]<=budget){shown.push(x);used+=x[3];}});
   if(!shown.length)shown=[L[0]];
   $('#prioList').innerHTML=shown.map(function(x,i){return row({href:x[0],nb:i+1,title:esc(x[1]),sub:esc(x[2]),pill:pill('plan','≈ '+x[3]+' min')});}).join('')+
     '<p class="prio-sum">'+shown.length+' action'+(shown.length>1?'s':'')+' · ≈ '+used+' min sur '+(budget===60?'1 h':budget+' min')+'</p>';

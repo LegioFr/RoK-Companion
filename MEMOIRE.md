@@ -74,6 +74,7 @@ Dernière mise à jour : 2026-10-08.
 | 2026-10-08 | **Deux séries de tests séparées** : « Corrections à vérifier » (tests modifiés par Claude, bandeau doré) et « Revue complète » (bandeau bleu), qui met de côté les tests en attente de vérification et reprend où Mickaël s'était arrêté ; un test vérifié dans les corrections compte comme fait et ne revient pas. |
 | 2026-10-09 | **« Hôtel de ville », pas « Château »** : l'objectif s'appelle « Hôtel de ville 25 » partout (note 6 de Mickaël : c'est le nom du bâtiment dans le jeu). |
 | 2026-10-09 | **Priorités du jour** : avec plus de temps, plus d'actions (note 5 : « Que 3 actions » en 1 h). Les actions sont prises dans l'ordre d'importance tant qu'elles tiennent dans le temps choisi ; le total s'affiche (« 7 actions · ≈ 42 min sur 1 h »). Durées : exemples proposés par Claude. |
+| 2026-10-09 | **Priorités du jour : 5 actions au plus**, quel que soit le temps choisi (note 8 de Mickaël : ne pas remplir l'écran). |
 | 2026-10-09 | **Rappels des événements** : bouton « Me prévenir » / « Rappel activé » (note 7 : « à quoi sert rappel activé ? ») ; pas de rappel pour une date inconnue. |
 | 2026-10-08 | **Tests guidés dans la maquette** : liste complète des tests, chacun avec un lien qui ouvre le bon écran dans le bon état ; résultats partagés avec Claude. « Mieux vaut trop de tests que pas assez. » Agréable à faire, sans cacher l'écran. |
 
@@ -112,3 +113,4 @@ Dernière mise à jour : 2026-10-08.
 - **2026-10-08** (suite) : v15, à la demande de Mickaël : bandeau des tests déplaçable (glisser la ligne de titre ⠿, position gardée). Corrigé aussi : dans la série « À revoir », un test sans écran propre (ex. test 25) ouvre maintenant son écran ; les repères de notes traitées ou dont l'élément n'existe plus ne s'affichent plus.
 - **2026-10-08** (suite) : v16, séries de tests séparées (demande de Mickaël, il avait peur de mélanger les corrections et la vraie revue).
 - **2026-10-09** : Mickaël a fini la revue complète (87 tests sur tablette) : 83 bons, 4 problèmes (n4 message trop bref, r2 et note 5 trop peu d'actions en 1 h, e1 et note 6 « Hôtel de ville » au lieu de « Château », e4 et note 7 rappel incompris). Tout corrigé en v17 ; les 4 tests sont dans « Corrections à vérifier ». Messages éphémères : 3 à 7 s selon leur longueur.
+- **2026-10-09** (suite) : corrections v17 vérifiées par Mickaël : 3 bonnes (Hôtel de ville 25, rappels, message du mot de passe), 1 reprise (priorités : 5 actions au plus, note 8) → v18.

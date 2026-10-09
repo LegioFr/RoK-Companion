@@ -80,7 +80,7 @@ window.RC_TESTS=[
  ]},
  {g:'Priorités du jour',p:['demo:main','#accueil'],l:[
   ['r1','Lis la ligne « Combien de temps as-tu pour jouer ? ».','Tu comprends sans aide à quoi servent 10 min, 30 min et 1 h.'],
-  ['r2','Touche 10 min, puis 30 min, puis 1 h.','Plus tu as de temps, plus il y a d’actions : 4 en 10 min, 6 en 30 min, 7 en 1 h (dont « Entraîner des fantassins »). Chaque action a sa durée et le total s’affiche sous la liste (ex. « 7 actions · ≈ 42 min sur 1 h »).',null,17,'Le nombre d’actions dépend du temps choisi (ta note 5)'],
+  ['r2','Touche 10 min, puis 30 min, puis 1 h.','3 actions en 10 min, 5 en 30 min, 5 en 1 h (dont « Entraîner des fantassins ») : jamais plus de 5. Chaque action a sa durée et le total s’affiche sous la liste (ex. « 5 actions · ≈ 38 min sur 1 h »).',null,18,'5 actions au plus (ta note 8)'],
   ['r3','Touche chaque priorité, puis reviens.','Chacune ouvre l’écran qui permet de la faire.'],
   ['r4','Regarde les priorités de Ferme 1, puis de Ferme 2.','Elles sont propres à chaque profil.',['demo:f1','#accueil']]
  ]},
