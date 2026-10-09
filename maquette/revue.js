@@ -5,14 +5,16 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=24,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=25,VERSION='v'+VNUM+' · 9 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
 var REEL=false;try{REEL=localStorage.getItem('rc-mode')==='reel';}catch(e){}
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
-  '*':[{sel:'',t:'La maquette s’installe sur l’écran d’accueil (icône couronne, proposée par Claude) et s’ouvre sans barre du navigateur ; elle charge toujours la dernière version.'},
+  '*':[{sel:'',t:'Onglet Tests : 21 tests courts pour toute la partie connexion, seulement ce que toi seul peux juger (graphisme, ta tablette, textes, prise en main). Le reste a été vérifié par mon robot sur le vrai site.'},
+    {sel:'',t:'Espaces insécables avant « ? », « ! », « : » et dans les guillemets : un « ? » ne se retrouve plus seul en début de ligne.'},
+    {sel:'',t:'La maquette s’installe sur l’écran d’accueil (icône couronne, proposée par Claude) et s’ouvre sans barre du navigateur ; elle charge toujours la dernière version.'},
     {sel:'',t:'Passer de « Ma version réelle » aux « Exemples » marche même si l’enregistrement ne répond pas ; l’onglet États dit si le dernier enregistrement a réussi (ta remarque).'},
     {sel:'',t:'Chaque version a ses propres notes : celles des tests ne s’affichent plus dans « Ma version réelle » (ta remarque).'},
     {sel:'',t:'Deux versions de la maquette (onglet États) : « Exemples », pour les tests, et « Ma version réelle », vierge, que tu remplis toi-même ; elle est gardée avec la maquette publiée.'},
@@ -657,7 +659,7 @@ function rTests(){
     var rr=row();rr.style.marginTop='8px';rr.appendChild(chip(RUN.on&&RUN.list?'Vérification en cours':'▶ Vérifier ces '+RV.length+' correction'+(RV.length>1?'s':''),true,function(){var L=RV.map(function(t){return t.i;});startRun(L[0],L);}));box.appendChild(rr);
     pb.appendChild(box);
   }
-  pb.appendChild(h4((RV.length?'2 · ':'')+'Revue complète · connexion, Accueil, Ma ville · '+VERSION));
+  pb.appendChild(h4((RV.length?'2 · ':'')+'Revue complète · '+VERSION));
   pb.appendChild(el('p','txt',st.done+' sur '+st.all+' faits · '+st.ok+' bon'+(st.ok>1?'s':'')+' · '+st.ko+' problème'+(st.ko>1?'s':'')));
   var pg=el('div','prog');var bar=el('i');bar.style.width=Math.round(st.done/st.all*100)+'%';pg.appendChild(bar);pb.appendChild(pg);
   var r=row();r.style.marginTop='8px';
