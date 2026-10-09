@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=34,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=35,VERSION='v'+VNUM+' · 9 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -32,7 +32,14 @@ var CHANGES={
   'inscription':[{sel:'[data-auth="inscription"] .a-signup',t:'« Déjà un compte ? » retiré, comme sur « Se connecter ».'},{sel:'[data-auth="inscription"]',t:'Même taille de carte que « Se connecter » (ta note 3).'}],
   'confirmation':[{sel:'[data-auth="confirmation"] .a-intro',t:'« Un e-mail de confirmation t’a été envoyé. » (ta note 4).'}],
   'nouveau-mot-de-passe':[{sel:'[data-auth="nouveau-mot-de-passe"]',t:'Écran ajouté, repris de B01-05. Après « Enregistrer », tu es connecté.'}],
-  'ma-ville-progression':[{sel:'#gSet',t:'Le bonus de vitesse accepte une décimale (42,5 %), comme dans le jeu.'}],
+  'ma-ville-progression':[{sel:'[data-screen="ma-ville"] [data-sync]',t:'Le faux « Synchronisé » est remplacé par le vrai état : « Enregistré », « Enregistrement… » ou « En attente d’envoi » dans ta version réelle, « Exemples, non enregistrés » ici.'},
+    {sel:'[data-panel="progression"] .cols',t:'Deux colonnes sur ta tablette, comme l’Accueil.'},
+    {sel:'#gNext',t:'Nouveau : « Prochain Hôtel de ville » dit ce qu’il te manque, avec le coût et la durée (guides du jeu, non vérifiés).'},
+    {sel:'#gBld',t:'Trois bâtiments ajoutés, prérequis de l’Hôtel de ville : Camp d’éclaireurs, Centre de l’alliance, Comptoir commercial (noms à vérifier dans le jeu).'},
+    {sel:'#gSet',t:'Le bonus de vitesse accepte une décimale (42,5 %), comme dans le jeu.'}],
+  'ma-ville-inventaire':[{sel:'#invChips',t:'Inventaire rangé comme les onglets du jeu : Ressources, Accélérateurs, Boosts, Équipement, Attirail, Autre.'},
+    {sel:'#gRes',t:'Tout se remplit à la main, aussi dans ta version réelle : ouvre une ligne puis « Modifier ». Vraies tailles de caisses (1 000 à 5 000 000) et vraies durées d’accélérateurs (1 min à 15 h, jusqu’à 30 j pour les généraux).'},
+    {sel:'#gRes .list',t:'Coffres « Choisissez un » et packs de ressources : nombre par niveau.'}],
   'accueil':[{sel:'#homeMain',t:'Les deux colonnes commencent à la même hauteur, même quand un bloc est caché (ta note 7).'},{sel:'#fillSec',t:'« Tout renseigner » est à droite de la carte (ta note 8).'},{sel:'#rtCard',t:'Une tâche cochée s’efface en fondu ; la remise à zéro est indiquée en heure UTC (minuit) (tes notes 9 et 10).'},{sel:'#prioList',t:'La ligne « N actions · ≈ X min sur Y » sous les priorités est retirée (ta note 6).'},{sel:'#homeMain',t:'Nouvelle organisation « À faire / Où j’en suis » : profil sur toute la largeur ; à gauche alertes, priorités, routine ; à droite en cours, événements, objectif, aperçu, semaine (ta remarque).'},{sel:'#fillSec',t:'Les valeurs à renseigner sont regroupées dans une seule carte « Renseigne ta ville » (ta décision).'},{sel:'#ecList',t:'Nouveau : « En cours » (constructions, recherches, entraînements avec leur heure de fin). Un bâtisseur libre est signalé dans « À surveiller ».'},{sel:'#rtCard',t:'Nouveau : « Routine du jour », liste à cocher remise à zéro à 2 h (liste proposée par Claude, à corriger).'},{sel:'#watchList',t:'Nouveau : ressources exposées au pillage, d’après le niveau de l’entrepôt (protection tirée d’un guide, non vérifiée).'},{sel:'#evHome',t:'Événements avec leur date et leur heure, et « en cours · se termine dans… ».'},{sel:'.kpis',t:'Le % de l’objectif n’est plus répété dans la carte du profil : il reste dans « Objectif en cours ».'},{sel:'#weekList',t:'« Ma semaine » suit le profil choisi (le bilan du Principal s’affichait aussi sur les fermes).'}],
   'profil':[{sel:'[data-act="delete-profile"]',t:'On peut supprimer n’importe quel profil, même l’actif : un autre profil devient actif (ta décision).'}],
   'plus':[{sel:'#verRow',t:'Numéro de version de la maquette affiché dans « L’appli » (ta demande).'},{sel:'[data-act="sheet-logout"]',t:'Se déconnecter mène à l’écran de connexion.'},{sel:'[data-act="sheet-password"]',t:'Le mot de passe actuel est vérifié.'}]
@@ -191,6 +198,10 @@ function saveLocal(){LS.set('notes',ALLN);setNotes(ALLN);refresh();}
    Même façon d'appeler que la base de claude.ai : collection().onSnapshot / add, doc().get / set / update / delete.
    Les écritures partent une par une ; l'écran est mis à jour tout de suite, puis relu quand la page reprend la main. */
 var SITE=/\.vercel\.app$/.test(location.hostname)||!!window.RC_SITE;
+/* État d'enregistrement de « Ma version réelle », affiché en haut de Ma ville (remplace le faux « Synchronisé », 2026-10-09).
+   Hors site : rien ne part, les données restent dans ce navigateur. */
+window.RC_SYNC=function(){return {local:true};};
+function syncEv(){try{document.dispatchEvent(new CustomEvent('rc:sync'));}catch(e){}}
 function httpErr(r){return {code:'http '+r.status};}
 function siteDb(){
   var subs={},cache={},q=Promise.resolve();
@@ -199,10 +210,15 @@ function siteDb(){
   function pull(col){return fetch('/api/db?col='+col,{cache:'no-store'}).then(function(r){if(!r.ok)throw httpErr(r);return r.json();}).then(function(j){cache[col]=j.docs||{};tell(col);return cache[col];});}
   /* Un enregistrement raté n'est pas perdu : il est gardé dans ce navigateur (rc-attente) et renvoyé tout seul
      (au chargement, quand la page revient au premier plan, toutes les 30 s, et après chaque enregistrement réussi). */
-  var WAIT=LS.get('attente',[]);
+  var WAIT=LS.get('attente',[]),ENVOI=0;
+  window.RC_SYNC=function(){return {envoi:ENVOI>0,attente:WAIT.some(function(o){return o.col==='reel';})};};
   function post(o){return fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(o)}).then(function(r){if(!r.ok)throw httpErr(r);return r.json();});}
-  function flush(){if(!WAIT.length)return q;var p=q.then(function(){var L=WAIT.slice();return L.reduce(function(a,o){return a.then(function(){return post(o).then(function(){WAIT=WAIT.filter(function(x){return x!==o&&!(x.col===o.col&&x.id===o.id&&x.t===o.t);});LS.set('attente',WAIT);},function(e){if(e&&/40[04]/.test(e.code)){WAIT=WAIT.filter(function(x){return x!==o;});LS.set('attente',WAIT);return;}throw e;});});},Promise.resolve());});q=p.catch(function(){});return p;}
-  function send(o){o.t=Date.now();var p=q.then(function(){return post(o);});q=p.then(function(){if(WAIT.length)flush();},function(){WAIT.push(o);LS.set('attente',WAIT);say('Pas encore enregistré : nouvel essai automatique dans 30 s.');});return p.catch(function(){});}
+  function flush(){if(!WAIT.length)return q;var p=q.then(function(){var L=WAIT.slice();return L.reduce(function(a,o){return a.then(function(){return post(o).then(function(){WAIT=WAIT.filter(function(x){return x!==o&&!(x.col===o.col&&x.id===o.id&&x.t===o.t);});LS.set('attente',WAIT);syncEv();},function(e){if(e&&/40[04]/.test(e.code)){WAIT=WAIT.filter(function(x){return x!==o;});LS.set('attente',WAIT);syncEv();return;}throw e;});});},Promise.resolve());});q=p.catch(function(){});return p;}
+  /* Un « set » remplace tout le document : une ancienne version encore en attente pour ce document ne doit plus partir après lui. */
+  function send(o){o.t=Date.now();if(o.op==='set'){var n0=WAIT.length;WAIT=WAIT.filter(function(x){return !(x.col===o.col&&x.id===o.id);});if(WAIT.length!==n0)LS.set('attente',WAIT);}
+    if(o.col==='reel'){ENVOI++;syncEv();}var p=q.then(function(){return post(o);});
+    function fin(){if(o.col==='reel'){ENVOI--;syncEv();}}
+    q=p.then(function(){fin();if(WAIT.length)flush();},function(){WAIT.push(o);LS.set('attente',WAIT);fin();say('Pas encore enregistré : nouvel essai automatique dans 30 s.');});return p.catch(function(){});}
   setInterval(function(){if(WAIT.length)flush();},30000);
   if(WAIT.length)setTimeout(flush,1500);
   function write(o){var d=cache[o.col]=cache[o.col]||{};if(o.op==='set')d[o.id]=o.data;else if(o.op==='update')d[o.id]=Object.assign({},d[o.id],o.data);else delete d[o.id];tell(o.col);return send(o).then(function(){});}

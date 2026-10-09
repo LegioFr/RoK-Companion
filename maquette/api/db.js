@@ -3,7 +3,7 @@
    Lecture toujours à jour (sans cache) ; écriture conditionnelle (ifMatch) refaite si quelqu'un a écrit entre-temps. */
 import { get, put, BlobPreconditionFailedError } from '@vercel/blob';
 
-const COLS = ['notes', 'tests', 'reel', 'essai']; // essai : réservé au robot de Claude, jamais aux données de Mickaël
+const COLS = ['notes', 'tests', 'reel', 'essai', 'lecture']; // essai : réservé au robot de Claude ; lecture : captures envoyées pour l'essai de lecture par l'IA
 const ID = /^[A-Za-z0-9_.:-]{1,120}$/;
 const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
 

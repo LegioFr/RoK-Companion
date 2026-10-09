@@ -1,5 +1,27 @@
 {
-  "regions": ["cdg1"],
-  "rewrites": [{ "source": "/_blob/:id", "destination": "/api/capture?id=:id" }],
-  "headers": [{ "source": "/api/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-store" }] }]
+  "regions": [
+    "cdg1"
+  ],
+  "rewrites": [
+    {
+      "source": "/_blob/:id",
+      "destination": "/api/capture?id=:id"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    }
+  ],
+  "functions": {
+    "api/lire.js": {
+      "maxDuration": 120
+    }
+  }
 }

@@ -541,3 +541,35 @@ button.more{border:0;background:none;cursor:pointer;font-family:inherit;min-heig
 .rt-box{transition:background-color .2s,border-color .2s,transform .2s}
 .rt-item.pop .rt-box{animation:rtPop .3s ease}
 @keyframes rtPop{0%{transform:scale(.7)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+/* ---------- Ma ville (décisions de Mickaël du 2026-10-09) ---------- */
+.sync.demo{color:var(--muted);border-color:#b1bbca40;background:#b1bbca0f}
+.sync.busy{color:var(--gold-2);border-color:#d8b24c66;background:var(--gold-soft)}
+.sync.wait{color:var(--red);border-color:#ef8a7455;background:#ef8a7412}
+@media(min-width:960px) and (max-width:1099px){
+  [data-screen="ma-ville"] .cols{grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px;align-items:start}
+  [data-screen="ma-ville"] .cols.even{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+.fold-f{display:flex;justify-content:flex-end;padding:0 12px 14px 48px}
+.fold-f .btn{min-height:44px}
+.nx-t{margin:0 0 12px;font-size:15px;font-weight:700;line-height:1.45}
+.nx.ok .nx-t{color:var(--green)}
+.nx .list+.nx-c{margin-top:14px}
+.nx-c{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+.nx-c b{margin-right:4px;color:var(--text)}
+.src{margin:8px 0 0;color:var(--muted);font-size:11px;line-height:1.45}
+.nx .btns{margin-top:0}
+.sh-intro{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+.sh-sub{margin:18px 0 0;color:var(--gold-2);font:700 15px/1.3 var(--display)}
+.sh-note{margin:14px 0 0;color:var(--muted);font-size:12px;line-height:1.45}
+.inv-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}
+.inv-grid .fld{margin-top:12px}
+.inv-grid input{text-align:right;font-variant-numeric:tabular-nums}
+@media(min-width:700px){.inv-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.cols .fold-b{grid-template-columns:repeat(2,minmax(0,1fr))}
+/* Essai de lecture par l'IA (écran Importer) */
+.essai-shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:12px}
+.essai-shot{margin:0;border:1px solid var(--line-cold);border-radius:12px;overflow:hidden;background:var(--surface-2)}
+.essai-shot img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.essai-shot figcaption{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;font-size:12px;color:var(--muted)}
+.essai-shot figcaption span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.essai-shot .btn{min-height:44px;padding:0 12px}

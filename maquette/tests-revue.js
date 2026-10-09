@@ -51,5 +51,17 @@ window.RC_TESTS=[
   ['ac9','Touche « 1 bâtisseur libre ».','La fenêtre d’ajout s’ouvre, déjà réglée sur « Construction ».']]},
  {g:'Accueil · événements',p:['demo','#accueil'],l:[
   ['ac10','Regarde « Prochains événements », puis touche « Calendrier ».','Les dates et les heures (heure de France) sont claires, et un événement en cours se repère tout de suite.'],
-  ['ac11','Dans le calendrier, touche « Ajouter » et ajoute un événement avec une date dans quelques jours.','C’est facile ; il apparaît à sa place dans le calendrier et sur l’Accueil.']]}
+  ['ac11','Dans le calendrier, touche « Ajouter » et ajoute un événement avec une date dans quelques jours.','C’est facile ; il apparaît à sa place dans le calendrier et sur l’Accueil.']]},
+ {g:'Ma ville · progression',p:['demo','#ma-ville-progression'],l:[
+  ['vp1','Regarde Ma ville › Progression sur ta tablette, en portrait.','Deux colonnes : réglages et bâtiments à gauche ; « Prochain Hôtel de ville », recherches et troupes à droite. Tout se lit bien, rien n’est serré.'],
+  ['vp2','Lis la carte « Prochain Hôtel de ville ».','Tu comprends tout de suite ce qu’il manque (ici le Mur 24), le coût et la durée. Si un prérequis ou un coût te semble faux par rapport au jeu, laisse une note.'],
+  ['vp3','Regarde les trois bâtiments ajoutés en bas de la liste : Camp d’éclaireurs, Centre de l’alliance, Comptoir commercial.','Leurs noms sont ceux du jeu en français. Sinon, laisse une note avec le bon nom.'],
+  ['vp4','Regarde le badge en haut, à côté de « Importer ».','Il dit « Exemples, non enregistrés » et c’est clair. Dans ta version réelle, il dira « Enregistré », ou « En attente d’envoi » si l’enregistrement n’a pas pu partir.']]},
+ {g:'Ma ville · inventaire',p:['demo','#ma-ville-inventaire'],l:[
+  ['vi1','Regarde les onglets de l’inventaire : Ressources, Accélérateurs, Boosts, Équipement, Attirail, Autre.','Ce sont les onglets de l’Inventaire du jeu, dans le même ordre.'],
+  ['vi2','Touche « Nourriture », puis « Modifier ». Change « En ville » (par exemple 40,5 M) et le nombre d’une caisse, puis « Enregistrer ».','La fenêtre est facile à remplir, les tailles de caisses sont celles du jeu, et le total de la nourriture change.'],
+  ['vi3','Dans Accélérateurs, ouvre « Généraux », puis « Modifier ».','Les durées sont celles du jeu. Celles marquées d’un * (24 h et plus) ne sont pas encore vérifiées : dis-moi si tu en as dans ton inventaire.'],
+  ['vi4','Dans « Autre », touche « Ajouter un objet », ajoute un objet de ton inventaire avec sa quantité, puis touche-le pour le modifier et le supprimer.','C’est simple et clair.']]},
+ {g:'Essai de lecture par l’IA',p:['demo','#import'],l:[
+  ['ia1','En bas de l’écran Importer, dans « Essai de lecture par l’IA », envoie 3 captures entières de ton Inventaire : une de l’onglet Ressources, une des Accélérateurs, une de ton choix.','Les 3 captures apparaissent en miniature, chacune avec « Retirer ». Je les utiliserai pour l’essai.']]}
 ];

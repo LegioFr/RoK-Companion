@@ -246,7 +246,7 @@
     <header class="header">
       <div class="tw"><h1>Ma ville</h1><p>Profil <span data-k="name"></span></p></div>
       <div class="hactions">
-        <span class="sync"><i></i>Synchronisé</span>
+        <span class="sync" data-sync role="status"><i></i><span>Enregistré</span></span>
         <a class="btn gold" href="#import"><i data-i="n-camera"></i>Importer</a>
         <button class="btn" type="button" data-act="quick"><i data-i="i-pencil"></i>Tout renseigner</button>
       </div>
@@ -259,7 +259,7 @@
       <a class="tab" href="#ma-ville-armements" data-sub="armements">Armements</a>
     </nav>
 
-    <div data-panel="progression" data-title="Ma ville · Progression" data-st="ok" data-b="B04 · B05" data-note="Réglages et bâtiments : déjà faits (B04). Touche une ligne pour corriger, ou « Tout renseigner » pour la saisie rapide. Recherches et troupes : prévus (B05).">
+    <div data-panel="progression" data-title="Ma ville · Progression" data-st="ok" data-b="B04 · B05" data-note="Réglages et bâtiments : déjà faits (B04). Touche une ligne pour corriger, ou « Tout renseigner » pour la saisie rapide. Ajoutés le 9 oct. : Camp d’éclaireurs, Centre de l’alliance, Comptoir commercial (noms à vérifier dans le jeu) et « Prochain Hôtel de ville » (prérequis tirés des guides du jeu, non vérifiés). Recherches et troupes : prévus (B05).">
       <div class="cols">
         <div class="col">
           <section class="sec"><div class="sec-t"><h2>Réglages</h2></div><div class="list" id="gSet"></div></section>
@@ -267,29 +267,25 @@
           <div id="quickBar"></div>
         </div>
         <div class="col">
+          <section class="sec"><div class="sec-t"><h2>Prochain Hôtel de ville</h2></div><div id="gNext"></div></section>
           <section class="sec"><div class="sec-t"><h2>Recherches</h2><span class="pill st-plan"><i></i>Prévu · B05</span></div><div class="card" id="gResearch"></div></section>
           <section class="sec"><div class="sec-t"><h2>Troupes</h2><span class="pill st-plan"><i></i>Prévu · B05</span></div><div class="list" id="gTroops"></div></section>
         </div>
       </div>
     </div>
 
-    <div data-panel="inventaire" data-title="Ma ville · Inventaire" data-st="ok" data-b="B04 · B03" data-note="Déjà fait (B04) ; l’import par captures (bouton « Importer ») est en cours (B03). Objets : prévus (B06).">
-      <div class="chips" role="group" aria-label="Catégories d’inventaire" id="invChips" style="margin-bottom:16px">
+    <div data-panel="inventaire" data-title="Ma ville · Inventaire" data-st="ok" data-b="B04 · B03" data-note="Rangé comme les onglets de l’Inventaire du jeu. Touche une ligne pour la détailler, puis « Modifier » pour recopier tes nombres. Caisses et accélérateurs : tailles du jeu (étude du 6 oct.). Boosts, Équipement, Attirail, Autre : ajoute tes objets à la main en attendant la lecture des captures. Noms et valeurs des exemples : exemples.">
+      <div class="chips" role="group" aria-label="Onglets de l’inventaire, comme dans le jeu" id="invChips" style="margin-bottom:16px">
         <button class="chip" type="button" data-inv="res" aria-pressed="true">Ressources</button>
         <button class="chip" type="button" data-inv="acc" aria-pressed="false">Accélérateurs</button>
-        <button class="chip" type="button" data-inv="obj" aria-pressed="false">Objets</button>
+        <button class="chip" type="button" data-inv="boosts" aria-pressed="false">Boosts</button>
+        <button class="chip" type="button" data-inv="equip" aria-pressed="false">Équipement</button>
+        <button class="chip" type="button" data-inv="attirail" aria-pressed="false">Attirail</button>
+        <button class="chip" type="button" data-inv="autre" aria-pressed="false">Autre</button>
       </div>
       <section class="sec" data-invsec="res"><div class="sec-t"><h2>Ressources</h2><span class="muted" style="font-size:13px" id="lastImport"></span></div><div class="cols even" id="gRes"></div></section>
       <section class="sec" data-invsec="acc" hidden><div class="sec-t"><h2>Accélérateurs</h2></div><div class="cols even" id="gAcc"></div></section>
-      <section class="sec" data-invsec="obj" hidden><div class="sec-t"><h2>Objets</h2><span class="pill st-plan"><i></i>Prévu · B06</span></div>
-        <p class="vide reel-only">Pas encore renseignés.</p>
-        <div class="list multi" data-ex>
-          <div class="row"><span class="ri"><i data-i="n-book"></i></span><span class="rc"><b>Livres d’expérience</b></span><span class="rv">1 240</span></div>
-          <div class="row"><span class="ri"><i data-i="n-star"></i></span><span class="rc"><b>Sculptures légendaires</b></span><span class="rv">86</span></div>
-          <div class="row"><span class="ri"><i data-i="n-map"></i></span><span class="rc"><b>Passeports</b></span><span class="rv">12</span></div>
-          <div class="row"><span class="ri"><i data-i="p-chest"></i></span><span class="rc"><b>Coffres de ressources</b></span><span class="rv">7</span></div>
-        </div>
-      </section>
+      <section class="sec" data-invsec="items" hidden><div class="sec-t"><h2 id="itemsTitle">Objets</h2></div><div id="gItems"></div></section>
     </div>
 
     <div data-panel="commandants" data-title="Ma ville · Commandants" data-st="plan" data-b="B07" data-note="Prévu (B07) : commandants, compétences et talents du profil, utilisés par Combat. Les filtres fonctionnent. Noms et niveaux : exemples.">
@@ -342,7 +338,7 @@
 
   <!-- ===================================================== VALEUR -->
   <section data-screen="valeur" data-href="#valeur-caserne" data-g="ma-ville" data-title="Valeur : saisie, correction, historique" data-st="ok" data-b="B04" data-note="Écran déjà fait (B04-03). Corrige la valeur : l’ancienne reste dans l’historique. Essaie avec le bonus de vitesse : le plan Hôtel de ville 25 se recalcule." hidden>
-    <header class="header"><div class="tw"><a class="back" href="#ma-ville-progression"><i data-i="i-back"></i>Ma ville</a><h1 id="valTitle"></h1></div><span class="sync"><i></i>Synchronisé</span></header>
+    <header class="header"><div class="tw"><a class="back" href="#ma-ville-progression"><i data-i="i-back"></i>Ma ville</a><h1 id="valTitle"></h1></div><span class="sync" data-sync role="status"><i></i><span>Enregistré</span></span></header>
     <div class="cols">
       <div class="col">
         <div class="card hl">
@@ -358,7 +354,7 @@
   </section>
 
   <!-- ===================================================== IMPORT -->
-  <section data-screen="import" data-g="ma-ville" data-title="Importer des captures" data-st="wip" data-b="B03" data-note="En cours (B03 minimal). Tu peux choisir de vraies images : elles restent dans ton navigateur, rien n’est envoyé. La lecture est simulée dans cette maquette." hidden>
+  <section data-screen="import" data-g="ma-ville" data-title="Importer des captures" data-st="wip" data-b="B03" data-note="En cours (B03 minimal). Les 4 étapes : tu peux choisir de vraies images, elles restent dans ton navigateur et la lecture est simulée. Seul le bloc « Essai de lecture par l’IA », en bas, envoie des captures, pour l’essai du 9 oct." hidden>
     <header class="header"><div class="tw"><a class="back" href="#ma-ville-inventaire"><i data-i="i-back"></i>Ma ville</a><h1>Importer</h1></div></header>
     <div class="stepper" role="group" aria-label="Étapes de l’import" id="stepper">
       <span class="sp" data-sp="1"><i>1</i>Captures</span>
@@ -401,13 +397,14 @@
             <div class="sec-t"><h2>À vérifier</h2></div>
             <div class="list">
               <div class="q" data-q="q1">
-                <div class="q-h"><span class="crop"><i data-i="a-build"></i></span><span class="rc"><b>Accélérateur de construction 1 h</b><small>Lu : 1 2?5</small></span></div>
+                <div class="q-h"><span class="crop"><i data-i="a-build"></i></span><span class="rc"><b>Accélérateur de construction 60 min</b><small>Lu : 1 2?5</small></span></div>
                 <div class="field"><label for="q1">Quantité</label><input id="q1" inputmode="numeric" value="1 255"></div>
                 <div class="chips"><button class="chip" type="button" data-qv="ok" aria-pressed="false">C’est bon</button><button class="chip" type="button" data-qv="skip" aria-pressed="false">Ignorer</button></div>
               </div>
               <div class="q" data-q="q2">
-                <div class="q-h"><span class="crop"><i data-i="r-food"></i></span><span class="rc"><b>Caisse de nourriture</b><small>Valeur inconnue du catalogue : 1,5 M</small></span></div>
-                <div class="chips"><button class="chip" type="button" data-qv="ok" aria-pressed="false">C’est 1 M</button><button class="chip" type="button" data-qv="skip" aria-pressed="false">Ignorer</button></div>
+                <div class="q-h"><span class="crop"><i data-i="r-food"></i></span><span class="rc"><b>Caisse de nourriture 150 000</b><small>Case coupée par le défilement : quantité lue « 3? »</small></span></div>
+                <div class="field"><label for="q2v">Quantité</label><input id="q2v" inputmode="numeric" value="32"></div>
+                <div class="chips"><button class="chip" type="button" data-qv="ok" aria-pressed="false">C’est bon</button><button class="chip" type="button" data-qv="skip" aria-pressed="false">Ignorer</button></div>
               </div>
               <div class="q" data-q="q3">
                 <div class="q-h"><span class="crop"><i data-i="r-stone"></i></span><span class="rc"><b>Pierre en ville</b><small>Changé depuis le dernier relevé : 9,8 M → 12 M</small></span></div>
@@ -433,6 +430,16 @@
         <div class="btns"><a class="btn primary" href="#ma-ville-inventaire">Voir l’inventaire</a><button class="btn" type="button" data-act="import-reset">Nouvel import</button></div>
       </div>
     </div>
+    <section class="sec" id="essaiIA" hidden>
+      <div class="sec-t"><h2>Essai de lecture par l’IA</h2><span class="pill st-wip"><i></i>Essai · 9 oct.</span></div>
+      <div class="card">
+        <p class="shp" style="margin-top:0">Choisis <b>3 captures de ton Inventaire</b>, en entier, sans les recadrer : une de l’onglet Ressources, une des Accélérateurs, et une de ton choix. Elles sont envoyées dans l’espace privé de la maquette. Claude les lit de trois façons (lecture gratuite, Claude Haiku 5.5, Claude Sonnet 5.5), puis te donne pour chacune le nombre de cases justes et le coût réel.</p>
+        <p class="src" id="essaiCle"></p>
+        <div id="essaiList"></div>
+        <div class="btns"><label class="btn gold" for="pickEssai"><i data-i="n-camera"></i>Choisir des captures pour l’essai</label><input id="pickEssai" type="file" accept="image/*" multiple hidden></div>
+        <p class="src">Seul Claude les regarde, pour cet essai. Tu peux les retirer à tout moment.</p>
+      </div>
+    </section>
   </section>
 
   <!-- ===================================================== OPTIMISER -->

@@ -70,6 +70,19 @@ Règle du projet : chaque donnée a sa source et sa date ; tant qu’elle n’es
 | 24 | Mur 23 Siege Workshop 23 | nourriture 54,8 M bois 54,8 M pierre 24,0 M | 36j |
 | 25 | Mur 24 Trading Post 24 | nourriture 82,2 M bois 82,2 M pierre 36,0 M Plan de maître | 126j 8h |
 
+- **Deuxième source (2026-10-09) :** wiki riseofkingdoms.fandom.com, page « Buildings/City Hall/Requirements » (révision du 2026-01-04), lue par son API publique le 2026-10-09. Mêmes prérequis et mêmes coûts à tous les niveaux. Elle complète le niveau 13 : **Champ de tir 12** (« Archery Range Lv.12 », le niveau manquait dans la première source). Seul écart : durée du niveau 10, 22 h (wiki) contre 1 j. Repris dans `maquette/donnees-jeu.js` (`hdv`).
+
+## Bâtiments prérequis ajoutés à Ma ville (2026-10-09)
+
+- Scout Camp, Alliance Center, Trading Post : prérequis de l'Hôtel de ville (niveaux 6, 9, 14, 15, 20, 25). Noms français proposés par Claude : **Camp d'éclaireurs**, **Centre de l'alliance**, **Comptoir commercial**. **Non vérifiés** : aucune source française trouvée le 2026-10-09 (recherche web) ; Mickaël les compare au jeu et les corrige.
+
+## Caisses et accélérateurs
+
+- **Source :** étude B03 du 2026-10-06 (`references/etude-lecture-captures-b03.md`) : wiki riseofkingdoms.fandom.com (API), calculateur bulbaritos.com, 15 captures de l'Inventaire de Mickaël.
+- **Caisses (unités) :** nourriture et bois 1 000 · 10 000 · 50 000 · 150 000 · 500 000 · 1 500 000 · 5 000 000 ; pierre 750 · 7 500 · 37 500 · 112 500 · 375 000 · 1 125 000 · 3 750 000 (toutes vues sur les captures) ; or 500 · 3 000 · 15 000 · 50 000 · 200 000 (vues) · 600 000 · 2 000 000 (wiki seul, non vérifié) ; gemmes 10 (vue) · 5 · 50 · 100 · 200 · 500 · 650 · 1 000 · 2 000 (wiki seul, non vérifié).
+- **Accélérateurs :** construction, recherche, entraînement, soins : 1, 5, 10, 15, 30, 60 min, 3 h, 8 h, 15 h ; universel : les mêmes plus 24 h, 3 j, 7 j, 30 j (24 h et plus : non vérifié, pas vus sur les captures).
+- **Exemples de la maquette corrigés le 2026-10-09 :** ils montraient des caisses « 1 M » et des accélérateurs de construction « 1 j », qui n'existent pas.
+
 ## Réinitialisation quotidienne
 
 - **2 h du matin, heure de France** (Mickaël, 2026-10-09), soit minuit UTC ; en heure d’hiver, ce serait 1 h : à vérifier après le changement d’heure.

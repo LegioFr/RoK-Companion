@@ -1,8 +1,9 @@
 {
   "private": true,
   "type": "module",
-  "description": "Site d'essai de la maquette (Vercel) : fonctions de stockage de la bulle d'outils.",
+  "description": "Maquette publiée (Vercel) : fonctions de stockage de la bulle d'outils et essai de lecture des captures par Claude.",
   "dependencies": {
+    "@anthropic-ai/sdk": "0.127.0",
     "@vercel/blob": "2.8.0"
   }
 }
