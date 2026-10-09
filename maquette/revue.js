@@ -5,14 +5,15 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=31,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=32,VERSION='v'+VNUM+' · 9 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
 var REEL=false;try{REEL=localStorage.getItem('rc-mode')==='reel';}catch(e){}
 /* Ce qui a changé dans cette version, par écran (« * » : partout). sel : élément encadré. */
 var CHANGES={
-  '*':[{sel:'',t:'Plus aucune page ne défile pour rien : une planche d’icônes invisible ajoutait 24 px en bas de chaque écran (ta note 1).'},
+  '*':[{sel:'',t:'On peut poser une note sur une fenêtre ouverte (par exemple « Modifier la routine ») : le repère s’affiche maintenant par-dessus (ta remarque).'},
+    {sel:'',t:'Plus aucune page ne défile pour rien : une planche d’icônes invisible ajoutait 24 px en bas de chaque écran (ta note 1).'},
     {sel:'',t:'Icône de l’appli installée : l’anneau doré avec RC (ta note 5). Nom de l’appli installée : « RoK Maquette », pour ne pas la confondre avec l’appli de l’autre projet.'},
     {sel:'',t:'Les notes et les résultats s’enregistrent à nouveau (ils échouaient depuis 17 h 11 avec « http 409 »). Un enregistrement raté est maintenant gardé et renvoyé tout seul.'},
     {sel:'',t:'Onglet Tests : 21 tests courts pour toute la partie connexion, seulement ce que toi seul peux juger (graphisme, ta tablette, textes, prise en main). Le reste a été vérifié par mon robot sur le vrai site.'},
@@ -94,7 +95,7 @@ var css=el('style');css.textContent=[
 '#rcPnl .sw{display:inline-block;width:12px;height:12px;margin-right:6px;border-radius:3px;border:1px solid #fff4;vertical-align:-1px}',
 '#rcPnl .crumbs{display:flex;flex-wrap:wrap;gap:4px}#rcPnl .crumbs button{min-height:30px;padding:0 8px;border:1px solid var(--rc-cold);border-radius:8px;background:transparent;color:var(--rc-dim);font:500 12px ui-monospace,Menlo,monospace;cursor:pointer;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#rcPnl .crumbs button.on{color:var(--rc-fg);border-color:var(--rc)}',
 '#rcPnl .copy{width:100%;min-height:120px;font:12px/1.4 ui-monospace,Menlo,monospace}',
-'#rcLayer{position:absolute;left:0;top:0;width:0;height:0;z-index:55}',
+'#rcLayer{position:absolute;left:0;top:0;width:0;height:0;z-index:90}',
 '#rcLayer .pin{position:absolute;transform:translate(-4px,-100%);min-width:26px;height:26px;padding:0 7px;border:2px solid #0a1220;border-radius:13px 13px 13px 3px;background:#d8b24c;color:#1c1408;font:800 12px/22px Roboto,sans-serif;text-align:center;cursor:pointer;box-shadow:0 3px 10px #000a}',
 '#rcLayer .pin.done{background:#5b6b80;color:#e8f0f8}#rcLayer .pin.new{background:#38bdf8;color:#04121c}',
 '#rcLayer .chg{position:absolute;border:2px dashed #38bdf8;border-radius:6px;pointer-events:none}#rcLayer .chg b{position:absolute;top:-12px;left:-12px;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:#38bdf8;color:#04121c;font:800 12px/22px Roboto,sans-serif;text-align:center}',
@@ -261,7 +262,11 @@ function describe(e){
 }
 function posOf(n){
   var e=null;try{e=n.ancre&&document.querySelector(n.ancre);}catch(_){}
+  /* Fenêtre de l'appli ouverte : on ne montre que les repères posés dans cette fenêtre (les autres sont derrière elle). */
+  var modal=document.body.classList.contains('modal-open');
+  if(e&&modal&&!e.closest('#sheet'))return null;
   if(e){var r=e.getBoundingClientRect();if(r.width||r.height)return {x:r.left+scrollX+n.fx*r.width,y:r.top+scrollY+n.fy*r.height};}
+  if(modal)return null;
   if(!n.ancre&&n.taille===cls())return {x:n.x,y:n.y};
   return null;
 }
@@ -512,6 +517,9 @@ function stopInsp(){S.insp=false;hov.hidden=true;document.body.classList.remove(
 document.addEventListener('pointermove',onMove,true);
 ['click','pointerdown','mousedown','pointerup','mouseup'].forEach(function(t){document.addEventListener(t,onPick,true);});
 addEventListener('scroll',function(){if(S.sel)drawSel();if(S.insp)hov.hidden=true;},{passive:true});
+/* Défilement dans une fenêtre de l'appli : on replace les repères (son ouverture est déjà suivie plus haut). */
+(function(){var sh=document.getElementById('sheet');if(!sh)return;
+  sh.addEventListener('scroll',function(){draw();},{passive:true,capture:true});})();
 
 /* États */
 function rEtats(){
