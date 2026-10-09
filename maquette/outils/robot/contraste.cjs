@@ -6,7 +6,7 @@ const TAILLES=[['telephone',390,844],['tablette',800,1280],['pc',1920,1080]];
 const DIR=path.join(process.env.ROBOT_SORTIE||__dirname,'fonds');fs.mkdirSync(DIR,{recursive:true});
 (async()=>{const local=/localhost/.test(url);const b=await chromium.launch(local?{}:{proxy:{server:process.env.HTTPS_PROXY}});const out=[];
 for(const [t,w,h] of TAILLES){const ctx=await b.newContext({ignoreHTTPSErrors:true,viewport:{width:w,height:h}});
-  await ctx.addInitScript(()=>{try{if(!sessionStorage.getItem('rb')){localStorage.clear();localStorage.setItem('rc-open','false');localStorage.setItem('rc-mode','demo');sessionStorage.setItem('rb','1');}}catch(e){}});
+  await ctx.addInitScript(()=>{try{if(!sessionStorage.getItem('rb')){localStorage.clear();localStorage.setItem('rc-open','false');localStorage.setItem('rc-mode','demo');localStorage.setItem('rc-seenRev','9999');sessionStorage.setItem('rb','1');}}catch(e){}});
   const p=await ctx.newPage();await p.goto(url);await p.waitForTimeout(1200);
   for(const [st,hash,zone] of jobs){await p.evaluate(([s,h])=>window.RC_API.go(s,h),[st,hash]);await p.waitForTimeout(600);
     await p.addStyleTag({content:'#rcBub{display:none!important} *{transition:none!important;animation:none!important}'});

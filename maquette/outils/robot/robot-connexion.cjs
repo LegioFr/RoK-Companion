@@ -12,7 +12,7 @@ const ok=(n,c,d)=>R.fonction.push([c?'OK':'ÉCHEC',n,d||'']);
 const local=/localhost/.test(URL0);
 const b=await chromium.launch(local?{}:{proxy:{server:process.env.HTTPS_PROXY}});
 async function page(w,h){const ctx=await b.newContext({ignoreHTTPSErrors:true,viewport:{width:w,height:h},hasTouch:w<1100,isMobile:false});await ctx.addInitScript(MES);
-  await ctx.addInitScript(()=>{try{if(!sessionStorage.getItem('rb')){localStorage.clear();localStorage.setItem('rc-open','false');localStorage.setItem('rc-mode','demo');sessionStorage.setItem('rb','1');}}catch(e){}});
+  await ctx.addInitScript(()=>{try{if(!sessionStorage.getItem('rb')){localStorage.clear();localStorage.setItem('rc-open','false');localStorage.setItem('rc-mode','demo');localStorage.setItem('rc-seenRev','9999');sessionStorage.setItem('rb','1');}}catch(e){}});
   const p=await ctx.newPage();p.on('pageerror',e=>R.erreurs.push(w+' '+e.message));p.on('console',m=>{if(m.type()==='error')R.erreurs.push(w+' console '+m.text());});
   await p.goto(URL0);await p.waitForTimeout(1200);return p;}
 const ev=(p,f,a)=>p.evaluate(f,a);
