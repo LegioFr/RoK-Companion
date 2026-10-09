@@ -18,21 +18,23 @@ Décision de Mickaël du 2026-10-09 : « pour l'IA on fait l'essai ». Le but es
 
 ## Résultats
 
-| | Lecture gratuite | Haiku 5.5 | Haiku 5.5 (consigne v2) | Sonnet 5.5 |
-|---|---|---|---|---|
-| Quantités justes | 41/41 | 41/41 | 41/41 | 41/41 |
-| Valeurs du haut justes | 36/37 (« 750 » lu « 50 ») | 37/37 | 37/37 | 37/37 |
-| Objet reconnu | non fait | 38/45, **7 faux** (le soin pris pour de la construction) | 38/45, 7 « inconnu », 0 faux | 38/45, 7 « inconnu », 0 faux |
-| Cases coupées signalées, sans rien inventer | — | 12/12 | 12/12 | 12/12 |
-| Barre du haut | — | 15/15 | 15/15 | 15/15 |
-| Onglet et panneau | — | 3/3 | 3/3 | 3/3 |
-| Coût pour les 3 captures | 0 $ | 0,0053 $ | 0,0051 $ | 0,0886 $ |
-| Coût par capture | 0 $ | ≈ 0,0018 $ | ≈ 0,0017 $ | ≈ 0,030 $ |
-| Durée par capture | 0,3 s de chargement, puis 1,2 s pour les 78 zones | 8,6 à 13,2 s | 8,2 à 11,6 s | 10,0 à 12,1 s |
+| | Lecture gratuite | Haiku 5.5 | Haiku 5.5 (consigne v2) | Sonnet 5.5 | Sonnet 5.5 (consigne v2) | Opus 5.5 (consigne v2) |
+|---|---|---|---|---|---|---|
+| Quantités justes | 41/41 | 41/41 | 41/41 | 41/41 | 41/41 * | 41/41 |
+| Valeurs du haut justes | 36/37 (« 750 » lu « 50 ») | 37/37 | 37/37 | 37/37 | 37/37 * | 37/37 |
+| Objet reconnu | non fait | 38/45, **7 faux** (le soin pris pour de la construction) | 38/45, 7 « inconnu », 0 faux | 38/45, 7 « inconnu », 0 faux | **45/45** * | **45/45** |
+| Cases coupées signalées, sans rien inventer | — | 12/12 | 12/12 | 12/12 | 12/12 | 12/12 |
+| Barre du haut | — | 15/15 | 15/15 | 15/15 | 15/15 | 15/15 |
+| Coût pour les 3 captures | 0 $ | 0,0053 $ | 0,0051 $ | 0,0886 $ | ≈ 0,087 $ | 0,1432 $ |
+| Coût par capture | 0 $ | ≈ 0,0018 $ | ≈ 0,0017 $ | ≈ 0,030 $ | ≈ 0,029 $ | ≈ 0,048 $ |
+| Durée par capture | 0,3 s de chargement, puis 1,2 s pour les 78 zones | 8,6 à 13,2 s | 8,2 à 11,6 s | 10,0 à 12,1 s | 10,7 s | 11,5 à 14,1 s |
 
-- **Jetons** : 6 202 en entrée par capture (6 295 avec la consigne v2) et 1 545 à 2 885 en sortie (la réflexion est comprise). Tarifs relevés le 2026-10-06 : Haiku 5.5 à 0,10 $ / 0,50 $, Sonnet 5.5 à 2 $ / 10 $ par million de jetons.
+\* Sonnet avec la consigne v2 n'a relu que la capture des accélérateurs (c1), le 2026-10-09 : 15 cases sur 15 justes, dont les 7 accélérateurs de soin reconnus. Sur c2 et c3, il était déjà sans faute avec la première consigne ; les chiffres du tableau supposent qu'il le reste.
+
+- **Jetons** : 6 202 en entrée par capture (6 295 avec la consigne v2) et 966 à 2 885 en sortie (la réflexion est comprise). Tarifs relevés le 2026-10-06 : Haiku 5.5 à 0,10 $ / 0,50 $, Sonnet 5.5 à 2 $ / 10 $, Opus 5.5 à 4 $ / 20 $ par million de jetons.
 - **Consigne v2** (2026-10-09) : elle décrit l'icône de chaque type d'accélérateur, d'après l'étude du 6 octobre (établi et marteau, fiole, cible, rouleau de bandage, sablier). Avec elle, Haiku ne se trompe plus : il dit « inconnu » pour les 7 accélérateurs de soin, comme Sonnet.
-- **Coût total de l'essai** : 0,0998 $, avec la lecture de test faite à la mise en place de la clé.
+- **Opus 5.5** a été ajouté à la question de Mickaël (« tu as essayé avec Opus ? »). Il a lu les 3 captures avec la consigne v2 et n'a fait aucune erreur, accélérateurs de soin compris. Sonnet a alors relu la capture des accélérateurs avec la même consigne, pour comparer à égalité : lui non plus n'a fait aucune erreur.
+- **Coût total de l'essai** : 0,27 $ (lecture de test 0,0008 $, Haiku 0,0104 $, Sonnet 0,1174 $, Opus 0,1432 $).
 
 ## Limites
 
@@ -42,6 +44,9 @@ Décision de Mickaël du 2026-10-09 : « pour l'IA on fait l'essai ». Le but es
 
 ## Pistes pour la suite (au choix de Mickaël)
 
-1. **Haiku 5.5 seul, avec la consigne v2** : il lit les nombres et les objets d'une capture entière pour environ 0,002 $. Ce qui reste « inconnu » est demandé au joueur.
-2. **Lecture gratuite, puis Haiku pour les cases douteuses** : moins cher, mais beaucoup plus long à construire (détection de la grille, images de référence des icônes). Le gain est de quelques centimes par mois.
-3. **Sonnet 5.5** : aucune différence avec Haiku v2 sur cet échantillon, pour environ 17 fois plus cher.
+1. **Sonnet 5.5, avec la consigne v2** : 45 cases sur 45, pour environ 0,03 $ par capture. Un inventaire complet d'une quinzaine de captures coûte environ 0,45 $.
+2. **Opus 5.5** : le même résultat sur cet échantillon, pour environ 0,05 $ par capture (0,72 $ l'inventaire). Il garde peut-être une marge sur les onglets pas encore essayés, comme les objets nommés de l'onglet Autre.
+3. **Haiku 5.5, avec la consigne v2** : environ 0,002 $ par capture. Les nombres sont justes, mais les accélérateurs de soin restent « inconnu » et seraient demandés au joueur.
+4. **Lecture gratuite, puis IA pour les cases douteuses** : la moins chère, mais la plus longue à construire.
+
+Pour Mickaël seul, avec 100 $ de crédits par mois, les trois modèles restent très abordables. Le coût par joueur ne comptera que si l'appli s'ouvre à d'autres joueurs.
