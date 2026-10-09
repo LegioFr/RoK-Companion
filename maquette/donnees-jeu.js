@@ -1,7 +1,7 @@
 /* Données du jeu utilisées par la maquette. Source, date et statut de chaque donnée : references/donnees-jeu.md.
    Une donnée « non vérifiée » vient d'une source extérieure et n'a pas encore été comparée à une capture du jeu. */
 window.RC_JEU={
-  /* Protection des ressources en ville par niveau d'entrepôt : [nourriture, bois, pierre, or], en unités.
+  /* Protection des ressources en ville par niveau de réserve (« Storehouse », nom du jeu : Réserve) : [nourriture, bois, pierre, or], en unités.
      Niveau 22 : l'or (500 K) est plus bas qu'au niveau 21 dans la source, sans doute une faute de frappe. */
   entrepot:{
     source:'riseofkingdomsguides.com, page « Storehouse » (mise à jour du 2 janv. 2026, consultée le 9 oct. 2026)',verifie:false,
@@ -53,11 +53,12 @@ window.RC_JEU={
   /* Bâtiments à niveau du jeu (1 à 25), rangés comme dans le menu de construction : wiki riseofkingdoms.fandom.com, page « Buildings »
      et pages « Buildings/…/Requirements » (lues le 9 oct. 2026). Fermes, scieries, carrières, mines d'or et hôpitaux : 4 chacun,
      débloqués aux niveaux d'Hôtel de ville indiqués (page « City Hall/Requirements », révision du 4 janv. 2026).
-     Sans niveau, donc pas suivis : forge, hutte du bâtisseur, tableau d'affichage, relais, monument, boutique, lycée de la sagesse, boutique VIP.
-     Noms français : ceux marqués dans app.js (aNom) sont proposés par Claude, à vérifier dans le jeu. */
+     Sans niveau, donc pas suivis (noms du jeu, captures de Mickaël du 9 oct. 2026) : Forgeron, Hutte de bâtisseur, Tableau d'affichage,
+     Poste de messagerie, Monument, Magasin, Amphithéâtre de la sagesse. Nouveaux bâtiments vus dans son menu, absents du wiki :
+     Forum d'état, Musée, Mine de cristal, Centre de recherche de cristal (niveaux inconnus). Groupes : noms du menu du jeu (Économique, Militaire). */
   batiments:{
     source:'wiki riseofkingdoms.fandom.com (pages « Buildings », lues le 9 oct. 2026)',
-    groupes:[['Économie',['ferme','scierie','carriere','mine','academie','entrepot','alliance','comptoir']],
+    groupes:[['Économique',['ferme','scierie','carriere','mine','academie','entrepot','alliance','comptoir']],
       ['Militaire',['caserne','tir','ecurie','siege','hopital','eclaireurs','taverne','chateau']],
       ['Autres',['mur','tourguet']]],
     instances:{ferme:[1,3,6,9],scierie:[2,5,8,11],carriere:[1,7,10,13],mine:[10,12,14,16],hopital:[1,4,9,15]}
@@ -71,11 +72,11 @@ window.RC_JEU={
     {id:'missions',t:'Missions quotidiennes',d:'Assez de missions pour ouvrir les coffres de points d’activité'},
     {id:'alliance',t:'Alliance',d:'Aider, donner à la technologie, ouvrir les cadeaux'},
     {id:'files',t:'Files toujours occupées',d:'Construction, recherche et entraînement lancés'},
-    {id:'ville',t:'Ressources de la ville',d:'Ramasser fermes, scieries, carrières et mines d’or'},
+    {id:'ville',t:'Ressources de la ville',d:'Ramasser fermes, moulins à bois, carrières et mines d’or'},
     {id:'recolte',t:'Marches en récolte',d:'Toutes les marches libres envoyées sur la carte'},
     {id:'pa',t:'Points d’action',d:'Les dépenser sur les barbares avant qu’ils plafonnent'},
     {id:'canyon',t:'Canyon du crépuscule',d:'Les combats gratuits du jour'},
-    {id:'lycee',t:'Lycée de la sagesse',d:'Le questionnaire du jour'},
+    {id:'lycee',t:'Amphithéâtre de la sagesse',d:'Le questionnaire du jour'},
     {id:'marchand',t:'Marchand mystérieux',d:'Regarder ses offres quand il est là'},
     {id:'evts',t:'Événements en cours',d:'Récupérer les récompenses quotidiennes'}
   ]

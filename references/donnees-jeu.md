@@ -74,18 +74,19 @@ Règle du projet : chaque donnée a sa source et sa date ; tant qu’elle n’es
 
 ## Bâtiments prérequis ajoutés à Ma ville (2026-10-09)
 
-- Scout Camp, Alliance Center, Trading Post : prérequis de l'Hôtel de ville (niveaux 6, 9, 14, 15, 20, 25). Noms français proposés par Claude : **Camp d'éclaireurs**, **Centre de l'alliance**, **Comptoir commercial**. **Non vérifiés** : aucune source française trouvée le 2026-10-09 (recherche web) ; Mickaël les compare au jeu et les corrige.
+- Scout Camp, Alliance Center, Trading Post : prérequis de l'Hôtel de ville (niveaux 6, 9, 14, 15, 20, 25). Noms du jeu (captures de Mickaël du 2026-10-09) : **Camp d'éclaireurs**, **Centre d'alliance**, **Comptoir**.
 
 ## Liste des bâtiments (2026-10-09)
 
 - **Source :** wiki riseofkingdoms.fandom.com, page « Buildings » (classement du menu de construction) et pages « Buildings/…/Requirements », lues par l'API publique le 2026-10-09. Révisions des tableaux : de 2019 à 2026 (Hôtel de ville, Académie, Carrière, Atelier de siège, Écurie, Taverne : janv. 2026 ; Comptoir commercial : août 2026). **Non vérifié** dans le jeu.
-- **Bâtiments à niveau (1 à 25)**, par groupe du jeu :
-  - Économie : Farm (Ferme ×4), Lumber Mill (Scierie ×4), Quarry (Carrière ×4), Goldmine (Mine d'or ×4), Academy (Académie), Storehouse (Entrepôt), Alliance Center (Centre de l'alliance), Trading Post (Comptoir commercial) ;
-  - Militaire : Barracks (Caserne), Archery Range (Champ de tir), Stable (Écurie), Siege Workshop (Atelier de siège), Hospital (Hôpital ×4), Scout Camp (Camp d'éclaireurs), Tavern (Taverne), Castle (Château) ;
-  - Autres : City Hall (Hôtel de ville), Wall (Mur), Watchtower (Tour de guet).
-- **Exemplaires et Hôtel de ville qui les débloque** (page « City Hall/Requirements ») : fermes 1, 3, 6, 9 ; scieries 2, 5, 8, 11 ; carrières 1, 7, 10, 13 ; mines d'or 10, 12, 14, 16 ; hôpitaux 1, 4, 9, 15. « 1 » = présent dès le début (absent de la liste des déblocages ; déduit, non vérifié).
-- **Sans niveau, donc pas suivis :** Blacksmith, Builder's Hut, Bulletin Board, Courier Station, Monument, Shop, Lyceum of Wisdom, VIP Shop.
-- **Noms français :** ceux qui existaient dans les maquettes validées (Mur, Académie, Caserne, Écurie, Champ de tir, Hôpital, Atelier de siège, Entrepôt) sont repris ; les autres sont proposés par Claude et marqués ° dans la maquette, **à vérifier dans le jeu** (aucune source française trouvée le 2026-10-09).
+- **Bâtiments à niveau (1 à 25)**, par groupe du menu de construction du jeu (noms français relevés sur les captures de Mickaël du 2026-10-09, menu « Économique » / « Militaire » et bannières de sa ville) :
+  - Économique : Farm = **Ferme** ×4, Lumber Mill = **Moulin à bois** ×4, Quarry = **Carrière** ×4, Goldmine = **Mine d'or** ×4, Academy = **Académie**, Storehouse = **Réserve**, Alliance Center = **Centre d'alliance**, Trading Post = **Comptoir** ;
+  - Militaire : Barracks = **Caserne**, Archery Range = **Champ de tir à l'arc**, Stable = **Écurie**, Siege Workshop = **Atelier d'armes de siège**, Hospital = **Hôpital** ×4, Scout Camp = **Camp d'éclaireurs**, Tavern = **Taverne**, Castle = **Château** ;
+  - Autres (pas dans le menu de construction) : City Hall = **Hôtel de ville**, Wall = **Mur**, Watchtower = **Tour de guet**.
+- **Exemplaires et Hôtel de ville qui les débloque** (page « City Hall/Requirements ») : fermes 1, 3, 6, 9 ; moulins à bois 2, 5, 8, 11 ; carrières 1, 7, 10, 13 ; mines d'or 10, 12, 14, 16 ; hôpitaux 1, 4, 9, 15. « 1 » = présent dès le début (absent de la liste des déblocages ; déduit, non vérifié).
+- **Sans niveau, donc pas suivis** (noms du jeu) : Forgeron (Blacksmith), Hutte de bâtisseur (Builder's Hut), Tableau d'affichage (Bulletin Board), Poste de messagerie (Courier Station), Monument, Magasin (Shop), Amphithéâtre de la sagesse (Lyceum of Wisdom).
+- **Vus dans le menu de Mickaël, absents du wiki (contenu récent)** : Forum d'état (« Obtenez de l'attirail ici »), Musée (reliques), Mine de cristal, Centre de recherche de cristal ; tous à 0/1 construit, coût 300 à 1 000 et 1 s. Niveaux inconnus. Sa barre du haut affiche aussi une nouvelle ressource, le **cristal** (0).
+- **Corrections du 2026-10-09** : les maquettes reprises de RoK disaient « Entrepôt », « Champ de tir », « Atelier de siège » ; le jeu dit Réserve, Champ de tir à l'arc, Atelier d'armes de siège. Les noms proposés par Claude « Scierie », « Comptoir commercial », « Centre de l'alliance », « Lycée de la sagesse » étaient faux.
 - **Hôpitaux et prérequis :** l'Hôtel de ville demande « Hospital Lv.X » ; la maquette compte l'hôpital le plus haut (hypothèse, à vérifier).
 
 ## Caisses et accélérateurs

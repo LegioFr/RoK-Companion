@@ -55,7 +55,7 @@ window.RC_TESTS=[
  {g:'Ma ville · progression',p:['demo','#ma-ville-progression'],l:[
   ['vp1','Regarde Ma ville › Progression sur ta tablette, en portrait, puis en paysage.','C’est propre et lisible : l’Hôtel de ville en haut avec ce qu’il manque pour le niveau 25, puis les réglages et les bâtiments en tuiles.'],
   ['vp2','Lis la carte de l’Hôtel de ville, puis touche « Mur 24 ».','Tu comprends tout de suite ce qu’il manque, le coût et la durée ; « Mur 24 » ouvre la valeur du Mur. Si un prérequis ou un coût te semble faux par rapport au jeu, laisse une note.'],
-  ['vp3','Regarde les bâtiments : Économie, Militaire, Autres.','Il ne manque aucun bâtiment à niveau de ton jeu, ils sont rangés comme dans le jeu, et les noms marqués ° sont ceux du jeu en français. Sinon, laisse une note.'],
+  ['vp3','Regarde les bâtiments : Économique, Militaire, Autres.','Il ne manque aucun bâtiment à niveau de ton jeu, ils sont rangés comme dans le jeu et portent les noms du jeu (Réserve, Moulin à bois, Comptoir…). Sinon, laisse une note.'],
   ['vp5','Touche la tuile « Fermes », puis « Corriger » : change le niveau d’une ferme et enregistre.','Une case par ferme, c’est clair ; la tuile affiche ensuite le bon niveau.'],
   ['vp4','Regarde le badge en haut, à côté de « Importer ».','Il dit « Exemples, non enregistrés » et c’est clair. Dans ta version réelle, il dira « Enregistré », ou « En attente d’envoi » si l’enregistrement n’a pas pu partir.']]},
  {g:'Ma ville · inventaire',p:['demo','#ma-ville-inventaire'],l:[

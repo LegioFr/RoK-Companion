@@ -35,18 +35,19 @@ var FIELDS={
   civ:{label:'Civilisation',icon:'n-laurel',kind:'civ',grp:'set'},
   mur:{label:'Mur',icon:'i-wall',kind:'lvl',grp:'bld'},academie:{label:'Académie',icon:'i-temple',kind:'lvl',grp:'bld'},
   caserne:{label:'Caserne',icon:'t-swords',kind:'lvl',grp:'bld'},ecurie:{label:'Écurie',icon:'n-horseshoe',kind:'lvl',grp:'bld'},
-  tir:{label:'Champ de tir',icon:'n-bow',kind:'lvl',grp:'bld'},
+  tir:{label:'Champ de tir à l’arc',icon:'n-bow',kind:'lvl',grp:'bld'},
   /* le jeu a 4 hôpitaux (2026-10-09) : un niveau par hôpital ; pour les prérequis, on compte le plus haut (à vérifier) */
   hopital:{label:'Hôpital',pl:'Hôpitaux',icon:'i-hosp',kind:'multi',n:4,grp:'bld'},
-  siege:{label:'Atelier de siège',icon:'n-catapult',kind:'lvl',grp:'bld'},
-  entrepot:{label:'Entrepôt',icon:'i-chest',kind:'lvl',grp:'bld'},
-  /* Ajoutés le 2026-10-09 (prérequis de l'Hôtel de ville, puis tous les bâtiments à niveau du jeu) ; noms français proposés par Claude, à vérifier dans le jeu (aNom) */
-  eclaireurs:{label:'Camp d’éclaireurs',icon:'i-eye',kind:'lvl',grp:'bld',aNom:1},alliance:{label:'Centre de l’alliance',icon:'n-banners',kind:'lvl',grp:'bld',aNom:1},
-  comptoir:{label:'Comptoir commercial',icon:'n-scale',kind:'lvl',grp:'bld',aNom:1},
-  chateau:{label:'Château',icon:'i-castle',kind:'lvl',grp:'bld',aNom:1},taverne:{label:'Taverne',icon:'i-house',kind:'lvl',grp:'bld',aNom:1},
-  tourguet:{label:'Tour de guet',icon:'i-keep',kind:'lvl',grp:'bld',aNom:1},
-  ferme:{label:'Ferme',pl:'Fermes',icon:'r-food',kind:'multi',n:4,grp:'bld',aNom:1},scierie:{label:'Scierie',pl:'Scieries',icon:'r-wood',kind:'multi',n:4,grp:'bld',aNom:1},
-  carriere:{label:'Carrière',pl:'Carrières',icon:'r-stone',kind:'multi',n:4,grp:'bld',aNom:1},mine:{label:'Mine d’or',pl:'Mines d’or',icon:'r-gold',kind:'multi',n:4,grp:'bld',aNom:1}
+  siege:{label:'Atelier d’armes de siège',icon:'n-catapult',kind:'lvl',grp:'bld'},
+  entrepot:{label:'Réserve',icon:'i-chest',kind:'lvl',grp:'bld'},
+  /* Ajoutés le 2026-10-09 (prérequis de l'Hôtel de ville, puis tous les bâtiments à niveau du jeu). Tous les noms sont ceux du jeu en français,
+     relevés sur les captures de Mickaël du 2026-10-09 (Réserve, Moulin à bois, Comptoir, Centre d'alliance, Champ de tir à l'arc, Atelier d'armes de siège…). */
+  eclaireurs:{label:'Camp d’éclaireurs',icon:'i-eye',kind:'lvl',grp:'bld'},alliance:{label:'Centre d’alliance',icon:'n-banners',kind:'lvl',grp:'bld'},
+  comptoir:{label:'Comptoir',icon:'n-scale',kind:'lvl',grp:'bld'},
+  chateau:{label:'Château',icon:'i-castle',kind:'lvl',grp:'bld'},taverne:{label:'Taverne',icon:'i-house',kind:'lvl',grp:'bld'},
+  tourguet:{label:'Tour de guet',icon:'i-keep',kind:'lvl',grp:'bld'},
+  ferme:{label:'Ferme',pl:'Fermes',icon:'r-food',kind:'multi',n:4,grp:'bld'},scierie:{label:'Moulin à bois',pl:'Moulins à bois',icon:'r-wood',kind:'multi',n:4,grp:'bld'},
+  carriere:{label:'Carrière',pl:'Carrières',icon:'r-stone',kind:'multi',n:4,grp:'bld'},mine:{label:'Mine d’or',pl:'Mines d’or',icon:'r-gold',kind:'multi',n:4,grp:'bld'}
 };
 var KIND={lvl:['Niveau','Nouveau niveau'],count:['Nombre','Nouveau nombre'],pct:['Bonus (en %)','Nouveau bonus (en %)'],civ:['Civilisation','Nouvelle civilisation'],multi:['Niveaux','Nouveaux niveaux']};
 /* Valeur d'un bâtiment en plusieurs exemplaires : tableau d'un niveau par exemplaire (null = pas renseigné). */
@@ -183,7 +184,7 @@ function paintSync(){var t,c;
     el.title=c==='demo'?'Version Exemples : tes essais ne sont pas gardés.':c==='wait'?'Une copie est gardée sur cet appareil ; l’envoi est retenté tout seul.':'';});}
 document.addEventListener('rc:sync',function(){if(window.RC_SYNC&&!window.RC_SYNC().attente)SAVE_KO=false;paintSync();});
 function applyReel(j){var d=JSON.parse(j);P=d.P||{};ORDER=d.ORDER||[];Object.keys(P).forEach(function(k){normProfile(P[k]);});S.active=d.active&&P[d.active]?d.active:(ORDER[0]||null);
-  if(d.S)Object.keys(d.S).forEach(function(k){if(STORE_KEYS.indexOf(k)>=0)S[k]=d.S[k];});ACC.REEL.data={P:P,ORDER:ORDER,active:S.active};}
+  if(d.S)Object.keys(d.S).forEach(function(k){if(STORE_KEYS.indexOf(k)>=0)S[k]=d.S[k];});fixRoutine();ACC.REEL.data={P:P,ORDER:ORDER,active:S.active};}
 function startReel(){
   var ld=document.createElement('div');ld.className='reel-load';ld.innerHTML='<p>Chargement de tes données…</p>';document.body.appendChild(ld);
   var done=false;
@@ -203,6 +204,9 @@ function normProfile(p){Object.keys(FIELDS).forEach(function(k){if(!(k in p.v))p
 var JEU=window.RC_JEU||{entrepot:{niveaux:{}},reset:{heureUTC:0},routine:[]};
 if(!S.routine)S.routine={items:JEU.routine.map(function(x){return {id:x.id,t:x.t,d:x.d};}),done:{},propose:true};
 if(!S.events)S.events=[];
+/* Noms du jeu relevés le 2026-10-09 : une ligne proposée que Mickaël n'a jamais renommée est corrigée (aussi dans sa version réelle). */
+function fixRoutine(){(S.routine&&S.routine.items||[]).forEach(function(x){if(x.id==='lycee'&&x.t==='Lycée de la sagesse')x.t='Amphithéâtre de la sagesse';if(x.id==='ville'&&x.d==='Ramasser fermes, scieries, carrières et mines d’or')x.d='Ramasser fermes, moulins à bois, carrières et mines d’or';});}
+fixRoutine();
 function evList(){return REEL?S.events:EVENTS;}
 /* Durée lisible : 2 j 4 h, 5 h 20 min, 12 min */
 function fDuree(ms){var m=Math.max(0,Math.round(ms/60000)),j=Math.floor(m/1440),h=Math.floor(m%1440/60),mn=m%60;
@@ -221,7 +225,7 @@ function prochainReset(){var d=new Date();d.setUTCHours(JEU.reset.heureUTC,0,0,0
 /* Heure de la remise à zéro, en heure UTC (note 10 de Mickaël, 2026-10-09) : « minuit UTC » */
 function heureReset(){var h=JEU.reset.heureUTC;return h===0?'minuit UTC':h+' h UTC';}
 function rtFait(id){return S.routine.done[(S.active||'')+'|'+id]===jourJeu();}
-/* Ressources en ville au-dessus de la protection de l'entrepôt (données de la source, non vérifiées) */
+/* Ressources en ville au-dessus de la protection de la réserve (« Storehouse » ; données de la source, non vérifiées) */
 function pillage(p){var lv=p.v.entrepot,pr=lv!=null&&JEU.entrepot.niveaux[lv];if(!pr)return null;
   var R=[['food','Nourriture'],['wood','Bois'],['stone','Pierre'],['gold','Or']],L=[];
   R.forEach(function(r,i){var x=p.res[r[0]];if(!x||x.v==null)return;var e=x.v-pr[i]/1e6;if(e>=0.05)L.push(r[1]+' '+fM(e));});return L;}
@@ -302,7 +306,7 @@ function renderHome(){
   /* Bâtisseurs libres (d'après « En cours ») et ressources exposées au pillage (décisions du 2026-10-09) */
   var nb2=p.encours.filter(function(x){return x.t==='build'&&x.fin>Date.now();}).length;
   if(p.v.builders!=null&&nb2<p.v.builders){var lib=p.v.builders-nb2;W.unshift(row({act:'add-encours',data:'build',icon:'t-hammer',title:lib+' bâtisseur'+(lib>1?'s':'')+' libre'+(lib>1?'s':''),sub:'Aucune construction en cours pour '+(lib>1?'eux':'lui')+' · touche pour en ajouter une',go:true}));}
-  var pg=pillage(p);if(pg&&pg.length)W.unshift(row({href:'#ma-ville-inventaire',icon:'i-shield',title:'Ressources exposées au pillage',sub:pg.join(' · ')+' au-dessus de la protection de l’entrepôt '+p.v.entrepot+(JEU.entrepot.verifie?'':' (protection d’après un guide, non vérifiée)')}));
+  var pg=pillage(p);if(pg&&pg.length)W.unshift(row({href:'#ma-ville-inventaire',icon:'i-shield',title:'Ressources exposées au pillage',sub:pg.join(' · ')+' au-dessus de la protection de la réserve '+p.v.entrepot+(JEU.entrepot.verifie?'':' (protection d’après un guide, non vérifiée)')}));
   $('#watchList').innerHTML=W.join('');$('#watchSec').hidden=!W.length;
   renderEnCours(p);renderRoutine();renderEvHome();
   /* Ma semaine : propre à chaque profil (le bilan du Principal s'affichait aussi sur les fermes, constaté le 2026-10-09) */
@@ -392,7 +396,7 @@ function tuile(p,k,manque){var f=FIELDS[k],v=p.v[k],val=v,sub='',cls='';
   if(val==null){cls=' vide';sub='à renseigner';}else if(f.kind==='pct')val=String(val).replace('.',',')+' %';
   if(manque){cls+=' manque';sub='niveau '+manque+' requis';}
   return '<a class="btile'+cls+'" href="#valeur-'+k+'"><span class="bt-i">'+ic(f.icon)+'</span><span class="bt-v'+(f.kind==='civ'&&val!=null?' txt':'')+'">'+(val==null?'—':esc(val))+'</span>'+
-    '<span class="bt-n">'+esc(isMulti(k)?f.pl:(f.court||f.label))+(f.aNom?'<sup title="Nom à vérifier dans le jeu">°</sup>':'')+'</span>'+(sub?'<span class="bt-s">'+sub+'</span>':'')+'</a>';}
+    '<span class="bt-n">'+esc(isMulti(k)?f.pl:(f.court||f.label))+'</span>'+(sub?'<span class="bt-s">'+sub+'</span>':'')+'</a>';}
 /* Saisie rapide : une ligne par valeur ; un bâtiment en plusieurs exemplaires a une case par exemplaire */
 function qrow(p,k){var f=FIELDS[k],v=p.v[k],inp;
   if(f.kind==='civ')inp='<select data-qk="'+k+'"><option value="">— choisir</option>'+CIVS.map(function(c){return '<option'+(c===v?' selected':'')+'>'+c+'</option>';}).join('')+'</select>';
@@ -462,7 +466,7 @@ function renderCity(){
       return '<div class="bgrp"><h3>'+g[0]+'</h3><div class="btiles">'+L.map(function(k){return tuile(p,k,MAN[k]);}).join('')+'</div></div>';}).join('');}
   var nu=BLD.filter(function(k){return isMulti(k)?vide4(p.v[k]):p.v[k]==null;}).length;
   $('#bldCount').textContent=nu?nu+' à renseigner':'Tous renseignés';
-  $('#bldNote').textContent='° Nom proposé, à vérifier dans le jeu. Les bâtiments sans niveau (forge, boutique, monument…) ne sont pas suivis.';
+  $('#bldNote').textContent='Les bâtiments sans niveau (forgeron, magasin, monument…) ne sont pas suivis.';
   $('#quickBar').innerHTML=S.quick?'<div class="qbar"><span id="qCount">Saisie rapide</span><div class="chips" data-single id="qMotif" hidden><button class="chip" type="button" aria-pressed="true">Changé en jeu</button><button class="chip" type="button" aria-pressed="false">Erreur de saisie</button><button class="chip" type="button" aria-pressed="false">Autre</button></div><div class="btns" style="margin-top:0"><button class="btn" type="button" data-act="quick-cancel">Annuler</button><button class="btn primary" type="button" data-act="quick-save">Enregistrer</button></div></div>':'';
   $('#gResearch').innerHTML=!p.research.length?vide('Pas encore renseignées.'):p.research.map(function(r){return '<div class="prow"><div class="ptop"><span>'+r[0]+'</span><span>'+r[1]+' %</span></div><div class="bar"><div class="fill" style="width:'+r[1]+'%"></div></div></div>';}).join('');
   $('#gTroops').innerHTML=!p.troops.length?vide('Pas encore renseignées.'):p.troops.map(function(t){return row({icon:t[1],title:t[0],sub:'Niveau '+t[2],val:nb(t[3])});}).join('');
