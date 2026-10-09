@@ -1,0 +1,5 @@
+{
+  "regions": ["cdg1"],
+  "rewrites": [{ "source": "/_blob/:id", "destination": "/api/capture?id=:id" }],
+  "headers": [{ "source": "/api/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-store" }] }]
+}

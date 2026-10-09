@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "type": "module",
+  "description": "Site d'essai de la maquette (Vercel) : fonctions de stockage de la bulle d'outils.",
+  "dependencies": {
+    "@vercel/blob": "2.8.0"
+  }
+}

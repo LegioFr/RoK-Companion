@@ -179,14 +179,43 @@ function useLocal(){db=null;dbState='local';giveStore('local');setNotes(LS.get('
 function announceReview(){setTimeout(announceNow,0);}
 function announceNow(){if(REEL||LS.get('seenRev',0)>=VNUM)return;var n=reviewList().length;LS.set('seenRev',VNUM);if(!n)return;S.tab='tests';LS.set('tab','tests');showPnl(true);say(n+' correction'+(n>1?'s':'')+' à vérifier : voir l’onglet Tests.');}
 function saveLocal(){LS.set('notes',ALLN);setNotes(ALLN);refresh();}
+/* Site d'essai (Vercel, décision du 2026-10-09) : mêmes outils, données rangées par les fonctions /api/db et /api/capture.
+   Même façon d'appeler que la base de claude.ai : collection().onSnapshot / add, doc().get / set / update / delete.
+   Les écritures partent une par une ; l'écran est mis à jour tout de suite, puis relu quand la page reprend la main. */
+var SITE=/\.vercel\.app$/.test(location.hostname)||!!window.RC_SITE;
+function httpErr(r){return {code:'http '+r.status};}
+function siteDb(){
+  var subs={},cache={},q=Promise.resolve();
+  function snap(d){return {docs:Object.keys(d).map(function(id){return {id:id,data:function(){return d[id];}};})};}
+  function tell(col){(subs[col]||[]).forEach(function(f){f(snap(cache[col]||{}));});}
+  function pull(col){return fetch('/api/db?col='+col,{cache:'no-store'}).then(function(r){if(!r.ok)throw httpErr(r);return r.json();}).then(function(j){cache[col]=j.docs||{};tell(col);return cache[col];});}
+  function send(o){var p=q.then(function(){return fetch('/api/db',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(o)}).then(function(r){if(!r.ok)throw httpErr(r);return r.json();});});q=p.catch(function(){});return p;}
+  function write(o){var d=cache[o.col]=cache[o.col]||{};if(o.op==='set')d[o.id]=o.data;else if(o.op==='update')d[o.id]=Object.assign({},d[o.id],o.data);else delete d[o.id];tell(o.col);return send(o).then(function(){});}
+  function doc(path){var a=path.split('/'),col=a[0],id=a[1];return {
+    get:function(){return pull(col).then(function(d){return {exists:Object.prototype.hasOwnProperty.call(d,id),data:function(){return d[id];}};});},
+    set:function(data){return write({op:'set',col:col,id:id,data:data});},
+    update:function(data){return write({op:'update',col:col,id:id,data:data});},
+    delete:function(){return write({op:'delete',col:col,id:id});}};}
+  window.addEventListener('focus',function(){Object.keys(subs).forEach(function(c){pull(c).catch(function(){});});});
+  return {doc:doc,collection:function(col){return {
+    onSnapshot:function(f,err){(subs[col]=subs[col]||[]).push(f);pull(col).catch(function(e){if(err)err(e);});return function(){};},
+    add:function(data){var id='n'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);return write({op:'set',col:col,id:id,data:data}).then(function(){return {id:id};});}};}};
+}
+function siteAssets(){return {
+  upload:function(file){return fetch('/api/capture',{method:'POST',headers:{'content-type':file.type||'image/jpeg'},body:file}).then(function(r){if(!r.ok)throw httpErr(r);return r.json();});},
+  delete:function(id){return fetch('/api/capture?id='+encodeURIComponent(id),{method:'DELETE'}).then(function(r){if(!r.ok)throw httpErr(r);});}};}
+function startDb(d){
+  db=d;dbState='ok';giveStore('db');
+  db.collection('notes').onSnapshot(function(s){setNotes(s.docs.map(function(x){var o=Object.assign({},x.data());o.id=x.id;return o;}));refresh();},function(){useLocal();});
+  db.collection('tests').onSnapshot(function(s){RES={};s.docs.forEach(function(x){RES[x.id]=x.data();});refresh();paintRun();announceReview();},function(){});
+}
 (function initDb(tries){
+  if(SITE){assets=siteAssets();startDb(siteDb());return;}
   if(location.protocol==='file:'){useLocal();if(window.claude&&window.claude.use)window.claude.use('assets').then(function(a){assets=a||null;render();paintRun();},function(){});return;}
   if(window.claude&&window.claude.use){
     window.claude.use('db').then(function(d){
       if(!d){useLocal();return;}
-      db=d;dbState='ok';giveStore('db');
-      db.collection('notes').onSnapshot(function(s){setNotes(s.docs.map(function(x){var o=Object.assign({},x.data());o.id=x.id;return o;}));refresh();},function(){useLocal();});
-      db.collection('tests').onSnapshot(function(s){RES={};s.docs.forEach(function(x){RES[x.id]=x.data();});refresh();paintRun();announceReview();},function(){});
+      startDb(d);
     },useLocal);
     window.claude.use('assets').then(function(a){assets=a||null;render();paintRun();},function(){});
   }else if(tries<40)setTimeout(function(){initDb(tries+1);},250);
