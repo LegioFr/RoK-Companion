@@ -14,6 +14,8 @@ const EFFORTS = ['low', 'medium', 'high'];
 const ID = /^c[a-z0-9]{6,40}\.(png|jpe?g|webp)$/;
 const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
 
+/* Icônes des accélérateurs : étude des captures de Mickaël du 2026-10-06 (texte du panneau de droite) ; ajoutées le 2026-10-09
+   après l'essai (Haiku prenait les accélérateurs de soin pour de la construction). */
 const CONSIGNE = `Tu lis une capture d'écran de l'Inventaire du jeu Rise of Kingdoms, jeu en français, pour un joueur qui veut recopier ses objets dans une appli.
 Disposition de l'écran :
 - en haut, une barre de compteurs : les ressources en ville, arrondies (par exemple « 81.8M »), et les gemmes ;
@@ -25,6 +27,7 @@ Règles :
 - Liste seulement les cases visibles, ligne par ligne, de gauche à droite ; ne devine jamais une case qui n'est pas à l'écran.
 - Une case coupée par le bord de la grille (défilement) : coupee = true, et ne devine pas ce qui est caché.
 - objet : quelques mots en français tirés de l'icône et de la valeur, par exemple « caisse de nourriture », « caisse de pierre », « caisse de gemmes », « coffre de ressources au choix », « accélérateur de construction », « accélérateur de recherche », « accélérateur d'entraînement », « accélérateur de soin », « accélérateur universel » ; « inconnu » si tu ne sais pas.
+- Les accélérateurs se distinguent par le petit dessin posé sur les flèches : établi et marteau = construction ; fiole = recherche ; cible = entraînement ; rouleau de bandage = soin ; sablier = universel (« Accélération », utilisable partout).
 - sur = false dès qu'un chiffre de la case est douteux ou illisible.`;
 
 const TXT = { type: 'string' };
