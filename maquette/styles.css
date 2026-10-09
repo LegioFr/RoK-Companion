@@ -522,3 +522,9 @@ button.more{border:0;background:none;cursor:pointer;font-family:inherit;min-heig
 .ev-dt{display:grid;grid-template-columns:minmax(0,1fr) 120px;gap:8px}
 .event.now{border-color:#3ecf8e66}
 .event.now span{color:var(--green)}
+/* Accueil « À faire / Où j’en suis » : carte du profil sur toute la largeur, carte « Renseigne ta ville » */
+.home-banner+.cols{margin-top:24px}
+.home-banner+.cols>.col>.sec:first-child{margin-top:0}
+.fill-card .ptop b{font:700 20px/1.2 var(--display);color:var(--gold-2)}
+.fill-card p{margin:8px 0 0}
+.fill-card .btns{margin-top:12px}

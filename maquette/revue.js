@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=30,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=31,VERSION='v'+VNUM+' · 9 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -30,7 +30,7 @@ var CHANGES={
   'confirmation':[{sel:'[data-auth="confirmation"] .a-intro',t:'« Un e-mail de confirmation t’a été envoyé. » (ta note 4).'}],
   'nouveau-mot-de-passe':[{sel:'[data-auth="nouveau-mot-de-passe"]',t:'Écran ajouté, repris de B01-05. Après « Enregistrer », tu es connecté.'}],
   'ma-ville-progression':[{sel:'#gSet',t:'Le bonus de vitesse accepte une décimale (42,5 %), comme dans le jeu.'}],
-  'accueil':[{sel:'#ecList',t:'Nouveau : « En cours » (constructions, recherches, entraînements avec leur heure de fin). Un bâtisseur libre est signalé dans « À surveiller ».'},{sel:'#rtCard',t:'Nouveau : « Routine du jour », liste à cocher remise à zéro à 2 h (liste proposée par Claude, à corriger).'},{sel:'#watchList',t:'Nouveau : ressources exposées au pillage, d’après le niveau de l’entrepôt (protection tirée d’un guide, non vérifiée).'},{sel:'#evHome',t:'Événements avec leur date et leur heure, et « en cours · se termine dans… ».'},{sel:'#homeMain',t:'Sur ta tablette (960 à 1099 px de large), l’Accueil passe en deux colonnes : il tient presque sur un écran.'},{sel:'#watchList',t:'« À surveiller » : une seule ligne pour les valeurs à renseigner (elles sont déjà dans les priorités et l’aperçu).'},{sel:'.kpis',t:'Le % de l’objectif n’est plus répété dans la carte du profil : il reste dans « Objectif en cours ».'},{sel:'#weekList',t:'« Ma semaine » suit le profil choisi (le bilan du Principal s’affichait aussi sur les fermes).'}],
+  'accueil':[{sel:'#homeMain',t:'Nouvelle organisation « À faire / Où j’en suis » : profil sur toute la largeur ; à gauche alertes, priorités, routine ; à droite en cours, événements, objectif, aperçu, semaine (ta remarque).'},{sel:'#fillSec',t:'Les valeurs à renseigner sont regroupées dans une seule carte « Renseigne ta ville » (ta décision).'},{sel:'#ecList',t:'Nouveau : « En cours » (constructions, recherches, entraînements avec leur heure de fin). Un bâtisseur libre est signalé dans « À surveiller ».'},{sel:'#rtCard',t:'Nouveau : « Routine du jour », liste à cocher remise à zéro à 2 h (liste proposée par Claude, à corriger).'},{sel:'#watchList',t:'Nouveau : ressources exposées au pillage, d’après le niveau de l’entrepôt (protection tirée d’un guide, non vérifiée).'},{sel:'#evHome',t:'Événements avec leur date et leur heure, et « en cours · se termine dans… ».'},{sel:'.kpis',t:'Le % de l’objectif n’est plus répété dans la carte du profil : il reste dans « Objectif en cours ».'},{sel:'#weekList',t:'« Ma semaine » suit le profil choisi (le bilan du Principal s’affichait aussi sur les fermes).'}],
   'profil':[{sel:'[data-act="delete-profile"]',t:'On peut supprimer n’importe quel profil, même l’actif : un autre profil devient actif (ta décision).'}],
   'plus':[{sel:'#verRow',t:'Numéro de version de la maquette affiché dans « L’appli » (ta demande).'},{sel:'[data-act="sheet-logout"]',t:'Se déconnecter mène à l’écran de connexion.'},{sel:'[data-act="sheet-password"]',t:'Le mot de passe actuel est vérifié.'}]
 };

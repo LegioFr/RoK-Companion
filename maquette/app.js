@@ -233,10 +233,9 @@ function renderHome(){
     (S.active==='f1'?(S.sent?'<b class="ok">'+fM(S.sent)+' de pierre envoyés</b> au Principal':'La Ferme 1 peut envoyer de la pierre au <b>Principal</b>'):'Reste : <b>Mur 18</b> · valeurs à renseigner');
   // priorités : actions triées par importance ; on garde celles qui tiennent dans le temps choisi (décision du 2026-10-08, note 5 de Mickaël)
   var L=[];
-  if(REEL){/* version réelle : seulement ce que l'appli sait de tes données, sans exemple */
-    L=unknown(p).map(function(k){return ['#valeur-'+k,'Renseigner : '+FIELDS[k].label,'Les priorités seront plus justes',1];});
+  if(REEL){/* version réelle : pas encore de priorités calculées ; les valeurs à renseigner sont dans la carte « Renseigne ta ville » */
+    L=[];
   }else if(S.active==='main'){
-    if(n)L.push(['#valeur-'+unknown(p)[0],'Renseigner : '+FIELDS[unknown(p)[0]].label,'Le plan en a besoin pour être juste',1]);
     L.push(['#plan-c25','Lancer le Mur niveau 24','Dernier prérequis de l’Hôtel de ville 25 · '+fH(pl.mur)+(pl.acc>=pl.mur?', couverts par tes accélérateurs':''),2]);
     L.push(pl.miss?['#fermes','Récupérer '+fM(pl.miss)+' de pierre','C’est ce qui manque à l’Hôtel de ville 25 · ta Ferme 1 peut l’envoyer',5]:['#plan-c25','Préparer l’Hôtel de ville 25','La pierre est couverte : il démarre juste après le Mur',2]);
     L.push(['#ma-ville-inventaire','Envoyer tes marches libres récolter','Le bois est ta ressource la plus basse',10]);
@@ -244,21 +243,23 @@ function renderHome(){
     L.push(['#evenements','Aider ton alliance','Dons et aides : tes points d’alliance servent au KvK',3]);
   }else if(S.active==='f1'){
     L=[['#fermes','Envoyer de la pierre au Principal','Il manque '+fM(pl.miss)+' à l’Hôtel de ville 25',5],['#valeur-mur','Lancer le Mur niveau 22','Avec ton bonus de 25 %',2],
-       ['#ma-ville-inventaire','Récolter du bois','Ta ferme est sous la limite de pillage',10],['#ma-ville-inventaire','Récolter de la pierre avec une 2e marche','Pour le prochain envoi au Principal',10],['#evenements','Aider ton alliance','Dons et aides',3]];
+       ['#ma-ville-inventaire','Récolter du bois','C’est sa ressource la plus basse',10],['#ma-ville-inventaire','Récolter de la pierre avec une 2e marche','Pour le prochain envoi au Principal',10],['#evenements','Aider ton alliance','Dons et aides',3]];
   }else{
-    L=[['#ma-ville-progression','Renseigner tes valeurs',n+' valeurs manquantes',5],['#valeur-mur','Lancer le Mur niveau 18','',2],['#ma-ville-inventaire','Récolter de la nourriture','',10],['#evenements','Aider ton alliance','',3]];
+    L=[['#valeur-mur','Lancer le Mur niveau 18','',2],['#ma-ville-inventaire','Récolter de la nourriture','',10],['#evenements','Aider ton alliance','',3]];
   }
   var budget=+S.time,used=0,shown=[];
   /* 5 actions au plus, pour ne pas remplir l'écran (note 8 de Mickaël, 2026-10-09) */
   L.forEach(function(x){if(shown.length<5&&used+x[3]<=budget){shown.push(x);used+=x[3];}});
   if(!shown.length&&L.length)shown=[L[0]];
-  $('#prioList').innerHTML=!shown.length?vide('Rien à faire pour l’instant : l’appli te proposera des actions quand tes valeurs seront renseignées.'):shown.map(function(x,i){return row({href:x[0],nb:i+1,title:esc(x[1]),sub:esc(x[2]),pill:pill('plan','≈ '+x[3]+' min')});}).join('')+
+  $('#prioList').innerHTML=!shown.length?vide(n?'Rien d’autre pour l’instant : renseigne d’abord ta ville, l’appli te proposera ensuite des actions.':'Rien à faire pour l’instant.'):shown.map(function(x,i){return row({href:x[0],nb:i+1,title:esc(x[1]),sub:esc(x[2]),pill:pill('plan','≈ '+x[3]+' min')});}).join('')+
     '<p class="prio-sum">'+shown.length+' action'+(shown.length>1?'s':'')+' · ≈ '+used+' min sur '+(budget===60?'1 h':budget+' min')+'</p>';
   $$('#timeChips .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.time===S.time));});
   // à surveiller
   var W=[];
-  /* Une seule ligne pour les valeurs manquantes : elles sont déjà dans les priorités et l'aperçu (décision du 2026-10-09) */
-  var U=unknown(p);if(U.length)W.push(row({href:'#ma-ville-progression',icon:'i-warn',title:U.length+' valeur'+(U.length>1?'s':'')+' à renseigner',sub:U.slice(0,3).map(function(k){return FIELDS[k].label;}).join(', ')+(U.length>3?'…':'')+' · Ma ville › Progression'}));
+  /* Valeurs à renseigner : une seule carte « Renseigne ta ville » en haut de « À faire » (décision du 2026-10-09) */
+  var U=unknown(p),fs=$('#fillSec');fs.hidden=!U.length;
+  if(U.length){$('#fillTitle').textContent='Renseigne ta ville';$('#fillTime').innerHTML='<i></i>≈ '+Math.max(1,Math.ceil(U.length/3))+' min';
+    $('#fillText').textContent=U.length+' valeur'+(U.length>1?'s':'')+' à renseigner : '+U.slice(0,4).map(function(k){return FIELDS[k].label;}).join(', ')+(U.length>4?'… ':'. ')+'Les priorités et les alertes seront plus justes.';}
   if(S.active==='main'&&!REEL){
     S.marches.forEach(function(m,i){if(!m.eq)W.push(row({href:'#combat',icon:'i-shield2',title:'Marche '+(i+1)+' incomplète',sub:'Équipement du commandant secondaire inconnu'}));});
     if(!S.imported)W.push(row({href:'#import',icon:'n-camera',title:'Inventaire relevé il y a 6 jours',sub:'Un nouvel import rendra les priorités plus justes'}));
@@ -267,7 +268,7 @@ function renderHome(){
   var nb2=p.encours.filter(function(x){return x.t==='build'&&x.fin>Date.now();}).length;
   if(p.v.builders!=null&&nb2<p.v.builders){var lib=p.v.builders-nb2;W.unshift(row({act:'add-encours',data:'build',icon:'t-hammer',title:lib+' bâtisseur'+(lib>1?'s':'')+' libre'+(lib>1?'s':''),sub:'Aucune construction en cours pour '+(lib>1?'eux':'lui')+' · touche pour en ajouter une',go:true}));}
   var pg=pillage(p);if(pg&&pg.length)W.unshift(row({href:'#ma-ville-inventaire',icon:'i-shield',title:'Ressources exposées au pillage',sub:pg.join(' · ')+' au-dessus de la protection de l’entrepôt '+p.v.entrepot+(JEU.entrepot.verifie?'':' (protection d’après un guide, non vérifiée)')}));
-  $('#watchList').innerHTML=W.length?W.join(''):row({icon:'i-check',title:'Rien à surveiller',sub:'Tout est à jour'});
+  $('#watchList').innerHTML=W.join('');$('#watchSec').hidden=!W.length;
   renderEnCours(p);renderRoutine();renderEvHome();
   /* Ma semaine : propre à chaque profil (le bilan du Principal s'affichait aussi sur les fermes, constaté le 2026-10-09) */
   var wk=!REEL&&WEEK[S.active];

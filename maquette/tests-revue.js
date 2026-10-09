@@ -37,16 +37,17 @@ window.RC_TESTS=[
   ['dx1','Dans Plus, touche « Se déconnecter », puis confirme.','Tu reviens sur « Se connecter » avec « Tu es déconnecté. Tes profils restent enregistrés. » : c’est clair.'],
   ['dx2','Supprime l’icône de la maquette déjà installée (appui long › Désinstaller), puis réinstalle-la depuis Chrome (menu ⋮ › Installer l’application) et ouvre-la depuis la nouvelle icône.','L’icône est l’anneau doré avec RC au milieu, son nom est « RoK Maquette », et elle s’ouvre sans barre du navigateur.',null,28,'icône RC (anneau doré) au lieu de la couronne (ta note 5) et nom « RoK Maquette » ; réinstalle la maquette pour les voir']]},
  {g:'Accueil · vue d’ensemble',p:['demo','#accueil'],l:[
-  ['ac1','Regarde l’Accueil sur ta tablette, en portrait.','Les deux colonnes te conviennent : tout se lit bien, rien n’est serré. L’ordre des blocs te paraît logique (à gauche : profil, priorités, routine, à surveiller ; à droite : en cours, aperçu, objectif, événements, semaine).'],
+  ['ac1','Regarde l’Accueil sur ta tablette, en portrait.','La nouvelle organisation te convient : le profil sur toute la largeur, à gauche ce qu’il faut faire (alertes, priorités, routine), à droite où tu en es (en cours, événements, objectif, aperçu, semaine). Tout se lit bien, rien n’est serré.'],
   ['ac2','Tourne la tablette en paysage, puis remets-la en portrait.','L’Accueil reste lisible dans les deux sens et se remet en place.'],
-  ['ac3','Passe d’un profil à l’autre avec les onglets en haut (Principal, Ferme 1, Ferme 2).','Tout suit le profil choisi, y compris « En cours », « À surveiller » et « Ma semaine ».']]},
+  ['ac3','Passe d’un profil à l’autre avec les onglets en haut (Principal, Ferme 1, Ferme 2).','Tout suit le profil choisi, y compris « En cours », « À surveiller » et « Ma semaine ».'],
+  ['ac12','Crée un profil sur ce compte neuf (« Créer mon premier profil »), puis regarde l’Accueil.','Une seule carte « Renseigne ta ville » en haut à gauche, avec le nombre de valeurs et « Tout renseigner », qui ouvre la saisie rapide de Ma ville. Les valeurs à renseigner ne sont pas répétées dans les priorités ni dans « À surveiller ».',['vide','#accueil']]]},
  {g:'Accueil · priorités et routine',p:['demo','#accueil'],l:[
   ['ac4','Change le temps de jeu (10 min, 30 min, 1 h) au-dessus des priorités.','La liste s’adapte au temps choisi et tu comprends pourquoi certaines actions apparaissent ou disparaissent.'],
   ['ac5','Dans « Routine du jour », coche deux tâches.','Les cases sont faciles à toucher, les tâches cochées laissent la place aux suivantes et le compteur avance.'],
   ['ac6','Touche « Tout voir », puis « Modifier la liste » : renomme une ligne, retires-en une, ajoutes-en une, puis « Enregistrer ».','La modification est facile et la liste change bien sur l’Accueil.']]},
  {g:'Accueil · en cours et alertes',p:['demo','#accueil'],l:[
   ['ac7','Dans « En cours », touche « + Ajouter » et ajoute une recherche avec un temps restant écrit comme dans le jeu (par exemple 1j 4h 30m).','C’est facile à saisir et l’heure de fin affichée est juste.'],
-  ['ac8','Lis « À surveiller ».','Chaque alerte est claire et tu sais quoi faire : ressources exposées au pillage, bâtisseur libre, valeurs à renseigner, marche incomplète, inventaire ancien.'],
+  ['ac8','Lis « À surveiller ».','Chaque alerte est claire et tu sais quoi faire : ressources exposées au pillage, bâtisseur libre, marche incomplète, inventaire ancien.'],
   ['ac9','Touche « 1 bâtisseur libre ».','La fenêtre d’ajout s’ouvre, déjà réglée sur « Construction ».']]},
  {g:'Accueil · événements',p:['demo','#accueil'],l:[
   ['ac10','Regarde « Prochains événements », puis touche « Calendrier ».','Les dates et les heures (heure de France) sont claires, et un événement en cours se repère tout de suite.'],

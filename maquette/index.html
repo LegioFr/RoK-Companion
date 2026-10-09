@@ -125,9 +125,10 @@
       <div class="empty-actions"><button class="btn primary" type="button" data-act="add-profile">Créer mon premier profil</button></div>
     </section>
 
-    <div class="cols" id="homeMain">
-      <div class="col">
-        <a class="banner" href="#profil">
+    <!-- Organisation « À faire / Où j’en suis » (décision de Mickaël du 2026-10-09) : profil sur toute la largeur,
+         à gauche ce qu’il faut faire (alertes d’abord), à droite ce qui se passe et où il en est. -->
+    <div id="homeMain">
+      <a class="banner home-banner" href="#profil">
           <div class="pmain">
             <div class="emblem" id="hEmblem"></div>
             <div class="pinfo">
@@ -144,6 +145,20 @@
             <div class="kpi"><div class="kl"><i data-i="t-hourglass"></i>Points d’action</div><div class="kv" data-k="ap"></div></div>
           </div>
         </a>
+    <div class="cols">
+      <div class="col">
+        <section class="sec" id="fillSec" hidden>
+          <div class="card hl fill-card">
+            <div class="ptop"><b id="fillTitle"></b><span class="pill st-plan" id="fillTime"></span></div>
+            <p id="fillText"></p>
+            <div class="btns"><button class="btn primary" type="button" data-act="quick">Tout renseigner</button></div>
+          </div>
+        </section>
+
+        <section class="sec" id="watchSec">
+          <div class="sec-t"><h2>À surveiller</h2></div>
+          <div class="list" id="watchList"></div>
+        </section>
 
         <section class="sec">
           <div class="sec-t"><h2>Priorités du jour</h2></div>
@@ -162,11 +177,6 @@
           <div class="sec-t"><h2>Routine du jour</h2><button class="more" type="button" data-act="routine-all">Tout voir ›</button></div>
           <div class="card" id="rtCard"></div>
         </section>
-
-        <section class="sec">
-          <div class="sec-t"><h2>À surveiller</h2></div>
-          <div class="list" id="watchList"></div>
-        </section>
       </div>
 
       <div class="col">
@@ -176,8 +186,8 @@
         </section>
 
         <section class="sec">
-          <div class="sec-t"><h2>Aperçu de ma ville</h2><a class="more" href="#ma-ville-progression" id="todoLink"></a></div>
-          <div class="tiles" id="homeTiles"></div>
+          <div class="sec-t"><h2>Prochains événements</h2><a class="more" href="#evenements">Calendrier ›</a></div>
+          <div class="events" id="evHome"></div>
         </section>
 
         <section class="sec">
@@ -190,8 +200,8 @@
         </section>
 
         <section class="sec">
-          <div class="sec-t"><h2>Prochains événements</h2><a class="more" href="#evenements">Calendrier ›</a></div>
-          <div class="events" id="evHome"></div>
+          <div class="sec-t"><h2>Aperçu de ma ville</h2><a class="more" href="#ma-ville-progression" id="todoLink"></a></div>
+          <div class="tiles" id="homeTiles"></div>
         </section>
 
         <section class="sec">
@@ -199,6 +209,7 @@
           <div class="list" id="weekList"></div>
         </section>
       </div>
+    </div>
     </div>
   </section>
 
