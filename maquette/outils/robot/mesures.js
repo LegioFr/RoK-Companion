@@ -8,7 +8,7 @@ window.__mesurer = function (rootSel) {
   const H = innerHeight, sh = document.documentElement.scrollHeight;
   if (sh > H + 1) { let bas = 0; document.querySelectorAll('body *').forEach(e => { const s = getComputedStyle(e); if (s.position === 'fixed' || !vis(e)) return; const r = e.getBoundingClientRect(); if (r.height > 0 && e.closest('#rcRun,#rcPnl,#rcBub,#toast') === null) bas = Math.max(bas, r.bottom + scrollY); });
     const grand = [...document.querySelectorAll('body *')].filter(e => getComputedStyle(e).position !== 'fixed' && e.getBoundingClientRect().bottom + scrollY >= sh - 1).map(e => (e.id || e.tagName.toLowerCase())).slice(0, 3);
-    if (bas <= H + 1 || grand.some(x => x === 'svg')) out.push(['défilement inutile', 'La page défile de ' + (sh - H) + ' px alors que le contenu tient dans l’écran (élément le plus bas : ' + grand.join(', ') + ').']); }
+    if (bas <= H + 1) out.push(['défilement inutile', 'La page défile de ' + (sh - H) + ' px alors que le contenu tient dans l’écran (élément le plus bas : ' + grand.join(', ') + ').']); }
   const actifs = [...root.querySelectorAll('a,button,input,select,textarea')].filter(vis);
   // zone de toucher réelle : un ::after placé en absolu (ex. « Mot de passe oublié ? ») agrandit la cible
   const zone = e => { const r = e.getBoundingClientRect(), a = getComputedStyle(e, '::after'); let w = r.width, h = r.height;

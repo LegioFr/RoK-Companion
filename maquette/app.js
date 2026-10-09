@@ -110,6 +110,8 @@ var EQ=[['n-helmet','Casque','leg','Légendaire · Infanterie',[['Attaque de l�
 var FORMS={'Coin':['n-wedge','4 armements équipés',[['Attaque de l’infanterie','+3,5 %'],['Défense de l’infanterie','+2,0 %'],['Dégâts de compétence','+1,5 %'],['Vitesse de marche','—']]],
   'Arc':['n-arch','2 armements équipés',[['Attaque des archers','+2,5 %'],['Santé','+1,0 %'],['Vitesse de marche','—']]],
   'Carré creux':['n-square','aucun armement',[['Défense','+1,0 %'],['Santé','—']]]};
+/* Bilan de la semaine d'exemple, par profil (exemples) */
+var WEEK={main:['+2,1 M de puissance, 3 améliorations','Hôtel de ville 25\u00a0: +8 % en 7 jours'],f1:['+0,4 M de puissance, 1 amélioration','Mur 21 terminé']};
 var EVENTS=[['ev1','i-trophy','Gouverneur le plus puissant','Du 11 au 17 oct.','ok','Confirmé'],['ev2','n-ankh','Arche d’Osiris','14 oct.','ok','Confirmé'],['ev3','i-flag','KvK : saison 3','Vers le 19 oct.','plan','Date estimée'],['ev4','n-gift','Fête de la moisson','Date inconnue','plan','Inconnu']];
 
 /* ================= Ma version réelle (décision de Mickaël du 2026-10-09) =================
@@ -214,13 +216,16 @@ function renderHome(){
   $$('#timeChips .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.time===S.time));});
   // à surveiller
   var W=[];
-  var U=unknown(p);U.slice(0,5).forEach(function(k){W.push(row({href:'#valeur-'+k,icon:'i-warn',title:esc(FIELDS[k].label)+' à renseigner',sub:k==='bonus'&&S.active==='main'?'Le plan Hôtel de ville 25 l’utilise pour calculer les durées':'Valeur inconnue : elle reste « — », jamais zéro'}));});
-  if(U.length>5)W.push(row({href:'#ma-ville-progression',icon:'i-warn',title:'Et '+(U.length-5)+' autre'+(U.length>6?'s':'')+' valeur'+(U.length>6?'s':'')+' à renseigner',sub:'Dans Ma ville › Progression'}));
+  /* Une seule ligne pour les valeurs manquantes : elles sont déjà dans les priorités et l'aperçu (décision du 2026-10-09) */
+  var U=unknown(p);if(U.length)W.push(row({href:'#ma-ville-progression',icon:'i-warn',title:U.length+' valeur'+(U.length>1?'s':'')+' à renseigner',sub:U.slice(0,3).map(function(k){return FIELDS[k].label;}).join(', ')+(U.length>3?'…':'')+' · Ma ville › Progression'}));
   if(S.active==='main'&&!REEL){
     S.marches.forEach(function(m,i){if(!m.eq)W.push(row({href:'#combat',icon:'i-shield2',title:'Marche '+(i+1)+' incomplète',sub:'Équipement du commandant secondaire inconnu'}));});
     if(!S.imported)W.push(row({href:'#import',icon:'n-camera',title:'Inventaire relevé il y a 6 jours',sub:'Un nouvel import rendra les priorités plus justes'}));
   }
   $('#watchList').innerHTML=W.length?W.join(''):row({icon:'i-check',title:'Rien à surveiller',sub:'Tout est à jour'});
+  /* Ma semaine : propre à chaque profil (le bilan du Principal s'affichait aussi sur les fermes, constaté le 2026-10-09) */
+  var wk=!REEL&&WEEK[S.active];
+  $('#weekList').innerHTML=wk?row({href:'#bilan',icon:'n-chart',title:esc(wk[0]),sub:esc(wk[1])}):vide('Pas encore de bilan\u00a0: il faut au moins deux relevés à quelques jours d’écart.');
 }
 
 /* ================= Fiche profil ================= */

@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=28,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=29,VERSION='v'+VNUM+' · 9 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -30,9 +30,7 @@ var CHANGES={
   'confirmation':[{sel:'[data-auth="confirmation"] .a-intro',t:'« Un e-mail de confirmation t’a été envoyé. » (ta note 4).'}],
   'nouveau-mot-de-passe':[{sel:'[data-auth="nouveau-mot-de-passe"]',t:'Écran ajouté, repris de B01-05. Après « Enregistrer », tu es connecté.'}],
   'ma-ville-progression':[{sel:'#gSet',t:'Le bonus de vitesse accepte une décimale (42,5 %), comme dans le jeu.'}],
-  'accueil':[{sel:'#prioList',t:'Priorités du jour : 5 actions au plus (ta note 8) ; elles tiennent dans le temps choisi et le total s’affiche sous la liste.'},{sel:'#homeTiles',t:'Aperçu de ma ville : les 6 bulles de l’Accueil validé (Bâtisseurs, Bonus de vitesse, 4 totaux), à ta demande.'},
-    {sel:'.timepick',t:'Temps de jeu plus clair : la question « Combien de temps as-tu pour jouer ? » et la durée de chaque action. Titre « Priorités du jour » (le nombre change avec le temps).'},
-    {sel:'#homeEmpty',t:'Accueil sans profil repris de B01-06 (onglet États → « Nouveau compte sans profil » pour le voir).'}],
+  'accueil':[{sel:'#homeMain',t:'Sur ta tablette (960 à 1099 px de large), l’Accueil passe en deux colonnes : il tient presque sur un écran.'},{sel:'#watchList',t:'« À surveiller » : une seule ligne pour les valeurs à renseigner (elles sont déjà dans les priorités et l’aperçu).'},{sel:'.kpis',t:'Le % de l’objectif n’est plus répété dans la carte du profil : il reste dans « Objectif en cours ».'},{sel:'#weekList',t:'« Ma semaine » suit le profil choisi (le bilan du Principal s’affichait aussi sur les fermes).'}],
   'profil':[{sel:'[data-act="delete-profile"]',t:'On peut supprimer n’importe quel profil, même l’actif : un autre profil devient actif (ta décision).'}],
   'plus':[{sel:'#verRow',t:'Numéro de version de la maquette affiché dans « L’appli » (ta demande).'},{sel:'[data-act="sheet-logout"]',t:'Se déconnecter mène à l’écran de connexion.'},{sel:'[data-act="sheet-password"]',t:'Le mot de passe actuel est vérifié.'}]
 };
