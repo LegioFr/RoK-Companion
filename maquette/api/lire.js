@@ -6,10 +6,10 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { get } from '@vercel/blob';
 
-// Modèles de l'essai (Mickaël, 2026-10-09) : Claude Haiku 5.5 et Claude Sonnet 5.5.
-const MODELES = { haiku: 'claude-haiku-5-5', sonnet: 'claude-sonnet-5-5' };
+// Modèles de l'essai (Mickaël, 2026-10-09) : Claude Haiku 5.5 et Claude Sonnet 5.5, puis Claude Opus 5.5 (sa question « tu as essayé avec Opus ? »).
+const MODELES = { haiku: 'claude-haiku-5-5', sonnet: 'claude-sonnet-5-5', opus: 'claude-opus-5-5' };
 // Tarifs Anthropic en dollars par million de jetons [entrée, sortie], relevés le 2026-10-06 (prompt de 100 K jetons au plus).
-const TARIFS = { 'claude-haiku-5-5': [0.10, 0.50], 'claude-sonnet-5-5': [2, 10] };
+const TARIFS = { 'claude-haiku-5-5': [0.10, 0.50], 'claude-sonnet-5-5': [2, 10], 'claude-opus-5-5': [4, 20] };
 const EFFORTS = ['low', 'medium', 'high'];
 const ID = /^c[a-z0-9]{6,40}\.(png|jpe?g|webp)$/;
 const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
@@ -52,7 +52,7 @@ export async function POST(request) {
   if (!process.env.ANTHROPIC_API_KEY) return json({ error: 'clé absente : ANTHROPIC_API_KEY n’est pas dans les variables du projet Vercel' }, 503);
   let b; try { b = await request.json(); } catch { return json({ error: 'JSON attendu' }, 400); }
   const model = MODELES[b && b.modele];
-  if (!model) return json({ error: 'modèle inconnu (haiku ou sonnet)' }, 400);
+  if (!model) return json({ error: 'modèle inconnu (haiku, sonnet ou opus)' }, 400);
   if (!ID.test((b && b.id) || '')) return json({ error: 'identifiant de capture invalide' }, 400);
   const effort = EFFORTS.includes(b.effort) ? b.effort : null;
 
