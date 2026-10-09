@@ -50,8 +50,18 @@ window.RC_JEU={
     source:'wiki riseofkingdoms.fandom.com et calculateur bulbaritos.com (6 oct. 2026), captures de Mickaël du 6 oct. 2026',
     specialises:[1,5,10,15,30,60,180,480,900],universel:[1,5,10,15,30,60,180,480,900,1440,4320,10080,43200],vues:[1,5,10,15,30,60,180,480,900]
   },
-  /* Bâtiments ajoutés le 9 oct. 2026 parce qu'ils sont des prérequis de l'Hôtel de ville. Noms français proposés par Claude : à vérifier dans le jeu. */
-  nomsAVerifier:['eclaireurs','alliance','comptoir'],
+  /* Bâtiments à niveau du jeu (1 à 25), rangés comme dans le menu de construction : wiki riseofkingdoms.fandom.com, page « Buildings »
+     et pages « Buildings/…/Requirements » (lues le 9 oct. 2026). Fermes, scieries, carrières, mines d'or et hôpitaux : 4 chacun,
+     débloqués aux niveaux d'Hôtel de ville indiqués (page « City Hall/Requirements », révision du 4 janv. 2026).
+     Sans niveau, donc pas suivis : forge, hutte du bâtisseur, tableau d'affichage, relais, monument, boutique, lycée de la sagesse, boutique VIP.
+     Noms français : ceux marqués dans app.js (aNom) sont proposés par Claude, à vérifier dans le jeu. */
+  batiments:{
+    source:'wiki riseofkingdoms.fandom.com (pages « Buildings », lues le 9 oct. 2026)',
+    groupes:[['Économie',['ferme','scierie','carriere','mine','academie','entrepot','alliance','comptoir']],
+      ['Militaire',['caserne','tir','ecurie','siege','hopital','eclaireurs','taverne','chateau']],
+      ['Autres',['mur','tourguet']]],
+    instances:{ferme:[1,3,6,9],scierie:[2,5,8,11],carriere:[1,7,10,13],mine:[10,12,14,16],hopital:[1,4,9,15]}
+  },
   /* Réinitialisation quotidienne : 2 h du matin heure de France (Mickaël, 9 oct. 2026), soit minuit UTC. */
   reset:{heureUTC:0,source:'Mickaël, 9 oct. 2026'},
   /* Routine du jour : liste proposée par Claude le 9 oct. 2026, noms à vérifier dans le jeu ; Mickaël la corrige. */

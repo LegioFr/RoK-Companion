@@ -53,9 +53,10 @@ window.RC_TESTS=[
   ['ac10','Regarde « Prochains événements », puis touche « Calendrier ».','Les dates et les heures (heure de France) sont claires, et un événement en cours se repère tout de suite.'],
   ['ac11','Dans le calendrier, touche « Ajouter » et ajoute un événement avec une date dans quelques jours.','C’est facile ; il apparaît à sa place dans le calendrier et sur l’Accueil.']]},
  {g:'Ma ville · progression',p:['demo','#ma-ville-progression'],l:[
-  ['vp1','Regarde Ma ville › Progression sur ta tablette, en portrait.','Deux colonnes : réglages et bâtiments à gauche ; « Prochain Hôtel de ville », recherches et troupes à droite. Tout se lit bien, rien n’est serré.'],
-  ['vp2','Lis la carte « Prochain Hôtel de ville ».','Tu comprends tout de suite ce qu’il manque (ici le Mur 24), le coût et la durée. Si un prérequis ou un coût te semble faux par rapport au jeu, laisse une note.'],
-  ['vp3','Regarde les trois bâtiments ajoutés en bas de la liste : Camp d’éclaireurs, Centre de l’alliance, Comptoir commercial.','Leurs noms sont ceux du jeu en français. Sinon, laisse une note avec le bon nom.'],
+  ['vp1','Regarde Ma ville › Progression sur ta tablette, en portrait, puis en paysage.','C’est propre et lisible : l’Hôtel de ville en haut avec ce qu’il manque pour le niveau 25, puis les réglages et les bâtiments en tuiles.'],
+  ['vp2','Lis la carte de l’Hôtel de ville, puis touche « Mur 24 ».','Tu comprends tout de suite ce qu’il manque, le coût et la durée ; « Mur 24 » ouvre la valeur du Mur. Si un prérequis ou un coût te semble faux par rapport au jeu, laisse une note.'],
+  ['vp3','Regarde les bâtiments : Économie, Militaire, Autres.','Il ne manque aucun bâtiment à niveau de ton jeu, ils sont rangés comme dans le jeu, et les noms marqués ° sont ceux du jeu en français. Sinon, laisse une note.'],
+  ['vp5','Touche la tuile « Fermes », puis « Corriger » : change le niveau d’une ferme et enregistre.','Une case par ferme, c’est clair ; la tuile affiche ensuite le bon niveau.'],
   ['vp4','Regarde le badge en haut, à côté de « Importer ».','Il dit « Exemples, non enregistrés » et c’est clair. Dans ta version réelle, il dira « Enregistré », ou « En attente d’envoi » si l’enregistrement n’a pas pu partir.']]},
  {g:'Ma ville · inventaire',p:['demo','#ma-ville-inventaire'],l:[
   ['vi1','Regarde les onglets de l’inventaire : Ressources, Accélérateurs, Boosts, Équipement, Attirail, Autre.','Ce sont les onglets de l’Inventaire du jeu, dans le même ordre.'],

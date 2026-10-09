@@ -76,6 +76,18 @@ Règle du projet : chaque donnée a sa source et sa date ; tant qu’elle n’es
 
 - Scout Camp, Alliance Center, Trading Post : prérequis de l'Hôtel de ville (niveaux 6, 9, 14, 15, 20, 25). Noms français proposés par Claude : **Camp d'éclaireurs**, **Centre de l'alliance**, **Comptoir commercial**. **Non vérifiés** : aucune source française trouvée le 2026-10-09 (recherche web) ; Mickaël les compare au jeu et les corrige.
 
+## Liste des bâtiments (2026-10-09)
+
+- **Source :** wiki riseofkingdoms.fandom.com, page « Buildings » (classement du menu de construction) et pages « Buildings/…/Requirements », lues par l'API publique le 2026-10-09. Révisions des tableaux : de 2019 à 2026 (Hôtel de ville, Académie, Carrière, Atelier de siège, Écurie, Taverne : janv. 2026 ; Comptoir commercial : août 2026). **Non vérifié** dans le jeu.
+- **Bâtiments à niveau (1 à 25)**, par groupe du jeu :
+  - Économie : Farm (Ferme ×4), Lumber Mill (Scierie ×4), Quarry (Carrière ×4), Goldmine (Mine d'or ×4), Academy (Académie), Storehouse (Entrepôt), Alliance Center (Centre de l'alliance), Trading Post (Comptoir commercial) ;
+  - Militaire : Barracks (Caserne), Archery Range (Champ de tir), Stable (Écurie), Siege Workshop (Atelier de siège), Hospital (Hôpital ×4), Scout Camp (Camp d'éclaireurs), Tavern (Taverne), Castle (Château) ;
+  - Autres : City Hall (Hôtel de ville), Wall (Mur), Watchtower (Tour de guet).
+- **Exemplaires et Hôtel de ville qui les débloque** (page « City Hall/Requirements ») : fermes 1, 3, 6, 9 ; scieries 2, 5, 8, 11 ; carrières 1, 7, 10, 13 ; mines d'or 10, 12, 14, 16 ; hôpitaux 1, 4, 9, 15. « 1 » = présent dès le début (absent de la liste des déblocages ; déduit, non vérifié).
+- **Sans niveau, donc pas suivis :** Blacksmith, Builder's Hut, Bulletin Board, Courier Station, Monument, Shop, Lyceum of Wisdom, VIP Shop.
+- **Noms français :** ceux qui existaient dans les maquettes validées (Mur, Académie, Caserne, Écurie, Champ de tir, Hôpital, Atelier de siège, Entrepôt) sont repris ; les autres sont proposés par Claude et marqués ° dans la maquette, **à vérifier dans le jeu** (aucune source française trouvée le 2026-10-09).
+- **Hôpitaux et prérequis :** l'Hôtel de ville demande « Hospital Lv.X » ; la maquette compte l'hôpital le plus haut (hypothèse, à vérifier).
+
 ## Caisses et accélérateurs
 
 - **Source :** étude B03 du 2026-10-06 (`references/etude-lecture-captures-b03.md`) : wiki riseofkingdoms.fandom.com (API), calculateur bulbaritos.com, 15 captures de l'Inventaire de Mickaël.

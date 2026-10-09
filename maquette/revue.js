@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=35,VERSION='v'+VNUM+' · 9 oct. 2026';
+var VNUM=36,VERSION='v'+VNUM+' · 9 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -32,11 +32,10 @@ var CHANGES={
   'inscription':[{sel:'[data-auth="inscription"] .a-signup',t:'« Déjà un compte ? » retiré, comme sur « Se connecter ».'},{sel:'[data-auth="inscription"]',t:'Même taille de carte que « Se connecter » (ta note 3).'}],
   'confirmation':[{sel:'[data-auth="confirmation"] .a-intro',t:'« Un e-mail de confirmation t’a été envoyé. » (ta note 4).'}],
   'nouveau-mot-de-passe':[{sel:'[data-auth="nouveau-mot-de-passe"]',t:'Écran ajouté, repris de B01-05. Après « Enregistrer », tu es connecté.'}],
-  'ma-ville-progression':[{sel:'[data-screen="ma-ville"] [data-sync]',t:'Le faux « Synchronisé » est remplacé par le vrai état : « Enregistré », « Enregistrement… » ou « En attente d’envoi » dans ta version réelle, « Exemples, non enregistrés » ici.'},
-    {sel:'[data-panel="progression"] .cols',t:'Deux colonnes sur ta tablette, comme l’Accueil.'},
-    {sel:'#gNext',t:'Nouveau : « Prochain Hôtel de ville » dit ce qu’il te manque, avec le coût et la durée (guides du jeu, non vérifiés).'},
-    {sel:'#gBld',t:'Trois bâtiments ajoutés, prérequis de l’Hôtel de ville : Camp d’éclaireurs, Centre de l’alliance, Comptoir commercial (noms à vérifier dans le jeu).'},
-    {sel:'#gSet',t:'Le bonus de vitesse accepte une décimale (42,5 %), comme dans le jeu.'}],
+  'ma-ville-progression':[{sel:'#pgHero',t:'Écran refait, plus propre (ta demande) : l’Hôtel de ville et son prochain niveau en haut (ce qu’il manque, coût, durée), puis des tuiles au lieu de longues lignes.'},
+    {sel:'#gBld',t:'Tous les bâtiments à niveau du jeu, rangés comme dans le jeu (Économie, Militaire, Autres) : ajout des fermes, scieries, carrières, mines d’or et hôpitaux (4 chacun, un niveau par exemplaire), du château, de la taverne et de la tour de guet. Un prérequis manquant est entouré d’or. Noms marqués ° : à vérifier.'},
+    {sel:'[data-screen="ma-ville"] [data-sync]',t:'Le faux « Synchronisé » est remplacé par le vrai état : « Enregistré », « Enregistrement… » ou « En attente d’envoi » dans ta version réelle, « Exemples, non enregistrés » ici.'},
+    {sel:'#gSet',t:'Réglages en tuiles. Le bonus de vitesse accepte une décimale (42,5 %), comme dans le jeu.'}],
   'ma-ville-inventaire':[{sel:'#invChips',t:'Inventaire rangé comme les onglets du jeu : Ressources, Accélérateurs, Boosts, Équipement, Attirail, Autre.'},
     {sel:'#gRes',t:'Tout se remplit à la main, aussi dans ta version réelle : ouvre une ligne puis « Modifier ». Vraies tailles de caisses (1 000 à 5 000 000) et vraies durées d’accélérateurs (1 min à 15 h, jusqu’à 30 j pour les généraux).'},
     {sel:'#gRes .list',t:'Coffres « Choisissez un » et packs de ressources : nombre par niveau.'}],

@@ -259,18 +259,14 @@
       <a class="tab" href="#ma-ville-armements" data-sub="armements">Armements</a>
     </nav>
 
-    <div data-panel="progression" data-title="Ma ville · Progression" data-st="ok" data-b="B04 · B05" data-note="Réglages et bâtiments : déjà faits (B04). Touche une ligne pour corriger, ou « Tout renseigner » pour la saisie rapide. Ajoutés le 9 oct. : Camp d’éclaireurs, Centre de l’alliance, Comptoir commercial (noms à vérifier dans le jeu) et « Prochain Hôtel de ville » (prérequis tirés des guides du jeu, non vérifiés). Recherches et troupes : prévus (B05).">
-      <div class="cols">
-        <div class="col">
-          <section class="sec"><div class="sec-t"><h2>Réglages</h2></div><div class="list" id="gSet"></div></section>
-          <section class="sec"><div class="sec-t"><h2>Bâtiments</h2></div><div class="list multi" id="gBld"></div></section>
-          <div id="quickBar"></div>
-        </div>
-        <div class="col">
-          <section class="sec"><div class="sec-t"><h2>Prochain Hôtel de ville</h2></div><div id="gNext"></div></section>
-          <section class="sec"><div class="sec-t"><h2>Recherches</h2><span class="pill st-plan"><i></i>Prévu · B05</span></div><div class="card" id="gResearch"></div></section>
-          <section class="sec"><div class="sec-t"><h2>Troupes</h2><span class="pill st-plan"><i></i>Prévu · B05</span></div><div class="list" id="gTroops"></div></section>
-        </div>
+    <div data-panel="progression" data-title="Ma ville · Progression" data-st="ok" data-b="B04 · B05" data-note="Proposé par Claude le 9 oct. (plus propre, à valider) : l’Hôtel de ville et son prochain niveau en haut, puis tous les bâtiments à niveau du jeu en tuiles, rangés comme dans le jeu (Économie, Militaire, Autres). Touche une tuile pour corriger, ou « Tout renseigner » pour la saisie rapide. Noms marqués ° : à vérifier dans le jeu. Prérequis : guides et wiki du jeu, non vérifiés. Recherches et troupes : prévus (B05).">
+      <div id="pgHero"></div>
+      <section class="sec"><div class="sec-t"><h2>Réglages</h2></div><div id="gSet"></div></section>
+      <section class="sec"><div class="sec-t"><h2>Bâtiments</h2><span class="muted" style="font-size:13px" id="bldCount"></span></div><div id="gBld"></div><p class="src" id="bldNote"></p></section>
+      <div id="quickBar"></div>
+      <div class="cols even pg-plus">
+        <section class="sec"><div class="sec-t"><h2>Recherches</h2><span class="pill st-plan"><i></i>Prévu · B05</span></div><div class="card" id="gResearch"></div></section>
+        <section class="sec"><div class="sec-t"><h2>Troupes</h2><span class="pill st-plan"><i></i>Prévu · B05</span></div><div class="list" id="gTroops"></div></section>
       </div>
     </div>
 
