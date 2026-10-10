@@ -97,8 +97,9 @@ window.RC_JEU={
           {id:'att12',l:'12 h',h:12,c:'v',vu:1,n:'Amélioration d’attaque - 12 heures'},{id:'att24',l:'24 h',h:24,c:'b',vu:1,n:'Amélioration d’attaque - 24 heures'},{id:'att24a',l:'24 h, +10 %',h:24}]},
         {id:'defense',nom:'Défense +5 %',but:'+5 % de défense pour toutes tes troupes',icone:'i-shield2',type:'duree',glow:'#8db6f222',info:'Amélioration de défense : +5 % de défense pour toutes les troupes (+10 % pour la version avancée, d’après le wiki).',items:[
           {id:'def12',l:'12 h',h:12,c:'v',vu:1,n:'Amélioration de défense - 12 heures'},{id:'def24',l:'24 h',h:24,c:'b',vu:1,n:'Amélioration de défense - 24 heures'},{id:'def24a',l:'24 h, +10 %',h:24}]},
+        /* réserves : l'effet dans la case plutôt que le niveau (choix de Mickaël du 2026-10-10) ; nom du jeu dans n */
         {id:'troupes',nom:'Troupes',but:'Plus de troupes à l’entraînement ou en marche',icone:'n-banners',type:'troupes',glow:'#d8b24c22',info:'Réserves : capacité d’entraînement en plus, au prochain entraînement. Expansions : capacité d’unités de tous les commandants pendant 4 h.',items:[
-          {id:'res5',cl:'Réserve niv. 5',l:'Réserve niv. 5 (+20 000)',cap:20000,c:'o',vu:1,n:'Réserve Niveau 5'},{id:'res6',cl:'Réserve niv. 6',l:'Réserve niv. 6 (+50 000)',cap:50000,c:'o',vu:1,n:'Réserve Niveau 6'},
+          {id:'res5',cl:'Réserve +20\u00a0000',l:'Réserve niv. 5 (+20 000)',cap:20000,c:'o',vu:1,n:'Réserve Niveau 5'},{id:'res6',cl:'Réserve +50\u00a0000',l:'Réserve niv. 6 (+50 000)',cap:50000,c:'o',vu:1,n:'Réserve Niveau 6'},
           {id:'exp25',cl:'Expansion +25 %',l:'Expansion basique (+25 %, 4 h)',c:'b',vu:1,n:'Expansion basique d’armée'},{id:'exp50',cl:'Expansion +50 %',l:'Expansion avancée (+50 %, 4 h)',c:'p',vu:1,n:'Expansion avancée d’armée'}]}],
       equip:[
         {id:'cuir',nom:'Cuir',but:'Pour forger l’équipement de tes commandants',icone:'n-leather',type:'mat',items:[{id:'cuir_g',c:'g',vu:1},{id:'cuir_v',c:'v',vu:1},{id:'cuir_b',c:'b',vu:1},{id:'cuir_p',c:'p',vu:1,n:'Cuir (ÉPIQUE)'},{id:'cuir_o',c:'o'}]},

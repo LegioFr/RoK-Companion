@@ -55,7 +55,7 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   ok('Saisie d’un boost : la tuile additionne les durées',/4 j 0 h/.test(await txt(p,'#gObj .it[data-arg="g:attaque"]')||''),await txt(p,'#gObj .it[data-arg="g:attaque"]'));
   /* v64 : Boosts sur le modèle de Ressources (demande de Mickaël du 2026-10-10) */
   ok('Boosts (v64) : 3 tuiles sans cases d’objets, détail en 3 lignes de 3, 3 et 4 cases',(await ev(p,()=>[document.querySelectorAll('#gObj .it').length,document.querySelectorAll('#gObj .it .sl').length,
-    [...document.querySelectorAll('#gObj .ledger .lg-r')].map(r=>r.querySelectorAll('.cz').length).join(',')].join('/')))==='3/0/3,3,4');
+    [...document.querySelectorAll('#gObj .ledger .lg-r')].map(r=>r.querySelectorAll('.cz').length).join(','),document.querySelector('#gObj .ledger .lg-r:nth-child(3) .cz small').textContent.replace(/\s/g,' ')].join('/')))==='3/0/3,3,4/Réserve +20 000Réserve +20 000');
   const dB=await txt(p,'#gObj .it[data-arg="g:defense"]');await p.click('#gObj .ledger .lg-r:nth-child(2) .cz:nth-child(2)');await p.waitForTimeout(200);
   const fB=await ev(p,()=>document.getElementById('shTitle').textContent);await p.fill('#iv-c','3');await p.click('[data-act=inv-save]');await p.waitForTimeout(250);
   ok('Boosts : une case se remplit seule (Défense 24 h × 3 → la tuile gagne 3 j)',fB==='Défense +5 % : 24 h'&&/× 3/.test(await txt(p,'#gObj .ledger .lg-r:nth-child(2) .cz:nth-child(2)')||'')&&/4 j 0 h/.test(await txt(p,'#gObj .it[data-arg="g:defense"]')||''),fB+' | '+dB+' → '+await txt(p,'#gObj .it[data-arg="g:defense"]'));

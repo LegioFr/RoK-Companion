@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=64,VERSION='v'+VNUM+' · 10 oct. 2026';
+var VNUM=65,VERSION='v'+VNUM+' · 10 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -48,7 +48,8 @@ var CHANGES={
     {sel:'[data-steppanel="3"]',t:'Corrigé (ton import de ce matin) : « 8 cases coupées » s’affichait à tort. Le dessin du type d’accélérateur est en bas de la case : coupé, Claude ne connaît pas le type, et l’appli ne retrouvait pas la case entière sur la capture suivante. Elle compare maintenant la rangée coupée, colonne par colonne.'},
     {sel:'[data-steppanel="3"]',t:'Coffres et packs de ressources : la relecture dit combien elle en a vu et que tu peux les saisir à la main dans l’inventaire, au lieu de « autres onglets, ou coffres et packs ».'},
     {sel:'#stepper',t:'La frise des étapes n’apparaît qu’à partir de la lecture ; pendant la lecture, chaque capture lue dit son onglet (Ressources ou Accélérateurs).'}],
-  'ma-ville-inventaire':[{sel:'#gObj, #invChips',t:'Onglet Boosts refait comme Ressources et Accélérateurs (ta demande) : des tuiles sans les cases d’objets (le grand nombre et à quoi servent les objets), puis le détail, une ligne par famille et une case par objet du jeu, même à 0 (nombre et durée ou capacité de troupes). Chaque case se touche pour la remplir seule.'},
+  'ma-ville-inventaire':[{sel:'#gObj .ledger',t:'Boosts, ligne Troupes : les réserves affichent leur effet, « Réserve +20 000 » et « Réserve +50 000 », au lieu de leur niveau (ta demande) ; le nom du jeu reste dans la fenêtre de la case.'},
+    {sel:'#gObj, #invChips',t:'Onglet Boosts refait comme Ressources et Accélérateurs (ta demande) : des tuiles sans les cases d’objets (le grand nombre et à quoi servent les objets), puis le détail, une ligne par famille et une case par objet du jeu, même à 0 (nombre et durée ou capacité de troupes). Chaque case se touche pour la remplir seule.'},
     {sel:'#gAcc .it.gx',t:'Tuile Généraux : la ligne « Avec les généraux » est supprimée (ta note 9).'},
     {sel:'#gAcc, #invChips',t:'Onglet Accélérateurs refait comme Ressources (ta demande) : les tuiles, puis le détail compact, une ligne par type et une case par durée du jeu, même à 0 (nombre et temps gagné), plus bleue quand elle fait gagner plus de temps. Les colonnes sont alignées par durée ; les 4 durées des généraux (24 h à 30 j) passent dessous. Chaque case se touche pour la remplir seule.'},
     {sel:'#invChips, [data-screen="ma-ville"] header',t:'Plus de titre en haut des onglets de l’inventaire (ta réponse) ; plus de « Profil Principal » sous « Ma ville » (ta note 7).'},
