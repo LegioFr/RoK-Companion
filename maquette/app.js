@@ -376,6 +376,8 @@ function fV(u){return u>=1e7?fM(u/1e6):fQte(u);}
 function valPack(o){var L=['food','wood','stone','gold'].filter(function(k){return o[k];});return L.reduce(function(a,k){return a+o[k];},0)/(L.length||1);}
 /* Objets des onglets Boosts, Équipement, Attirail, Autre (RC_JEU.objets, 2026-10-10) */
 var JO=(window.RC_JEU&&window.RC_JEU.objets)||{onglets:{},qualites:[]},QL={};(JO.qualites||[]).forEach(function(q){QL[q[0]]=q;});
+var ONG_OBJ={'Boosts':'boosts','Équipement':'equip','Attirail':'attirail','Autre':'autre'},OBJ_ID={};
+Object.keys(JO.onglets||{}).forEach(function(t){JO.onglets[t].forEach(function(g){g.items.forEach(function(o){OBJ_ID[o.id]={o:o,g:g,t:t};});});});
 function grpObj(id){var r=null;Object.keys(JO.onglets||{}).forEach(function(t){JO.onglets[t].forEach(function(g){if(g.id===id)r=g;});});return r;}
 function sumK(o,L){var n=null;L.forEach(function(x){if(o[x[0]]!=null)n=(n||0)+o[x[0]];});return n;}
 /* 82 200 000 → « 82,2 M » ; 942 500 → « 942,5 K » ; 750 → « 750 » */
@@ -729,7 +731,8 @@ function prepImage(f){if(f.size<=3.9e6&&/^image\/(png|jpeg|webp)$/.test(f.type))
    puis elle est effacée. Les cases sont regroupées (une même case peut être sur deux captures), comparées aux tailles et
    durées du jeu (RC_JEU), puis relues : les sûres se confirment d'un coup, les douteuses une par une. Rien n'est écrit
    pour un élément absent des captures (absent ≠ zéro). Onglets lus : Ressources et Accélérateurs (essai du 2026-10-09). */
-var LECT_MODELE='opus',LECT_PRIX=0.05;
+/* coût moyen mesuré par capture : 0,05 $ (Ressources, Accélérateurs, 9 oct.), 0,074 $ avec la consigne des 6 onglets (20 captures, 10 oct.) */
+var LECT_MODELE='opus',LECT_PRIX=0.075;
 var TYPES_ACC={build:'construction',research:'recherche',train:'entraînement',heal:'soins',general:'généraux'};
 function lectFamille(o){o=String(o||'').toLowerCase();
   if(/acc[ée]l/.test(o)){if(/construction/.test(o))return ['acc','build'];if(/recherche/.test(o))return ['acc','research'];if(/entra[iî]nement/.test(o))return ['acc','train'];
@@ -742,20 +745,23 @@ function lectDuree(t){var m=String(t||'').toLowerCase().replace(/\s/g,'').match(
 function lectNom(it){
   if(it.kind==='ville')return it.type==='gems'?'Gemmes en ville':(RN.filter(function(x){return x[0]===it.type;})[0]||[,,'?'])[2]+' en ville';
   if(it.kind==='res')return (it.type==='gems'?'Gemmes':(RN.filter(function(x){return x[0]===it.type;})[0]||[,,'Ressource'])[2])+' · caisse de '+(it.val==null?'?':nb(it.val));
+  if(it.kind==='obj'){var X=OBJ_ID[it.type];if(!X)return it.type;var o2=X.o,g=X.g,q=o2.q||o2.c,ql=QL[q]?QL[q][1]:'';
+    if(g.type==='mat'||g.type==='qual')return g.nom+' · '+ql;if(g.type==='qual3')return g.nom+' · '+ql+' · '+({simples:'simple',bénies:'bénie',lots:'lot'})[o2.f];return g.nom+' · '+o2.l;}
   if(it.kind==='coffre'){var o=COFFRES.concat(PACKS).filter(function(x){return x[0]===it.type;})[0];return it.fam==='pack'?'Pack de ressources '+(o?o[2].nom:'?'):'Coffre « Choisissez un » '+(o?o[1].toLowerCase():'?');}
   return 'Accélérateur '+(it.type?TYPES_ACC[it.type]:'de type inconnu')+' · '+(it.val==null?'?':fDur(it.val));}
-function lectIcone(it){if(it.kind==='coffre')return it.fam==='pack'?'p-pack':'p-chest';if(it.kind==='acc')return it.type?(AN.filter(function(x){return x[0]===it.type;})[0]||[,'a-general'])[1]:'a-general';
+function lectIcone(it){if(it.kind==='obj')return OBJ_ID[it.type]?OBJ_ID[it.type].g.icone:'n-gift';if(it.kind==='coffre')return it.fam==='pack'?'p-pack':'p-chest';if(it.kind==='acc')return it.type?(AN.filter(function(x){return x[0]===it.type;})[0]||[,'a-general'])[1]:'a-general';
   if(it.type==='gems')return 'r-gem';return (RN.filter(function(x){return x[0]===it.type;})[0]||[,'r-food'])[1];}
 /* Regroupe les lectures des captures en éléments à enregistrer */
 /* Regroupe les lectures des captures en éléments à enregistrer. L[i] = lecture de la capture i (ou rien si elle a échoué),
    avec r._i (numéro de la capture) et r._t (heure de la capture, d'après le fichier). */
 function lectHeure(t){return t?new Date(t).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}):'';}
 function lectRegrouper(L,erreurs,n){
-  var items=[],par={},pasPris=0,coupees=[],pleines=[],cof=[],onglets={},vu=0,barres=[];
+  var items=[],par={},pasPris=0,coupees=[],pleines=[],cof=[],onglets={},vu=0,barres=[],tabs={};
   function ajoute(it,lu){var k=it.kind+'|'+(it.type||'?')+'|'+it.val+(it.type?'':'|'+it.qte);var o=par[k];
     if(o){o.lus.push(lu);return;}
     it.id='l'+items.length;it.lus=[lu];par[k]=it;items.push(it);}
   L.forEach(function(r){if(!r||!r.resultat)return;var R=r.resultat,lu0={i:r._i,t:r._t};onglets[R.onglet]=1;if(R.barre)barres.push({b:R.barre,i:r._i,t:r._t});
+    if(ONG_OBJ[R.onglet]){vu+=(R.cases||[]).length;(tabs[R.onglet]=tabs[R.onglet]||[]).push({i:r._i,t:r._t,cases:R.cases||[]});return;}
     (R.cases||[]).forEach(function(c){vu++;
       if(R.onglet!=='Ressources'&&R.onglet!=='Accélérateurs'){pasPris++;return;}
       var f=lectFamille(c.objet);if(R.onglet==='Accélérateurs'&&f[0]!=='acc')f=['acc',null];/* onglet Accélérateurs : un objet pas reconnu est un accélérateur de type inconnu */
@@ -803,13 +809,44 @@ function lectRegrouper(L,erreurs,n){
     var trouve=pleines.some(function(p0){if(p0.i===x0.i||p0.o!==x0.o)return false;
       return G.every(function(x){return pleines.some(function(p){return p.i===p0.i&&p.lig===p0.lig&&p.col===x.c.colonne&&p.kind===x.f[0]&&(!x.f[1]||p.type===x.f[1])&&(x.v==null||p.val===x.v)&&(x.q==null||p.q===x.q);});});});
     if(!trouve)perdues+=G.length;});
+  /* Onglets Boosts, Équipement, Attirail, Autre (2026-10-10) : plusieurs cases peuvent être le même objet du catalogue (plans, pièces,
+     sculptures de commandants…), on additionne. Pour ne pas compter deux fois les rangées vues sur deux captures (défilement), on recolle
+     les rangées entières de capture en capture : celles du début d'une capture qui reprennent la fin de la précédente sont sautées.
+     Une rangée coupée par le bord n'est jamais comptée ; si elle n'est entière sur aucune capture, elle est signalée perdue. */
+  var objInc=0,attP={},objSomme=false;
+  Object.keys(tabs).forEach(function(o){
+    var caps=tabs[o].sort(function(a,b){return (a.t||0)-(b.t||0)||a.i-b.i;}),seq=[],cut=[];
+    function sig(R){return R.map(function(x){return x.colonne+':'+x.id_objet+'/'+String(x.quantite||'').replace(/\s/g,'')+'/'+String(x.valeur_haut||'').replace(/\s/g,'');}).join('|');}
+    function egal(A,B,ia,ib,k){for(var z=0;z<k;z++)if(A[ia+z].sig!==B[ib+z].sig)return false;return true;}
+    caps.forEach(function(c){var rows={};c.cases.forEach(function(x){(rows[x.ligne]=rows[x.ligne]||[]).push(x);});
+      var B=[];Object.keys(rows).map(Number).sort(function(a,b){return a-b;}).forEach(function(k){var R=rows[k].sort(function(a,b){return a.colonne-b.colonne;});
+        if(R.some(function(x){return x.coupee;}))cut.push(R);else B.push({sig:sig(R),cells:R,i:c.i,t:c.t});});
+      if(!B.length)return;if(!seq.length){seq=B;return;}
+      for(var j=0;j+B.length<=seq.length;j++)if(egal(seq,B,j,0,B.length))return;/* capture déjà toute vue */
+      for(var k=Math.min(seq.length,B.length);k>0;k--)if(egal(seq,B,seq.length-k,0,k)){seq=seq.concat(B.slice(k));return;}
+      for(k=Math.min(seq.length,B.length);k>0;k--)if(egal(B,seq,B.length-k,0,k)){seq=B.slice(0,B.length-k).concat(seq);return;}
+      seq=seq.concat(B);});
+    /* rangées coupées : retrouvées entières ailleurs ? (une case coupée n'a pas tout : on compare ce qu'elle montre) */
+    cut.forEach(function(R){var ok=seq.some(function(S){return R.every(function(x){var y=S.cells.filter(function(z){return z.colonne===x.colonne;})[0];if(!y)return false;
+        var q=String(x.quantite||'').replace(/\s/g,'');return (x.id_objet==='inconnu'||x.id_objet===y.id_objet)&&(!q||q===String(y.quantite||'').replace(/\s/g,''));});});
+      if(!ok)perdues+=R.length;});
+    var acc={},ord=[];
+    seq.forEach(function(S){S.cells.forEach(function(x){var id=x.id_objet,O=OBJ_ID[id];
+      if(id==='piece_attirail'){var cq=String(x.couleur||'');attP[cq]=(attP[cq]||0)+1;return;}
+      if(!O){objInc++;return;}
+      var q=parseEntier(x.quantite);if(q==null&&/^piece_/.test(id)&&!String(x.quantite||'').trim())q=1;/* pièce forgée : une case = une pièce */
+      if(!acc[id]){acc[id]={q:0,n:0,sur:true,lus:[]};ord.push(id);}var A2=acc[id];A2.n++;A2.lus.push({i:S.i,t:S.t,q:q});
+      if(q==null)A2.sur=false,A2.ill=true;else A2.q+=q;if(!x.sur)A2.sur=false;});});
+    ord.forEach(function(id){var A2=acc[id];if(A2.n>1)objSomme=true;
+      var it={kind:'obj',type:id,type0:id,val:null,qte:A2.ill?null:A2.q,sur:A2.sur,raison:A2.ill?'Quantité illisible':!A2.sur?'Chiffre douteux : vérifie la quantité':'',n:A2.n};
+      it.id='l'+items.length;it.lus=A2.lus;items.push(it);});});
   /* barre du haut : celle de la capture la plus récente ; si elle change d'une capture à l'autre, on le dit */
   var bdif=false;barres.sort(function(a,b){return (b.t||0)-(a.t||0);});
   if(barres.length>1){var k0=JSON.stringify(barres[0].b);bdif=barres.some(function(x){return JSON.stringify(x.b)!==k0;});}
   if(barres.length){var barre=barres[0].b;
     [['food','nourriture'],['wood','bois'],['stone','pierre'],['gold','or']].forEach(function(x){var u=parseQte(barre[x[1]]);if(u!=null)items.push({id:'v'+x[0],kind:'ville',type:x[0],val:u,qte:null,sur:!bdif,raison:bdif?'La barre du haut change d’une capture à l’autre : valeur de la plus récente':'',lus:[]});});
     var g=parseEntier(barre.gemmes);if(g!=null)items.push({id:'vgems',kind:'ville',type:'gems',val:g,qte:null,sur:!bdif,raison:bdif?'La barre du haut change d’une capture à l’autre : valeur de la plus récente':'',lus:[]});}
-  return {items:items,sureOk:false,n:n,erreurs:erreurs,pasPris:pasPris,perdues:perdues,vu:vu,bdif:bdif,onglets:Object.keys(onglets)};}
+  return {items:items,sureOk:false,n:n,erreurs:erreurs,pasPris:pasPris,objInc:objInc,attP:attP,objSomme:objSomme,perdues:perdues,vu:vu,bdif:bdif,onglets:Object.keys(onglets)};}
 /* une coupure réseau (écran mis en veille, appli changée, wifi) donne « Failed to fetch » : on le dit simplement */
 function lectReseau(e){return e instanceof TypeError||/fetch|network|load failed/i.test(String(e));}
 function lectMessage(e){return lectReseau(e)?'connexion coupée (écran en veille, autre appli ou wifi ?)':String(e);}
@@ -853,7 +890,11 @@ function renderLect(){
   if(X.erreurs.length)notes.push('<b>'+X.erreurs.length+' capture'+(X.erreurs.length>1?'s':'')+' non lue'+(X.erreurs.length>1?'s':'')+'</b> : '+esc(X.erreurs.join(' ; '))+'.<div class="btns"><button class="btn gold" type="button" data-act="lect-relire">Relire '+(X.erreurs.length>1?'ces '+X.erreurs.length+' captures':'cette capture')+'</button></div>');
   if(X.bdif)notes.push('<b>La barre du haut n’est pas la même sur toutes les captures</b> : elles ne viennent pas toutes du même moment, ou pas du même compte. Les nombres qui changent sont à vérifier ; ne mélange pas les comptes dans un même import.');
   if(X.perdues)notes.push(X.perdues+' case'+(X.perdues>1?'s':'')+' coupée'+(X.perdues>1?'s':'')+' par le défilement, absente'+(X.perdues>1?'s':'')+' des autres captures : pas enregistrée'+(X.perdues>1?'s':'')+'. Reprends une capture où elle'+(X.perdues>1?'s sont':' est')+' entière'+(X.perdues>1?'s':'')+'.');
-  if(X.pasPris)notes.push(X.pasPris+' élément'+(X.pasPris>1?'s':'')+' d’autres onglets (Boosts, Équipement, Attirail, Autre), pas encore pris en charge.');
+  if(X.pasPris)notes.push(X.pasPris+' case'+(X.pasPris>1?'s':'')+' des onglets Ressources ou Accélérateurs pas reconnue'+(X.pasPris>1?'s':'')+' : pas enregistrée'+(X.pasPris>1?'s':'')+'.');
+  if(X.objInc)notes.push(X.objInc+' objet'+(X.objInc>1?'s':'')+' des onglets Boosts, Équipement, Attirail ou Autre pas reconnu'+(X.objInc>1?'s':'')+' : ajoute-les à la main dans « Autres objets » de l’onglet.');
+  var nAt=Object.keys(X.attP||{}).reduce(function(a,k){return a+X.attP[k];},0);
+  if(nAt)notes.push(nAt+' pièce'+(nAt>1?'s':'')+' d’attirail vue'+(nAt>1?'s':'')+' : leurs noms ne sont pas sur la grille du jeu, garde ta liste à jour à la main dans Attirail.');
+  if(X.objSomme)notes.push('Plans, fragments, pièces forgées, sculptures de commandants : l’appli additionne toutes les cases de tes captures. Fais défiler chaque onglet jusqu’en bas pour avoir le bon total.');
   notes.push('Un élément absent des captures reste comme il est : l’appli n’écrit jamais zéro à sa place. Une ligne non vérifiée n’est pas enregistrée.');
   notes.push('Ressources en ville : lues dans la barre du haut du jeu, arrondies (ex. 84,2 M).');
   box.innerHTML='<div class="cols"><div class="col">'+
@@ -882,7 +923,8 @@ function lectEnregistrer(){
   if(!ok.length){say('Confirme au moins un élément avant d’enregistrer.');return;}
   function pose(L,label,qte,val,taille){var i=-1;L.forEach(function(c,j){if(Math.abs(c[2]-taille)<1e-9)i=j;});if(i>=0)L[i][1]=qte;else L.push([label,qte,taille]);L.sort(function(a,b){return a[2]-b[2];});}
   ok.forEach(function(it){
-    if(it.kind==='coffre'){if(!p.coffres)p.coffres={};p.coffres[it.type]=it.qte;}
+    if(it.kind==='obj'){if(!p.objets)p.objets={};p.objets[it.type]=it.qte;}
+    else if(it.kind==='coffre'){if(!p.coffres)p.coffres={};p.coffres[it.type]=it.qte;}
     else if(it.kind==='ville'){if(it.type==='gems')p.gemsIn.v=it.val;else p.res[it.type].v=it.val/1e6;}
     else if(it.kind==='res'){if(it.type==='gems')pose(p.gemsIn.c,nb(it.val),it.qte,it.val,it.val);else pose(p.res[it.type].c,nb(it.val),it.qte,it.val,it.val/1e6);}
     else{if(!p.acc[it.type])p.acc[it.type]=[];pose(p.acc[it.type],fDur(it.val),it.qte,it.val,it.val/60);}});

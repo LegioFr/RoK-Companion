@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=52,VERSION='v'+VNUM+' · 10 oct. 2026';
+var VNUM=53,VERSION='v'+VNUM+' · 10 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -38,7 +38,10 @@ var CHANGES={
     {sel:'#gBld',t:'Noms du jeu repris de tes captures : Réserve (et non Entrepôt), Moulin à bois, Comptoir, Centre d’alliance, Champ de tir à l’arc, Atelier d’armes de siège. Les « ° » ont disparu : tous les noms sont vérifiés.'},
     {sel:'[data-screen="ma-ville"] [data-sync]',t:'Le faux « Synchronisé » est remplacé par le vrai état : « Enregistré », « Enregistrement… » ou « En attente d’envoi » dans ta version réelle, « Exemples, non enregistrés » ici.'},
     {sel:'#gSet',t:'Réglages en tuiles. Le bonus de vitesse accepte une décimale (42,5 %), comme dans le jeu.'}],
-  'import':[{sel:'[data-steppanel="3"]',t:'La lecture prend maintenant les coffres « Choisissez un » et les packs de ressources, avec leur niveau (d’après la couleur de la case et l’ordre du jeu). Deux packs gris : on te demande A, B ou C une fois, puis tes niveaux sont repris.'},
+  'import':[{sel:'.imp-hero',t:'La lecture remplit maintenant les 6 onglets de l’Inventaire (ta demande) : Boosts, Équipement, Attirail et Autre en plus. Essayé sur tes 20 captures : tous les totaux justes (250 plans, 389 sculptures légendaires de commandants, 13,9 M d’EXP…).'},
+    {sel:'[data-steppanel="3"]',t:'Plans, pièces, sculptures de commandants : plusieurs cases font le même objet, l’appli les additionne. Les rangées vues sur deux captures (défilement) ne sont comptées qu’une fois.'},
+    {sel:'[data-steppanel="3"]',t:'Ce qui n’est pas reconnu (objets dont je n’ai pas le nom) et les pièces d’attirail (leur nom n’est pas sur la grille) sont signalés : à mettre à la main. Coût mesuré : environ 0,07 $ par capture.'},
+    {sel:'[data-steppanel="3"]',t:'La lecture prend maintenant les coffres « Choisissez un » et les packs de ressources, avec leur niveau (d’après la couleur de la case et l’ordre du jeu). Deux packs gris : on te demande A, B ou C une fois, puis tes niveaux sont repris.'},
     {sel:'',t:'Nouveau (v44) : si une nouvelle version est envoyée pendant que la page est ouverte, un bandeau « Nouvelle version de la maquette » apparaît en haut quand tu reviens sur la page, avec « Recharger ». Ton import de 10 h 01 tournait encore sur la v42.'},
     {sel:'.imp-hero',t:'Piste A, ton choix : un seul bouton « Choisir mes captures » (Ressources et Accélérateurs ensemble), avec les 3 étapes en images en dessous.'},
     {sel:'.imp-foot',t:'Durée, coût, effacement des captures et relecture : sur une seule ligne en bas, au lieu des blocs de texte.'},

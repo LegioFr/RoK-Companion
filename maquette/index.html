@@ -350,7 +350,7 @@
   </section>
 
   <!-- ===================================================== IMPORT -->
-  <section data-screen="import" data-g="ma-ville" data-title="Importer des captures" data-st="wip" data-b="B03" data-note="Piste A choisie par toi le 10 oct. : un seul bouton « Choisir mes captures », 3 étapes en images, puis tes miniatures et « Lire ». Lecture par Claude Opus 5.5 (ton choix du 9 oct.), environ 0,05 $ par capture. Les captures d’exemple gardent la lecture simulée, gratuite." hidden>
+  <section data-screen="import" data-g="ma-ville" data-title="Importer des captures" data-st="wip" data-b="B03" data-note="Piste A choisie par toi le 10 oct. : un seul bouton « Choisir mes captures », 3 étapes en images, puis tes miniatures et « Lire ». Lecture par Claude Opus 5.5 (ton choix du 9 oct.), environ 0,07 $ par capture (mesuré le 10 oct. sur tes 20 captures des 4 autres onglets). Les captures d’exemple gardent la lecture simulée, gratuite." hidden>
     <header class="header"><div class="tw"><a class="back" href="#ma-ville-inventaire"><i data-i="i-back"></i>Ma ville</a><h1>Importer</h1></div></header>
     <ol class="stepper" aria-label="Étapes de l’import" id="stepper">
       <li class="sp" data-sp="1"><i>1</i><span>Captures</span></li>
@@ -364,14 +364,14 @@
         <div class="imp-hero">
           <div class="imp-art" aria-hidden="true"><span><i data-i="r-food"></i></span><span><i data-i="n-camera"></i></span><span><i data-i="a-general"></i></span></div>
           <h2>Ton inventaire en quelques captures</h2>
-          <p id="lectNote">Claude Opus 5.5 lit les onglets <b>Ressources</b> et <b>Accélérateurs</b> de l’Inventaire du jeu, puis tu vérifies.</p>
+          <p id="lectNote">Claude Opus 5.5 lit <b>les 6 onglets</b> de l’Inventaire du jeu, puis tu vérifies.</p>
           <label class="btn primary imp-big" for="pickShots"><i data-i="n-camera"></i>Choisir mes captures</label>
           <button class="imp-ex" type="button" data-act="sample-shots" data-ex>Essayer avec des captures d’exemple</button>
         </div>
         <ol class="imp-steps">
-          <li><em>1</em><i data-i="r-food"></i><span><b>Inventaire du jeu</b>onglet Ressources</span></li>
+          <li><em>1</em><i data-i="r-food"></i><span><b>Inventaire du jeu</b>un onglet à la fois</span></li>
           <li><em>2</em><i data-i="n-camera"></i><span><b>Une capture par écran</b>jusqu’en bas de la grille</span></li>
-          <li><em>3</em><i data-i="a-general"></i><span><b>Pareil</b>pour les Accélérateurs</span></li>
+          <li><em>3</em><i data-i="a-general"></i><span><b>Pareil</b>pour chaque onglet</span></li>
         </ol>
       </div>
       <div class="imp-pret" id="impPret" hidden>
@@ -379,7 +379,7 @@
         <div class="imp-thumbs" id="shots"></div>
         <div class="imp-go"><div><b id="impGoT">Lecture par Claude</b><small id="impCost"></small></div><button class="btn primary" type="button" data-act="analyse" id="analyseBtn">Lire</button></div>
       </div>
-      <p class="imp-foot"><span id="impFootCost"><i data-i="i-bolt"></i>≈ 15 s et 0,05 $ par capture</span><span><i data-i="i-lock"></i>effacées après lecture</span><span><i data-i="i-check"></i>tu relis tout avant d’enregistrer</span></p>
+      <p class="imp-foot"><span id="impFootCost"><i data-i="i-bolt"></i>≈ 15 s et 0,07 $ par capture</span><span><i data-i="i-lock"></i>effacées après lecture</span><span><i data-i="i-check"></i>tu relis tout avant d’enregistrer</span></p>
       <input id="pickShots" type="file" accept="image/*" multiple hidden>
       <input id="pickVideo" type="file" accept="video/*" hidden>
     </div>

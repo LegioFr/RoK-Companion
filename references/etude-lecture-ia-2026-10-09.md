@@ -50,3 +50,9 @@ Décision de Mickaël du 2026-10-09 : « pour l'IA on fait l'essai ». Le but es
 4. **Lecture gratuite, puis IA pour les cases douteuses** : la moins chère, mais la plus longue à construire.
 
 Pour Mickaël seul, avec 100 $ de crédits par mois, les trois modèles restent très abordables. Le coût par joueur ne comptera que si l'appli s'ouvre à d'autres joueurs.
+
+## Ajout du 2026-10-10 : onglets Boosts, Équipement, Attirail et Autre
+
+- **Consigne v3** (`maquette/api/lire.js`) : chaque case reçoit un `id_objet` du catalogue de l'appli (118 objets, icône décrite d'après les captures de Mickaël du 10 oct.), plus la `couleur` de la case (ajoutée le même jour pour les coffres et packs).
+- **Essai réel** : les 20 captures d'onglets envoyées par Mickaël le 10 oct. (Boosts 1, Équipement 9, Attirail 1, Autre 9), Claude Opus 5.5 : 20/20 lues, 6 à 25 s chacune, **1,486 $** au total (0,055 à 0,085 $, moyenne 0,074 $ par capture : la consigne est plus longue).
+- **Justesse** : tous les objets nommés reconnus ; totaux après regroupement identiques au relevé de Claude à l'œil (plans 250 dont 4 légendaires, fragments 86, coffres d'équipement 988, pièces forgées 18, sculptures au choix 612, de commandants 7 043, de lumière d'étoile 5 804, tomes 13,9 M EXP, points d'action 151 250). 11 cases « inconnu » : objets dont le nom n'a pas encore été lu (coffres orange d'Autre, livres, rouleaux, décorations, carte).
