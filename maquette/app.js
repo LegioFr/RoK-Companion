@@ -441,6 +441,10 @@ function invSheet(k){
       'Règles du wiki du jeu, pas encore vérifiées dans le jeu.</p>':'';
     openSheet(g.nom,INV_INTRO+(g.info?'<p class="sh-intro">'+g.info+'</p>':'')+'<div class="inv-grid deux">'+F+'</div>'+paR+
       ((etoile||nv)?'<p class="sh-note">'+(etoile?'* Vu seulement sur le wiki du jeu, pas encore sur tes captures. ':'')+(nv?'Certains noms ne sont pas encore lus dans le jeu.':'')+'</p>':''),acts);return;}
+  /* Bâtiments (2026-10-10) : l'en-tête d'une ligne ouvre la valeur (historique, correction de tous les exemplaires) ; une case, son seul niveau */
+  if(String(k).indexOf('b:')===0){location.hash='valeur-'+k.slice(2);return;}
+  if(String(k).indexOf('c:bat:')===0){var ab=k.split(':'),bk=ab[2],bi=+ab[3],fb=FIELDS[bk];if(!fb)return;var mb=bi>=0,cb=mb?(p.v[bk]||[])[bi]:p.v[bk],db=mb?(((JEU.batiments||{}).instances||{})[bk]||[])[bi]:0;
+    openSheet((mb?fb.label+' '+(bi+1):fb.label)+' : niveau',numFld('iv-c','Niveau',cb==null?null:cb,false,((db>1?'Débloqué par l’Hôtel de ville '+db+'. ':'')+(p.v.hdv!=null&&bk!=='hdv'?'Au plus le niveau de ton Hôtel de ville ('+p.v.hdv+').':'')).trim()),acts);return;}
   /* Attirail : une case de la ligne des pièces ajoute une pièce de cette qualité (2026-10-10) */
   if(String(k).indexOf('c:att:')===0){var qa=String(k).slice(6);itemSheet('attirail|new');if(qa)$$('#itC .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.c===qa));});return;}
   /* Une seule case du détail des caisses (note 6 de Mickaël du 2026-10-10 : remplir les cases une par une en les touchant) */
@@ -478,6 +482,13 @@ function czCase(p,k){var a=String(k).split(':'),t=a[1],id=a[2];
   return {r:r,gem:gem,t:n,q:c?c[1]:null,titre:(gem?'Gemmes':rn[2])+' : caisses de '+nb(n).replace(/ /g,'\u00a0'),lab:'Nombre de caisses',aide:vu?'':'Taille indiquée par le wiki du jeu, pas encore vue sur tes captures.'};}
 function invSave(){
   var p=A(),k=S.invEdit,bad=0,first=null;if(!p||!k)return;
+  /* un niveau de bâtiment : gardé dans l'historique comme une correction (même chose que « Corriger » sur la valeur) */
+  if(String(k).indexOf('c:bat:')===0){var ab=k.split(':'),bk=ab[2],bi=+ab[3],el=$('#iv-c'),raw=el.value.trim(),er=el.parentNode.querySelector('.ferr');er.hidden=true;
+    if(raw===''){er.textContent='Écris un niveau.';er.hidden=false;el.focus();return;}var xb=qVal(bk,raw);if(xb.e){er.textContent=xb.e;er.hidden=false;el.focus();return;}
+    var old=p.v[bk],nv,avant;if(bi>=0){nv=(old||[]).slice();while(nv.length<FIELDS[bk].n)nv.push(null);avant=nv[bi];nv[bi]=xb.v;}else{nv=xb.v;avant=old;}
+    if(avant!=null&&String(avant)===String(xb.v)){closeSheet();return;}
+    p.h[bk].unshift({v:nv,d:TODAY,m:avant!=null?'Changé en jeu':'',src:'Saisie'});p.v[bk]=nv;p.releves++;if(avant!=null)p.corr++;
+    closeSheet();say(avant==null?'Niveau enregistré.':'Niveau corrigé. L’ancien reste dans l’historique.');refreshAll();return;}
   function lit(id,dec){var el=$('#'+id);if(!el)return null;var raw=el.value.trim(),err=el.parentNode.querySelector('.ferr');err.hidden=true;el.removeAttribute('aria-invalid');
     if(raw==='')return null;var v=dec?parseQte(raw):parseEntier(raw);
     if(v==null){err.textContent=dec?'Écris par exemple 81,8 M, 500 K ou 1 200 000.':'Écris un nombre entier (0 si tu n’en as pas).';err.hidden=false;el.setAttribute('aria-invalid','true');bad++;if(!first)first=el;}return v;}
@@ -528,6 +539,8 @@ function itemSave(){
 function itemDel(){var p=A(),e=S.itemEdit;if(!p||!e||e.i<0)return;var o=p.items[e.t][e.i];p.items[e.t].splice(e.i,1);p.invMaj=dateJour();closeSheet();say('« '+o.n+' » retiré de la liste.');refreshAll();}
 function renderCity(){
   var p=A();if(!p)return;
+  /* flèche des tuiles (défini avant l'onglet Bâtiments, qui utilise aussi les tuiles) */
+  var CHEV='<svg class="inv-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
   /* Progression ne montre que les bâtiments, Hôtel de ville compris (choix 3 de Mickaël du 2026-10-10 : plus de grande tuile du prochain niveau ;
      ce qui concerne le plan vers l'Hôtel de ville va dans Optimiser). Le bâtiment qui bloque le prochain niveau reste entouré d'or. */
   var BLD=ordreBat(),SET=Object.keys(FIELDS).filter(function(k){return FIELDS[k].grp==='set'&&BLD.indexOf(k)<0;}),MAN=manquants(p);
@@ -536,22 +549,51 @@ function renderCity(){
   if(S.quick){
     $('#gBld').innerHTML='<div class="list">'+BLD.map(function(k){return qrow(p,k);}).join('')+'</div>';}
   else{
-    $('#gBld').innerHTML=(JEU.batiments?JEU.batiments.groupes:[['Bâtiments',BLD]]).map(function(g){var L=g[1].filter(function(k){return FIELDS[k];});
-      return '<div class="bgrp'+(g[2]?' saison':'')+'"><h3>'+g[0]+'</h3>'+(g[2]?'<p class="bgrp-n">'+g[2]+'</p>':'')+'<div class="btiles">'+L.map(function(k){return tuile(p,k,MAN[k]);}).join('')+'</div></div>';}).join('');}
-  $('#bldNote').textContent='Entouré d’or : le niveau requis pour ton prochain Hôtel de ville (guides et wiki du jeu, pas encore vérifiés dans le jeu). Les bâtiments sans niveau (forgeron, magasin, monument…) ne sont pas suivis.';
+    /* Onglet Bâtiments sur le modèle de Ressources (demande de Mickaël du 2026-10-10) : une tuile par groupe du jeu (combien de bâtiments sont
+       au niveau de ton Hôtel de ville, le plus haut possible), puis le détail : une case par bâtiment, et par exemplaire pour les fermes, moulins,
+       carrières, mines et hôpitaux, qui se remplit seule ; plus la case est bleue, plus le bâtiment est proche du niveau de l'Hôtel de ville. */
+    var HV=p.v.hdv,GR=JEU.batiments?JEU.batiments.groupes:[['Bâtiments',BLD]],INS=(JEU.batiments&&JEU.batiments.instances)||{};
+    var BI={'Économique':['n-scale','#d8b24c22'],'Militaire':['t-swords','#ef8a7422'],'Autres':['i-hall','#8db6f222']};
+    var CTE={alliance:'Alliance',siege:'Siège',eclaireurs:'Éclaireurs',tir:'Tir à l’arc',hdv:'Hôtel de ville',forum:'Forum',minecristal:'Mine',cristalrech:'Recherche',scierie:'Moulin',mine:'Mine'},
+        LNG={tir:'Champ de tir',siege:'Atelier de siège',cristalrech:'Recherche de cristal'};
+    /* exemplaires : [clé, index (-1 : bâtiment unique), nom, niveau, débloqué, Hôtel de ville qui le débloque] */
+    function inst(k){var f=FIELDS[k];if(!isMulti(k))return [[k,-1,LNG[k]||f.label,p.v[k],true,0]];var v=p.v[k]||[];
+      return (INS[k]||[1,1,1,1]).map(function(d,i){return [k,i,f.label+' '+(i+1),v[i]==null?null:v[i],HV==null||d<=HV,d];});}
+    function ligneBat(nom,icon,I,arg,gi){var R=I.filter(function(x){return x[4]&&x[3]!=null;}).map(function(x){return x[3];}),
+        tot=!R.length?'—':Math.min.apply(null,R)===Math.max.apply(null,R)?String(R[0]):Math.min.apply(null,R)+'–'+Math.max.apply(null,R);
+      /* bâtiment en plusieurs exemplaires qui bloque : on entoure l'exemplaire le plus haut */
+      var hiM={};I.forEach(function(x){if(x[1]>=0&&MAN[x[0]]&&(hiM[x[0]]==null||(x[3]||0)>(I[hiM[x[0]]][3]||0)))hiM[x[0]]=I.indexOf(x);});
+      var cells=I.map(function(x,j){var k=x[0],lv=x[4]?x[3]:null,man=MAN[k]&&(x[1]<0||hiM[k]===j),
+          val=!x[4]?'Hôtel de ville '+x[5]:man?'niv. '+MAN[k]+' requis':'',a=HV&&lv?Math.max(0.05,1-(HV-lv)/6):0,
+          lb=esc(x[2]),lc=esc(x[1]>=0?(CTE[k]?CTE[k]+' '+(x[1]+1):x[2]):(CTE[k]||x[2]));
+        return cz(lb,lc,lv,val,a,'bat:'+k+':'+x[1],lb,{brut:1,cls:man?'manque':''});}).join('');
+      /* les noms passent sur deux lignes (classe wrap) : pas besoin de deux rangées de plus sur téléphone pour les noms longs */
+      K.c=0;return lgR(arg,icon,nom,tot,cells,I.length).replace('<div class="lg-r">','<div class="lg-r"'+(gi!=null?' data-g="'+gi+'"':'')+'>');}
+    var tiles='',rows='';K={b:0,l:0,c:0,v:0};
+    GR.forEach(function(g,gi){var L=g[1].filter(function(k){return FIELDS[k];}),saison=!!g[2],all=[];L.forEach(function(k){all=all.concat(inst(k));});
+      var ok=all.filter(function(x){return x[4];}),ren=ok.filter(function(x){return x[3]!=null;}),mx=ren.filter(function(x){return HV!=null&&x[3]>=HV;}).length,vd=ok.length-ren.length,bi=BI[g[0]]||['n-scroll','#ad7be622'];
+      tiles+=grand({act:'bat-voir',arg:gi,icon:bi[0],nom:g[0],glow:bi[1],
+        val:saison?nb(ren.length)+' / '+nb(ok.length):(HV==null||!ren.length?'—':nb(mx)+' / '+nb(ok.length)),
+        v:mx,c:ren.length-mx,lv:saison||HV==null||!ren.length?null:nb(mx),lc:nb(ren.length-mx),lvT:'Au niveau '+HV,lcT:'En dessous',
+        sub:saison?'renseignés · niveaux propres à la saison':HV==null?'Renseigne ton Hôtel de ville':'',
+        x:vd&&!saison?'<span class="it-s">'+nb(vd)+' à renseigner</span>':''});
+      var first=true;L.filter(isMulti).forEach(function(k){rows+=ligneBat(FIELDS[k].pl,FIELDS[k].icon,inst(k),'b:'+k,first?gi:null);first=false;});
+      var S1=[];L.filter(function(k){return !isMulti(k);}).forEach(function(k){S1=S1.concat(inst(k));});
+      if(S1.length)rows+=ligneBat(g[0],bi[0],S1,null,first?gi:null);});
+    $('#gBld').innerHTML='<div class="it-grid">'+tiles+'</div><div class="ledger bat" aria-label="Détail des bâtiments">'+rows.replace(/class="lg-c"/g,'class="lg-c wrap"')+'</div>';}
+  $('#bldNote').textContent=S.quick?'':'Plus la case est bleue, plus le bâtiment est proche du niveau de ton Hôtel de ville, le plus haut possible. Entouré d’or : le niveau requis pour ton prochain Hôtel de ville (guides et wiki du jeu, pas encore vérifiés dans le jeu). Les bâtiments sans niveau (forgeron, magasin, monument…) ne sont pas suivis.';
   $('#quickBar').innerHTML=S.quick?'<div class="qbar"><span id="qCount">Saisie rapide</span><div class="chips" data-single id="qMotif" hidden><button class="chip" type="button" aria-pressed="true">Changé en jeu</button><button class="chip" type="button" aria-pressed="false">Erreur de saisie</button><button class="chip" type="button" aria-pressed="false">Autre</button></div><div class="btns" style="margin-top:0"><button class="btn" type="button" data-act="quick-cancel">Annuler</button><button class="btn primary" type="button" data-act="quick-save">Enregistrer</button></div></div>':'';
   $('#gResearch').innerHTML=!p.research.length?vide('Pas encore renseignées.'):p.research.map(function(r){return '<div class="prow"><div class="ptop"><span>'+r[0]+'</span><span>'+r[1]+' %</span></div><div class="bar"><div class="fill" style="width:'+r[1]+'%"></div></div></div>';}).join('');
   $('#gTroops').innerHTML=!p.troops.length?vide('Pas encore renseignées.'):p.troops.map(function(t){return row({icon:t[1],title:t[0],sub:'Niveau '+t[2],val:nb(t[3])});}).join('');
   // inventaire, rangé comme les onglets du jeu (décision du 2026-10-09)
   /* Inventaire, mélange des pistes A et C (choix de Mickaël du 2026-10-10) : grandes tuiles en haut (total, part en ville et en caisses),
      cartes du détail en dessous (une ligne par taille de caisse ou par durée, avec une barre). Toucher une tuile ou une carte ouvre la saisie. */
-  var CHEV='<svg class="inv-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
   function f1(m){return (Math.round(m*10)/10).toFixed(1).replace('.',',')+'\u00a0M';}
   function grand(o){var t=(o.v||0)+(o.c||0);
     return '<button class="it'+(o.cls?' '+o.cls:'')+(o.extra?' gx':'')+(o.val==='—'?' vide':'')+'" type="button" data-act="'+(o.act||'inv-edit')+'" data-arg="'+o.arg+'" style="--glow:'+o.glow+'">'+(o.extra?'<span class="gx-g">':'')+
       '<span class="it-h">'+ic(o.icon)+'<small>'+o.nom+'</small>'+CHEV+'<b>'+o.val+'</b></span>'+
       (o.lv!=null&&t>0?'<span class="it-bar"><i class="v" style="width:'+(o.v/t*100)+'%"></i><i class="c" style="width:'+(o.c/t*100)+'%"></i></span>'+
-        '<span class="it-l"><span class="v">En ville <b>'+o.lv+'</b></span><span class="c">En caisses <b>'+o.lc+'</b></span></span>':o.sub?'<span class="it-s">'+o.sub+'</span>':'')+
+        '<span class="it-l"><span class="v">'+(o.lvT||'En ville')+' <b>'+o.lv+'</b></span><span class="c">'+(o.lcT||'En caisses')+' <b>'+o.lc+'</b></span></span>':o.sub?'<span class="it-s">'+o.sub+'</span>':'')+
       (o.extra?(o.x||'')+'</span>'+o.extra:(o.x||''))+'</button>';}
   var GLOW={food:'#d8b24c33',wood:'#c27a4a33',stone:'#a9bdd52e',gold:'#f3d98233',gems:'#ef6a7a2e',build:'#d8a24c2e',research:'#8db6f22e',train:'#ef8a742e',heal:'#3ecf8e26',general:'#b99af02e'};
   function cais(r){return r.c.reduce(function(a,c){return a+c[1]*c[2];},0);}
@@ -580,8 +622,8 @@ function renderCity(){
      chaque ligne note la longueur de ses plus longs textes (--k, --kl, --kc, --kv) et la feuille de style réduit la police juste assez pour la largeur de la case. */
   var K={b:0,l:0,c:0,v:0};function tl(x){return String(x).replace(/&[^;]+;/g,'x').length;}
   /* Chaque case s'ouvre seule pour la remplir (note 6 de Mickaël du 2026-10-10) ; sans valeur, pas de ligne vide : le texte reste centré dans la case (note 1). */
-  function cz(lab,labC,q,val,a,arg,nom){var z=!q,bt=q==null?'—':'× '+nb(q);K.b=Math.max(K.b,tl(bt));K.l=Math.max(K.l,tl(lab));K.c=Math.max(K.c,tl(labC));K.v=Math.max(K.v,tl(val||''));
-    return '<button class="cz'+(z?' z':'')+'" type="button" data-act="inv-edit" data-arg="c:'+arg+'" aria-label="'+nom+' : '+(q==null?'non renseigné':bt)+'. Modifier" style="--a:'+(z?0:(0.12+0.5*a)).toFixed(3)+'"><small><span class="cz-l">'+lab+'</span><span class="cz-c">'+labC+'</span></small><b>'+bt+'</b>'+(val?'<span>'+val+'</span>':'')+'</button>';}
+  function cz(lab,labC,q,val,a,arg,nom,op){op=op||{};var z=!q,bt=q==null?'—':op.brut?String(q):'× '+nb(q);K.b=Math.max(K.b,tl(bt));K.l=Math.max(K.l,tl(lab));K.c=Math.max(K.c,tl(labC));K.v=Math.max(K.v,tl(val||''));
+    return '<button class="cz'+(z?' z':'')+(op.cls?' '+op.cls:'')+'" type="button" data-act="inv-edit" data-arg="c:'+arg+'" aria-label="'+nom+' : '+(q==null?'non renseigné':bt)+'. Modifier" style="--a:'+(z?0:(0.12+0.5*a)).toFixed(3)+'"><small><span class="cz-l">'+lab+'</span><span class="cz-c">'+labC+'</span></small><b>'+bt+'</b>'+(val?'<span>'+val+'</span>':'')+'</button>';}
   function lgR(arg,icon,nom,tot,cells,n,cols){var h=lgR0(arg,icon,nom,tot,cells,cols||n);K={b:0,l:0,c:0,v:0};return h;}
   function lgR0(arg,icon,nom,tot,cells,n){return '<div class="lg-r">'+(arg?'<button class="lg-h" type="button" data-act="inv-edit" data-arg="'+arg+'" aria-label="Modifier : '+nom+'">':'<div class="lg-h">')+
     ic(icon)+'<span>'+nom+'</span><em>'+tot+'</em>'+(arg?'</button>':'</div>')+'<div class="lg-c" style="--n:'+n+';--m:'+(n<=5&&K.c<=12?n:Math.ceil(n/2))+';--k:'+Math.max(K.b,3)+';--kl:'+Math.max(K.l,3)+';--kc:'+Math.max(K.c,3)+';--kv:'+Math.max(K.v,3)+'">'+cells+'</div></div>';}
@@ -1390,6 +1432,7 @@ var ACT={
   quick:function(){S.quick=true;if(location.hash!=='#ma-ville-progression')location.hash='ma-ville-progression';renderCity();quickCount();},
   'quick-cancel':function(){S.quick=false;renderCity();},'quick-save':quickSave,
   correct:correctSheet,'save-correct':saveCorrect,
+  'bat-voir':function(a){var r=$('#gBld .lg-r[data-g="'+a+'"]');if(r)r.scrollIntoView({behavior:'smooth',block:'start'});},
   'inv-edit':invSheet,'inv-save':invSave,'item-edit':itemSheet,'item-save':itemSave,'item-del':itemDel,
   'sample-shots':function(){S.shots=[];S.lect=null;S.lectJob=null;for(var i=0;i<15;i++)S.shots.push({});renderShots();},
   'lect-sure':function(){lectSync();S.lect.sureOk=true;renderLect();say('Éléments sûrs confirmés.');},

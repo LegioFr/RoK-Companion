@@ -37,9 +37,11 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
 {const p=await page(1028,1567);
   await etat(p,'demo:neuf','#ma-ville-progression');
   ok('badge d’état en version Exemples',(await txt(p,'[data-screen="ma-ville"] [data-sync]'))==='Exemples, non enregistrés');
-  const cols=await ev(p,()=>getComputedStyle(document.querySelector('#gBld .btiles')).gridTemplateColumns.split(' ').length);
-  ok('Bâtiments en 4 colonnes de tuiles à 1028 px',cols===4,String(cols));
-  ok('Progression : que des bâtiments (v70, choix 3 de Mickaël) : plus de grande tuile du prochain niveau, l’Hôtel de ville en tête du groupe « Autres », niveau 24',(await ev(p,()=>[!!document.getElementById('pgHero'),(document.querySelector('#gBld .bgrp:nth-child(3) .btile')||{}).getAttribute&&document.querySelector('#gBld .bgrp:nth-child(3) .btile').getAttribute('href'),(document.querySelector('#gBld a[href="#valeur-hdv"] .bt-v')||{}).textContent].join('/')))==='false/#valeur-hdv/24');
+  /* v72 : Bâtiments sur le modèle de Ressources (demande de Mickaël du 2026-10-10) : 4 tuiles de groupe, détail en 9 lignes */
+  const bt=await ev(p,()=>[[...document.querySelectorAll('#gBld .it')].map(t=>t.querySelector('.it-h b').textContent.replace(/\s/g,' ')).join(','),
+    [...document.querySelectorAll('#gBld .ledger .lg-r')].map(r=>r.querySelectorAll('.cz').length).join(',')].join('/'));
+  ok('Bâtiments (v72) : 4 tuiles (au niveau de l’Hôtel de ville 6/20, 0/11, 1/3 ; saison 3/3), détail en 9 lignes, une case par bâtiment ou exemplaire',bt==='6 / 20,0 / 11,1 / 3,3 / 3/4,4,4,4,4,4,7,3,3',bt);
+  ok('Hôtel de ville dans la ligne « Autres » du détail, niveau 24 ; plus de grande tuile du prochain niveau',(await ev(p,()=>[!!document.getElementById('pgHero'),(document.querySelector('#gBld .cz[data-arg="c:bat:hdv:-1"] b')||{}).textContent].join('/')))==='false/24');
   /* v71 : onglet « Bâtiments », Réglages dans le profil, Recherches et troupes à part (choix de Mickaël du 2026-10-10) */
   ok('Onglets de Ma ville : Bâtiments, Recherches et troupes, Inventaire, Commandants, Équipements, Armements (v71)',(await txt(p,'[data-screen="ma-ville"] .tabs'))==='Bâtiments Recherches et troupes Inventaire Commandants Équipements Armements');
   ok('Onglet Bâtiments : ni réglages, ni recherches, ni troupes (v71)',(await ev(p,()=>{const P=document.querySelector('[data-panel=progression]');return !/Réglages|Recherches|Troupes|Niveau VIP/.test(P.innerText);})));
@@ -47,13 +49,16 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   await etat(p,'demo','#profil');ok('Réglages dans la fiche du profil : VIP 17, Bâtisseurs 2, Bonus de vitesse, Civilisation France (v71)',/17 Niveau VIP 2 Bâtisseurs — Bonus de vitesse à renseigner France Civilisation/.test(await txt(p,'#pfSet')||''),await txt(p,'#pfSet'));
   await p.click('#pfSet a[href="#valeur-vip"]');await p.waitForTimeout(300);ok('Un réglage ouvert depuis le profil y ramène (« Profil »)',(await ev(p,()=>[document.getElementById('valBack').getAttribute('href'),document.getElementById('valBack').textContent.trim()].join('/')))==='#profil/Profil');
   await etat(p,'demo','#ma-ville-progression');
-  ok('Hôtel de ville et 18 bâtiments à niveau en 3 groupes, et 3 de saison',(await ev(p,()=>[document.querySelectorAll('#gBld .btile').length,document.querySelectorAll('#gBld .bgrp').length,document.querySelectorAll('#gBld .bgrp.saison .btile').length].join('/')))==='22/4/3');
-  ok('Prérequis manquant entouré (Mur)',(await ev(p,()=>[...document.querySelectorAll('#gBld .btile.manque')].map(a=>a.getAttribute('href')).join(',')))==='#valeur-mur');
-  await p.click('#gBld a[href="#valeur-comptoir"]');await p.waitForTimeout(300);ok('Comptoir ouvre sa valeur',(await txt(p,'#valTitle'))==='Comptoir');
+  ok('37 cases : Hôtel de ville, 18 bâtiments (fermes, moulins, carrières, mines et hôpitaux par exemplaire) et 3 de saison',(await ev(p,()=>document.querySelectorAll('#gBld .cz').length))===37);
+  ok('Prérequis manquant entouré (Mur, niv. 24 requis)',(await ev(p,()=>[...document.querySelectorAll('#gBld .cz.manque')].map(a=>a.dataset.arg+' '+a.querySelector(':scope>span').textContent).join(',')))==='c:bat:mur:-1 niv. 24 requis');
+  await p.click('#gBld .cz[data-arg="c:bat:taverne:-1"]');await p.waitForTimeout(200);const fT=await ev(p,()=>[document.getElementById('shTitle').textContent,document.getElementById('iv-c').value].join('/'));
+  await p.fill('#iv-c','22');await p.click('[data-act=inv-save]');await p.waitForTimeout(250);
+  ok('Une case se remplit seule (Taverne 21 → 22), gardée dans l’historique',fT==='Taverne : niveau/21'&&(await txt(p,'#gBld .cz[data-arg="c:bat:taverne:-1"] b'))==='22'&&/Changé en jeu/.test((await ev(p,()=>{location.hash='valeur-taverne';return new Promise(r=>setTimeout(()=>r(document.getElementById('valHist').innerText),400));}))||''),fT);
+  await etat(p,'demo','#ma-ville-progression');await p.click('#gBld .lg-h[data-arg="b:ferme"]');await p.waitForTimeout(300);ok('L’en-tête d’une ligne ouvre la valeur (Fermes, historique et correction)',(await txt(p,'#valTitle'))==='Fermes');
   await etat(p,'demo','#valeur-ferme');ok('Fermes : 4 niveaux',(await txt(p,'#valBig'))==='24 · 24 · 23 · 22');
   await p.click('#valBtn');await p.waitForTimeout(200);await p.fill('#cv3','23');await p.click('[data-act=save-correct]');await p.waitForTimeout(300);
   ok('Correction d’une ferme enregistrée',(await txt(p,'#valBig'))==='24 · 24 · 23 · 23');
-  await etat(p,'demo:f2','#ma-ville-progression');ok('Prérequis non renseigné signalé sur sa tuile (Ferme 2 : Réserve, niveau 17 requis)',/niveau 17 requis/.test(await txt(p,'#gBld .btile.manque[href="#valeur-entrepot"]')||''),await txt(p,'#gBld .btile.manque'));
+  await etat(p,'demo:f2','#ma-ville-progression');ok('Prérequis non renseigné signalé sur sa case (Ferme 2 : Réserve, niv. 17 requis)',/niv. 17 requis/.test(await txt(p,'#gBld .cz.manque[data-arg="c:bat:entrepot:-1"]')||''),await txt(p,'#gBld .cz.manque'));
   await etat(p,'demo','#ma-ville-inventaire');
   ok('6 onglets d’inventaire comme le jeu',(await txt(p,'#invChips'))==='Ressources Accélérateurs Boosts Équipement Attirail Autre');
   const nbT=async inv=>{await p.click('#invChips [data-inv='+inv+']');await p.waitForTimeout(150);return ev(p,()=>document.querySelectorAll('#gObj .it').length);};
