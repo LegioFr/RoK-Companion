@@ -577,27 +577,25 @@ var step=1,anaTimer=null;
 function showStep(n){step=n;$('#stepper').hidden=n===1;$$('[data-steppanel]').forEach(function(p){p.hidden=+p.dataset.steppanel!==n;});
   $$('#stepper .sp').forEach(function(b){var k=+b.dataset.sp;b.classList.toggle('done',k<n);if(k===n)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});}
 /* Écran Importer redessiné le 2026-10-10 (demande de Mickaël, proposé par Claude) */
-/* Écran Importer, piste C (2026-10-10) : une carte par onglet du jeu ; S.shots garde l'ordre de lecture, Ressources puis Accélérateurs */
-var ONGLET_IMP={res:['Res','Ressources'],acc:['Acc','Accélérateurs']};
+/* Écran Importer, piste A (choisie par Mickaël le 2026-10-10) : un seul bouton, puis les miniatures et « Lire » */
 function renderShots(){
-  var n=S.shots.length,vraies=S.shots.filter(function(x){return x.file;}).length,par={res:0,acc:0};
-  S.shots.forEach(function(s){par[s.tab]++;});
-  ['res','acc'].forEach(function(t){var K=ONGLET_IMP[t][0],k=par[t],add=$('#add'+K);
-    $('#imp'+K).classList.toggle('done',k>0);$('#n'+K).textContent=k;
-    $('#shots'+K).innerHTML=k?S.shots.map(function(s,i){if(s.tab!==t)return '';return '<figure class="shot'+(s.url?' real':'')+'">'+(s.url?'<img src="'+s.url+'" alt="Capture '+(i+1)+'">':'')+'<span class="shot-n">'+(i+1)+'</span>'+
-      (s.file?'<button class="shot-x" type="button" data-act="shot-rm" data-arg="'+i+'" aria-label="Retirer la capture '+(i+1)+'">✕</button>':'')+'</figure>';}).join(''):'<p class="imp-vide">Une capture par écran,<br>jusqu’en bas de la grille</p>';
-    add.innerHTML=ic(k?'i-plus':'n-camera')+(k?'Ajouter':'Ajouter mes captures');add.classList.toggle('primary',!k);add.hidden=vraies>=20;});
-  var sec=Math.ceil(vraies/3)*15,prix=(vraies*LECT_PRIX).toFixed(2).replace('.',','),manque=!par.res?'Ressources':!par.acc?'Accélérateurs':'';
-  $('#impCount').textContent=n?n+' capture'+(n>1?'s':''):'Aucune capture';
-  $('#impCost').textContent=!n?'Environ 0,05\u00a0$ par capture · effacées après lecture':!vraies?'Captures d’exemple · lecture simulée, gratuite':!SITE_PUB?'La lecture marche sur la maquette publiée.':
-    'Environ '+(sec<60?sec+'\u00a0s':Math.round(sec/60)+'\u00a0min')+' · environ '+prix+'\u00a0$'+(manque?' · '+manque+' sans capture : rien n’y changera':'');
+  var n=S.shots.length,vraies=S.shots.filter(function(x){return x.file;}).length;
+  $('#impVide').hidden=!!n;$('#impPret').hidden=!n;$('#impFootCost').hidden=!!n;
+  $('#shots').innerHTML=S.shots.map(function(s,i){return '<figure class="shot'+(s.url?' real':'')+'">'+(s.url?'<img src="'+s.url+'" alt="Capture '+(i+1)+'">':'')+'<span class="shot-n">'+(i+1)+'</span>'+
+      (s.file?'<button class="shot-x" type="button" data-act="shot-rm" data-arg="'+i+'" aria-label="Retirer la capture '+(i+1)+'">✕</button>':'')+'</figure>';}).join('')+
+    (vraies&&vraies<20?'<label class="shot add" for="pickShots">'+ic('i-plus')+'<span>Ajouter</span></label>':'');
+  var sec=Math.ceil(vraies/3)*15;
+  $('#impCount').textContent=!vraies?n+' captures d’exemple':n+' capture'+(n>1?'s':'')+' prête'+(n>1?'s':'');
+  $('#impGoT').textContent=vraies?'Lecture par Claude':'Lecture simulée';
+  $('#impCost').textContent=!vraies?'Gratuite : rien n’est envoyé':!SITE_PUB?'La lecture marche sur la maquette publiée.':
+    'Environ '+(sec<60?sec+'\u00a0s':Math.round(sec/60)+'\u00a0min')+' · environ '+(vraies*LECT_PRIX).toFixed(2).replace('.',',')+'\u00a0$';
   var b=$('#analyseBtn');b.disabled=!n;b.textContent=n?'Lire '+(n>1?'les '+n+' captures':'la capture'):'Lire';
 }
 /* Avancement capture par capture pendant la lecture */
 var ETAT_TXT={attente:'En attente',envoi:'Envoi…',lecture:'Lecture par Claude…',ok:'Lue',echec:'Non lue'};
 function renderAnaList(J){var box=$('#anaList');if(!box)return;if(!J){box.innerHTML='';return;}
   box.innerHTML=J.files.map(function(f,i){var e=J.etat[i];if(!e)return '';var sh=S.shots[i]||{};
-    return '<div class="imp-li '+e+'">'+(sh.url?'<img src="'+sh.url+'" alt="">':'<span class="imp-li-ph"></span>')+'<span class="imp-li-t"><b>Capture '+(i+1)+(sh.tab?' · '+ONGLET_IMP[sh.tab][1]:'')+'</b><small>'+ETAT_TXT[e]+(e==='ok'&&J.nb[i]!=null?' · '+J.nb[i]+' case'+(J.nb[i]>1?'s':''):'')+(e==='echec'&&J.msg[i]?' · '+esc(J.msg[i]):'')+'</small></span>'+
+    return '<div class="imp-li '+e+'">'+(sh.url?'<img src="'+sh.url+'" alt="">':'<span class="imp-li-ph"></span>')+'<span class="imp-li-t"><b>Capture '+(i+1)+(e==='ok'&&J.res[i]&&J.res[i].resultat&&J.res[i].resultat.onglet!=='inconnu'?' · '+J.res[i].resultat.onglet:'')+'</b><small>'+ETAT_TXT[e]+(e==='ok'&&J.nb[i]!=null?' · '+J.nb[i]+' case'+(J.nb[i]>1?'s':''):'')+(e==='echec'&&J.msg[i]?' · '+esc(J.msg[i]):'')+'</small></span>'+
       '<span class="imp-li-s">'+(e==='ok'?ic('i-check'):e==='echec'?ic('i-warn'):'<span class="imp-dot"></span>')+'</span></div>';}).join('');}
 function analyse(){
   if(S.shots.some(function(x){return x.file;})){if(!SITE_PUB){say('La lecture des captures marche sur la maquette publiée (site), pas dans ce fichier.');return;}lireVraies();return;}
@@ -661,7 +659,7 @@ function lectIcone(it){if(it.kind==='acc')return it.type?(AN.filter(function(x){
    avec r._i (numéro de la capture) et r._t (heure de la capture, d'après le fichier). */
 function lectHeure(t){return t?new Date(t).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}):'';}
 function lectRegrouper(L,erreurs,n){
-  var items=[],par={},pasPris=0,coupees=[],onglets={},vu=0,barres=[];
+  var items=[],par={},pasPris=0,coffres=0,coupees=[],pleines=[],onglets={},vu=0,barres=[];
   function ajoute(it,lu){var k=it.kind+'|'+(it.type||'?')+'|'+it.val+(it.type?'':'|'+it.qte);var o=par[k];
     if(o){o.lus.push(lu);return;}
     it.id='l'+items.length;it.lus=[lu];par[k]=it;items.push(it);}
@@ -669,8 +667,8 @@ function lectRegrouper(L,erreurs,n){
     (R.cases||[]).forEach(function(c){vu++;
       if(R.onglet!=='Ressources'&&R.onglet!=='Accélérateurs'){pasPris++;return;}
       var f=lectFamille(c.objet);if(R.onglet==='Accélérateurs'&&f[0]!=='acc')f=['acc',null];/* onglet Accélérateurs : un objet pas reconnu est un accélérateur de type inconnu */
-      if(f[0]==='autre'){pasPris++;return;}
-      if(c.coupee){coupees.push({f:f,c:c});return;}
+      if(f[0]==='autre'){if(/coffre|pack/i.test(c.objet))coffres++;else pasPris++;return;}
+      if(c.coupee){coupees.push({f:f,c:c,i:r._i,o:R.onglet});return;}
       var qte=parseEntier(c.quantite),it={kind:f[0],type:f[1],type0:f[1],qte:qte,sur:!!c.sur,raison:''};
       if(f[0]==='res'){it.val=parseEntier(c.valeur_haut);var C=JEU.caisses[f[1]];
         if(it.val==null)it.raison='Taille illisible';else if(C&&C.tailles.indexOf(it.val)<0)it.raison='Taille inconnue du jeu : '+nb(it.val);}
@@ -679,22 +677,30 @@ function lectRegrouper(L,erreurs,n){
         else if(it.val==null)it.raison='Durée illisible';else if(LD.indexOf(it.val)<0)it.raison='Durée inconnue du jeu pour ce type : '+fDur(it.val);}
       if(qte==null)it.raison=it.raison||'Quantité illisible';else if(!c.sur)it.raison=it.raison||'Chiffre douteux : vérifie la quantité';
       if(it.raison)it.sur=false;
+      pleines.push({i:r._i,o:R.onglet,lig:c.ligne,col:c.colonne,kind:it.kind,type:it.type,val:it.val,q:qte});
       ajoute(it,{i:r._i,t:r._t,q:qte});});});
   /* même élément lu sur plusieurs captures avec des nombres différents : on propose celui de la capture la plus récente */
   items.forEach(function(it){var Q=it.lus.filter(function(x){return x.q!=null;});var dif=Q.filter(function(x){return x.q!==Q[0].q;}).length;if(!dif)return;
     Q.sort(function(a,b){return (b.t||0)-(a.t||0);});it.qte=Q[0].q;it.sur=false;
     var rec=Q[0].t&&Q[1].t&&Math.abs(Q[0].t-Q[1].t)>=60000;
     it.raison='Pas le même nombre selon la capture : '+Q.map(function(x){return nb(x.q)+' (capture '+(x.i+1)+(x.t?', '+lectHeure(x.t):'')+')';}).join(', ')+(rec?'. Le nombre de la plus récente est proposé.':'. Vérifie dans le jeu.');});
-  /* une case coupée sans double entier sur une autre capture n'est pas enregistrée */
-  var perdues=coupees.filter(function(x){var f=x.f,c=x.c;var v=f[0]==='res'?parseEntier(c.valeur_haut):lectDuree(c.valeur_haut),q=parseEntier(c.quantite);
-    return !items.some(function(it){return it.kind===f[0]&&it.type===f[1]&&((v!=null&&it.val===v)||(v==null&&q!=null&&it.lus.some(function(x){return x.q===q;})));});}).length;
+  /* Une case coupée sans double entier sur une autre capture n'est pas enregistrée. La grille défile de haut en bas :
+     une rangée coupée doit se retrouver entière, colonne par colonne, sur une autre capture du même onglet.
+     Le dessin du type d'accélérateur est en bas de la case : coupé, le type est inconnu (captures de Mickaël, 2026-10-10). */
+  var rangs={};coupees.forEach(function(x){var c=x.c;x.v=x.f[0]==='res'?parseEntier(c.valeur_haut):lectDuree(c.valeur_haut);x.q=parseEntier(c.quantite);
+    if(x.v==null&&x.q==null)return;/* rien de lisible : on ne peut rien en dire */
+    var k=x.i+'|'+c.ligne;(rangs[k]=rangs[k]||[]).push(x);});
+  var perdues=0;Object.keys(rangs).forEach(function(k){var G=rangs[k],x0=G[0];
+    var trouve=pleines.some(function(p0){if(p0.i===x0.i||p0.o!==x0.o)return false;
+      return G.every(function(x){return pleines.some(function(p){return p.i===p0.i&&p.lig===p0.lig&&p.col===x.c.colonne&&p.kind===x.f[0]&&(!x.f[1]||p.type===x.f[1])&&(x.v==null||p.val===x.v)&&(x.q==null||p.q===x.q);});});});
+    if(!trouve)perdues+=G.length;});
   /* barre du haut : celle de la capture la plus récente ; si elle change d'une capture à l'autre, on le dit */
   var bdif=false;barres.sort(function(a,b){return (b.t||0)-(a.t||0);});
   if(barres.length>1){var k0=JSON.stringify(barres[0].b);bdif=barres.some(function(x){return JSON.stringify(x.b)!==k0;});}
   if(barres.length){var barre=barres[0].b;
     [['food','nourriture'],['wood','bois'],['stone','pierre'],['gold','or']].forEach(function(x){var u=parseQte(barre[x[1]]);if(u!=null)items.push({id:'v'+x[0],kind:'ville',type:x[0],val:u,qte:null,sur:!bdif,raison:bdif?'La barre du haut change d’une capture à l’autre : valeur de la plus récente':'',lus:[]});});
     var g=parseEntier(barre.gemmes);if(g!=null)items.push({id:'vgems',kind:'ville',type:'gems',val:g,qte:null,sur:!bdif,raison:bdif?'La barre du haut change d’une capture à l’autre : valeur de la plus récente':'',lus:[]});}
-  return {items:items,sureOk:false,n:n,erreurs:erreurs,pasPris:pasPris,perdues:perdues,vu:vu,bdif:bdif,onglets:Object.keys(onglets)};}
+  return {items:items,sureOk:false,n:n,erreurs:erreurs,pasPris:pasPris,coffres:coffres,perdues:perdues,vu:vu,bdif:bdif,onglets:Object.keys(onglets)};}
 /* une coupure réseau (écran mis en veille, appli changée, wifi) donne « Failed to fetch » : on le dit simplement */
 function lectReseau(e){return e instanceof TypeError||/fetch|network|load failed/i.test(String(e));}
 function lectMessage(e){return lectReseau(e)?'connexion coupée (écran en veille, autre appli ou wifi ?)':String(e);}
@@ -738,7 +744,8 @@ function renderLect(){
   if(X.erreurs.length)notes.push('<b>'+X.erreurs.length+' capture'+(X.erreurs.length>1?'s':'')+' non lue'+(X.erreurs.length>1?'s':'')+'</b> : '+esc(X.erreurs.join(' ; '))+'.<div class="btns"><button class="btn gold" type="button" data-act="lect-relire">Relire '+(X.erreurs.length>1?'ces '+X.erreurs.length+' captures':'cette capture')+'</button></div>');
   if(X.bdif)notes.push('<b>La barre du haut n’est pas la même sur toutes les captures</b> : elles ne viennent pas toutes du même moment, ou pas du même compte. Les nombres qui changent sont à vérifier ; ne mélange pas les comptes dans un même import.');
   if(X.perdues)notes.push(X.perdues+' case'+(X.perdues>1?'s':'')+' coupée'+(X.perdues>1?'s':'')+' par le défilement, absente'+(X.perdues>1?'s':'')+' des autres captures : pas enregistrée'+(X.perdues>1?'s':'')+'. Reprends une capture où elle'+(X.perdues>1?'s sont':' est')+' entière'+(X.perdues>1?'s':'')+'.');
-  if(X.pasPris)notes.push(X.pasPris+' élément'+(X.pasPris>1?'s':'')+' d’autres onglets, ou coffres et packs, pas encore pris en charge.');
+  if(X.coffres)notes.push(X.coffres+' coffre'+(X.coffres>1?'s':'')+' et pack'+(X.coffres>1?'s':'')+' de ressources lu'+(X.coffres>1?'s':'')+', pas encore enregistré'+(X.coffres>1?'s':'')+' par la lecture : tu peux les saisir à la main dans l’inventaire (Ressources, lignes « Coffres » et « Packs »).');
+  if(X.pasPris)notes.push(X.pasPris+' élément'+(X.pasPris>1?'s':'')+' d’autres onglets (Boosts, Équipement, Attirail, Autre), pas encore pris en charge.');
   notes.push('Un élément absent des captures reste comme il est : l’appli n’écrit jamais zéro à sa place. Une ligne non vérifiée n’est pas enregistrée.');
   notes.push('Ressources en ville : lues dans la barre du haut du jeu, arrondies (ex. 84,2 M).');
   box.innerHTML='<div class="cols"><div class="col">'+
@@ -1128,7 +1135,7 @@ var ACT={
   'quick-cancel':function(){S.quick=false;renderCity();},'quick-save':quickSave,
   correct:correctSheet,'save-correct':saveCorrect,
   'inv-edit':invSheet,'inv-save':invSave,'item-edit':itemSheet,'item-save':itemSave,'item-del':itemDel,
-  'sample-shots':function(){S.shots=[];S.lect=null;S.lectJob=null;for(var i=0;i<15;i++)S.shots.push({tab:i<9?'res':'acc'});renderShots();},
+  'sample-shots':function(){S.shots=[];S.lect=null;S.lectJob=null;for(var i=0;i<15;i++)S.shots.push({});renderShots();},
   'lect-sure':function(){lectSync();S.lect.sureOk=true;renderLect();say('Éléments sûrs confirmés.');},
   'lect-relire':function(){lectSync();lireVraies(true);},
   'shot-rm':function(i){i=+i;var x=S.shots[i];if(!x)return;try{if(x.url)URL.revokeObjectURL(x.url);}catch(e){}S.shots.splice(i,1);S.lect=null;S.lectJob=null;renderShots();say('Capture retirée.');},
@@ -1257,12 +1264,12 @@ document.addEventListener('change',function(e){
   else if(t.matches('#compList select')){$('#compList').dataset.live='1';compCheck();}
   else if(t.matches('[data-qk]'))quickCount();
   else if(t.matches('[data-notif]')){S.notif[t.dataset.notif]=t.checked;renderPlus();}
-  else if(t.id==='pickShots'||t.id==='pickShotsAcc'){var tab=t.dataset.tab,fs=[].slice.call(t.files||[]).filter(function(f){return /^image\//.test(f.type);});t.value='';
+  else if(t.id==='pickShots'){var fs=[].slice.call(t.files||[]).filter(function(f){return /^image\//.test(f.type);});t.value='';
     if(!fs.length){say('Choisis des images.');return;}
-    var deja=S.shots.filter(function(x){return x.file;}),place=20-deja.length,pris=fs.slice(0,Math.max(0,place)).map(function(f){return {url:URL.createObjectURL(f),file:f,tab:tab};});
+    var deja=S.shots.filter(function(x){return x.file;}),pris=fs.slice(0,Math.max(0,20-deja.length)).map(function(f){return {url:URL.createObjectURL(f),file:f};});
     if(!pris.length){say('20 captures au plus : retires-en une avant d’en ajouter.');return;}
-    deja=deja.concat(pris);S.shots=deja.filter(function(x){return x.tab==='res';}).concat(deja.filter(function(x){return x.tab==='acc';}));S.lect=null;S.lectJob=null;renderShots();
-    say(pris.length+' capture'+(pris.length>1?'s':'')+' ajoutée'+(pris.length>1?'s':'')+' dans '+ONGLET_IMP[tab][1]+(fs.length>pris.length?' (20 au plus)':'')+'.');}
+    S.shots=deja.concat(pris);S.lect=null;S.lectJob=null;renderShots();
+    say(pris.length+' capture'+(pris.length>1?'s':'')+' ajoutée'+(pris.length>1?'s':'')+(fs.length>pris.length?' (20 au plus)':'')+'.');}
   else if(t.id==='pickVideo'){var v=t.files&&t.files[0];if(v)openSheet('Vidéo choisie','<p class="shp">'+esc(v.name)+'</p><p class="shp muted">La lecture d’un enregistrement d’écran est prévue plus tard (complément B03). La vidéo reste sur ton appareil.</p>',[['Fermer','close-sheet','primary']]);t.value='';}
   else if(t.id==='pickReport'){var f=t.files&&t.files[0];if(f){S.reports.unshift({t:'Rapport importé',d:TODAY_S+' · à relire',ok:null,img:URL.createObjectURL(f),obs:'Lecture simulée dans la maquette : les valeurs lues apparaîtront ici, à corriger.',hyp:'Aucune tant que les valeurs ne sont pas relues.',abs:'À compléter après relecture.'});S.rep=0;renderCombat();say('Rapport ajouté. Il reste sur ton appareil.');}t.value='';}
 });

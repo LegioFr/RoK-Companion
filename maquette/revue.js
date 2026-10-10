@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=42,VERSION='v'+VNUM+' · 10 oct. 2026';
+var VNUM=43,VERSION='v'+VNUM+' · 10 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -38,11 +38,11 @@ var CHANGES={
     {sel:'#gBld',t:'Noms du jeu repris de tes captures : Réserve (et non Entrepôt), Moulin à bois, Comptoir, Centre d’alliance, Champ de tir à l’arc, Atelier d’armes de siège. Les « ° » ont disparu : tous les noms sont vérifiés.'},
     {sel:'[data-screen="ma-ville"] [data-sync]',t:'Le faux « Synchronisé » est remplacé par le vrai état : « Enregistré », « Enregistrement… » ou « En attente d’envoi » dans ta version réelle, « Exemples, non enregistrés » ici.'},
     {sel:'#gSet',t:'Réglages en tuiles. Le bonus de vitesse accepte une décimale (42,5 %), comme dans le jeu.'}],
-  'import':[{sel:'.imp-cards',t:'Écran refait (piste C, ta v41 ne te plaisait pas) : une carte par onglet du jeu, Ressources et Accélérateurs. Chaque carte a son bouton « Ajouter mes captures », ses miniatures (✕ pour en retirer une) et son nombre de captures.'},
-    {sel:'.imp-soon',t:'Les onglets pas encore lus (Boosts, Équipement, Attirail, Autre) sont rangés en dessous, en « Bientôt », au lieu d’une liste de textes.'},
-    {sel:'.imp-bar',t:'Un seul bouton « Lire » en bas, avec le nombre de captures, la durée et le coût. Si une carte est vide, la barre le dit : rien ne changera dans cet onglet. La barre ne flotte plus.'},
-    {sel:'#lectNote',t:'La frise des étapes n’apparaît plus qu’à partir de la lecture ; pendant la lecture, chaque capture dit de quel onglet elle vient.'},
-    {sel:'[data-steppanel="3"]',t:'Après ton premier essai : une coupure réseau (écran en veille, autre appli) relance la lecture une fois toute seule ; sinon un bouton « Relire » apparaît. Un même objet avec des nombres différents d’une capture à l’autre : l’appli propose la plus récente.'}],
+  'import':[{sel:'.imp-hero',t:'Piste A, ton choix : un seul bouton « Choisir mes captures » (Ressources et Accélérateurs ensemble), avec les 3 étapes en images en dessous.'},
+    {sel:'.imp-foot',t:'Durée, coût, effacement des captures et relecture : sur une seule ligne en bas, au lieu des blocs de texte.'},
+    {sel:'[data-steppanel="3"]',t:'Corrigé (ton import de ce matin) : « 8 cases coupées » s’affichait à tort. Le dessin du type d’accélérateur est en bas de la case : coupé, Claude ne connaît pas le type, et l’appli ne retrouvait pas la case entière sur la capture suivante. Elle compare maintenant la rangée coupée, colonne par colonne.'},
+    {sel:'[data-steppanel="3"]',t:'Coffres et packs de ressources : la relecture dit combien elle en a vu et que tu peux les saisir à la main dans l’inventaire, au lieu de « autres onglets, ou coffres et packs ».'},
+    {sel:'#stepper',t:'La frise des étapes n’apparaît qu’à partir de la lecture ; pendant la lecture, chaque capture lue dit son onglet (Ressources ou Accélérateurs).'}],
   'ma-ville-inventaire':[{sel:'#invChips',t:'Inventaire rangé comme les onglets du jeu : Ressources, Accélérateurs, Boosts, Équipement, Attirail, Autre.'},
     {sel:'#gRes',t:'Tout se remplit à la main, aussi dans ta version réelle : ouvre une ligne puis « Modifier ». Vraies tailles de caisses (1 000 à 5 000 000) et vraies durées d’accélérateurs (1 min à 15 h, jusqu’à 30 j pour les généraux).'},
     {sel:'#gRes .list',t:'Coffres « Choisissez un » et packs de ressources : nombre par niveau.'}],
