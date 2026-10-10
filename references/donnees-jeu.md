@@ -97,6 +97,34 @@ Règle du projet : chaque donnée a sa source et sa date ; tant qu’elle n’es
 - **Accélérateurs :** construction, recherche, entraînement, soins : 1, 5, 10, 15, 30, 60 min, 3 h, 8 h, 15 h ; universel : les mêmes plus 24 h, 3 j, 7 j, 30 j (24 h et plus : non vérifié, pas vus sur les captures).
 - **Exemples de la maquette corrigés le 2026-10-09 :** ils montraient des caisses « 1 M » et des accélérateurs de construction « 1 j », qui n'existent pas.
 
+- **Gemmes, revérifiées le 2026-10-10** (demande de Mickaël, qui n'en a pas en ce moment) : wiki riseofkingdoms.fandom.com, page « Items/Gem » (révision du 2025-01-29), lue par l'API le 2026-10-10 : objets de 5, 10, 50 (vert) · 100, 200, 500 (bleu) · 650, 1 000, 2 000 gemmes (violet). Même liste que l'étude du 6 octobre ; seul le 10 a été vu dans le jeu. Origines connues : coffres d'alliance (5), barbares et forts (10, 100), événements (100, 650), Arche d'Osiris (2 000).
+
+## Coffres « Choisissez un » et packs de ressources (2026-10-10)
+
+- **Sources :** captures de l'Inventaire de Mickaël du 2026-10-10 (panneau de droite, texte du jeu en français) ; wiki riseofkingdoms.fandom.com, pages « Items/"Pick One" Resource Chest » (révision du 2023-03-24) et « Items/Resource Pack » (révision du 2024-05-06), lues par l'API le 2026-10-10. Le jeu et le wiki donnent les mêmes nombres pour tout ce que Mickaël possède.
+- **Coffres de ressources « Choisissez un »** (une ressource au choix) — vus dans le jeu :
+
+| Niveau | Couleur de la case | Nourriture | Bois | Pierre | Or |
+|---|---|---|---|---|---|
+| 1 | vert | 10 000 | 10 000 | 7 500 | 3 000 |
+| 2 | vert | 50 000 | 50 000 | 37 500 | 15 000 |
+| 3 | bleu | 150 000 | 150 000 | 112 500 | 50 000 |
+| 4 | bleu | 500 000 | 500 000 | 375 000 | 200 000 |
+| 5 | violet | 1 500 000 | 1 500 000 | 1 125 000 | 600 000 |
+
+- **Packs de ressources** (une ressource au hasard) :
+
+| Pack | Couleur | Contenu possible | Vu dans le jeu |
+|---|---|---|---|
+| A niv. 1 | gris | 1 000 nourriture ou 1 000 bois | non (wiki seul ; quêtes secondaires) |
+| B niv. 1 | gris | 1 000 nourriture, 1 000 bois ou 750 pierre | oui |
+| C niv. 1 | gris | 1 000 nourriture, 1 000 bois, 750 pierre ou 500 or | oui |
+| niv. 2 | vert | 10 000 nourriture, 10 000 bois, 7 500 pierre ou 5 000 or | oui |
+| niv. 3 | bleu | 100 000 nourriture, bois, pierre ou or | non (wiki seul) |
+
+- **Pas trouvé :** coffre « Choisissez un » niveau 6, pack niveau 4 (recherche du 2026-10-10). Un guide de la boutique VIP (theriagames.com, ancien) cite des « Level 6 Reserves » : objet non identifié, à vérifier si Mickaël en voit un.
+- **Ordre dans le jeu :** packs (A, B, C niv. 1, puis niv. 2, niv. 3), puis coffres niveaux 1 à 5, avant les caisses ; le niveau se déduit de la couleur de la case et de cet ordre. Deux niveaux ont parfois la même couleur (packs A, B, C gris ; coffres 1 et 2 verts ; 3 et 4 bleus).
+
 ## Réinitialisation quotidienne
 
 - **2 h du matin, heure de France** (Mickaël, 2026-10-09), soit minuit UTC ; en heure d’hiver, ce serait 1 h : à vérifier après le changement d’heure.

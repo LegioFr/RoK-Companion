@@ -363,8 +363,14 @@ function badValue(k,v){var f=FIELDS[k];var max=f.kind==='pct'?1000:(k==='builder
 var RN=[['food','r-food','Nourriture'],['wood','r-wood','Bois'],['stone','r-stone','Pierre'],['gold','r-gold','Or']];
 var AN=[['build','a-build','Construction'],['research','a-research','Recherche'],['train','a-train','Entraînement'],['heal','a-heal','Soins'],['general','a-general','Généraux']];
 var ITEMS={boosts:['i-bolt','Boosts'],equip:['n-helmet','Équipement'],attirail:['n-ring','Attirail'],autre:['n-gift','Autre']};
-var COFFRES=[['c1','Coffre niv. 1'],['c2','Coffre niv. 2'],['c3','Coffre niv. 3'],['c4','Coffre niv. 4'],['c5','Coffre niv. 5']];
-var PACKS=[['pA','Pack niv. 1 A'],['pB','Pack niv. 1 B'],['pC','Pack niv. 1 C'],['p2','Pack niv. 2'],['p3','Pack niv. 3']];
+/* Coffres « Choisissez un » et packs de ressources : noms et contenus du jeu (RC_JEU.coffres, 2026-10-10) */
+var JC=(window.RC_JEU&&window.RC_JEU.coffres)||{choix:[],packs:[]};
+var COFFRES=JC.choix.map(function(o){return [o.id,o.nom,o];}),PACKS=JC.packs.map(function(o){return [o.id,'Pack '+o.nom,o];});
+function contenuCof(o){return [['food','nourriture'],['wood','bois'],['stone','pierre'],['gold','or']].filter(function(x){return o[x[0]];}).map(function(x){return nb(o[x[0]]).replace(/ /g,'\u00a0')+'\u00a0'+x[1];}).join(', ');}
+/* ce que valent les coffres (tout en nourriture) et les packs (en moyenne, ressource au hasard), en unités */
+function valCof(o){return o.food||0;}
+function fV(u){return u>=1e7?fM(u/1e6):fQte(u);}
+function valPack(o){var L=['food','wood','stone','gold'].filter(function(k){return o[k];});return L.reduce(function(a,k){return a+o[k];},0)/(L.length||1);}
 function sumK(o,L){var n=null;L.forEach(function(x){if(o[x[0]]!=null)n=(n||0)+o[x[0]];});return n;}
 /* 82 200 000 → « 82,2 M » ; 942 500 → « 942,5 K » ; 750 → « 750 » */
 function fQte(u){function d(x){return String(Math.round(x*10)/10).replace('.',',');}return u>=1e6?d(u/1e6)+' M':u>=1e4?d(u/1e3)+' K':nb(u);}
@@ -410,13 +416,14 @@ function qrow(p,k){var f=FIELDS[k],v=p.v[k],inp;
 function ordreBat(){var L=[];(JEU.batiments?JEU.batiments.groupes:[]).forEach(function(g){g[1].forEach(function(k){if(FIELDS[k])L.push(k);});});
   Object.keys(FIELDS).forEach(function(k){if(FIELDS[k].grp==='bld'&&L.indexOf(k)<0)L.push(k);});return L;}
 /* Saisie de l'inventaire (version réelle comme exemples) : vide = pas renseigné, 0 = aucun. */
-function numFld(id,label,v,dec){return '<div class="fld"><label for="'+id+'">'+label+'</label><input id="'+id+'" inputmode="'+(dec?'text':'numeric')+'" autocomplete="off" value="'+(v==null?'':esc(v))+'"'+(dec?' placeholder="ex. 81,8 M"':'')+'><small class="ferr" hidden></small></div>';}
+function numFld(id,label,v,dec,aide){return '<div class="fld"><label for="'+id+'">'+label+'</label>'+(aide?'<small class="fld-h">'+aide+'</small>':'')+'<input id="'+id+'" inputmode="'+(dec?'text':'numeric')+'" autocomplete="off" value="'+(v==null?'':esc(v))+'"'+(dec?' placeholder="ex. 81,8 M"':'')+'><small class="ferr" hidden></small></div>';}
 var INV_INTRO='<p class="sh-intro">Recopie les nombres de ton Inventaire. Laisse vide ce que tu ne connais pas, mets 0 si tu n’en as pas.</p>';
 function invSheet(k){
   var p=A();if(!p)return;S.invEdit=k;var acts=[['Annuler','close-sheet',''],['Enregistrer','inv-save','primary']],star=false;
   if(k==='coffres'){var cf=p.coffres||{};
-    openSheet('Coffres et packs',INV_INTRO+'<h3 class="sh-sub">Coffres « Choisissez un »</h3><div class="inv-grid">'+COFFRES.map(function(x){return numFld('iv-'+x[0],x[1],cf[x[0]]);}).join('')+'</div>'+
-      '<h3 class="sh-sub">Packs de ressources (au hasard)</h3><div class="inv-grid">'+PACKS.map(function(x){return numFld('iv-'+x[0],x[1],cf[x[0]]);}).join('')+'</div>',acts);return;}
+    openSheet('Coffres et packs',INV_INTRO+'<h3 class="sh-sub">Coffres « Choisissez un » : une ressource au choix</h3><div class="inv-grid deux">'+COFFRES.map(function(x){return numFld('iv-'+x[0],x[1],cf[x[0]],false,contenuCof(x[2]));}).join('')+'</div>'+
+      '<h3 class="sh-sub">Packs de ressources : une ressource au hasard</h3><div class="inv-grid deux">'+PACKS.map(function(x){return numFld('iv-'+x[0],x[1]+(x[2].vu?'':' *'),cf[x[0]],false,contenuCof(x[2]));}).join('')+'</div>'+
+      '<p class="sh-note">Contenus lus dans le jeu sur tes captures du 10 oct. * Vu seulement sur le wiki du jeu, pas encore sur tes captures.</p>',acts);return;}
   var ac=AN.filter(function(x){return x[0]===k;})[0];
   if(ac){var J=JEU.accelerateurs,L=k==='general'?J.universel:J.specialises,cur={};(p.acc[k]||[]).forEach(function(c){cur[Math.round(c[2]*60)]=c[1];});
     openSheet('Accélérateurs : '+ac[2].toLowerCase(),INV_INTRO+'<div class="inv-grid">'+L.map(function(m){var vu=J.vues.indexOf(m)>=0;if(!vu)star=true;return numFld('iv-'+m,fDur(m)+(vu?'':' *'),cur[m]);}).join('')+'</div>'+
@@ -495,10 +502,13 @@ function renderCity(){
   /* Gemmes, Coffres et Packs : 3 tuiles côte à côte (proposition 1, choix de Mickaël du 2026-10-10 : la tuile Gemmes seule « faisait vide ») */
   var resT3=grand({arg:'gems',icon:'r-gem',nom:'Gemmes',val:gHas?nb((g.v||0)+gc):'—',sub:gHas?'En ville':'À renseigner',v:g.v||0,c:gc,lv:g.c.length?(g.v!=null?nb(g.v):'—'):null,lc:nb(gc),glow:GLOW.gems});
   var cf=p.coffres||{},nC=sumK(cf,COFFRES),nPk=sumK(cf,PACKS);
-  resT3+=grand({arg:'coffres',icon:'p-chest',nom:'Coffres',val:nC==null?'—':nb(nC),sub:'« Choisissez un » · '+(nC==null?'à renseigner':'niveaux 1 à 5'),glow:'#d8b24c22'})+
-    grand({arg:'coffres',icon:'p-pack',nom:'Packs',val:nPk==null?'—':nb(nPk),sub:'De ressources · '+(nPk==null?'à renseigner':'au hasard'),glow:'#c27a4a22'});
+  var vC=COFFRES.reduce(function(a,x){return a+(cf[x[0]]||0)*valCof(x[2]);},0),vPk=PACKS.reduce(function(a,x){return a+(cf[x[0]]||0)*valPack(x[2]);},0);
+  resT3+=grand({arg:'coffres',icon:'p-chest',nom:'Coffres',val:nC==null?'—':nb(nC),sub:nC==null?'« Choisissez un » · à renseigner':'Au choix · jusqu’à '+fV(vC)+' de nourriture',glow:'#d8b24c22'})+
+    grand({arg:'coffres',icon:'p-pack',nom:'Packs',val:nPk==null?'—':nb(nPk),sub:nPk==null?'De ressources · à renseigner':'Au hasard · ≈ '+fV(vPk)+' en moyenne',glow:'#c27a4a22'});
   var resC=RN.map(function(x){var r=p.res[x[0]];return carte(x[0],x[1],x[2]+' · caisses',r.c.length?fM(cais(r)):'—',r.c.map(function(c){return [c[0],c[1],c[1]*c[2]];}),'Aucune caisse renseignée');}).join('')+
-    (g.c.length?carte('gems','r-gem','Gemmes · caisses',nb(gc),g.c.map(function(c){return [c[0],c[1],c[1]*c[2]];}),''):'');
+    (g.c.length?carte('gems','r-gem','Gemmes · caisses',nb(gc),g.c.map(function(c){return [c[0],c[1],c[1]*c[2]];}),''):'')+
+    carte('coffres','p-chest','Coffres « Choisissez un »',nC==null?'—':'jusqu’à '+fV(vC),COFFRES.filter(function(x){return cf[x[0]];}).map(function(x){return [x[1],cf[x[0]],cf[x[0]]*valCof(x[2])];}),'Aucun coffre renseigné')+
+    carte('coffres','p-pack','Packs de ressources',nPk==null?'—':'≈ '+fV(vPk),PACKS.filter(function(x){return cf[x[0]];}).map(function(x){return [x[2].nom,cf[x[0]],cf[x[0]]*valPack(x[2])];}),'Aucun pack renseigné');
   $('#gRes').innerHTML='<div class="it-grid">'+resT+'</div><div class="it-row3">'+resT3+'</div>'+
     '<h3 class="inv-h3">Détail des caisses</h3><div class="ic-grid">'+resC+'</div>';
   var accT=AN.map(function(x){var a=p.acc[x[0]]||[],n=a.reduce(function(s,c){return s+c[1];},0),gen=x[0]==='general';
@@ -666,15 +676,16 @@ function lectDuree(t){var m=String(t||'').toLowerCase().replace(/\s/g,'').match(
 function lectNom(it){
   if(it.kind==='ville')return it.type==='gems'?'Gemmes en ville':(RN.filter(function(x){return x[0]===it.type;})[0]||[,,'?'])[2]+' en ville';
   if(it.kind==='res')return (it.type==='gems'?'Gemmes':(RN.filter(function(x){return x[0]===it.type;})[0]||[,,'Ressource'])[2])+' · caisse de '+(it.val==null?'?':nb(it.val));
+  if(it.kind==='coffre'){var o=COFFRES.concat(PACKS).filter(function(x){return x[0]===it.type;})[0];return it.fam==='pack'?'Pack de ressources '+(o?o[2].nom:'?'):'Coffre « Choisissez un » '+(o?o[1].toLowerCase():'?');}
   return 'Accélérateur '+(it.type?TYPES_ACC[it.type]:'de type inconnu')+' · '+(it.val==null?'?':fDur(it.val));}
-function lectIcone(it){if(it.kind==='acc')return it.type?(AN.filter(function(x){return x[0]===it.type;})[0]||[,'a-general'])[1]:'a-general';
+function lectIcone(it){if(it.kind==='coffre')return it.fam==='pack'?'p-pack':'p-chest';if(it.kind==='acc')return it.type?(AN.filter(function(x){return x[0]===it.type;})[0]||[,'a-general'])[1]:'a-general';
   if(it.type==='gems')return 'r-gem';return (RN.filter(function(x){return x[0]===it.type;})[0]||[,'r-food'])[1];}
 /* Regroupe les lectures des captures en éléments à enregistrer */
 /* Regroupe les lectures des captures en éléments à enregistrer. L[i] = lecture de la capture i (ou rien si elle a échoué),
    avec r._i (numéro de la capture) et r._t (heure de la capture, d'après le fichier). */
 function lectHeure(t){return t?new Date(t).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}):'';}
 function lectRegrouper(L,erreurs,n){
-  var items=[],par={},pasPris=0,coffres=0,coupees=[],pleines=[],onglets={},vu=0,barres=[];
+  var items=[],par={},pasPris=0,coupees=[],pleines=[],cof=[],onglets={},vu=0,barres=[];
   function ajoute(it,lu){var k=it.kind+'|'+(it.type||'?')+'|'+it.val+(it.type?'':'|'+it.qte);var o=par[k];
     if(o){o.lus.push(lu);return;}
     it.id='l'+items.length;it.lus=[lu];par[k]=it;items.push(it);}
@@ -682,7 +693,10 @@ function lectRegrouper(L,erreurs,n){
     (R.cases||[]).forEach(function(c){vu++;
       if(R.onglet!=='Ressources'&&R.onglet!=='Accélérateurs'){pasPris++;return;}
       var f=lectFamille(c.objet);if(R.onglet==='Accélérateurs'&&f[0]!=='acc')f=['acc',null];/* onglet Accélérateurs : un objet pas reconnu est un accélérateur de type inconnu */
-      if(f[0]==='autre'){if(/coffre|pack/i.test(c.objet))coffres++;else pasPris++;return;}
+      if(f[0]==='autre'){var fam=R.onglet!=='Ressources'?null:/pack/i.test(c.objet)?'pack':/coffre/i.test(c.objet)?'choix':null;
+        if(!fam){pasPris++;return;}
+        if(c.coupee){coupees.push({f:['coffre',null],c:c,i:r._i,o:R.onglet});return;}
+        cof.push({i:r._i,t:r._t,o:R.onglet,fam:fam,coul:String(c.couleur||'inconnu'),lig:c.ligne,col:c.colonne,q:parseEntier(c.quantite),sur:!!c.sur});return;}
       if(c.coupee){coupees.push({f:f,c:c,i:r._i,o:R.onglet});return;}
       var qte=parseEntier(c.quantite),it={kind:f[0],type:f[1],type0:f[1],qte:qte,sur:!!c.sur,raison:''};
       if(f[0]==='res'){it.val=parseEntier(c.valeur_haut);var C=JEU.caisses[f[1]];
@@ -694,6 +708,20 @@ function lectRegrouper(L,erreurs,n){
       if(it.raison)it.sur=false;
       pleines.push({i:r._i,o:R.onglet,lig:c.ligne,col:c.colonne,kind:it.kind,type:it.type,val:it.val,q:qte});
       ajoute(it,{i:r._i,t:r._t,q:qte});});});
+  /* Coffres « Choisissez un » et packs de ressources (2026-10-10) : le niveau vient de la couleur de la case et de l'ordre de la grille
+     (le jeu les range par niveau). Moins de cases que de niveaux possibles pour une couleur : niveau proposé, à confirmer. */
+  var CAND={pack:{gris:['pA','pB','pC'],vert:['p2'],bleu:['p3']},choix:{vert:['c1','c2'],bleu:['c3','c4'],violet:['c5']}},
+      TOUS={pack:PACKS.map(function(x){return x[0];}),choix:COFFRES.map(function(x){return x[0];})},grp={};
+  cof.forEach(function(x){var k=x.i+'|'+x.fam+'|'+x.coul;(grp[k]=grp[k]||[]).push(x);});
+  var avant=(A()||{}).coffres||{};
+  Object.keys(grp).forEach(function(k){var G=grp[k].sort(function(a,b){return a.lig-b.lig||a.col-b.col;}),x0=G[0],C=CAND[x0.fam][x0.coul],sure=!!C&&G.length===C.length,cands=C||TOUS[x0.fam];
+    /* ton inventaire connaît déjà autant de niveaux de cette couleur que de cases : on les reprend (ex. packs B et C) */
+    var connus=C?C.filter(function(id){return avant[id]>0;}):[];if(!sure&&C&&connus.length===G.length){C=connus;sure=true;}
+    /* packs gris incomplets : le pack A (quêtes du début de jeu) est le moins probable, on propose B puis C */
+    var pre=sure?C:x0.fam==='pack'&&x0.coul==='gris'?cands.slice(Math.max(0,cands.length-G.length)):cands.slice(0,G.length);
+    G.forEach(function(x,j){var t=pre[Math.min(j,pre.length-1)],it={kind:'coffre',fam:x.fam,type:t,type0:sure?t:null,val:0,qte:x.q,cands:cands,sur:sure&&x.sur&&x.q!=null,
+      raison:!sure?(C?'Niveau à confirmer : plusieurs niveaux ont cette couleur':'Couleur de la case pas reconnue : choisis le niveau'):x.q==null?'Quantité illisible':!x.sur?'Chiffre douteux : vérifie la quantité':''};
+      pleines.push({i:x.i,o:x.o,lig:x.lig,col:x.col,kind:'coffre',type:t,val:null,q:x.q});ajoute(it,{i:x.i,t:x.t,q:x.q});});});
   /* même élément lu sur plusieurs captures avec des nombres différents : on propose celui de la capture la plus récente */
   items.forEach(function(it){var Q=it.lus.filter(function(x){return x.q!=null;});var dif=Q.filter(function(x){return x.q!==Q[0].q;}).length;if(!dif)return;
     Q.sort(function(a,b){return (b.t||0)-(a.t||0);});it.qte=Q[0].q;it.sur=false;
@@ -715,7 +743,7 @@ function lectRegrouper(L,erreurs,n){
   if(barres.length){var barre=barres[0].b;
     [['food','nourriture'],['wood','bois'],['stone','pierre'],['gold','or']].forEach(function(x){var u=parseQte(barre[x[1]]);if(u!=null)items.push({id:'v'+x[0],kind:'ville',type:x[0],val:u,qte:null,sur:!bdif,raison:bdif?'La barre du haut change d’une capture à l’autre : valeur de la plus récente':'',lus:[]});});
     var g=parseEntier(barre.gemmes);if(g!=null)items.push({id:'vgems',kind:'ville',type:'gems',val:g,qte:null,sur:!bdif,raison:bdif?'La barre du haut change d’une capture à l’autre : valeur de la plus récente':'',lus:[]});}
-  return {items:items,sureOk:false,n:n,erreurs:erreurs,pasPris:pasPris,coffres:coffres,perdues:perdues,vu:vu,bdif:bdif,onglets:Object.keys(onglets)};}
+  return {items:items,sureOk:false,n:n,erreurs:erreurs,pasPris:pasPris,perdues:perdues,vu:vu,bdif:bdif,onglets:Object.keys(onglets)};}
 /* une coupure réseau (écran mis en veille, appli changée, wifi) donne « Failed to fetch » : on le dit simplement */
 function lectReseau(e){return e instanceof TypeError||/fetch|network|load failed/i.test(String(e));}
 function lectMessage(e){return lectReseau(e)?'connexion coupée (écran en veille, autre appli ou wifi ?)':String(e);}
@@ -759,7 +787,6 @@ function renderLect(){
   if(X.erreurs.length)notes.push('<b>'+X.erreurs.length+' capture'+(X.erreurs.length>1?'s':'')+' non lue'+(X.erreurs.length>1?'s':'')+'</b> : '+esc(X.erreurs.join(' ; '))+'.<div class="btns"><button class="btn gold" type="button" data-act="lect-relire">Relire '+(X.erreurs.length>1?'ces '+X.erreurs.length+' captures':'cette capture')+'</button></div>');
   if(X.bdif)notes.push('<b>La barre du haut n’est pas la même sur toutes les captures</b> : elles ne viennent pas toutes du même moment, ou pas du même compte. Les nombres qui changent sont à vérifier ; ne mélange pas les comptes dans un même import.');
   if(X.perdues)notes.push(X.perdues+' case'+(X.perdues>1?'s':'')+' coupée'+(X.perdues>1?'s':'')+' par le défilement, absente'+(X.perdues>1?'s':'')+' des autres captures : pas enregistrée'+(X.perdues>1?'s':'')+'. Reprends une capture où elle'+(X.perdues>1?'s sont':' est')+' entière'+(X.perdues>1?'s':'')+'.');
-  if(X.coffres)notes.push(X.coffres+' coffre'+(X.coffres>1?'s':'')+' et pack'+(X.coffres>1?'s':'')+' de ressources lu'+(X.coffres>1?'s':'')+', pas encore enregistré'+(X.coffres>1?'s':'')+' par la lecture : tu peux les saisir à la main dans l’inventaire (Ressources, lignes « Coffres » et « Packs »).');
   if(X.pasPris)notes.push(X.pasPris+' élément'+(X.pasPris>1?'s':'')+' d’autres onglets (Boosts, Équipement, Attirail, Autre), pas encore pris en charge.');
   notes.push('Un élément absent des captures reste comme il est : l’appli n’écrit jamais zéro à sa place. Une ligne non vérifiée n’est pas enregistrée.');
   notes.push('Ressources en ville : lues dans la barre du haut du jeu, arrondies (ex. 84,2 M).');
@@ -769,6 +796,7 @@ function renderLect(){
       '<details class="lect-sur"><summary>Voir les éléments sûrs</summary><div class="list">'+sur.map(function(it){return row({icon:lectIcone(it),title:esc(lectNom(it)),val:lu(it)});}).join('')+'</div></details>':'')+'</div>'+
     (todo.length?'<section class="sec"><div class="sec-t"><h2>À vérifier</h2></div><div class="list">'+todo.map(function(it){
       return '<div class="q'+(it.choix?' done':'')+'" data-lq="'+it.id+'"><div class="q-h"><span class="crop">'+ic(lectIcone(it))+'</span><span class="rc"><b>'+esc(lectNom(it))+'</b><small>'+esc(it.raison)+'</small></span></div>'+
+        (it.kind==='coffre'&&!it.type0?'<div class="chips lq-type" role="group" aria-label="Niveau">'+it.cands.map(function(id){var o=COFFRES.concat(PACKS).filter(function(x){return x[0]===id;})[0];return '<button class="chip" type="button" data-lt="'+id+'" aria-pressed="'+(it.type===id)+'">'+(it.fam==='pack'?o[2].nom:o[1])+'</button>';}).join('')+'</div>':'')+
         (it.kind==='acc'&&!it.type0?'<div class="chips lq-type" role="group" aria-label="Type d’accélérateur">'+AN.map(function(a){return '<button class="chip" type="button" data-lt="'+a[0]+'" aria-pressed="'+(it.type===a[0])+'">'+a[2]+'</button>';}).join('')+'</div>':'')+
         '<div class="field"><label for="lqv'+it.id+'">'+(it.kind==='ville'?'En ville':'Quantité')+'</label><input id="lqv'+it.id+'" data-lqv="'+it.id+'" inputmode="'+(it.kind==='ville'?'text':'numeric')+'" value="'+(it.kind==='ville'?(it.type==='gems'?it.val:String(fQte(it.val)).replace(/\u00a0/g,' ')):(it.qte==null?'':it.qte))+'"></div>'+
         '<div class="chips"><button class="chip" type="button" data-lqc="ok" aria-pressed="'+(it.choix==='ok')+'">C’est bon</button><button class="chip" type="button" data-lqc="skip" aria-pressed="'+(it.choix==='skip')+'">Ignorer</button></div></div>';}).join('')+'</div></section>':'')+
@@ -788,7 +816,8 @@ function lectEnregistrer(){
   if(!ok.length){say('Confirme au moins un élément avant d’enregistrer.');return;}
   function pose(L,label,qte,val,taille){var i=-1;L.forEach(function(c,j){if(Math.abs(c[2]-taille)<1e-9)i=j;});if(i>=0)L[i][1]=qte;else L.push([label,qte,taille]);L.sort(function(a,b){return a[2]-b[2];});}
   ok.forEach(function(it){
-    if(it.kind==='ville'){if(it.type==='gems')p.gemsIn.v=it.val;else p.res[it.type].v=it.val/1e6;}
+    if(it.kind==='coffre'){if(!p.coffres)p.coffres={};p.coffres[it.type]=it.qte;}
+    else if(it.kind==='ville'){if(it.type==='gems')p.gemsIn.v=it.val;else p.res[it.type].v=it.val/1e6;}
     else if(it.kind==='res'){if(it.type==='gems')pose(p.gemsIn.c,nb(it.val),it.qte,it.val,it.val);else pose(p.res[it.type].c,nb(it.val),it.qte,it.val,it.val/1e6);}
     else{if(!p.acc[it.type])p.acc[it.type]=[];pose(p.acc[it.type],fDur(it.val),it.qte,it.val,it.val/60);}});
   p.invMaj=dateJour();p.releves+=ok.length;S.imported=true;

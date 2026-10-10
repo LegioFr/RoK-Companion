@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=47,VERSION='v'+VNUM+' · 10 oct. 2026';
+var VNUM=48,VERSION='v'+VNUM+' · 10 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -38,13 +38,16 @@ var CHANGES={
     {sel:'#gBld',t:'Noms du jeu repris de tes captures : Réserve (et non Entrepôt), Moulin à bois, Comptoir, Centre d’alliance, Champ de tir à l’arc, Atelier d’armes de siège. Les « ° » ont disparu : tous les noms sont vérifiés.'},
     {sel:'[data-screen="ma-ville"] [data-sync]',t:'Le faux « Synchronisé » est remplacé par le vrai état : « Enregistré », « Enregistrement… » ou « En attente d’envoi » dans ta version réelle, « Exemples, non enregistrés » ici.'},
     {sel:'#gSet',t:'Réglages en tuiles. Le bonus de vitesse accepte une décimale (42,5 %), comme dans le jeu.'}],
-  'import':[{sel:'',t:'Nouveau (v44) : si une nouvelle version est envoyée pendant que la page est ouverte, un bandeau « Nouvelle version de la maquette » apparaît en haut quand tu reviens sur la page, avec « Recharger ». Ton import de 10 h 01 tournait encore sur la v42.'},
+  'import':[{sel:'[data-steppanel="3"]',t:'La lecture prend maintenant les coffres « Choisissez un » et les packs de ressources, avec leur niveau (d’après la couleur de la case et l’ordre du jeu). Deux packs gris : on te demande A, B ou C une fois, puis tes niveaux sont repris.'},
+    {sel:'',t:'Nouveau (v44) : si une nouvelle version est envoyée pendant que la page est ouverte, un bandeau « Nouvelle version de la maquette » apparaît en haut quand tu reviens sur la page, avec « Recharger ». Ton import de 10 h 01 tournait encore sur la v42.'},
     {sel:'.imp-hero',t:'Piste A, ton choix : un seul bouton « Choisir mes captures » (Ressources et Accélérateurs ensemble), avec les 3 étapes en images en dessous.'},
     {sel:'.imp-foot',t:'Durée, coût, effacement des captures et relecture : sur une seule ligne en bas, au lieu des blocs de texte.'},
     {sel:'[data-steppanel="3"]',t:'Corrigé (ton import de ce matin) : « 8 cases coupées » s’affichait à tort. Le dessin du type d’accélérateur est en bas de la case : coupé, Claude ne connaît pas le type, et l’appli ne retrouvait pas la case entière sur la capture suivante. Elle compare maintenant la rangée coupée, colonne par colonne.'},
     {sel:'[data-steppanel="3"]',t:'Coffres et packs de ressources : la relecture dit combien elle en a vu et que tu peux les saisir à la main dans l’inventaire, au lieu de « autres onglets, ou coffres et packs ».'},
     {sel:'#stepper',t:'La frise des étapes n’apparaît qu’à partir de la lecture ; pendant la lecture, chaque capture lue dit son onglet (Ressources ou Accélérateurs).'}],
-  'ma-ville-inventaire':[{sel:'#gRes .it-row3',t:'Ta proposition 1 : Gemmes, Coffres et Packs en 3 tuiles côte à côte, sous les 4 grandes tuiles (la tuile Gemmes seule faisait vide).'},
+  'ma-ville-inventaire':[{sel:'#gRes .it-row3',t:'Coffres et packs (ta demande) : la saisie donne le contenu de chaque niveau, repris de tes captures (le pack A niv. 1 et le pack niv. 3, que tu n’as pas, viennent du wiki du jeu, marqués *). La tuile Coffres dit jusqu’à combien de nourriture ils valent, la tuile Packs combien en moyenne.'},
+    {sel:'#gRes .ic-grid',t:'Deux cartes en plus en bas : Coffres « Choisissez un » et Packs de ressources, niveau par niveau.'},
+    {sel:'#gRes .it-row3',t:'Ta proposition 1 : Gemmes, Coffres et Packs en 3 tuiles côte à côte, sous les 4 grandes tuiles (la tuile Gemmes seule faisait vide).'},
     {sel:'#gRes .it-grid',t:'Ton mélange des pistes A et C : une grande tuile par ressource, avec le total et une barre qui montre la part en ville (or) et en caisses (bleu). Touche une tuile pour la modifier.'},
     {sel:'#gRes .ic-grid',t:'En dessous, une carte par ressource avec chaque taille de caisse : la barre montre ce que chaque taille pèse dans le total, le nombre est ta quantité. Le crayon ouvre la saisie.'},
     {sel:'#invChips',t:'L’onglet Accélérateurs suit le même modèle : une tuile par type (temps total), puis le détail par durée.'},

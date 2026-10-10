@@ -788,3 +788,6 @@ button.more{border:0;background:none;cursor:pointer;font-family:inherit;min-heig
   .ic{padding:6px 16px 14px}
   .ic-l{grid-template-columns:96px minmax(0,1fr) 80px}
 }
+/* aide sous le nom d'un champ (contenu d'un coffre ou d'un pack, 2026-10-10) */
+.fld-h{display:block;margin-top:-3px;color:var(--muted);font-size:12px;line-height:1.35}
+.inv-grid.deux .fld{align-content:end}

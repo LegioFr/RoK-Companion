@@ -44,6 +44,24 @@ window.RC_JEU={
     gold:{tailles:[500,3000,15000,50000,200000,600000,2000000],vues:[500,3000,15000,50000,200000]},
     gems:{tailles:[5,10,50,100,200,500,650,1000,2000],vues:[10]}
   },
+  /* Coffres « Choisissez un » (niveaux 1 à 5) et packs de ressources (au hasard), avec la couleur du fond de leur case dans l'Inventaire.
+     Contenus lus dans le panneau de droite du jeu sur les captures de Mickaël du 10 oct. 2026 (vu:true) : coffres niveaux 1 à 5, packs B niv. 1,
+     C niv. 1 et niv. 2. Pack A niv. 1 et pack niv. 3 : wiki seul (riseofkingdoms.fandom.com, page « Items/Resource Pack », révision du 6 mai 2024,
+     lue par l'API le 10 oct. 2026), non vérifiés. Les coffres du wiki (page « Items/"Pick One" Resource Chest », révision du 24 mars 2023)
+     donnent les mêmes nombres que le jeu. Aucun niveau 6 de coffre ni niveau 4 de pack trouvé (recherche du 10 oct. 2026). */
+  coffres:{
+    source:'captures de Mickaël du 10 oct. 2026 et wiki riseofkingdoms.fandom.com (API, 10 oct. 2026)',
+    choix:[{id:'c1',nom:'Niveau 1',couleur:'vert',food:10000,wood:10000,stone:7500,gold:3000,vu:true},
+      {id:'c2',nom:'Niveau 2',couleur:'vert',food:50000,wood:50000,stone:37500,gold:15000,vu:true},
+      {id:'c3',nom:'Niveau 3',couleur:'bleu',food:150000,wood:150000,stone:112500,gold:50000,vu:true},
+      {id:'c4',nom:'Niveau 4',couleur:'bleu',food:500000,wood:500000,stone:375000,gold:200000,vu:true},
+      {id:'c5',nom:'Niveau 5',couleur:'violet',food:1500000,wood:1500000,stone:1125000,gold:600000,vu:true}],
+    packs:[{id:'pA',nom:'A niv. 1',couleur:'gris',food:1000,wood:1000,vu:false},
+      {id:'pB',nom:'B niv. 1',couleur:'gris',food:1000,wood:1000,stone:750,vu:true},
+      {id:'pC',nom:'C niv. 1',couleur:'gris',food:1000,wood:1000,stone:750,gold:500,vu:true},
+      {id:'p2',nom:'niv. 2',couleur:'vert',food:10000,wood:10000,stone:7500,gold:5000,vu:true},
+      {id:'p3',nom:'niv. 3',couleur:'bleu',food:100000,wood:100000,stone:100000,gold:100000,vu:false}]
+  },
   /* Accélérateurs : durées en minutes (même étude). Les quatre types spécialisés vont de 1 min à 15 h ; l'universel en plus 24 h, 3 j, 7 j, 30 j.
      Durées vues sur les captures : 1 à 60 min, 3 h, 8 h, 15 h (pas pour chaque type) ; 24 h et plus : wiki et calculateur seulement (non vérifié). */
   accelerateurs:{

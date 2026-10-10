@@ -14,6 +14,8 @@ const EFFORTS = ['low', 'medium', 'high'];
 const ID = /^c[a-z0-9]{6,40}\.(png|jpe?g|webp)$/;
 const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
 
+/* Couleur de la case (2026-10-10) : elle donne le niveau des coffres « Choisissez un » et des packs de ressources
+   (captures de Mickaël du 10 oct. 2026 ; voir RC_JEU.coffres dans donnees-jeu.js). */
 /* Icônes des accélérateurs : étude des captures de Mickaël du 2026-10-06 (texte du panneau de droite) ; ajoutées le 2026-10-09
    après l'essai (Haiku prenait les accélérateurs de soin pour de la construction). */
 const CONSIGNE = `Tu lis une capture d'écran de l'Inventaire du jeu Rise of Kingdoms, jeu en français, pour un joueur qui veut recopier ses objets dans une appli.
@@ -28,6 +30,8 @@ Règles :
 - Une case coupée par le bord de la grille (défilement) : coupee = true, et ne devine pas ce qui est caché.
 - objet : quelques mots en français tirés de l'icône et de la valeur, par exemple « caisse de nourriture », « caisse de pierre », « caisse de gemmes », « coffre de ressources au choix », « accélérateur de construction », « accélérateur de recherche », « accélérateur d'entraînement », « accélérateur de soin », « accélérateur universel » ; « inconnu » si tu ne sais pas.
 - Les accélérateurs se distinguent par le petit dessin posé sur les flèches : établi et marteau = construction ; fiole = recherche ; cible = entraînement ; rouleau de bandage = soin ; sablier = universel (« Accélération », utilisable partout).
+- Onglet Ressources : « pack de ressources » = coffre doré et argenté à serrure ; « coffre de ressources au choix » = coffre en bois rempli de ressources (épi, bûche, pierre).
+- couleur : la couleur du fond de la case, « gris », « vert », « bleu », « violet » ou « orange » ; « inconnu » si elle n'est pas visible.
 - sur = false dès qu'un chiffre de la case est douteux ou illisible.`;
 
 const TXT = { type: 'string' };
@@ -38,8 +42,9 @@ const SCHEMA = {
     barre: { type: 'object', additionalProperties: false, required: ['nourriture', 'bois', 'pierre', 'or', 'gemmes'],
       properties: { nourriture: TXT, bois: TXT, pierre: TXT, or: TXT, gemmes: TXT } },
     cases: { type: 'array', items: { type: 'object', additionalProperties: false,
-      required: ['ligne', 'colonne', 'objet', 'valeur_haut', 'quantite', 'coupee', 'sur'],
-      properties: { ligne: { type: 'integer' }, colonne: { type: 'integer' }, objet: TXT, valeur_haut: TXT, quantite: TXT, coupee: { type: 'boolean' }, sur: { type: 'boolean' } } } },
+      required: ['ligne', 'colonne', 'objet', 'valeur_haut', 'quantite', 'couleur', 'coupee', 'sur'],
+      properties: { ligne: { type: 'integer' }, colonne: { type: 'integer' }, objet: TXT, valeur_haut: TXT, quantite: TXT,
+        couleur: { type: 'string', enum: ['gris', 'vert', 'bleu', 'violet', 'orange', 'inconnu'] }, coupee: { type: 'boolean' }, sur: { type: 'boolean' } } } },
     panneau: { type: 'object', additionalProperties: false, required: ['nom', 'texte'], properties: { nom: TXT, texte: TXT } }
   }
 };
