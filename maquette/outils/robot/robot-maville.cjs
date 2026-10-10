@@ -73,6 +73,14 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   const fc=await fen('#gRes .tr-c[data-arg=coffres]'),fp=await fen('#gRes .tr-c[data-arg=packs]');
   ok('Tuile Coffres : sa propre fenêtre, 5 niveaux avec leur contenu',/Coffres/.test(fc[0])&&fc[1]===5&&/7\u00a0500\u00a0pierre/.test(fc[2]),fc[0]+' / '+fc[1]);
   ok('Tuile Packs : sa propre fenêtre, 5 packs',/Packs/.test(fp[0])&&fp[1]===5&&!/Niveau 5/.test(fp[2]),fp[0]+' / '+fp[1]);
+  /* v62, notes 1 à 6 de Mickaël du 2026-10-10 */
+  ok('Ressources (v62) : ni titre ni ligne d’import, ni ligne « Détail des caisses », ni crayon ; texte des bulles de pillage centré',
+    (await ev(p,()=>[!!document.querySelector('[data-invsec=res] .sec-t'),!!document.querySelector('#gRes .lg-hd'),document.querySelectorAll('#gRes .lg-h svg').length,getComputedStyle(document.querySelector('#gRes .pil')).justifyContent].join('/')))==='false/false/7/center');
+  ok('Case sans valeur : texte centré en hauteur (note 1)',await ev(p,()=>{const c=document.querySelector('#gRes .cz.z'),r=c.getBoundingClientRect(),k=[...c.children].map(e=>e.getBoundingClientRect());return c.children.length===2&&Math.abs((Math.min(...k.map(q=>q.top))-r.top)-(r.bottom-Math.max(...k.map(q=>q.bottom))))<2;}));
+  await p.click('#gRes .lg-r:nth-child(7) .cz:nth-child(5)');await p.waitForTimeout(200);
+  const f62=await ev(p,()=>[document.getElementById('shTitle').textContent,document.querySelectorAll('#shBody input').length,document.activeElement&&document.activeElement.id].join('/'));
+  await p.fill('#iv-c','42410');await p.click('[data-act=inv-save]');await p.waitForTimeout(250);
+  ok('Une case du détail s’ouvre seule et s’enregistre (note 6) : pack niv. 3 → × 42 410, total des packs à jour',f62==='Pack niv. 3/1/iv-c'&&/× 42 410/.test(await txt(p,'#gRes .lg-r:nth-child(7) .cz:nth-child(5)')||'')&&/42 412/.test(await txt(p,'#gRes .tr-c[data-arg=packs]')||''),f62);
   await p.click('#gRes .it[data-arg=food]');await p.waitForTimeout(200);
   ok('7 tailles de caisses de nourriture',(await ev(p,()=>document.querySelectorAll('#shBody .inv-grid input').length))===7);
   await p.fill('#iv-ville','douze');await p.click('[data-act=inv-save]');await p.waitForTimeout(150);
@@ -93,6 +101,13 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   await etat(p,'demo','#import');await p.waitForTimeout(1200);
   ok('Lecture par Claude annoncée dans Importer',/Claude Opus 5\.5/.test(await txt(p,'#lectNote')||''));R.cle=await ev(p,()=>fetch('/api/lire').then(r=>r.json()).then(j=>j.cle?'clé en place':'clé absente').catch(()=>'?'));
   await p.context().close();}
+// 3. Détail des caisses avec de grosses quantités : aucun texte de case ne passe à la ligne ni ne dépasse (remarque du 2026-10-10, « × 42 410 » sur téléphone)
+for(const w of [360,390,768,820]){const p=await page(w,900);await etat(p,'demo','#ma-ville-inventaire');
+  for(const [sel,v] of [['#gRes .lg-r:nth-child(7) .cz:nth-child(3)','42410'],['#gRes .lg-r:nth-child(7) .cz:nth-child(4)','16213'],['#gRes .lg-r:nth-child(1) .cz:nth-child(1)','34017'],['#gRes .lg-r:nth-child(6) .cz:nth-child(1)','1089']]){
+    await ev(p,s=>document.querySelector(s).click(),sel);await p.waitForTimeout(150);await p.fill('#iv-c',v);await p.click('[data-act=inv-save]');await p.waitForTimeout(200);}
+  const bad=await ev(p,()=>{const o=[];document.querySelectorAll('#gRes .cz').forEach(c=>{const cr=c.getBoundingClientRect();[...c.children].forEach(e=>{const r=e.getBoundingClientRect(),lh=parseFloat(getComputedStyle(e).lineHeight)||16;
+    if(r.height>lh*1.4||r.left<cr.left+1||r.right>cr.right-1)o.push(e.textContent.replace(/\s+/g,' '));});});return o;});
+  ok('Nombres sur une ligne dans le détail des caisses à '+w+' px',bad.length===0,bad.slice(0,6).join(' | '));await p.context().close();}
 fs.writeFileSync(path.join(SORTIE,'resultat-maville.json'),JSON.stringify(R,null,1));
 const n=Object.values(R.mesures).reduce((a,c)=>a+c.length,0);
 console.log('mesures :',Object.keys(R.mesures).length,'vues,',n,'constats ; fonctionnement :',R.fonction.filter(x=>x[0]==='OK').length+'/'+R.fonction.length,'; erreurs :',R.erreurs.length);

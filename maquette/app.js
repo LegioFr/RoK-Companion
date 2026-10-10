@@ -453,6 +453,9 @@ function invSheet(k){
       'Règles du wiki du jeu, pas encore vérifiées dans le jeu.</p>':'';
     openSheet(g.nom,INV_INTRO+(g.info?'<p class="sh-intro">'+g.info+'</p>':'')+'<div class="inv-grid deux">'+F+'</div>'+paR+
       ((etoile||nv)?'<p class="sh-note">'+(etoile?'* Vu seulement sur le wiki du jeu, pas encore sur tes captures. ':'')+(nv?'Certains noms ne sont pas encore lus dans le jeu.':'')+'</p>':''),acts);return;}
+  /* Une seule case du détail des caisses (note 6 de Mickaël du 2026-10-10 : remplir les cases une par une en les touchant) */
+  if(String(k).indexOf('c:')===0){var cs=czCase(p,k);if(!cs)return;
+    openSheet(cs.titre,INV_INTRO+numFld('iv-c',cs.lab,cs.q,false,cs.aide),acts);return;}
   /* Coffres et packs : une fenêtre chacun (remarque de Mickaël du 2026-10-10 : les deux tuiles ouvraient la même) */
   if(k==='coffres'){var cf=p.coffres||{};
     openSheet('Coffres « Choisissez un »',INV_INTRO+'<p class="sh-intro">Une ressource au choix à l’ouverture.</p><div class="inv-grid deux">'+COFFRES.map(function(x){return numFld('iv-'+x[0],x[1],cf[x[0]],false,contenuCof(x[2]));}).join('')+'</div>'+
@@ -472,6 +475,13 @@ function invSheet(k){
     '<h3 class="sh-sub">Caisses</h3><div class="inv-grid">'+C.tailles.map(function(t){var vu=vues.indexOf(t)>=0;if(!vu)star=true;return numFld('iv-'+t,'Caisses de '+nb(t)+(vu?'':' *'),cur2[t]);}).join('')+'</div>'+
     (star?'<p class="sh-note">* Taille indiquée par le wiki du jeu, pas encore vue sur tes captures.</p>':''),acts);
 }
+/* « c:food:1000 », « c:gems:50 », « c:cof:pB » : la case du détail des caisses, sa quantité et le nom à afficher */
+function czCase(p,k){var a=String(k).split(':'),t=a[1],id=a[2];
+  if(t==='cof'){var x=COFFRES.concat(PACKS).filter(function(y){return y[0]===id;})[0];if(!x)return null;var pk=PACKS.indexOf(x)>=0,cf=p.coffres||{};
+    return {cof:true,id:id,q:cf[id]==null?null:cf[id],titre:pk?x[1]:'Coffres « Choisissez un » : '+x[1].toLowerCase(),lab:pk?'Nombre de packs':'Nombre de coffres',aide:(pk?'Au hasard : ':'Au choix : ')+contenuCof(x[2])+'.'};}
+  var gem=t==='gems',rn=RN.filter(function(y){return y[0]===t;})[0];if(!gem&&!rn)return null;
+  var r=gem?p.gemsIn:p.res[t],n=+id,C=JEU.caisses&&JEU.caisses[t],vu=!C||C.vues==='toutes'||C.vues.indexOf(n)>=0,c=r.c.filter(function(c){return Math.round(gem?c[2]:c[2]*1e6)===n;})[0];
+  return {r:r,gem:gem,t:n,q:c?c[1]:null,titre:(gem?'Gemmes':rn[2])+' : caisses de '+nb(n).replace(/ /g,'\u00a0'),lab:'Nombre de caisses',aide:vu?'':'Taille indiquée par le wiki du jeu, pas encore vue sur tes captures.'};}
 function invSave(){
   var p=A(),k=S.invEdit,bad=0,first=null;if(!p||!k)return;
   function lit(id,dec){var el=$('#'+id);if(!el)return null;var raw=el.value.trim(),err=el.parentNode.querySelector('.ferr');err.hidden=true;el.removeAttribute('aria-invalid');
@@ -482,6 +492,11 @@ function invSave(){
     var nvB=$('#iv-niv')?lit('iv-niv'):null;
     if(nvB!=null&&(nvB<1||nvB>JPA.nivMax)){var elB=$('#iv-niv'),erB=elB.parentNode.querySelector('.ferr');erB.textContent='Un niveau de 1 à '+JPA.nivMax+'.';erB.hidden=false;elB.setAttribute('aria-invalid','true');bad++;if(!first)first=elB;}
     if(!bad){p.objets=o3;if($('#paT')){var tb=$('#paT [aria-pressed="true"]');p.paCalc={niv:nvB,talent:!!(tb&&tb.dataset.v==='1')};}}nom=g2.nom+' : enregistré.';}
+  else if(String(k).indexOf('c:')===0){var cs=czCase(p,k),vc=lit('iv-c');
+    if(!bad&&cs){if(cs.cof){var oc=Object.assign({},p.coffres||{});if(vc==null)delete oc[cs.id];else oc[cs.id]=vc;p.coffres=oc;}
+      else{var L=cs.r.c.filter(function(c){return Math.round((cs.gem?c[2]:c[2]*1e6))!==cs.t;});if(vc!=null)L.push([nb(cs.t),vc,cs.gem?cs.t:cs.t/1e6]);
+        L.sort(function(a,b){return a[2]-b[2];});cs.r.c=L;}}
+    nom=cs?cs.titre+' : enregistré.':'';}
   else if(k==='coffres'||k==='packs'){var o=Object.assign({},p.coffres||{});(k==='coffres'?COFFRES:PACKS).forEach(function(x){var v=lit('iv-'+x[0]);if(v!=null)o[x[0]]=v;else delete o[x[0]];});if(!bad)p.coffres=o;nom=k==='coffres'?'Coffres enregistrés.':'Packs enregistrés.';}
   else if(AN.some(function(x){return x[0]===k;})){var J=JEU.accelerateurs,L=k==='general'?J.universel:J.specialises,a=[];
     L.forEach(function(m){var v=lit('iv-'+m);if(v!=null)a.push([fDur(m),v,m/60]);});if(!bad)p.acc[k]=a;nom='Accélérateurs enregistrés.';}
@@ -551,8 +566,6 @@ function renderCity(){
   var resT=RN.map(function(x,i){var r=p.res[x[0]],c=cais(r),has=r.v!=null||r.c.length>0,ex=prE&&r.v!=null?r.v-prE[i]/1e6:0;
     var pil=ex>=0.05?'<span class="pil">'+WARN+'<span><b>'+d1(ex)+'</b> <span class="pil-l">exposés au pillage</span><span class="pil-c">pillables</span><span class="pil-p"> · la réserve en protège '+fV(prE[i])+'</span></span></span>':'';
     return grand({arg:x[0],icon:x[1],nom:x[2],val:has?fM(resTot(r)):'—',sub:'À renseigner',v:r.v||0,c:c,lv:has?(r.v!=null?f1(r.v):'—'):null,lc:r.c.length?fM(c):'—',glow:GLOW[x[0]],x:pil});}).join('');
-  var tV=0,tC=0,anyR=false,NBC=0,MAXC=0;
-  RN.forEach(function(x){var r=p.res[x[0]];if(r.v!=null||r.c.length)anyR=true;tV+=r.v||0;tC+=cais(r);r.c.forEach(function(c){NBC+=c[1];MAXC=Math.max(MAXC,c[1]*c[2]);});});
   var g=p.gemsIn,gc=g.c.reduce(function(a,c){return a+c[1]*c[2];},0),gHas=g.v!=null||g.c.length>0;
   var cf=p.coffres||{},nC=sumK(cf,COFFRES),nPk=sumK(cf,PACKS);
   var vC=COFFRES.reduce(function(a,x){return a+(cf[x[0]]||0)*valCof(x[2]);},0),vPk=PACKS.reduce(function(a,x){return a+(cf[x[0]]||0)*valPack(x[2]);},0);
@@ -565,20 +578,26 @@ function renderCity(){
      une ligne par ressource, une case par taille du jeu (nombre, valeur) ; la case est d'autant plus bleue que les caisses valent cher,
      à la même échelle pour les 4 ressources. Puis gemmes, coffres « Choisissez un » et packs, sur le même modèle. */
   function court(u){var f=function(x,d){return x.toLocaleString('fr-FR',{maximumFractionDigits:d}).replace(/[\s\u202f\u00a0]/g,'\u00a0');};return u>=1e6?f(u/1e6,3)+'\u00a0M':u>=1e4?f(u/1e3,1)+'\u00a0K':nb(u);}
-  function cz(lab,labC,q,val,a){var z=!q;return '<div class="cz'+(z?' z':'')+'" style="--a:'+(z?0:(0.12+0.5*a)).toFixed(3)+'"><small><span class="cz-l">'+lab+'</span><span class="cz-c">'+labC+'</span></small><b>'+(q==null?'—':'× '+nb(q))+'</b><span>'+(val||' ')+'</span></div>';}
-  function lgR(arg,icon,nom,tot,cells,n){return '<div class="lg-r">'+(arg?'<button class="lg-h" type="button" data-act="inv-edit" data-arg="'+arg+'" aria-label="Modifier : '+nom+'">':'<div class="lg-h">')+
-    ic(icon)+'<span>'+nom+'</span><em>'+tot+'</em>'+(arg?ic('i-pencil')+'</button>':'</div>')+'<div class="lg-c" style="--n:'+n+';--m:'+(n<=5?n:Math.ceil(n/2))+'">'+cells+'</div></div>';}
+  /* Les textes d'une ligne restent sur une ligne (remarque du 2026-10-10 : « × 42 410 » passait à la ligne sur téléphone) :
+     chaque ligne note la longueur de ses plus longs textes (--k, --kl, --kc, --kv) et la feuille de style réduit la police juste assez pour la largeur de la case. */
+  var K={b:0,l:0,c:0,v:0};function tl(x){return String(x).replace(/&[^;]+;/g,'x').length;}
+  /* Chaque case s'ouvre seule pour la remplir (note 6 de Mickaël du 2026-10-10) ; sans valeur, pas de ligne vide : le texte reste centré dans la case (note 1). */
+  function cz(lab,labC,q,val,a,arg,nom){var z=!q,bt=q==null?'—':'× '+nb(q);K.b=Math.max(K.b,tl(bt));K.l=Math.max(K.l,tl(lab));K.c=Math.max(K.c,tl(labC));K.v=Math.max(K.v,tl(val||''));
+    return '<button class="cz'+(z?' z':'')+'" type="button" data-act="inv-edit" data-arg="c:'+arg+'" aria-label="'+nom+' : '+(q==null?'non renseigné':bt)+'. Modifier" style="--a:'+(z?0:(0.12+0.5*a)).toFixed(3)+'"><small><span class="cz-l">'+lab+'</span><span class="cz-c">'+labC+'</span></small><b>'+bt+'</b>'+(val?'<span>'+val+'</span>':'')+'</button>';}
+  function lgR(arg,icon,nom,tot,cells,n){var h=lgR0(arg,icon,nom,tot,cells,n);K={b:0,l:0,c:0,v:0};return h;}
+  function lgR0(arg,icon,nom,tot,cells,n){return '<div class="lg-r">'+(arg?'<button class="lg-h" type="button" data-act="inv-edit" data-arg="'+arg+'" aria-label="Modifier : '+nom+'">':'<div class="lg-h">')+
+    ic(icon)+'<span>'+nom+'</span><em>'+tot+'</em>'+(arg?'</button>':'</div>')+'<div class="lg-c" style="--n:'+n+';--m:'+(n<=5?n:Math.ceil(n/2))+';--k:'+Math.max(K.b,3)+';--kl:'+Math.max(K.l,3)+';--kc:'+Math.max(K.c,3)+';--kv:'+Math.max(K.v,3)+'">'+cells+'</div></div>';}
   var MAXV=0;RN.forEach(function(x){p.res[x[0]].c.forEach(function(c){MAXV=Math.max(MAXV,c[1]*c[2]*1e6);});});
   var ledger=RN.map(function(x){var r=p.res[x[0]],T=JEU.caisses&&JEU.caisses[x[0]]?JEU.caisses[x[0]].tailles:r.c.map(function(c){return Math.round(c[2]*1e6);}),Q={},rien=r.c.length===0;r.c.forEach(function(c){Q[Math.round(c[2]*1e6)]=c[1];});
-      return lgR(x[0],x[1],x[2],rien?'—':fM(cais(r)),T.map(function(t){var q=rien?null:(Q[t]||0),v=(q||0)*t;return cz(nb(t),court(t),q,q?fV(v):'',MAXV?v/MAXV:0);}).join(''),T.length);}).join('')+
+      return lgR(x[0],x[1],x[2],rien?'—':fM(cais(r)),T.map(function(t){var q=rien?null:(Q[t]||0),v=(q||0)*t;return cz(nb(t),court(t),q,q?fV(v):'',MAXV?v/MAXV:0,x[0]+':'+t,x[2]+', caisses de '+nb(t));}).join(''),T.length);}).join('')+
     (function(){var T=JEU.caisses&&JEU.caisses.gems?JEU.caisses.gems.tailles:g.c.map(function(c){return c[2];}),Q={},rien=g.c.length===0,mx=0;g.c.forEach(function(c){Q[c[2]]=c[1];mx=Math.max(mx,c[1]*c[2]);});
-      return lgR('gems','r-gem','Gemmes',rien?'—':nb(gc),T.map(function(t){var q=rien?null:(Q[t]||0),v=(q||0)*t;return cz(nb(t),nb(t),q,q?nb(v):'',mx?v/mx:0);}).join(''),T.length);})()+
+      return lgR('gems','r-gem','Gemmes',rien?'—':nb(gc),T.map(function(t){var q=rien?null:(Q[t]||0),v=(q||0)*t;return cz(nb(t),nb(t),q,q?nb(v):'',mx?v/mx:0,'gems:'+t,'Gemmes, caisses de '+nb(t));}).join(''),T.length);})()+
     (function(){var mx=Math.max.apply(null,COFFRES.map(function(x){return cf[x[0]]||0;}).concat([0]));
-      return lgR('coffres','p-chest','Coffres « Choisissez un »',nC==null?'—':nb(nC),COFFRES.map(function(x){var q=nC==null?null:(cf[x[0]]||0);return cz(x[1],x[1].replace('Niveau','Niv.'),q,'',mx?(q||0)/mx:0);}).join(''),COFFRES.length);})()+
+      return lgR('coffres','p-chest','Coffres « Choisissez un »',nC==null?'—':nb(nC),COFFRES.map(function(x){var q=nC==null?null:(cf[x[0]]||0);return cz(x[1],x[1].replace('Niveau','Niv.'),q,'',mx?(q||0)/mx:0,'cof:'+x[0],'Coffres « Choisissez un », '+x[1].toLowerCase());}).join(''),COFFRES.length);})()+
     (function(){var mx=Math.max.apply(null,PACKS.map(function(x){return cf[x[0]]||0;}).concat([0]));
-      return lgR('packs','p-pack','Packs de ressources',nPk==null?'—':nb(nPk),PACKS.map(function(x){var q=nPk==null?null:(cf[x[0]]||0);return cz(esc(x[2].nom),esc(x[2].nom),q,'',mx?(q||0)/mx:0);}).join(''),PACKS.length);})();
+      return lgR('packs','p-pack','Packs de ressources',nPk==null?'—':nb(nPk),PACKS.map(function(x){var q=nPk==null?null:(cf[x[0]]||0);return cz(esc(x[2].nom),esc(x[2].nom),q,'',mx?(q||0)/mx:0,'cof:'+x[0],esc(x[1]));}).join(''),PACKS.length);})();
   $('#gRes').innerHTML='<div class="it-grid">'+resT+'</div>'+trio+
-    '<div class="lg-hd"><h3 class="inv-h3">Détail des caisses</h3><small>'+(NBC?nb(NBC)+' caisses · '+d1(tC)+' · plus la case est bleue, plus elle vaut':'')+'</small></div><div class="ledger">'+ledger+'</div>';
+    '<div class="ledger" aria-label="Détail des caisses">'+ledger+'</div>';
   /* Généraux : la tuile donne aussi, pour chaque type, le temps total généraux compris (proposition 2, choix de Mickaël du 2026-10-10) */
   var gA=p.acc.general||[],gT=accTot(gA),avecGen=gA.length?'<span class="gx-l"><span class="gx-t">Avec les généraux</span>'+AN.filter(function(x){return x[0]!=='general';}).map(function(x){
     return '<span class="gx-i">'+ic(x[1])+'<span>'+x[2]+'</span><b>'+fH(accTot(p.acc[x[0]]||[])+gT)+'</b></span>';}).join('')+'</span>':'';
@@ -647,7 +666,6 @@ function renderCity(){
     $('#gItems').innerHTML=(L.length?'<div class="list">'+L.map(function(o,i){return row({act:'item-edit',data:S.inv+'|'+i,icon:it[0],title:esc(o.n),sub:att&&o.c&&QL[o.c]?QL[o.c][1].charAt(0).toUpperCase()+QL[o.c][1].slice(1):'',val:nb(o.q)});}).join('')+'</div>':
       vide(att?'Aucune pièce renseignée.':'Rien d’autre. Ajoute ici un objet qui n’est pas dans les tuiles.'))+
       '<div class="btns"><button class="btn" type="button" data-act="item-edit" data-arg="'+S.inv+'|new">'+ic('i-plus')+(att?'Ajouter une pièce':'Ajouter un objet')+'</button></div>';}
-  $('#lastImport').textContent=REEL?(p.invMaj?'Mis à jour le '+p.invMaj:''):S.active==='main'?(S.imported?'Import d’aujourd’hui':'Import du 2 oct.'):'';
   $$('#invChips .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.inv===S.inv));});
   $$('[data-invsec]').forEach(function(s){s.hidden=s.dataset.invsec!==(ITEMS[S.inv]?'items':S.inv);});
   // commandants
