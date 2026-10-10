@@ -542,8 +542,8 @@ function renderCity(){
       (!L.length?'<p class="ic-vide">'+vide+'</p>':large&&L.length>1?'<div class="ic-cols"><div>'+L.slice(0,moitie).map(ligne).join('')+'</div><div>'+L.slice(moitie).map(ligne).join('')+'</div></div>':L.map(ligne).join(''))+'</section>';}
   var GLOW={food:'#d8b24c33',wood:'#c27a4a33',stone:'#a9bdd52e',gold:'#f3d98233',gems:'#ef6a7a2e',build:'#d8a24c2e',research:'#8db6f22e',train:'#ef8a742e',heal:'#3ecf8e26',general:'#b99af02e'};
   function cais(r){return r.c.reduce(function(a,c){return a+c[1]*c[2];},0);}
-  /* Onglet Ressources : aperçu n° 2 choisi par Mickaël le 2026-10-10 (l'onglet validé retravaillé avec le skill artifact-design).
-     Résumé avant le détail (#resSum), cadres réservés aux 4 ressources, ce qui dépasse la protection de la réserve, Gemmes · Coffres · Packs
+  /* Onglet Ressources : aperçu n° 2 choisi par Mickaël le 2026-10-10 (l'onglet validé retravaillé avec le skill artifact-design),
+     sans la ligne des totaux ni la phrase sur le pillage (ses notes 15 et 16 du 2026-10-10). Cadres réservés aux 4 ressources, ce qui dépasse la protection de la réserve, Gemmes · Coffres · Packs
      dans un panneau plat, détail des caisses dans un seul panneau, barres à la valeur et à la même échelle. */
   var lvE=p.v.entrepot,prE=lvE!=null&&JEU.entrepot&&JEU.entrepot.niveaux[lvE];
   function d1(m){return m>=100?fM(m):f1(m);}
@@ -553,7 +553,6 @@ function renderCity(){
     return grand({arg:x[0],icon:x[1],nom:x[2],val:has?fM(resTot(r)):'—',sub:'À renseigner',v:r.v||0,c:c,lv:has?(r.v!=null?f1(r.v):'—'):null,lc:r.c.length?fM(c):'—',glow:GLOW[x[0]],x:pil});}).join('');
   var tV=0,tC=0,anyR=false,NBC=0,MAXC=0;
   RN.forEach(function(x){var r=p.res[x[0]];if(r.v!=null||r.c.length)anyR=true;tV+=r.v||0;tC+=cais(r);r.c.forEach(function(c){NBC+=c[1];MAXC=Math.max(MAXC,c[1]*c[2]);});});
-  $('#resSum').innerHTML=anyR?'<div><dt>Au total</dt><dd>'+d1(tV+tC)+'</dd></div><div><dt>En ville</dt><dd>'+d1(tV)+'</dd></div><div><dt>En caisses</dt><dd>'+d1(tC)+'</dd></div>':'';
   var g=p.gemsIn,gc=g.c.reduce(function(a,c){return a+c[1]*c[2];},0),gHas=g.v!=null||g.c.length>0;
   var cf=p.coffres||{},nC=sumK(cf,COFFRES),nPk=sumK(cf,PACKS);
   var vC=COFFRES.reduce(function(a,x){return a+(cf[x[0]]||0)*valCof(x[2]);},0),vPk=PACKS.reduce(function(a,x){return a+(cf[x[0]]||0)*valPack(x[2]);},0);
@@ -572,13 +571,12 @@ function renderCity(){
     lgS('','r-gem','Gemmes et packs','',g.c.map(function(c){return '<div class="lg-l"><span>Caisses de '+c[0]+' gemmes</span><b>× '+nb(c[1])+'</b></div>';}).join('')+
       PACKS.filter(function(x){return cf[x[0]];}).map(function(x){return '<div class="lg-l"><span>Pack '+esc(x[2].nom)+'</span><b>× '+nb(cf[x[0]])+'</b></div>';}).join(''),'Aucune caisse de gemmes ni aucun pack renseigné',true);
   $('#gRes').innerHTML='<div class="it-grid">'+resT+'</div>'+trio+
-    '<div class="lg-hd"><h3 class="inv-h3">Détail des caisses</h3><small>'+(NBC?nb(NBC)+' caisses · '+d1(tC)+' · barres à la même échelle':'')+'</small></div><div class="ledger">'+ledger+'</div>'+
-    (prE?'<p class="lg-note">Pillage : ce qui dépasse la protection de ta réserve (niveau '+lvE+') peut être pris lors d’une attaque ; les caisses ne peuvent pas l’être. Protection d’après un guide du jeu, pas encore vérifiée dans le jeu.</p>':'');
+    '<div class="lg-hd"><h3 class="inv-h3">Détail des caisses</h3><small>'+(NBC?nb(NBC)+' caisses · '+d1(tC)+' · barres à la même échelle':'')+'</small></div><div class="ledger">'+ledger+'</div>';
   /* Généraux : la tuile donne aussi, pour chaque type, le temps total généraux compris (proposition 2, choix de Mickaël du 2026-10-10) */
   var gA=p.acc.general||[],gT=accTot(gA),avecGen=gA.length?'<span class="gx-l"><span class="gx-t">Avec les généraux</span>'+AN.filter(function(x){return x[0]!=='general';}).map(function(x){
     return '<span class="gx-i">'+ic(x[1])+'<span>'+x[2]+'</span><b>'+fH(accTot(p.acc[x[0]]||[])+gT)+'</b></span>';}).join('')+'</span>':'';
   var accT=AN.map(function(x){var a=p.acc[x[0]]||[],n=a.reduce(function(s,c){return s+c[1];},0),gen=x[0]==='general';
-    return grand({arg:x[0],icon:x[1],nom:x[2],cls:gen?'large':'',extra:gen?avecGen:'',val:a.length?fH(accTot(a)):'—',sub:a.length?nb(n)+' accélérateur'+(n>1?'s':'')+(gen?' · utilisables partout':''):(REEL?'À renseigner':'Aucun'),glow:GLOW[x[0]]});}).join('');
+    return grand({arg:x[0],icon:x[1],nom:x[2],cls:gen?'large':'',extra:gen?avecGen:'',val:a.length?fH(accTot(a)):'—',sub:a.length?'':(REEL?'À renseigner':'Aucun'),glow:GLOW[x[0]]});}).join('');
   var accC=AN.map(function(x,k){var a=p.acc[x[0]]||[];return carte(x[0],x[1],x[2],a.length?fH(accTot(a)):'—',a.map(function(c){return [c[0],c[1],c[1]*c[2]];}),REEL?'Pas encore renseigné':'Aucun',AN.length%2===1&&k===AN.length-1);}).join('');
   $('#gAcc').innerHTML='<div class="it-grid">'+accT+'</div><h3 class="inv-h3">Détail par durée</h3><div class="ic-grid">'+accC+'</div>';
   /* Onglets Boosts, Équipement, Attirail, Autre (2026-10-10, même modèle que Ressources et Accélérateurs) : une tuile par famille

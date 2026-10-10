@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=59,VERSION='v'+VNUM+' · 10 oct. 2026';
+var VNUM=60,VERSION='v'+VNUM+' · 10 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -48,7 +48,8 @@ var CHANGES={
     {sel:'[data-steppanel="3"]',t:'Corrigé (ton import de ce matin) : « 8 cases coupées » s’affichait à tort. Le dessin du type d’accélérateur est en bas de la case : coupé, Claude ne connaît pas le type, et l’appli ne retrouvait pas la case entière sur la capture suivante. Elle compare maintenant la rangée coupée, colonne par colonne.'},
     {sel:'[data-steppanel="3"]',t:'Coffres et packs de ressources : la relecture dit combien elle en a vu et que tu peux les saisir à la main dans l’inventaire, au lieu de « autres onglets, ou coffres et packs ».'},
     {sel:'#stepper',t:'La frise des étapes n’apparaît qu’à partir de la lecture ; pendant la lecture, chaque capture lue dit son onglet (Ressources ou Accélérateurs).'}],
-  'ma-ville-inventaire':[{sel:'#gRes, #invChips',t:'Onglet Ressources refait : c’est l’aperçu n° 2 que tu as choisi (ton écran validé, retravaillé avec le skill artifact-design). Résumé à côté du titre (au total, en ville, en caisses) ; sur chaque ressource, ce qui dépasse la protection de ta réserve et peut être pillé ; Gemmes · Coffres · Packs dans un seul panneau ; détail des caisses dans un seul panneau, chaque barre montre ce que valent les caisses, à la même échelle pour les 4 ressources.'},
+  'ma-ville-inventaire':[{sel:'#gRes, #gAcc, #invChips',t:'Tes notes 12 à 17 : la ligne des totaux et la phrase sur le pillage sont retirées ; la part « en caisses » est en bleu plein, sans hachures ; Gemmes, Coffres et Packs sont centrés dans leur panneau ; les tuiles des accélérateurs n’ont plus la petite ligne « N accélérateurs ».'},
+    {sel:'#gRes, #invChips',t:'Onglet Ressources refait : c’est l’aperçu n° 2 que tu as choisi (ton écran validé, retravaillé avec le skill artifact-design). Résumé à côté du titre (au total, en ville, en caisses) ; sur chaque ressource, ce qui dépasse la protection de ta réserve et peut être pillé ; Gemmes · Coffres · Packs dans un seul panneau ; détail des caisses dans un seul panneau, chaque barre montre ce que valent les caisses, à la même échelle pour les 4 ressources.'},
     {sel:'#gObj .it.obj, #invChips',t:'Rendu refait (ta demande « rendu pro ») : dans Boosts, Équipement, Attirail et Autre, chaque objet est une case de la couleur de sa qualité, comme dans l’inventaire du jeu, avec le nombre dans le coin et une légende dessous. Chaque tuile dit en une ligne à quoi servent ses objets. Points d’action : 3 chiffres clés, chacun avec sa phrase.'},
     {sel:'#gObj .it[data-arg="g:pa"], #invChips',t:'Points d’action, ta proposition 1 : la tuile prend toute la largeur comme Généraux ; à droite, « Avec tes potions » donne les barbares, l’EXP par commandant et les jours de recharge. La carte du calcul est supprimée ; touche la tuile pour régler le niveau des barbares et le talent (le calcul y est expliqué).'},
     {sel:'#invChips',t:'Sur téléphone, l’unité des grandes tuiles est plus petite : « 12 légendaires » et « 500 000 EXP » étaient coupés.'},

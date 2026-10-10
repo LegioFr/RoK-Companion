@@ -66,8 +66,9 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   await p.click('#gObj .it[data-arg="g:pa"]');await p.waitForTimeout(200);await p.fill('#iv-niv','30');await p.click('#paT [data-v="1"]');await p.click('[data-act=inv-save]');await p.waitForTimeout(200);pa1=await paT();
   ok('Réglages dans la fenêtre de la tuile : niv. 30 avec le talent → ≈ 350 barbares, ≈ 1,1 M EXP',/niveau 30/.test(pa1)&&/≈ 350/.test(pa1)&&/≈ 1,1 M/.test(pa1),pa1.slice(0,200));
   await p.click('#invChips [data-inv=res]');await p.waitForTimeout(150);
-  ok('Ressources (v59, aperçu n° 2 choisi) : résumé, 4 tuiles, panneau Gemmes / Coffres / Packs, détail en un panneau à 6 parties, pillage sur les 4 ressources',
-    (await ev(p,()=>[document.querySelectorAll('#resSum dd').length,document.querySelectorAll('#gRes .it-grid .it').length,document.querySelectorAll('#gRes .trio .tr-c').length,document.querySelectorAll('#gRes .ledger .lg-s').length,document.querySelectorAll('#gRes .pil').length].join('/')))==='3/4/3/6/4');
+  ok('Ressources (v60, aperçu n° 2 et notes 12 à 17) : 4 tuiles, panneau Gemmes / Coffres / Packs, détail en 6 parties, pillage sur les 4 ressources, sans ligne des totaux ni phrase sur le pillage',
+    (await ev(p,()=>[document.querySelectorAll('#gRes .it-grid .it').length,document.querySelectorAll('#gRes .trio .tr-c').length,document.querySelectorAll('#gRes .ledger .lg-s').length,document.querySelectorAll('#gRes .pil').length,document.querySelectorAll('#resSum,#gRes .lg-note').length].join('/')))==='4/3/6/4/0');
+  ok('Barre « en caisses » sans hachures (note 14)',(await ev(p,()=>getComputedStyle(document.querySelector('#gRes .it-bar .c')).backgroundImage)).indexOf('repeating')<0);
   const fen=async(sel)=>ev(p,s=>{document.querySelector(s).click();const r=[document.getElementById('shTitle').textContent,document.querySelectorAll('#shBody input').length,document.getElementById('shBody').textContent];document.querySelector('#sheet [data-act=close-sheet]').click();return r;},sel);
   const fc=await fen('#gRes .tr-c[data-arg=coffres]'),fp=await fen('#gRes .tr-c[data-arg=packs]');
   ok('Tuile Coffres : sa propre fenêtre, 5 niveaux avec leur contenu',/Coffres/.test(fc[0])&&fc[1]===5&&/7\u00a0500\u00a0pierre/.test(fc[2]),fc[0]+' / '+fc[1]);
@@ -82,6 +83,7 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   await ev(p,()=>{location.hash='accueil'});await p.waitForTimeout(300);ok('Total nourriture repris sur l’Accueil',/Total nourriture 6\d M/.test(await txt(p,'#homeTiles')||''),await txt(p,'#homeTiles'));
   await etat(p,'demo','#ma-ville-inventaire');await p.click('#invChips [data-inv=acc]');await p.click('#gAcc .ic-h[data-arg=general]');await p.waitForTimeout(200);
   ok('Tuile Généraux : 4 temps « avec les généraux »',(await ev(p,()=>document.querySelectorAll('#gAcc .it.gx .gx-i').length))===4);
+  ok('Tuiles des accélérateurs sans la petite ligne « N accélérateurs » (note 12)',(await ev(p,()=>document.querySelectorAll('#gAcc .it-grid .it .it-s').length))===0);
   ok('Détail des accélérateurs : la carte Généraux seule prend toute la largeur',(await ev(p,()=>{const c=document.querySelector('#gAcc .ic.large');const g=document.querySelector('#gAcc .ic-grid');return !!c&&/Généraux/.test(c.textContent)&&Math.abs(c.getBoundingClientRect().width-g.getBoundingClientRect().width)<2;})));
   ok('13 durées pour les accélérateurs généraux, 4 marquées *',(await ev(p,()=>[document.querySelectorAll('#shBody .inv-grid input').length,[...document.querySelectorAll('#shBody label')].filter(l=>/\*$/.test(l.textContent)).length].join('/')))==='13/4');
   await p.click('#sheet [data-act=close-sheet]');
