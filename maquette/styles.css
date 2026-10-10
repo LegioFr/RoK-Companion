@@ -778,28 +778,27 @@ button.more{border:0;background:none;cursor:pointer;font-family:inherit;min-heig
 .tr-c.vide .tr-s{color:var(--gold-2);font-weight:700}
 .lg-hd{display:flex;align-items:baseline;justify-content:space-between;gap:4px 10px;flex-wrap:wrap}
 .lg-hd small{color:var(--muted);font-size:12.5px}
-.ledger{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--line-cold);border-radius:18px;background:rgba(17,26,41,.85)}
-.lg-s{display:grid;align-content:start;gap:2px;min-width:0;padding:10px 18px 14px;border-top:1px solid var(--line-cold)}
-.lg-s:nth-child(-n+2){border-top:0}
-.lg-s:nth-child(even){border-left:1px solid var(--line-cold)}
-.lg-h{display:flex;align-items:center;gap:9px;width:100%;min-height:44px;padding:0;border:0;background:none;color:var(--text);font:inherit;font-size:14.5px;font-weight:700;text-align:left}
+.ledger{display:grid;border:1px solid var(--line-cold);border-radius:18px;background:rgba(17,26,41,.85)}
+/* une ligne par ressource : en-tête à gauche (tablette), une case par taille du jeu à droite */
+.lg-r{display:grid;grid-template-columns:200px minmax(0,1fr);align-items:center;gap:8px 16px;min-width:0;padding:12px 18px;border-top:1px solid var(--line-cold)}
+.lg-r:first-child{border-top:0}
+.lg-h{display:flex;align-items:center;gap:9px;width:100%;min-width:0;min-height:44px;padding:0;border:0;background:none;color:var(--text);font:inherit;font-size:14.5px;font-weight:700;text-align:left}
 .lg-h svg{width:24px;height:24px}
-.lg-h em{margin-left:auto;font:700 16px/1 var(--display);font-style:normal}
+.lg-h span{min-width:0}
+.lg-h em{margin-left:auto;font:700 16px/1 var(--display);font-style:normal;white-space:nowrap}
 .lg-h svg:last-child:not(:first-child){width:18px;height:18px;opacity:.7}
-.lg-l{display:grid;grid-template-columns:72px minmax(0,1fr) 58px 46px;align-items:center;gap:10px;min-height:28px;font-variant-numeric:tabular-nums}
-.lg-l>span:first-child{color:var(--muted);font-size:13px}
-.lg-t{height:6px;border-radius:3px;background:#0b1220}
-.lg-t i{display:block;height:100%;border-radius:0 3px 3px 0;background:linear-gradient(90deg,#4a7cc0,#7fb0f0);transform-origin:left;animation:rsfill .9s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(.3s + var(--k,0)*.05s)}
-.lg-l b{text-align:right;font-size:13.5px}
-.lg-l small{text-align:right;color:var(--muted);font-size:12.5px}
-.lg-s.petit .lg-l{grid-template-columns:minmax(0,1fr) auto}
-.lg-s.petit .lg-l b{color:var(--text);font-weight:500}
-.lg-v{margin:2px 0 4px;color:var(--muted);font-size:13px}
+.lg-c{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:6px}
+.cz{display:grid;justify-items:center;align-content:center;gap:1px;min-width:0;min-height:58px;padding:6px 4px;border-radius:10px;border:1px solid rgba(91,143,214,calc(var(--a) + .1));background:rgba(91,143,214,var(--a));text-align:center;font-variant-numeric:tabular-nums}
+.cz small{max-width:100%;overflow-wrap:anywhere;color:var(--muted);font-size:12px;line-height:1.2}
+.cz .cz-c{display:none}
+.cz b{font-size:15px;line-height:1.2}
+.cz>span{color:#d9e4f5;font-size:12px;line-height:1.2}
+.cz.z{border-color:var(--line-cold);background:none}
+.cz.z b{color:var(--muted);font-weight:500}
 @media(max-width:699px){
   .pil .pil-l,.pil .pil-p{display:none}.pil .pil-c{display:inline}
   .trio{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.tr-c:first-child{grid-column:1/-1;border-bottom:1px solid var(--line-cold)}.tr-c:nth-child(2){border-left:0}
-  .ledger{grid-template-columns:minmax(0,1fr)}.lg-s:nth-child(2){border-top:1px solid var(--line-cold)}.lg-s:nth-child(even){border-left:0}
-  .lg-l{grid-template-columns:64px minmax(0,1fr) 54px 42px;gap:8px}}
+  .lg-r{grid-template-columns:minmax(0,1fr);padding:10px 14px 14px}.lg-c{grid-template-columns:repeat(var(--m),minmax(0,1fr));gap:5px}.cz{padding:6px 2px}.cz .cz-l{display:none}.cz .cz-c{display:inline}}
 .ic-grid{display:grid;gap:10px}
 .ic{padding:4px 14px 12px;border:1px solid var(--line-cold);border-radius:16px;background:linear-gradient(135deg,var(--card-a),var(--card-b))}
 .ic-h{display:flex;align-items:center;gap:8px;width:100%;min-height:44px;margin-bottom:2px;padding:0;border:0;background:none;color:var(--text);font:inherit;text-align:left}

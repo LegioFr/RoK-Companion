@@ -561,17 +561,24 @@ function renderCity(){
   var trio='<div class="trio">'+trC('gems','r-gem','Gemmes',gHas?nb((g.v||0)+gc):'—',gHas?(g.v!=null?nb(g.v):'—')+' en ville · '+nb(gc)+' en caisses':'À renseigner')+
     trC('coffres','p-chest','Coffres',nC==null?'—':nb(nC),nC==null?'« Choisissez un » · à renseigner':'au choix · jusqu’à '+fV(vC)+' de nourriture')+
     trC('packs','p-pack','Packs',nPk==null?'—':nb(nPk),nPk==null?'de ressources · à renseigner':'au hasard · ≈ '+fV(vPk)+' en moyenne')+'</div>';
-  /* Détail des caisses : un seul panneau ; chaque barre montre ce que valent les caisses, à la même échelle pour les 4 ressources */
-  var kB=0;
-  function lgS(arg,icon,nom,tot,rows,vide,petit){return '<div class="lg-s'+(petit?' petit':'')+'">'+(arg?'<button class="lg-h" type="button" data-act="inv-edit" data-arg="'+arg+'" aria-label="Modifier : '+nom+'">':'<div class="lg-h">')+
-    ic(icon)+'<span>'+nom+'</span><em>'+tot+'</em>'+(arg?ic('i-pencil')+'</button>':'</div>')+(rows||'<p class="lg-v">'+vide+'</p>')+'</div>';}
-  var ledger=RN.map(function(x){var r=p.res[x[0]];return lgS(x[0],x[1],x[2],r.c.length?fM(cais(r)):'—',r.c.map(function(c){var val=c[1]*c[2];
-      return '<div class="lg-l"><span>'+c[0]+'</span><span class="lg-t"><i style="width:'+(MAXC?Math.max(1,val/MAXC*100):0).toFixed(1)+'%;--k:'+(kB++)+'"></i></span><b>'+fV(val*1e6)+'</b><small>× '+nb(c[1])+'</small></div>';}).join(''),'Aucune caisse renseignée');}).join('')+
-    lgS('coffres','p-chest','Coffres « Choisissez un »',nC==null?'—':nb(nC),COFFRES.filter(function(x){return cf[x[0]];}).map(function(x){return '<div class="lg-l"><span>'+x[1]+'</span><b>× '+nb(cf[x[0]])+'</b></div>';}).join(''),'Aucun coffre renseigné',true)+
-    lgS('','r-gem','Gemmes et packs','',g.c.map(function(c){return '<div class="lg-l"><span>Caisses de '+c[0]+' gemmes</span><b>× '+nb(c[1])+'</b></div>';}).join('')+
-      PACKS.filter(function(x){return cf[x[0]];}).map(function(x){return '<div class="lg-l"><span>Pack '+esc(x[2].nom)+'</span><b>× '+nb(cf[x[0]])+'</b></div>';}).join(''),'Aucune caisse de gemmes ni aucun pack renseigné',true);
+  /* Détail des caisses (demande de Mickaël du 2026-10-10 : toutes les tailles, même à 0, mais en prenant peu de place) :
+     une ligne par ressource, une case par taille du jeu (nombre, valeur) ; la case est d'autant plus bleue que les caisses valent cher,
+     à la même échelle pour les 4 ressources. Puis gemmes, coffres « Choisissez un » et packs, sur le même modèle. */
+  function court(u){var f=function(x,d){return x.toLocaleString('fr-FR',{maximumFractionDigits:d}).replace(/[\s\u202f\u00a0]/g,'\u00a0');};return u>=1e6?f(u/1e6,3)+'\u00a0M':u>=1e4?f(u/1e3,1)+'\u00a0K':nb(u);}
+  function cz(lab,labC,q,val,a){var z=!q;return '<div class="cz'+(z?' z':'')+'" style="--a:'+(z?0:(0.12+0.5*a)).toFixed(3)+'"><small><span class="cz-l">'+lab+'</span><span class="cz-c">'+labC+'</span></small><b>'+(q==null?'—':'× '+nb(q))+'</b><span>'+(val||' ')+'</span></div>';}
+  function lgR(arg,icon,nom,tot,cells,n){return '<div class="lg-r">'+(arg?'<button class="lg-h" type="button" data-act="inv-edit" data-arg="'+arg+'" aria-label="Modifier : '+nom+'">':'<div class="lg-h">')+
+    ic(icon)+'<span>'+nom+'</span><em>'+tot+'</em>'+(arg?ic('i-pencil')+'</button>':'</div>')+'<div class="lg-c" style="--n:'+n+';--m:'+(n<=5?n:Math.ceil(n/2))+'">'+cells+'</div></div>';}
+  var MAXV=0;RN.forEach(function(x){p.res[x[0]].c.forEach(function(c){MAXV=Math.max(MAXV,c[1]*c[2]*1e6);});});
+  var ledger=RN.map(function(x){var r=p.res[x[0]],T=JEU.caisses[x[0]].tailles,Q={},rien=r.c.length===0;r.c.forEach(function(c){Q[Math.round(c[2]*1e6)]=c[1];});
+      return lgR(x[0],x[1],x[2],rien?'—':fM(cais(r)),T.map(function(t){var q=rien?null:(Q[t]||0),v=(q||0)*t;return cz(nb(t),court(t),q,q?fV(v):'',MAXV?v/MAXV:0);}).join(''),T.length);}).join('')+
+    (function(){var T=JEU.caisses.gems.tailles,Q={},rien=g.c.length===0,mx=0;g.c.forEach(function(c){Q[c[2]]=c[1];mx=Math.max(mx,c[1]*c[2]);});
+      return lgR('gems','r-gem','Gemmes',rien?'—':nb(gc),T.map(function(t){var q=rien?null:(Q[t]||0),v=(q||0)*t;return cz(nb(t),nb(t),q,q?nb(v):'',mx?v/mx:0);}).join(''),T.length);})()+
+    (function(){var mx=Math.max.apply(null,COFFRES.map(function(x){return cf[x[0]]||0;}).concat([0]));
+      return lgR('coffres','p-chest','Coffres « Choisissez un »',nC==null?'—':nb(nC),COFFRES.map(function(x){var q=nC==null?null:(cf[x[0]]||0);return cz(x[1],x[1].replace('Niveau','Niv.'),q,'',mx?(q||0)/mx:0);}).join(''),COFFRES.length);})()+
+    (function(){var mx=Math.max.apply(null,PACKS.map(function(x){return cf[x[0]]||0;}).concat([0]));
+      return lgR('packs','p-pack','Packs de ressources',nPk==null?'—':nb(nPk),PACKS.map(function(x){var q=nPk==null?null:(cf[x[0]]||0);return cz(esc(x[2].nom),esc(x[2].nom),q,'',mx?(q||0)/mx:0);}).join(''),PACKS.length);})();
   $('#gRes').innerHTML='<div class="it-grid">'+resT+'</div>'+trio+
-    '<div class="lg-hd"><h3 class="inv-h3">Détail des caisses</h3><small>'+(NBC?nb(NBC)+' caisses · '+d1(tC)+' · barres à la même échelle':'')+'</small></div><div class="ledger">'+ledger+'</div>';
+    '<div class="lg-hd"><h3 class="inv-h3">Détail des caisses</h3><small>'+(NBC?nb(NBC)+' caisses · '+d1(tC)+' · plus la case est bleue, plus elle vaut':'')+'</small></div><div class="ledger">'+ledger+'</div>';
   /* Généraux : la tuile donne aussi, pour chaque type, le temps total généraux compris (proposition 2, choix de Mickaël du 2026-10-10) */
   var gA=p.acc.general||[],gT=accTot(gA),avecGen=gA.length?'<span class="gx-l"><span class="gx-t">Avec les généraux</span>'+AN.filter(function(x){return x[0]!=='general';}).map(function(x){
     return '<span class="gx-i">'+ic(x[1])+'<span>'+x[2]+'</span><b>'+fH(accTot(p.acc[x[0]]||[])+gT)+'</b></span>';}).join('')+'</span>':'';
