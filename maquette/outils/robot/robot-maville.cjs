@@ -53,6 +53,12 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   ok('Tuiles des autres onglets : Boosts 3, Équipement 8, Attirail 2, Autre 9 (objets inutiles retirés)',tT==='3/8/2/9',tT);
   await p.click('#invChips [data-inv=boosts]');await p.click('#gObj .it[data-arg="g:attaque"]');await p.waitForTimeout(200);await p.fill('#iv-att24','2');await p.click('[data-act=inv-save]');await p.waitForTimeout(200);
   ok('Saisie d’un boost : la tuile additionne les durées',/4 j 0 h/.test(await txt(p,'#gObj .it[data-arg="g:attaque"]')||''),await txt(p,'#gObj .it[data-arg="g:attaque"]'));
+  /* v64 : Boosts sur le modèle de Ressources (demande de Mickaël du 2026-10-10) */
+  ok('Boosts (v64) : 3 tuiles sans cases d’objets, détail en 3 lignes de 3, 3 et 4 cases',(await ev(p,()=>[document.querySelectorAll('#gObj .it').length,document.querySelectorAll('#gObj .it .sl').length,
+    [...document.querySelectorAll('#gObj .ledger .lg-r')].map(r=>r.querySelectorAll('.cz').length).join(',')].join('/')))==='3/0/3,3,4');
+  const dB=await txt(p,'#gObj .it[data-arg="g:defense"]');await p.click('#gObj .ledger .lg-r:nth-child(2) .cz:nth-child(2)');await p.waitForTimeout(200);
+  const fB=await ev(p,()=>document.getElementById('shTitle').textContent);await p.fill('#iv-c','3');await p.click('[data-act=inv-save]');await p.waitForTimeout(250);
+  ok('Boosts : une case se remplit seule (Défense 24 h × 3 → la tuile gagne 3 j)',fB==='Défense +5 % : 24 h'&&/× 3/.test(await txt(p,'#gObj .ledger .lg-r:nth-child(2) .cz:nth-child(2)')||'')&&/4 j 0 h/.test(await txt(p,'#gObj .it[data-arg="g:defense"]')||''),fB+' | '+dB+' → '+await txt(p,'#gObj .it[data-arg="g:defense"]'));
   /* Rendu pro (v58) : chaque tuile d'objets dit à quoi servent les objets et montre une case de qualité par objet */
   await p.click('#invChips [data-inv=autre]');await p.waitForTimeout(150);
   const rp=await ev(p,()=>{const T=[...document.querySelectorAll('#gObj .it.obj')];return [T.length,T.filter(t=>t.querySelector('.it-p')).length,document.querySelectorAll('#gObj .it[data-arg="g:tomes"] .sl').length,document.querySelectorAll('#gObj .it[data-arg="g:tomes"] .sl-c.q-p').length].join('/');});
@@ -92,7 +98,7 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   ok('« En ville » avec un chiffre après la virgule',/En ville 40,5 M/.test(await txt(p,'#gRes .it[data-arg=food]')||''));
   await ev(p,()=>{location.hash='accueil'});await p.waitForTimeout(300);ok('Total nourriture repris sur l’Accueil',/Total nourriture 6\d M/.test(await txt(p,'#homeTiles')||''),await txt(p,'#homeTiles'));
   await etat(p,'demo','#ma-ville-inventaire');await p.click('#invChips [data-inv=acc]');await p.click('#gAcc .lg-h[data-arg=general]');await p.waitForTimeout(200);
-  ok('Tuile Généraux : 4 temps « avec les généraux »',(await ev(p,()=>document.querySelectorAll('#gAcc .it.gx .gx-i').length))===4);
+  ok('Tuile Généraux : 4 temps « avec les généraux », sans la ligne « Avec les généraux » (note 9, v64)',(await ev(p,()=>document.querySelectorAll('#gAcc .it.gx .gx-i').length+'/'+document.querySelectorAll('#gAcc .gx-t').length))==='4/0');
   ok('Tuiles des accélérateurs sans la petite ligne « N accélérateurs » (note 12)',(await ev(p,()=>document.querySelectorAll('#gAcc .it-grid .it .it-s').length))===0);
   ok('Détail des accélérateurs (v63, comme Ressources) : 5 lignes, 9 cases par type et 13 pour les généraux, sur 9 colonnes alignées par durée',
     (await ev(p,()=>{const R=[...document.querySelectorAll('#gAcc .ledger .lg-r')];const x=c=>Math.round(c.getBoundingClientRect().left);

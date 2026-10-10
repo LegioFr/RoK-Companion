@@ -477,6 +477,8 @@ function invSheet(k){
 }
 /* « c:food:1000 », « c:gems:50 », « c:cof:pB » : la case du détail des caisses, sa quantité et le nom à afficher */
 function czCase(p,k){var a=String(k).split(':'),t=a[1],id=a[2];
+  if(t==='obj'){var fo=null,fg=null;Object.keys(JO.onglets||{}).forEach(function(k2){JO.onglets[k2].forEach(function(g){g.items.forEach(function(o){if(o.id===id){fo=o;fg=g;}});});});if(!fo)return null;var ob2=p.objets||{},lo=fo.cl||fo.l||(QL[fo.c]?QL[fo.c][1]:id);
+    return {obj:id,q:ob2[id]==null?null:ob2[id],titre:fg.nom+' : '+lo,lab:'Quantité',aide:((fo.n?'Dans le jeu : « '+fo.n+' ».':'')+(fo.vu?'':' Vu seulement sur le wiki du jeu, pas encore sur tes captures.')).trim()};}
   if(t==='acc'){var m=+a[3],xa=AN.filter(function(y){return y[0]===id;})[0];if(!xa)return null;var ca=(p.acc[id]||[]).filter(function(c){return Math.round(c[2]*60)===m;})[0],J=JEU.accelerateurs,vua=!J||J.vues.indexOf(m)>=0;
     return {acc:id,m:m,q:ca?ca[1]:null,titre:xa[2]+' : accélérateurs de '+fDur(m).replace(' ',' '),lab:'Nombre d’accélérateurs',aide:vua?'':'Durée indiquée par le wiki du jeu, pas encore vue sur tes captures.'};}
   if(t==='cof'){var x=COFFRES.concat(PACKS).filter(function(y){return y[0]===id;})[0];if(!x)return null;var pk=PACKS.indexOf(x)>=0,cf=p.coffres||{};
@@ -495,7 +497,8 @@ function invSave(){
     if(nvB!=null&&(nvB<1||nvB>JPA.nivMax)){var elB=$('#iv-niv'),erB=elB.parentNode.querySelector('.ferr');erB.textContent='Un niveau de 1 à '+JPA.nivMax+'.';erB.hidden=false;elB.setAttribute('aria-invalid','true');bad++;if(!first)first=elB;}
     if(!bad){p.objets=o3;if($('#paT')){var tb=$('#paT [aria-pressed="true"]');p.paCalc={niv:nvB,talent:!!(tb&&tb.dataset.v==='1')};}}nom=g2.nom+' : enregistré.';}
   else if(String(k).indexOf('c:')===0){var cs=czCase(p,k),vc=lit('iv-c');
-    if(!bad&&cs){if(cs.acc){var La=(p.acc[cs.acc]||[]).filter(function(c){return Math.round(c[2]*60)!==cs.m;});if(vc!=null)La.push([fDur(cs.m),vc,cs.m/60]);
+    if(!bad&&cs){if(cs.obj){var o4=Object.assign({},p.objets||{});if(vc==null)delete o4[cs.obj];else o4[cs.obj]=vc;p.objets=o4;}
+      else if(cs.acc){var La=(p.acc[cs.acc]||[]).filter(function(c){return Math.round(c[2]*60)!==cs.m;});if(vc!=null)La.push([fDur(cs.m),vc,cs.m/60]);
         La.sort(function(a,b){return a[2]-b[2];});p.acc[cs.acc]=La;}
       else if(cs.cof){var oc=Object.assign({},p.coffres||{});if(vc==null)delete oc[cs.id];else oc[cs.id]=vc;p.coffres=oc;}
       else{var L=cs.r.c.filter(function(c){return Math.round((cs.gem?c[2]:c[2]*1e6))!==cs.t;});if(vc!=null)L.push([nb(cs.t),vc,cs.gem?cs.t:cs.t/1e6]);
@@ -590,7 +593,7 @@ function renderCity(){
     return '<button class="cz'+(z?' z':'')+'" type="button" data-act="inv-edit" data-arg="c:'+arg+'" aria-label="'+nom+' : '+(q==null?'non renseigné':bt)+'. Modifier" style="--a:'+(z?0:(0.12+0.5*a)).toFixed(3)+'"><small><span class="cz-l">'+lab+'</span><span class="cz-c">'+labC+'</span></small><b>'+bt+'</b>'+(val?'<span>'+val+'</span>':'')+'</button>';}
   function lgR(arg,icon,nom,tot,cells,n,cols){var h=lgR0(arg,icon,nom,tot,cells,cols||n);K={b:0,l:0,c:0,v:0};return h;}
   function lgR0(arg,icon,nom,tot,cells,n){return '<div class="lg-r">'+(arg?'<button class="lg-h" type="button" data-act="inv-edit" data-arg="'+arg+'" aria-label="Modifier : '+nom+'">':'<div class="lg-h">')+
-    ic(icon)+'<span>'+nom+'</span><em>'+tot+'</em>'+(arg?'</button>':'</div>')+'<div class="lg-c" style="--n:'+n+';--m:'+(n<=5?n:Math.ceil(n/2))+';--k:'+Math.max(K.b,3)+';--kl:'+Math.max(K.l,3)+';--kc:'+Math.max(K.c,3)+';--kv:'+Math.max(K.v,3)+'">'+cells+'</div></div>';}
+    ic(icon)+'<span>'+nom+'</span><em>'+tot+'</em>'+(arg?'</button>':'</div>')+'<div class="lg-c" style="--n:'+n+';--m:'+(n<=5&&K.c<=12?n:Math.ceil(n/2))+';--k:'+Math.max(K.b,3)+';--kl:'+Math.max(K.l,3)+';--kc:'+Math.max(K.c,3)+';--kv:'+Math.max(K.v,3)+'">'+cells+'</div></div>';}
   var MAXV=0;RN.forEach(function(x){p.res[x[0]].c.forEach(function(c){MAXV=Math.max(MAXV,c[1]*c[2]*1e6);});});
   var ledger=RN.map(function(x){var r=p.res[x[0]],T=JEU.caisses&&JEU.caisses[x[0]]?JEU.caisses[x[0]].tailles:r.c.map(function(c){return Math.round(c[2]*1e6);}),Q={},rien=r.c.length===0;r.c.forEach(function(c){Q[Math.round(c[2]*1e6)]=c[1];});
       return lgR(x[0],x[1],x[2],rien?'—':fM(cais(r)),T.map(function(t){var q=rien?null:(Q[t]||0),v=(q||0)*t;return cz(nb(t),court(t),q,q?fV(v):'',MAXV?v/MAXV:0,x[0]+':'+t,x[2]+', caisses de '+nb(t));}).join(''),T.length);}).join('')+
@@ -602,8 +605,9 @@ function renderCity(){
       return lgR('packs','p-pack','Packs de ressources',nPk==null?'—':nb(nPk),PACKS.map(function(x){var q=nPk==null?null:(cf[x[0]]||0);return cz(esc(x[2].nom),esc(x[2].nom),q,'',mx?(q||0)/mx:0,'cof:'+x[0],esc(x[1]));}).join(''),PACKS.length);})();
   $('#gRes').innerHTML='<div class="it-grid">'+resT+'</div>'+trio+
     '<div class="ledger" aria-label="Détail des caisses">'+ledger+'</div>';
-  /* Généraux : la tuile donne aussi, pour chaque type, le temps total généraux compris (proposition 2, choix de Mickaël du 2026-10-10) */
-  var gA=p.acc.general||[],gT=accTot(gA),avecGen=gA.length?'<span class="gx-l"><span class="gx-t">Avec les généraux</span>'+AN.filter(function(x){return x[0]!=='general';}).map(function(x){
+  /* Généraux : la tuile donne aussi, pour chaque type, le temps total généraux compris (proposition 2, choix de Mickaël du 2026-10-10) ;
+     sans la ligne « Avec les généraux » au-dessus (sa note 9 du 2026-10-10) */
+  var gA=p.acc.general||[],gT=accTot(gA),avecGen=gA.length?'<span class="gx-l" aria-label="Avec les généraux">'+AN.filter(function(x){return x[0]!=='general';}).map(function(x){
     return '<span class="gx-i">'+ic(x[1])+'<span>'+x[2]+'</span><b>'+fH(accTot(p.acc[x[0]]||[])+gT)+'</b></span>';}).join('')+'</span>':'';
   var accT=AN.map(function(x){var a=p.acc[x[0]]||[],n=a.reduce(function(s,c){return s+c[1];},0),gen=x[0]==='general';
     return grand({arg:x[0],icon:x[1],nom:x[2],cls:gen?'large':'',extra:gen?avecGen:'',val:a.length?fH(accTot(a)):'—',sub:a.length?'':(REEL?'À renseigner':'Aucun'),glow:GLOW[x[0]]});}).join('');
@@ -649,11 +653,22 @@ function renderCity(){
               kc('t-hourglass',ap(pc.jours<1?Math.max(1,Math.round(pc.jours*24))+' h':nb(pc.jours)+' j'),'le temps que le jeu met à te redonner ces points')+'</span></span>';}}
         else{val=nb(n);if(g.vals)sansVal=true;SL=T.map(function(o){return slot(o.c,ico(o),qn(o),cap(o));});}}
       /* la phrase qui explique le grand nombre (sub) vient juste dessous, puis à quoi servent les objets, puis les cases */
-      var x=(has&&sub?'<span class="it-s">'+sub+'</span>':'')+(g.but?'<span class="it-p">'+g.but+'</span>':'')+(has?slots(SL):'<span class="it-s">À renseigner</span>');
+      var x=(has&&sub?'<span class="it-s">'+sub+'</span>':'')+(g.but?'<span class="it-p">'+g.but+'</span>':'')+(has?(LEDGER?'':slots(SL)):'<span class="it-s">À renseigner</span>');
       /* unité en plus petit sur téléphone (« 12 légendaires » était coupé, 2026-10-10) */
       var mU=/^(.*\d(?:[\s ][KM])?)[\s ](\D{2,})$/.exec(val);if(mU)val=mU[1]+'<span class="u"> '+mU[2]+'</span>';
       return grand({arg:'g:'+g.id,icon:g.icone,nom:g.nom,val:val,sub:'',x:x,extra:ext,glow:g.glow||'#d8b24c1a',
         cls:(cls||'')+' obj'+(g.type==='mat'?' q5t':'')+(sansVal?' sansval':'')+(ext&&!/large/.test(cls||'')?' large':'')});}
+    /* Onglet Boosts sur le modèle de Ressources et Accélérateurs (demande de Mickaël du 2026-10-10) : tuiles sans les cases d'objets
+       (le grand nombre et à quoi servent les objets), puis le détail compact, une ligne par famille, une case par objet du jeu, même à 0,
+       qui se remplit seule ; la case est d'autant plus bleue qu'elle compte dans sa ligne (durée, ou capacité de troupes). */
+    var LEDGER=S.inv==='boosts';
+    function poids(g,o){return g.type==='duree'?o.h:g.type==='troupes'?(o.cap||0):1;}
+    function ligneObj(g){var has=g.items.some(function(o){return ob[o.id]!=null;}),mx=Math.max.apply(null,g.items.map(function(o){return qn(o)*poids(g,o);}).concat([0])),
+        n=g.items.reduce(function(a,o){return a+qn(o);},0),capT=g.items.reduce(function(a,o){return a+qn(o)*(o.cap||0);},0),
+        tot=!has?'—':g.type==='duree'?fH(g.items.reduce(function(a,o){return a+qn(o)*o.h;},0)):g.type==='troupes'&&capT?'+'+fK(capT):nb(n);
+      return lgR('g:'+g.id,g.icone,g.nom,tot,g.items.map(function(o){var q=has?qn(o):null,lb=esc(o.cl||o.l||capQ(o.c)),
+        v=!q?'':g.type==='duree'?dCourt(q*o.h*60):o.cap?'+'+fK(q*o.cap):'';
+        return cz(lb,lb,q,v,mx?(q||0)*poids(g,o)/mx:0,'obj:'+o.id,esc(g.nom)+', '+lb);}).join(''),g.items.length);}
     var G=(JO.onglets&&JO.onglets[S.inv])||[],grands=G.filter(function(g){return !g.petit;}),petits=G.filter(function(g){return g.petit;}),html='';
     if(att){var nP=L.reduce(function(a,o){return a+(o.q||1);},0);
       var PQ={};L.forEach(function(o){PQ[o.c||'b']=(PQ[o.c||'b']||0)+(o.q||1);});
@@ -672,7 +687,8 @@ function renderCity(){
       else lines=T.map(function(o){return [o.l,qn(o),qn(o)];});
       var tot=g.type==='qual3'?'simples · bénies · lots':g.type==='valeur'?'':nb(T.reduce(function(a,o){return a+qn(o);},0));
       return carte('g:'+g.id,g.icone,g.nom,tot,lines,'Rien de renseigné',A2.length%2===1&&k===A2.length-1);});
-    if(C.length)html+='<h3 class="inv-h3">Détail</h3><div class="ic-grid">'+C.join('')+'</div>';
+    if(LEDGER)html+='<div class="ledger" aria-label="Détail">'+G.map(ligneObj).join('')+'</div>';
+    else if(C.length)html+='<h3 class="inv-h3">Détail</h3><div class="ic-grid">'+C.join('')+'</div>';
     $('#gObj').innerHTML=html;
     $('#itemsSub').textContent=att?'Tes pièces d’attirail':'Autres objets';
     $('#gItems').innerHTML=(L.length?'<div class="list">'+L.map(function(o,i){return row({act:'item-edit',data:S.inv+'|'+i,icon:it[0],title:esc(o.n),sub:att&&o.c&&QL[o.c]?QL[o.c][1].charAt(0).toUpperCase()+QL[o.c][1].slice(1):'',val:nb(o.q)});}).join('')+'</div>':
