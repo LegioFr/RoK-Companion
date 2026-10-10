@@ -490,10 +490,11 @@ function renderCity(){
   var CHEV='<svg class="inv-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
   function f1(m){return (Math.round(m*10)/10).toFixed(1).replace('.',',')+'\u00a0M';}
   function grand(o){var t=(o.v||0)+(o.c||0);
-    return '<button class="it'+(o.cls?' '+o.cls:'')+(o.val==='—'?' vide':'')+'" type="button" data-act="inv-edit" data-arg="'+o.arg+'" style="--glow:'+o.glow+'">'+
+    return '<button class="it'+(o.cls?' '+o.cls:'')+(o.extra?' gx':'')+(o.val==='—'?' vide':'')+'" type="button" data-act="inv-edit" data-arg="'+o.arg+'" style="--glow:'+o.glow+'">'+(o.extra?'<span class="gx-g">':'')+
       '<span class="it-h">'+ic(o.icon)+'<small>'+o.nom+'</small>'+CHEV+'<b>'+o.val+'</b></span>'+
       (o.lv!=null&&t>0?'<span class="it-bar"><i class="v" style="width:'+(o.v/t*100)+'%"></i><i class="c" style="width:'+(o.c/t*100)+'%"></i></span>'+
-        '<span class="it-l"><span class="v">En ville <b>'+o.lv+'</b></span><span class="c">En caisses <b>'+o.lc+'</b></span></span>':'<span class="it-s">'+o.sub+'</span>')+'</button>';}
+        '<span class="it-l"><span class="v">En ville <b>'+o.lv+'</b></span><span class="c">En caisses <b>'+o.lc+'</b></span></span>':'<span class="it-s">'+o.sub+'</span>')+
+      (o.extra?'</span>'+o.extra:'')+'</button>';}
   function carte(arg,icon,nom,tot,L,vide){var mx=Math.max.apply(null,L.map(function(x){return x[2];}).concat([0]));
     return '<section class="ic"><button class="ic-h" type="button" data-act="inv-edit" data-arg="'+arg+'" aria-label="Modifier : '+nom+'">'+ic(icon)+'<b>'+nom+'</b><span>'+tot+'</span>'+ic('i-pencil')+'</button>'+
       (L.length?L.map(function(x){return '<div class="ic-l"><span>'+x[0]+'</span><span class="ic-tr"><i style="width:'+Math.max(3,mx?x[2]/mx*100:0)+'%"></i></span><b>×\u00a0'+nb(x[1])+'</b></div>';}).join(''):'<p class="ic-vide">'+vide+'</p>')+'</section>';}
@@ -514,8 +515,11 @@ function renderCity(){
     carte('packs','p-pack','Packs de ressources',nPk==null?'—':'≈ '+fV(vPk),PACKS.filter(function(x){return cf[x[0]];}).map(function(x){return [x[2].nom,cf[x[0]],cf[x[0]]*valPack(x[2])];}),'Aucun pack renseigné');
   $('#gRes').innerHTML='<div class="it-grid">'+resT+'</div><div class="it-row3">'+resT3+'</div>'+
     '<h3 class="inv-h3">Détail des caisses</h3><div class="ic-grid">'+resC+'</div>';
+  /* Généraux : la tuile donne aussi, pour chaque type, le temps total généraux compris (proposition 2, choix de Mickaël du 2026-10-10) */
+  var gA=p.acc.general||[],gT=accTot(gA),avecGen=gA.length?'<span class="gx-l"><span class="gx-t">Avec les généraux</span>'+AN.filter(function(x){return x[0]!=='general';}).map(function(x){
+    return '<span class="gx-i">'+ic(x[1])+'<span>'+x[2]+'</span><b>'+fH(accTot(p.acc[x[0]]||[])+gT)+'</b></span>';}).join('')+'</span>':'';
   var accT=AN.map(function(x){var a=p.acc[x[0]]||[],n=a.reduce(function(s,c){return s+c[1];},0),gen=x[0]==='general';
-    return grand({arg:x[0],icon:x[1],nom:x[2],cls:gen?'large':'',val:a.length?fH(accTot(a)):'—',sub:a.length?nb(n)+' accélérateur'+(n>1?'s':'')+(gen?' · utilisables partout':''):(REEL?'À renseigner':'Aucun'),glow:GLOW[x[0]]});}).join('');
+    return grand({arg:x[0],icon:x[1],nom:x[2],cls:gen?'large':'',extra:gen?avecGen:'',val:a.length?fH(accTot(a)):'—',sub:a.length?nb(n)+' accélérateur'+(n>1?'s':'')+(gen?' · utilisables partout':''):(REEL?'À renseigner':'Aucun'),glow:GLOW[x[0]]});}).join('');
   var accC=AN.map(function(x){var a=p.acc[x[0]]||[];return carte(x[0],x[1],x[2],a.length?fH(accTot(a)):'—',a.map(function(c){return [c[0],c[1],c[1]*c[2]];}),REEL?'Pas encore renseigné':'Aucun');}).join('');
   $('#gAcc').innerHTML='<div class="it-grid">'+accT+'</div><h3 class="inv-h3">Détail par durée</h3><div class="ic-grid">'+accC+'</div>';
   var it=ITEMS[S.inv];if(it){var L=(p.items&&p.items[S.inv])||[];$('#itemsTitle').textContent=it[1];
