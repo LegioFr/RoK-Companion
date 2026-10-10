@@ -402,22 +402,6 @@ function parseEntier(t){t=String(t||'').replace(/[\s  ]/g,'');return /^\d{1,9
 /* Progression (proposée par Claude le 2026-10-09, « plus propre ») : carte de l'Hôtel de ville et de son prochain niveau */
 function prochainNiv(p){var h=p.v.hdv;return h!=null&&h<25&&JEU.hdv?JEU.hdv.niveaux[h+1]||null:null;}
 function manquants(p){var d=prochainNiv(p),M={};if(d)d.pre.forEach(function(x){var v=niv(p,x[0]);if(v==null||v<x[1])M[x[0]]=x[1];});return M;}
-function heroHtml(p){
-  var h=p.v.hdv,d=prochainNiv(p),nx='',ok=false;
-  var cur='<a class="hh-cur" href="#valeur-hdv"><span class="hh-i">'+ic('i-hall')+'</span><span class="hh-l">Hôtel de ville</span><span class="hh-v'+(h==null?' unk':'')+'">'+(h==null?'—':h)+'</span>'+(h==null?'<span class="hh-s">à renseigner</span>':'')+'</a>';
-  if(h==null)nx='<div class="hh-next"><h3>Prochain niveau</h3><p class="hh-t">Renseigne ton Hôtel de ville : tu verras ce qu’il te manque pour le niveau suivant.</p></div>';
-  else if(h>=25){ok=true;nx='<div class="hh-next"><h3>Niveau maximum</h3><p class="hh-t">Ton Hôtel de ville est au niveau 25.</p></div>';}
-  else if(d){
-    var man=d.pre.filter(function(x){var v=niv(p,x[0]);return v==null||v<x[1];});ok=!man.length;
-    var t=!d.pre.length?'Aucun prérequis : tu peux lancer l’amélioration.':man.length?'Il te manque : '+man.map(function(x){return FIELDS[x[0]].label+' '+x[1];}).join(', ')+'.':'Tous les prérequis sont faits : tu peux lancer l’amélioration.';
-    var pres=d.pre.map(function(x){var v=niv(p,x[0]),fait=v!=null&&v>=x[1];
-      return '<a class="pre '+(fait?'ok':v==null?'unk':'manque')+'" href="#valeur-'+x[0]+'"><span class="pre-i">'+ic(FIELDS[x[0]].icon)+'</span><span class="pre-t"><b>'+esc(FIELDS[x[0]].label)+' '+x[1]+'</b><small>'+(fait?'fait':v==null?'niveau non renseigné':'tu es au niveau '+v)+'</small></span>'+(fait?'<span class="pre-ck">'+ic('i-check')+'</span>':'')+'</a>';}).join('');
-    var R=['de nourriture','de bois','de pierre','d’or'],c=d.cout.map(function(x,i){return x?fQte(x)+' '+R[i]:'';}).filter(Boolean);if(d.plus)c.push(d.plus);
-    nx='<div class="hh-next"><h3>Vers le niveau '+(h+1)+'</h3><p class="hh-t">'+t+'</p>'+(pres?'<div class="pres">'+pres+'</div>':'')+
-      '<p class="hh-c"><span><b>Coût</b> '+c.join(' · ')+'</span><span><b>Durée</b> '+d.duree+' sans bonus de vitesse</span></p></div>';}
-  return '<div class="hdv-hero'+(ok?' ok':'')+'">'+cur+nx+'</div><p class="src">Prérequis, coûts et durées : guides et wiki du jeu, pas encore vérifiés dans le jeu.</p>';
-}
-/* Une tuile de bâtiment ou de réglage ; « manque » = niveau exigé pour le prochain Hôtel de ville */
 function tuile(p,k,manque){var f=FIELDS[k],v=p.v[k],val=v,sub='',cls='';
   if(isMulti(k)){var L=(v||[]).filter(function(x){return x!=null;});val=L.length?Math.max.apply(null,L):null;
     if(L.length){var mi=Math.min.apply(null,L);sub=L.length<f.n?L.length+' sur '+f.n+' renseignés':mi===val?f.n+' au niveau '+val:'niveaux '+mi+' à '+val;}}
@@ -540,16 +524,17 @@ function itemSave(){
 function itemDel(){var p=A(),e=S.itemEdit;if(!p||!e||e.i<0)return;var o=p.items[e.t][e.i];p.items[e.t].splice(e.i,1);p.invMaj=dateJour();closeSheet();say('« '+o.n+' » retiré de la liste.');refreshAll();}
 function renderCity(){
   var p=A();if(!p)return;
-  var SET=Object.keys(FIELDS).filter(function(k){return FIELDS[k].grp==='set';}),BLD=ordreBat(),MAN=manquants(p);
-  $('#pgHero').innerHTML=heroHtml(p);
+  /* Progression ne montre que les bâtiments, Hôtel de ville compris (choix 3 de Mickaël du 2026-10-10 : plus de grande tuile du prochain niveau ;
+     ce qui concerne le plan vers l'Hôtel de ville va dans Optimiser). Le bâtiment qui bloque le prochain niveau reste entouré d'or. */
+  var BLD=ordreBat(),SET=Object.keys(FIELDS).filter(function(k){return FIELDS[k].grp==='set'&&BLD.indexOf(k)<0;}),MAN=manquants(p);
   if(S.quick){$('#gSet').innerHTML='<div class="list">'+SET.map(function(k){return qrow(p,k);}).join('')+'</div>';
     $('#gBld').innerHTML='<div class="list">'+BLD.map(function(k){return qrow(p,k);}).join('')+'</div>';}
-  else{$('#gSet').innerHTML='<div class="btiles">'+SET.filter(function(k){return k!=='hdv';}).map(function(k){return tuile(p,k);}).join('')+'</div>';
+  else{$('#gSet').innerHTML='<div class="btiles">'+SET.map(function(k){return tuile(p,k);}).join('')+'</div>';
     $('#gBld').innerHTML=(JEU.batiments?JEU.batiments.groupes:[['Bâtiments',BLD]]).map(function(g){var L=g[1].filter(function(k){return FIELDS[k];});
       return '<div class="bgrp'+(g[2]?' saison':'')+'"><h3>'+g[0]+'</h3>'+(g[2]?'<p class="bgrp-n">'+g[2]+'</p>':'')+'<div class="btiles">'+L.map(function(k){return tuile(p,k,MAN[k]);}).join('')+'</div></div>';}).join('');}
   var nu=BLD.filter(function(k){return !FIELDS[k].saison&&(isMulti(k)?vide4(p.v[k]):p.v[k]==null);}).length;
   $('#bldCount').textContent=nu?nu+' à renseigner':'Tous renseignés';
-  $('#bldNote').textContent='Les bâtiments sans niveau (forgeron, magasin, monument…) ne sont pas suivis.';
+  $('#bldNote').textContent='Entouré d’or : le niveau requis pour ton prochain Hôtel de ville (guides et wiki du jeu, pas encore vérifiés dans le jeu). Les bâtiments sans niveau (forgeron, magasin, monument…) ne sont pas suivis.';
   $('#quickBar').innerHTML=S.quick?'<div class="qbar"><span id="qCount">Saisie rapide</span><div class="chips" data-single id="qMotif" hidden><button class="chip" type="button" aria-pressed="true">Changé en jeu</button><button class="chip" type="button" aria-pressed="false">Erreur de saisie</button><button class="chip" type="button" aria-pressed="false">Autre</button></div><div class="btns" style="margin-top:0"><button class="btn" type="button" data-act="quick-cancel">Annuler</button><button class="btn primary" type="button" data-act="quick-save">Enregistrer</button></div></div>':'';
   $('#gResearch').innerHTML=!p.research.length?vide('Pas encore renseignées.'):p.research.map(function(r){return '<div class="prow"><div class="ptop"><span>'+r[0]+'</span><span>'+r[1]+' %</span></div><div class="bar"><div class="fill" style="width:'+r[1]+'%"></div></div></div>';}).join('');
   $('#gTroops').innerHTML=!p.troops.length?vide('Pas encore renseignées.'):p.troops.map(function(t){return row({icon:t[1],title:t[0],sub:'Niveau '+t[2],val:nb(t[3])});}).join('');
