@@ -125,6 +125,14 @@ Règle du projet : chaque donnée a sa source et sa date ; tant qu’elle n’es
 - **Pas trouvé :** coffre « Choisissez un » niveau 6, pack niveau 4 (recherche du 2026-10-10). Un guide de la boutique VIP (theriagames.com, ancien) cite des « Level 6 Reserves » : objet non identifié, à vérifier si Mickaël en voit un.
 - **Ordre dans le jeu :** packs (A, B, C niv. 1, puis niv. 2, niv. 3), puis coffres niveaux 1 à 5, avant les caisses ; le niveau se déduit de la couleur de la case et de cet ordre. Deux niveaux ont parfois la même couleur (packs A, B, C gris ; coffres 1 et 2 verts ; 3 et 4 bleus).
 
+## Autres onglets de l'Inventaire : premières recherches (2026-10-10, à confirmer sur les captures de Mickaël)
+
+- **Source :** wiki riseofkingdoms.fandom.com, page « Items » (vue d'ensemble, révision du 2019-12-01, ancienne) et pages d'objets lues par l'API le 2026-10-10 (révisions de 2018 à 2025, indiquées). Noms anglais du wiki ; les noms français viendront des captures. **Rien n'est vérifié dans le jeu.**
+- **Boosts :** bouclier de paix 8 h, 24 h, 3 j, 30 j (« Peace Shield », 2020-04-30) ; récolte améliorée +50 % 8 h et 24 h (2018-12-08) ; attaque et défense améliorées ; anti-reconnaissance ; expansion d'armée ; troupes trompeuses ; boosts de nourriture, bois, pierre, or ; « Réserves » niv. 2 à 6 : capacité d'entraînement +2 000, +5 000, +10 000, +20 000 au prochain entraînement (« Reserves », 2025-02-23 ; c'est le « Level 6 Reserves » de la boutique VIP).
+- **Équipement :** matériaux de forge en 5 qualités (normal, avancé, élite, épique, légendaire) : cuir, minerai de fer, ébène, os d'animal (page « Leather », 2019-12-08) ; le wiki cite aussi soie, cristal, plume.
+- **Autre :** livres d'expérience (« Tome of Knowledge », 2023-06-24) niv. 1 à 7 : 100, 500, 1 000, 5 000, 10 000, 20 000, 50 000 EXP ; potions de points d'action 50, 100, 500, 1 000 (2024-11-03) ; téléporteurs aléatoire, de territoire, ciblé (2020-04-30) ; clés d'argent, d'or, de cristal (taverne, 2020-09-01) ; sculptures de commandant au choix (avancé, élite, épique, légendaire) et sculptures nommées (2022-11-19) ; plan de maître (bâtiment 24 → 25, 2021-01-18) ; changement de civilisation, de nom, remise à zéro des talents, recrutement de bâtisseur.
+- **Attirail :** absent de cette vue d'ensemble ; probablement les objets de saison du Forum d'état (« Obtenez de l'attirail ici »). À établir sur les captures.
+
 ## Réinitialisation quotidienne
 
 - **2 h du matin, heure de France** (Mickaël, 2026-10-09), soit minuit UTC ; en heure d’hiver, ce serait 1 h : à vérifier après le changement d’heure.
