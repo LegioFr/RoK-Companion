@@ -532,7 +532,7 @@ function renderCity(){
     return '<button class="it'+(o.cls?' '+o.cls:'')+(o.extra?' gx':'')+(o.val==='—'?' vide':'')+'" type="button" data-act="'+(o.act||'inv-edit')+'" data-arg="'+o.arg+'" style="--glow:'+o.glow+'">'+(o.extra?'<span class="gx-g">':'')+
       '<span class="it-h">'+ic(o.icon)+'<small>'+o.nom+'</small>'+CHEV+'<b>'+o.val+'</b></span>'+
       (o.lv!=null&&t>0?'<span class="it-bar"><i class="v" style="width:'+(o.v/t*100)+'%"></i><i class="c" style="width:'+(o.c/t*100)+'%"></i></span>'+
-        '<span class="it-l"><span class="v">En ville <b>'+o.lv+'</b></span><span class="c">En caisses <b>'+o.lc+'</b></span></span>':'<span class="it-s">'+o.sub+'</span>')+
+        '<span class="it-l"><span class="v">En ville <b>'+o.lv+'</b></span><span class="c">En caisses <b>'+o.lc+'</b></span></span>':o.sub?'<span class="it-s">'+o.sub+'</span>':'')+
       (o.extra?(o.x||'')+'</span>'+o.extra:(o.x||''))+'</button>';}
   /* large : carte seule sur sa rangée, sur toute la largeur, lignes sur 2 colonnes (choix de Mickaël du 2026-10-10 : pas de case vide) */
   function carte(arg,icon,nom,tot,L,vide,large){var mx=Math.max.apply(null,L.map(function(x){return x[2];}).concat([0]));
@@ -569,38 +569,43 @@ function renderCity(){
   var it=ITEMS[S.inv];if(it){var L=(p.items&&p.items[S.inv])||[],ob=p.objets||{},att=S.inv==='attirail';
     $('#itemsTitle').textContent=it[1];$('#itemsMaj').textContent=p.invMaj?'Mis à jour le '+p.invMaj:'';
     function qn(o){return ob[o.id]||0;}
-    function vq(X){return X.length?'<span class="vq">'+X.map(function(x){return '<span>'+(x.c?'<i class="dot '+x.c+'"></i>':'')+x.l+' <b>'+(x.b!=null?x.b:'×\u00a0'+nb(x.q))+'</b></span>';}).join('')+'</span>':'';}
-    function tuileObj(g,cls){var has=g.items.some(function(o){return ob[o.id]!=null;}),T=g.items.filter(function(o){return qn(o)>0;}),n=T.reduce(function(a,o){return a+qn(o);},0),val='—',sub='À renseigner',x='',ext='';
-      if(has){sub='';
-        if(g.type==='duree'){val=n?fH(T.reduce(function(a,o){return a+qn(o)*o.h;},0)):'0 h';sub=nb(n)+' objet'+(n>1?'s':'');x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}
-        else if(g.type==='troupes'){var cap=T.reduce(function(a,o){return a+qn(o)*(o.cap||0);},0);val=cap?'+'+nb(cap):nb(n);sub=cap?'capacité d’entraînement en plus':nb(n)+' objet'+(n>1?'s':'');x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}
+    /* « Rendu pro » (demande de Mickaël du 2026-10-10) : chaque objet est une case de la couleur de sa qualité, comme dans l'inventaire du jeu,
+       avec le nombre dans le coin et une légende courte dessous ; une ligne dit à quoi servent les objets (g.but). */
+    function capQ(q,fem){var t=fem?QL[q][3].replace(/s$/,''):QL[q][1];return t.charAt(0).toUpperCase()+t.slice(1);}
+    function slot(c,icon,q,cap,z){return '<span class="sl'+(z?' z':'')+'"><span class="sl-c q-'+(c||'g')+'">'+ic(icon)+'<b>'+(q>=1e4?fQte(q):nb(q))+'</b></span><small>'+cap+'</small></span>';}
+    function slots(A){return A.length?'<span class="sl-row">'+A.join('')+'</span>':'';}
+    function fK(x){return x>=1e6?String(Math.round(x/1e5)/10).replace('.',',')+' M':x>=1e4?nb(Math.round(x/1e3))+' K':nb(x);}
+    function tuileObj(g,cls){var has=g.items.some(function(o){return ob[o.id]!=null;}),T=g.items.filter(function(o){return qn(o)>0;}),n=T.reduce(function(a,o){return a+qn(o);},0),
+      val='—',sub='',SL=[],ext='',sansVal=false,ico=function(o){return o.ic||g.icone;},cap=function(o){return o.cl||o.l;};
+      if(has){
+        if(g.type==='duree'){val=n?fH(T.reduce(function(a,o){return a+qn(o)*o.h;},0)):'0 h';SL=T.map(function(o){return slot(o.c,ico(o),qn(o),cap(o));});}
+        else if(g.type==='troupes'){var capT=T.reduce(function(a,o){return a+qn(o)*(o.cap||0);},0);val=capT?'+'+nb(capT):nb(n);sub=capT?'de capacité d’entraînement en plus':'';SL=T.map(function(o){return slot(o.c,ico(o),qn(o),cap(o));});}
         else if(g.type==='mat'){var Q={};g.items.forEach(function(o){Q[o.c]=qn(o);});var lg=Math.floor((Math.floor((Math.floor((Math.floor(Q.g/4)+Q.v)/4)+Q.b)/4)+Q.p)/4)+Q.o;
-          val='≈\u00a0'+nb(lg)+' légendaire'+(lg>1?'s':'');sub='si tu combines tout (4 = 1 de la qualité au-dessus)';
-          x='<span class="q5">'+g.items.map(function(o){return '<span class="'+o.c+(qn(o)?'':' z')+'"><b>'+nb(qn(o))+'</b>'+QL[o.c][1]+'</span>';}).join('')+'</span>';}
+          val='≈ '+nb(lg)+' légendaire'+(lg>1?'s':'');sub='si tu combines tout (4 = 1 de la qualité au-dessus)';
+          SL=g.items.map(function(o){return slot(o.c,ico(o),qn(o),capQ(o.c),!qn(o));});}
         else if(g.type==='qual'||g.type==='qual3'){var P={};g.items.forEach(function(o){var q=o.q||o.c;P[q]=(P[q]||0)+qn(o);});var ord=['o','p','b','v','g'].filter(function(q){return P[q];});
-          var pl=function(q){return QL[q][g.fem?3:2];};
-          if(g.top&&ord.length){val=nb(P[ord[0]])+' '+pl(ord[0]);sub=ord.length>1?nb(n)+' en tout':'';x=vq(ord.slice(1).map(function(q){return {c:q,l:pl(q),b:nb(P[q])};}));}
-          else{val=nb(n);x=vq(ord.map(function(q){return {c:q,l:pl(q),b:nb(P[q])};}));}}
-        else if(g.type==='valeur'){var tot=T.reduce(function(a,o){return a+qn(o)*o.val;},0);val=(tot>=1e6?String(Math.round(tot/1e5)/10).replace('.',',')+'\u00a0M':nb(tot))+' '+g.unite;
-          sub=nb(n)+' objet'+(n>1?'s':'');x=vq(T.slice().sort(function(a,b){return b.val-a.val;}).slice(0,4).map(function(o){return {l:o.l,q:qn(o)};}));
-          /* Points d'action : à droite, ce que donnent les potions (proposition 1 de Mickaël du 2026-10-10, comme la tuile Généraux) */
+          val=g.top&&ord.length?nb(P[ord[0]])+' '+QL[ord[0]][g.fem?3:2]:nb(n);SL=ord.map(function(q){return slot(q,g.icone,P[q],capQ(q,g.fem));});}
+        else if(g.type==='valeur'){var tot=T.reduce(function(a,o){return a+qn(o)*o.val;},0);val=(tot>=1e6?String(Math.round(tot/1e5)/10).replace('.',',')+' M':nb(tot))+' '+g.unite;
+          SL=T.slice().sort(function(a,b){return b.val-a.val;}).map(function(o){return slot(o.c,ico(o),qn(o),cap(o));});
+          /* Points d'action : 3 chiffres clés à droite (proposition 1 de Mickaël du 2026-10-10, comme la tuile Généraux) */
           var pc=g.id==='pa'?paCalc(p):null;
-          if(pc&&pc.T){sub=nb(n)+' potion'+(n>1?'s':'');
-            var gi=function(i,l,v){return '<span class="gx-i">'+ic(i)+'<span>'+l+'</span><b>'+v+'</b></span>';};
-            ext='<span class="gx-l un"><span class="gx-t">Avec tes potions</span>'+gi('i-skull','Barbares'+(pc.niv?' niv.\u00a0'+pc.niv:''),'≈\u00a0'+nb(pc.n1))+
-              gi('n-book','EXP par commandant',pc.e1?'≈\u00a0'+fQte(pc.e1):'niveau\u00a0?')+
-              gi('t-hourglass','Jours de recharge',pc.jours<1?'≈\u00a0'+Math.max(1,Math.round(pc.jours*24))+'\u00a0h':'≈\u00a0'+nb(pc.jours)+'\u00a0j')+'</span>';}}
-        else if(g.vals){val=T.map(function(o){return nb(qn(o));}).join(' · ')||'0';x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}
-        else if(g.sortes){val=nb(T.length)+' sorte'+(T.length>1?'s':'');sub='à dépenser pendant les événements';x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}
-        else if(T.some(function(o){return o.grp;})){var Gp={};T.forEach(function(o){Gp[o.grp]=(Gp[o.grp]||0)+qn(o);});val=nb(n);sub=g.carte?'le détail est en bas':'';x=vq(Object.keys(Gp).map(function(k){return {l:k,q:Gp[k]};}));}
-        else{val=nb(n);x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}}
+          if(pc&&pc.T){var kc=function(i,v,t){return '<span class="kpi-c">'+ic(i)+'<b>'+v+'</b><span>'+t+'</span></span>';},ap=function(v){return '<i>≈</i> '+v;};
+            ext='<span class="kpi"><span class="kpi-t">Avec tes potions</span><span class="kpi-r">'+
+              kc('i-skull',ap(nb(pc.n1)),'barbares'+(pc.niv?' de niveau '+pc.niv:'')+' à attaquer')+
+              kc('n-book',pc.e1?ap(fK(pc.e1)):'—',pc.e1?'EXP pour chacun de tes 2 commandants':'EXP : touche la tuile et choisis le niveau des barbares')+
+              kc('t-hourglass',ap(pc.jours<1?Math.max(1,Math.round(pc.jours*24))+' h':nb(pc.jours)+' j'),'le temps que le jeu met à te redonner ces points')+'</span></span>';}}
+        else{val=nb(n);if(g.vals)sansVal=true;SL=T.map(function(o){return slot(o.c,ico(o),qn(o),cap(o));});}}
+      /* la phrase qui explique le grand nombre (sub) vient juste dessous, puis à quoi servent les objets, puis les cases */
+      var x=(has&&sub?'<span class="it-s">'+sub+'</span>':'')+(g.but?'<span class="it-p">'+g.but+'</span>':'')+(has?slots(SL):'<span class="it-s">À renseigner</span>');
       /* unité en plus petit sur téléphone (« 12 légendaires » était coupé, 2026-10-10) */
-      var mU=/^(.*\d(?:[\s\u00a0][KM])?)[\s\u00a0](\D+)$/.exec(val);if(mU)val=mU[1]+'<span class="u"> '+mU[2]+'</span>';
-      return grand({arg:'g:'+g.id,icon:g.icone,nom:g.nom,val:val,sub:sub,x:x,extra:ext,glow:g.glow||'#d8b24c1a',cls:(cls||'')+(g.type==='mat'?' q5t':'')+(ext&&!/large/.test(cls||'')?' large':'')});}
+      var mU=/^(.*\d(?:[\s ][KM])?)[\s ](\D{2,})$/.exec(val);if(mU)val=mU[1]+'<span class="u"> '+mU[2]+'</span>';
+      return grand({arg:'g:'+g.id,icon:g.icone,nom:g.nom,val:val,sub:'',x:x,extra:ext,glow:g.glow||'#d8b24c1a',
+        cls:(cls||'')+' obj'+(g.type==='mat'?' q5t':'')+(sansVal?' sansval':'')+(ext&&!/large/.test(cls||'')?' large':'')});}
     var G=(JO.onglets&&JO.onglets[S.inv])||[],grands=G.filter(function(g){return !g.petit;}),petits=G.filter(function(g){return g.petit;}),html='';
     if(att){var nP=L.reduce(function(a,o){return a+(o.q||1);},0);
-      html+='<div class="it-grid">'+grand({act:'item-edit',arg:'attirail|new',icon:'n-ring',nom:'Pièces d’attirail',val:nb(nP)+' / 2\u00a0000',sub:nP?'place dans ton inventaire':'Ajoute tes pièces',glow:'#8db6f222',
-        x:vq(L.map(function(o){return {c:o.c,l:esc(o.n),b:''};}))})+grands.map(function(g){return tuileObj(g);}).join('')+'</div>';}
+      var PQ={};L.forEach(function(o){PQ[o.c||'b']=(PQ[o.c||'b']||0)+(o.q||1);});
+      html+='<div class="it-grid">'+grand({act:'item-edit',arg:'attirail|new',icon:'n-ring',nom:'Pièces d’attirail',val:nb(nP)+' / 2\u00a0000',sub:'',glow:'#8db6f222',cls:'obj',
+        x:'<span class="it-p">Places prises dans ton inventaire d’attirail</span>'+(nP?slots(['o','p','b'].filter(function(q){return PQ[q];}).map(function(q){return slot(q,'n-ring',PQ[q],capQ(q,true));})):'<span class="it-s">Ajoute tes pièces</span>')})+grands.map(function(g){return tuileObj(g);}).join('')+'</div>';}
     else html+='<div class="it-grid'+(S.inv==='boosts'?' trois':'')+'">'+grands.map(function(g,k){return tuileObj(g,grands.length%2&&k===grands.length-1&&S.inv!=='boosts'?'large':'');}).join('')+'</div>';
     /* petites tuiles : la dernière rangée remplit toute la largeur (4 colonnes sur tablette, 2 sur téléphone ; pas de case vide) */
     if(petits.length){var np=petits.length,r4=np%4,r2=np%2;

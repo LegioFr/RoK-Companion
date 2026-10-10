@@ -53,6 +53,10 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   ok('Tuiles des autres onglets : Boosts 3, Équipement 8, Attirail 2, Autre 9 (objets inutiles retirés)',tT==='3/8/2/9',tT);
   await p.click('#invChips [data-inv=boosts]');await p.click('#gObj .it[data-arg="g:attaque"]');await p.waitForTimeout(200);await p.fill('#iv-att24','2');await p.click('[data-act=inv-save]');await p.waitForTimeout(200);
   ok('Saisie d’un boost : la tuile additionne les durées',/4 j 0 h/.test(await txt(p,'#gObj .it[data-arg="g:attaque"]')||''),await txt(p,'#gObj .it[data-arg="g:attaque"]'));
+  /* Rendu pro (v58) : chaque tuile d'objets dit à quoi servent les objets et montre une case de qualité par objet */
+  await p.click('#invChips [data-inv=autre]');await p.waitForTimeout(150);
+  const rp=await ev(p,()=>{const T=[...document.querySelectorAll('#gObj .it.obj')];return [T.length,T.filter(t=>t.querySelector('.it-p')).length,document.querySelectorAll('#gObj .it[data-arg="g:tomes"] .sl').length,document.querySelectorAll('#gObj .it[data-arg="g:tomes"] .sl-c.q-p').length].join('/');});
+  ok('Rendu pro : 9 tuiles d’objets avec leur ligne « à quoi ça sert », Tomes en 5 cases dont 3 violettes',rp==='9/9/5/3',rp);
   /* Points d'action (v57, proposition 1 de Mickaël) : exemples = 10 500 points, VIP 17, barbares niv. 25 sans talent ; plus de carte de détail */
   await p.click('#invChips [data-inv=autre]');await p.waitForTimeout(150);
   const paT=async()=>(await txt(p,'#gObj .it[data-arg="g:pa"]')||'').replace(/\s+/g,' ');
@@ -60,7 +64,7 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   ok('Points d’action : tuile sur toute la largeur, « Avec tes potions » ≈ 262 barbares, ≈ 655 K EXP, ≈ 4 j, sans carte de détail',/Avec tes potions/i.test(pa1)&&/≈ 262/.test(pa1)&&/≈ 655 K/.test(pa1)&&/≈ 4 j/.test(pa1)&&
     (await ev(p,()=>{const t=document.querySelector('#gObj .it[data-arg="g:pa"]');return t.classList.contains('large')&&t.classList.contains('gx')&&!document.querySelector('#gObj .ic-h[data-arg="g:pa"]');})),pa1.slice(0,200));
   await p.click('#gObj .it[data-arg="g:pa"]');await p.waitForTimeout(200);await p.fill('#iv-niv','30');await p.click('#paT [data-v="1"]');await p.click('[data-act=inv-save]');await p.waitForTimeout(200);pa1=await paT();
-  ok('Réglages dans la fenêtre de la tuile : niv. 30 avec le talent → ≈ 350 barbares, ≈ 1,1 M EXP',/niv\. 30/.test(pa1)&&/≈ 350/.test(pa1)&&/≈ 1,1 M/.test(pa1),pa1.slice(0,200));
+  ok('Réglages dans la fenêtre de la tuile : niv. 30 avec le talent → ≈ 350 barbares, ≈ 1,1 M EXP',/niveau 30/.test(pa1)&&/≈ 350/.test(pa1)&&/≈ 1,1 M/.test(pa1),pa1.slice(0,200));
   await p.click('#invChips [data-inv=res]');await p.waitForTimeout(150);
   ok('Inventaire : 4 grandes tuiles, 3 tuiles Gemmes / Coffres / Packs, 7 cartes (caisses, gemmes, coffres, packs)',(await ev(p,()=>[document.querySelectorAll('#gRes .it-grid .it').length,document.querySelectorAll('#gRes .it-row3 .it').length,document.querySelectorAll('#gRes .ic').length].join('/')))==='4/3/7');
   const fen=async(sel)=>ev(p,s=>{document.querySelector(s).click();const r=[document.getElementById('shTitle').textContent,document.querySelectorAll('#shBody input').length,document.getElementById('shBody').textContent];document.querySelector('#sheet [data-act=close-sheet]').click();return r;},sel);

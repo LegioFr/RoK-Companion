@@ -815,22 +815,35 @@ button.more{border:0;background:none;cursor:pointer;font-family:inherit;min-heig
 .it-grid.trois .it-h b{font-size:24px}
 .it-petits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
 .it.petit .it-h b{font-size:24px}
-.vq{display:flex;flex-wrap:wrap;gap:6px}
-.vq>span{display:inline-flex;align-items:center;gap:5px;max-width:100%;padding:3px 9px;border:1px solid #a9bdd51f;border-radius:9px;background:#0b122099;color:var(--muted);font-size:12px}
-.vq b{color:var(--text);font-size:13px;white-space:nowrap}
-/* Points d'action : « Avec tes potions » en une colonne, à droite de la tuile (proposition 1, choix de Mickaël du 2026-10-10) */
-.gx-l.un{grid-template-columns:minmax(0,1fr);gap:8px}
-.gx-l.un .gx-i{padding:10px 12px;gap:10px}
-.gx-l.un .gx-i svg{width:28px;height:28px}
-.gx-l.un .gx-i span{font-size:13px}
-.gx-l.un .gx-i b{font-size:19px}
+/* « Rendu pro » des tuiles d'objets (demande de Mickaël du 2026-10-10) : cases de qualité comme dans l'inventaire du jeu */
+.it.obj{gap:12px}
+.it-p{color:var(--muted);font-size:13.5px;line-height:1.35}
+.it.sansval .it-h b{display:none}
+.sl-row{display:flex;flex-wrap:wrap;gap:12px 10px;margin-top:2px}
+.sl{display:grid;justify-items:center;align-content:start;gap:6px;width:66px}
+.sl-c{position:relative;display:grid;place-items:center;width:56px;height:56px;border-radius:12px;background:linear-gradient(160deg,var(--q1),var(--q2));
+  box-shadow:inset 0 0 0 1px #ffffff47,inset 0 -14px 20px #00000055,0 5px 12px #0009}
+.sl-c::after{content:"";position:absolute;inset:3px;border-radius:9px;border:1px solid #ffffff1f;pointer-events:none}
+.sl-c svg{width:36px;height:36px;filter:drop-shadow(0 2px 3px #000a)}
+.sl-c b{position:absolute;right:4px;bottom:2px;color:#fff;font:800 14px/1.1 var(--body);font-variant-numeric:tabular-nums;white-space:nowrap;
+  text-shadow:0 0 3px #000,0 1px 2px #000,0 0 6px #000c}
+.sl small{max-width:100%;color:var(--muted);font-size:12px;line-height:1.25;text-align:center}
+.sl.z .sl-c{filter:saturate(.25) brightness(.6)}.sl.z small{opacity:.6}
+.q-g{--q1:#a3acb9;--q2:#4b5563}.q-v{--q1:#6fcf7a;--q2:#2a6e35}.q-b{--q1:#63aaf5;--q2:#23529b}.q-p{--q1:#b98af7;--q2:#5c31a3}.q-o{--q1:#f7c160;--q2:#b25d18}
+/* Points d'action : 3 chiffres clés (proposition 1, choix de Mickaël du 2026-10-10) */
+.kpi{display:grid;gap:10px;min-width:0}
+.kpi-t{color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.kpi-r{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.kpi-c{display:grid;align-content:start;gap:6px;min-width:0;padding:12px;border:1px solid #a9bdd526;border-radius:14px;background:linear-gradient(180deg,#0b1220cc,#0b122066)}
+.kpi-c svg{width:28px;height:28px;filter:drop-shadow(0 2px 3px #0009)}
+.kpi-c b{color:var(--gold-2);font:700 26px/1.05 var(--display);white-space:nowrap;font-variant-numeric:tabular-nums}
+.kpi-c b i{font-style:normal;font-size:.62em;opacity:.8}
+.kpi-c span{color:var(--muted);font-size:12.5px;line-height:1.3}
+@media(max-width:699px){.it-grid .it.obj{grid-column:1/-1}.kpi-c{padding:10px}.kpi-c b{font-size:22px}
+  .sl-row{gap:12px 8px}.sl{width:58px}.sl-c{width:52px;height:52px}.sl-c svg{width:32px;height:32px}.sl-c b{font-size:13px}
+  .kpi-r{grid-template-columns:minmax(0,1fr)}.kpi-c{grid-template-columns:28px 92px minmax(0,1fr);align-items:center;gap:10px}}
 .dot{flex:none;display:inline-block;width:9px;height:9px;border-radius:3px}
 .dot.g{background:#b9c0c9}.dot.v{background:#5fbf5a}.dot.b{background:#5aa2e6}.dot.p{background:#ad7be6}.dot.o{background:#e6a640}
-.q5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
-.q5>span{display:grid;justify-items:center;gap:1px;min-width:0;padding:5px 2px;border-radius:8px;color:#0b1220;font-size:11.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
-.q5 b{font:800 14px/1.1 var(--body);font-variant-numeric:tabular-nums;white-space:nowrap}
-.q5 .g{background:#b9c0c9}.q5 .v{background:#5fbf5a}.q5 .b{background:#5aa2e6}.q5 .p{background:#ad7be6}.q5 .o{background:#e6a640}
-.q5 .z{opacity:.35}
 @media(max-width:699px){.it.q5t{grid-column:1/-1}}
 @media(min-width:700px){
   .it-grid.trois{grid-template-columns:repeat(3,minmax(0,1fr))}
