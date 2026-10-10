@@ -542,21 +542,38 @@ function renderCity(){
       (!L.length?'<p class="ic-vide">'+vide+'</p>':large&&L.length>1?'<div class="ic-cols"><div>'+L.slice(0,moitie).map(ligne).join('')+'</div><div>'+L.slice(moitie).map(ligne).join('')+'</div></div>':L.map(ligne).join(''))+'</section>';}
   var GLOW={food:'#d8b24c33',wood:'#c27a4a33',stone:'#a9bdd52e',gold:'#f3d98233',gems:'#ef6a7a2e',build:'#d8a24c2e',research:'#8db6f22e',train:'#ef8a742e',heal:'#3ecf8e26',general:'#b99af02e'};
   function cais(r){return r.c.reduce(function(a,c){return a+c[1]*c[2];},0);}
-  var resT=RN.map(function(x){var r=p.res[x[0]],c=cais(r),has=r.v!=null||r.c.length>0;
-    return grand({arg:x[0],icon:x[1],nom:x[2],val:has?fM(resTot(r)):'—',sub:'À renseigner',v:r.v||0,c:c,lv:has?(r.v!=null?f1(r.v):'—'):null,lc:r.c.length?fM(c):'—',glow:GLOW[x[0]]});}).join('');
+  /* Onglet Ressources : aperçu n° 2 choisi par Mickaël le 2026-10-10 (l'onglet validé retravaillé avec le skill artifact-design).
+     Résumé avant le détail (#resSum), cadres réservés aux 4 ressources, ce qui dépasse la protection de la réserve, Gemmes · Coffres · Packs
+     dans un panneau plat, détail des caisses dans un seul panneau, barres à la valeur et à la même échelle. */
+  var lvE=p.v.entrepot,prE=lvE!=null&&JEU.entrepot&&JEU.entrepot.niveaux[lvE];
+  function d1(m){return m>=100?fM(m):f1(m);}
+  var WARN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg>';
+  var resT=RN.map(function(x,i){var r=p.res[x[0]],c=cais(r),has=r.v!=null||r.c.length>0,ex=prE&&r.v!=null?r.v-prE[i]/1e6:0;
+    var pil=ex>=0.05?'<span class="pil">'+WARN+'<span><b>'+d1(ex)+'</b> <span class="pil-l">exposés au pillage</span><span class="pil-c">pillables</span><span class="pil-p"> · la réserve en protège '+fV(prE[i])+'</span></span></span>':'';
+    return grand({arg:x[0],icon:x[1],nom:x[2],val:has?fM(resTot(r)):'—',sub:'À renseigner',v:r.v||0,c:c,lv:has?(r.v!=null?f1(r.v):'—'):null,lc:r.c.length?fM(c):'—',glow:GLOW[x[0]],x:pil});}).join('');
+  var tV=0,tC=0,anyR=false,NBC=0,MAXC=0;
+  RN.forEach(function(x){var r=p.res[x[0]];if(r.v!=null||r.c.length)anyR=true;tV+=r.v||0;tC+=cais(r);r.c.forEach(function(c){NBC+=c[1];MAXC=Math.max(MAXC,c[1]*c[2]);});});
+  $('#resSum').innerHTML=anyR?'<div><dt>Au total</dt><dd>'+d1(tV+tC)+'</dd></div><div><dt>En ville</dt><dd>'+d1(tV)+'</dd></div><div><dt>En caisses</dt><dd>'+d1(tC)+'</dd></div>':'';
   var g=p.gemsIn,gc=g.c.reduce(function(a,c){return a+c[1]*c[2];},0),gHas=g.v!=null||g.c.length>0;
-  /* Gemmes, Coffres et Packs : 3 tuiles côte à côte (proposition 1, choix de Mickaël du 2026-10-10 : la tuile Gemmes seule « faisait vide ») */
-  var resT3=grand({arg:'gems',icon:'r-gem',nom:'Gemmes',val:gHas?nb((g.v||0)+gc):'—',sub:gHas?'En ville':'À renseigner',v:g.v||0,c:gc,lv:g.c.length?(g.v!=null?nb(g.v):'—'):null,lc:nb(gc),glow:GLOW.gems});
   var cf=p.coffres||{},nC=sumK(cf,COFFRES),nPk=sumK(cf,PACKS);
   var vC=COFFRES.reduce(function(a,x){return a+(cf[x[0]]||0)*valCof(x[2]);},0),vPk=PACKS.reduce(function(a,x){return a+(cf[x[0]]||0)*valPack(x[2]);},0);
-  resT3+=grand({arg:'coffres',icon:'p-chest',nom:'Coffres',val:nC==null?'—':nb(nC),sub:nC==null?'« Choisissez un » · à renseigner':'Au choix · jusqu’à '+fV(vC)+' de nourriture',glow:'#d8b24c22'})+
-    grand({arg:'packs',icon:'p-pack',nom:'Packs',val:nPk==null?'—':nb(nPk),sub:nPk==null?'De ressources · à renseigner':'Au hasard · ≈ '+fV(vPk)+' en moyenne',glow:'#c27a4a22'});
-  var resC=RN.map(function(x){var r=p.res[x[0]];return carte(x[0],x[1],x[2]+' · caisses',r.c.length?fM(cais(r)):'—',r.c.map(function(c){return [c[0],c[1],c[1]*c[2]];}),'Aucune caisse renseignée');}).join('')+
-    (g.c.length?carte('gems','r-gem','Gemmes · caisses',nb(gc),g.c.map(function(c){return [c[0],c[1],c[1]*c[2]];}),''):'')+
-    carte('coffres','p-chest','Coffres « Choisissez un »',nC==null?'—':'jusqu’à '+fV(vC),COFFRES.filter(function(x){return cf[x[0]];}).map(function(x){return [x[1],cf[x[0]],cf[x[0]]*valCof(x[2])];}),'Aucun coffre renseigné')+
-    carte('packs','p-pack','Packs de ressources',nPk==null?'—':'≈ '+fV(vPk),PACKS.filter(function(x){return cf[x[0]];}).map(function(x){return [x[2].nom,cf[x[0]],cf[x[0]]*valPack(x[2])];}),'Aucun pack renseigné',(RN.length+(g.c.length?1:0)+2)%2===1);
-  $('#gRes').innerHTML='<div class="it-grid">'+resT+'</div><div class="it-row3">'+resT3+'</div>'+
-    '<h3 class="inv-h3">Détail des caisses</h3><div class="ic-grid">'+resC+'</div>';
+  /* Gemmes, Coffres, Packs : un panneau plat en trois colonnes séparées par des filets (chaque colonne ouvre sa fenêtre) */
+  function trC(arg,icon,nom,val,sub){return '<button class="tr-c'+(val==='—'?' vide':'')+'" type="button" data-act="inv-edit" data-arg="'+arg+'"><span class="tr-h">'+ic(icon)+'<span>'+nom+'</span></span><b>'+val+'</b><span class="tr-s">'+sub+'</span></button>';}
+  var trio='<div class="trio">'+trC('gems','r-gem','Gemmes',gHas?nb((g.v||0)+gc):'—',gHas?(g.v!=null?nb(g.v):'—')+' en ville · '+nb(gc)+' en caisses':'À renseigner')+
+    trC('coffres','p-chest','Coffres',nC==null?'—':nb(nC),nC==null?'« Choisissez un » · à renseigner':'au choix · jusqu’à '+fV(vC)+' de nourriture')+
+    trC('packs','p-pack','Packs',nPk==null?'—':nb(nPk),nPk==null?'de ressources · à renseigner':'au hasard · ≈ '+fV(vPk)+' en moyenne')+'</div>';
+  /* Détail des caisses : un seul panneau ; chaque barre montre ce que valent les caisses, à la même échelle pour les 4 ressources */
+  var kB=0;
+  function lgS(arg,icon,nom,tot,rows,vide,petit){return '<div class="lg-s'+(petit?' petit':'')+'">'+(arg?'<button class="lg-h" type="button" data-act="inv-edit" data-arg="'+arg+'" aria-label="Modifier : '+nom+'">':'<div class="lg-h">')+
+    ic(icon)+'<span>'+nom+'</span><em>'+tot+'</em>'+(arg?ic('i-pencil')+'</button>':'</div>')+(rows||'<p class="lg-v">'+vide+'</p>')+'</div>';}
+  var ledger=RN.map(function(x){var r=p.res[x[0]];return lgS(x[0],x[1],x[2],r.c.length?fM(cais(r)):'—',r.c.map(function(c){var val=c[1]*c[2];
+      return '<div class="lg-l"><span>'+c[0]+'</span><span class="lg-t"><i style="width:'+(MAXC?Math.max(1,val/MAXC*100):0).toFixed(1)+'%;--k:'+(kB++)+'"></i></span><b>'+fV(val*1e6)+'</b><small>× '+nb(c[1])+'</small></div>';}).join(''),'Aucune caisse renseignée');}).join('')+
+    lgS('coffres','p-chest','Coffres « Choisissez un »',nC==null?'—':nb(nC),COFFRES.filter(function(x){return cf[x[0]];}).map(function(x){return '<div class="lg-l"><span>'+x[1]+'</span><b>× '+nb(cf[x[0]])+'</b></div>';}).join(''),'Aucun coffre renseigné',true)+
+    lgS('','r-gem','Gemmes et packs','',g.c.map(function(c){return '<div class="lg-l"><span>Caisses de '+c[0]+' gemmes</span><b>× '+nb(c[1])+'</b></div>';}).join('')+
+      PACKS.filter(function(x){return cf[x[0]];}).map(function(x){return '<div class="lg-l"><span>Pack '+esc(x[2].nom)+'</span><b>× '+nb(cf[x[0]])+'</b></div>';}).join(''),'Aucune caisse de gemmes ni aucun pack renseigné',true);
+  $('#gRes').innerHTML='<div class="it-grid">'+resT+'</div>'+trio+
+    '<div class="lg-hd"><h3 class="inv-h3">Détail des caisses</h3><small>'+(NBC?nb(NBC)+' caisses · '+d1(tC)+' · barres à la même échelle':'')+'</small></div><div class="ledger">'+ledger+'</div>'+
+    (prE?'<p class="lg-note">Pillage : ce qui dépasse la protection de ta réserve (niveau '+lvE+') peut être pris lors d’une attaque ; les caisses ne peuvent pas l’être. Protection d’après un guide du jeu, pas encore vérifiée dans le jeu.</p>':'');
   /* Généraux : la tuile donne aussi, pour chaque type, le temps total généraux compris (proposition 2, choix de Mickaël du 2026-10-10) */
   var gA=p.acc.general||[],gT=accTot(gA),avecGen=gA.length?'<span class="gx-l"><span class="gx-t">Avec les généraux</span>'+AN.filter(function(x){return x[0]!=='general';}).map(function(x){
     return '<span class="gx-i">'+ic(x[1])+'<span>'+x[2]+'</span><b>'+fH(accTot(p.acc[x[0]]||[])+gT)+'</b></span>';}).join('')+'</span>':'';

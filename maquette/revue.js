@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=58,VERSION='v'+VNUM+' · 10 oct. 2026';
+var VNUM=59,VERSION='v'+VNUM+' · 10 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -48,7 +48,8 @@ var CHANGES={
     {sel:'[data-steppanel="3"]',t:'Corrigé (ton import de ce matin) : « 8 cases coupées » s’affichait à tort. Le dessin du type d’accélérateur est en bas de la case : coupé, Claude ne connaît pas le type, et l’appli ne retrouvait pas la case entière sur la capture suivante. Elle compare maintenant la rangée coupée, colonne par colonne.'},
     {sel:'[data-steppanel="3"]',t:'Coffres et packs de ressources : la relecture dit combien elle en a vu et que tu peux les saisir à la main dans l’inventaire, au lieu de « autres onglets, ou coffres et packs ».'},
     {sel:'#stepper',t:'La frise des étapes n’apparaît qu’à partir de la lecture ; pendant la lecture, chaque capture lue dit son onglet (Ressources ou Accélérateurs).'}],
-  'ma-ville-inventaire':[{sel:'#gObj .it.obj, #invChips',t:'Rendu refait (ta demande « rendu pro ») : dans Boosts, Équipement, Attirail et Autre, chaque objet est une case de la couleur de sa qualité, comme dans l’inventaire du jeu, avec le nombre dans le coin et une légende dessous. Chaque tuile dit en une ligne à quoi servent ses objets. Points d’action : 3 chiffres clés, chacun avec sa phrase.'},
+  'ma-ville-inventaire':[{sel:'#gRes, #invChips',t:'Onglet Ressources refait : c’est l’aperçu n° 2 que tu as choisi (ton écran validé, retravaillé avec le skill artifact-design). Résumé à côté du titre (au total, en ville, en caisses) ; sur chaque ressource, ce qui dépasse la protection de ta réserve et peut être pillé ; Gemmes · Coffres · Packs dans un seul panneau ; détail des caisses dans un seul panneau, chaque barre montre ce que valent les caisses, à la même échelle pour les 4 ressources.'},
+    {sel:'#gObj .it.obj, #invChips',t:'Rendu refait (ta demande « rendu pro ») : dans Boosts, Équipement, Attirail et Autre, chaque objet est une case de la couleur de sa qualité, comme dans l’inventaire du jeu, avec le nombre dans le coin et une légende dessous. Chaque tuile dit en une ligne à quoi servent ses objets. Points d’action : 3 chiffres clés, chacun avec sa phrase.'},
     {sel:'#gObj .it[data-arg="g:pa"], #invChips',t:'Points d’action, ta proposition 1 : la tuile prend toute la largeur comme Généraux ; à droite, « Avec tes potions » donne les barbares, l’EXP par commandant et les jours de recharge. La carte du calcul est supprimée ; touche la tuile pour régler le niveau des barbares et le talent (le calcul y est expliqué).'},
     {sel:'#invChips',t:'Sur téléphone, l’unité des grandes tuiles est plus petite : « 12 légendaires » et « 500 000 EXP » étaient coupés.'},
     {sel:'#invChips',t:'Objets inutiles au site retirés (ton choix) : bouclier de la paix, anti-reconnaissance, récolte, devises d’événements, téléportations, chefs barbares, remises à zéro, changement de civilisation, pinceau, décorations. La lecture les ignore. Gardés : passeport (tuile « Migration »), points d’action, clés.'},
@@ -58,12 +59,7 @@ var CHANGES={
     {sel:'#invChips',t:'Attirail : tes pièces avec leur qualité (élite, épique, légendaire), sur 2 000 places. Un objet qui n’est pas dans les tuiles s’ajoute en bas, dans « Autres objets ».'},
     {sel:'#invChips',t:'Accélérateurs, détail par durée (ta proposition 1) : la carte Généraux prend toute la largeur, ses durées sur deux colonnes ; plus de case vide. Pareil dans Ressources quand une carte se retrouve seule sur sa rangée.'},
     {sel:'#invChips',t:'Accélérateurs (ta proposition 2) : la tuile Généraux montre aussi, pour chaque type, ce que tu peux accélérer en tout, généraux compris (ex. construction : construction + généraux).'},
-    {sel:'#gRes .it-row3',t:'Les tuiles Coffres et Packs ouvrent chacune leur fenêtre : Coffres « Choisissez un » (niveaux 1 à 5) d’un côté, Packs de ressources de l’autre (ta remarque).'},
-    {sel:'#gRes .it-row3',t:'Coffres et packs (ta demande) : la saisie donne le contenu de chaque niveau, repris de tes captures (le pack A niv. 1 et le pack niv. 3, que tu n’as pas, viennent du wiki du jeu, marqués *). La tuile Coffres dit jusqu’à combien de nourriture ils valent, la tuile Packs combien en moyenne.'},
-    {sel:'#gRes .ic-grid',t:'Deux cartes en plus en bas : Coffres « Choisissez un » et Packs de ressources, niveau par niveau.'},
-    {sel:'#gRes .it-row3',t:'Ta proposition 1 : Gemmes, Coffres et Packs en 3 tuiles côte à côte, sous les 4 grandes tuiles (la tuile Gemmes seule faisait vide).'},
     {sel:'#gRes .it-grid',t:'Ton mélange des pistes A et C : une grande tuile par ressource, avec le total et une barre qui montre la part en ville (or) et en caisses (bleu). Touche une tuile pour la modifier.'},
-    {sel:'#gRes .ic-grid',t:'En dessous, une carte par ressource avec chaque taille de caisse : la barre montre ce que chaque taille pèse dans le total, le nombre est ta quantité. Le crayon ouvre la saisie.'},
     {sel:'#invChips',t:'L’onglet Accélérateurs suit le même modèle : une tuile par type (temps total), puis le détail par durée.'},
     {sel:'#gRes',t:'« En ville » s’affiche comme dans la barre du haut du jeu, avec un chiffre après la virgule : 84,2 M au lieu de 84 M (ta remarque).'},{sel:'#invChips',t:'Inventaire rangé comme les onglets du jeu : Ressources, Accélérateurs, Boosts, Équipement, Attirail, Autre.'},
     {sel:'#gRes',t:'Tout se remplit à la main, aussi dans ta version réelle : ouvre une ligne puis « Modifier ». Vraies tailles de caisses (1 000 à 5 000 000) et vraies durées d’accélérateurs (1 min à 15 h, jusqu’à 30 j pour les généraux).'},

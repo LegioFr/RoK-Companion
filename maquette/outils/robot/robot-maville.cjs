@@ -66,9 +66,10 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   await p.click('#gObj .it[data-arg="g:pa"]');await p.waitForTimeout(200);await p.fill('#iv-niv','30');await p.click('#paT [data-v="1"]');await p.click('[data-act=inv-save]');await p.waitForTimeout(200);pa1=await paT();
   ok('Réglages dans la fenêtre de la tuile : niv. 30 avec le talent → ≈ 350 barbares, ≈ 1,1 M EXP',/niveau 30/.test(pa1)&&/≈ 350/.test(pa1)&&/≈ 1,1 M/.test(pa1),pa1.slice(0,200));
   await p.click('#invChips [data-inv=res]');await p.waitForTimeout(150);
-  ok('Inventaire : 4 grandes tuiles, 3 tuiles Gemmes / Coffres / Packs, 7 cartes (caisses, gemmes, coffres, packs)',(await ev(p,()=>[document.querySelectorAll('#gRes .it-grid .it').length,document.querySelectorAll('#gRes .it-row3 .it').length,document.querySelectorAll('#gRes .ic').length].join('/')))==='4/3/7');
+  ok('Ressources (v59, aperçu n° 2 choisi) : résumé, 4 tuiles, panneau Gemmes / Coffres / Packs, détail en un panneau à 6 parties, pillage sur les 4 ressources',
+    (await ev(p,()=>[document.querySelectorAll('#resSum dd').length,document.querySelectorAll('#gRes .it-grid .it').length,document.querySelectorAll('#gRes .trio .tr-c').length,document.querySelectorAll('#gRes .ledger .lg-s').length,document.querySelectorAll('#gRes .pil').length].join('/')))==='3/4/3/6/4');
   const fen=async(sel)=>ev(p,s=>{document.querySelector(s).click();const r=[document.getElementById('shTitle').textContent,document.querySelectorAll('#shBody input').length,document.getElementById('shBody').textContent];document.querySelector('#sheet [data-act=close-sheet]').click();return r;},sel);
-  const fc=await fen('#gRes .it[data-arg=coffres]'),fp=await fen('#gRes .it[data-arg=packs]');
+  const fc=await fen('#gRes .tr-c[data-arg=coffres]'),fp=await fen('#gRes .tr-c[data-arg=packs]');
   ok('Tuile Coffres : sa propre fenêtre, 5 niveaux avec leur contenu',/Coffres/.test(fc[0])&&fc[1]===5&&/7\u00a0500\u00a0pierre/.test(fc[2]),fc[0]+' / '+fc[1]);
   ok('Tuile Packs : sa propre fenêtre, 5 packs',/Packs/.test(fp[0])&&fp[1]===5&&!/Niveau 5/.test(fp[2]),fp[0]+' / '+fp[1]);
   await p.click('#gRes .it[data-arg=food]');await p.waitForTimeout(200);
