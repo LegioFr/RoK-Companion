@@ -74,12 +74,6 @@ window.RC_JEU={
     qualites:[['g','normal','normaux','normales'],['v','avancé','avancés','avancées'],['b','élite','élites','élites'],['p','épique','épiques','épiques'],['o','légendaire','légendaires','légendaires']],
     onglets:{
       boosts:[
-        {id:'bouclier',nom:'Bouclier de la paix',icone:'i-shield',type:'duree',glow:'#3ecf8e22',info:'Ta ville ne peut pas être attaquée.',items:[
-          {id:'bp8',l:'8 h',h:8,c:'v',vu:1,n:'Bouclier de la paix – 8 heures'},{id:'bp24',l:'24 h',h:24},{id:'bp3j',l:'3 j',h:72},{id:'bp30j',l:'30 j',h:720}]},
-        {id:'recolte',nom:'Récolte +50 %',icone:'i-sprout',type:'duree',glow:'#8dd36a22',info:'Augmentation de la vitesse de récolte : +50 % pour toutes les ressources.',items:[
-          {id:'rec8',l:'8 h',h:8,c:'b',vu:1,n:'Augmentation de la vitesse de récolte - 8 heures'},{id:'rec24',l:'24 h',h:24,c:'p',vu:1,n:'Amélioration de récolte - 24 heures'}]},
-        {id:'antireco',nom:'Anti-reconnaissance',icone:'i-eyeoff',type:'duree',glow:'#8db6f222',info:'Longue-vue : les éclaireurs ennemis n’obtiennent rien sur ta ville.',items:[
-          {id:'ar24',l:'24 h',h:24,c:'v',vu:1,n:'Longue-vue anti-reconnaissance (24 h)'},{id:'ar7j',l:'7 j',h:168}]},
         {id:'attaque',nom:'Attaque +5 %',icone:'t-swords',type:'duree',glow:'#ef8a7422',info:'Amélioration d’attaque : +5 % d’attaque pour toutes les troupes (+10 % pour la version avancée, d’après le wiki).',items:[
           {id:'att12',l:'12 h',h:12,c:'v',vu:1,n:'Amélioration d’attaque - 12 heures'},{id:'att24',l:'24 h',h:24,c:'b',vu:1,n:'Amélioration d’attaque - 24 heures'},{id:'att24a',l:'24 h, +10 %',h:24}]},
         {id:'defense',nom:'Défense +5 %',icone:'i-shield2',type:'duree',glow:'#8db6f222',info:'Amélioration de défense : +5 % de défense pour toutes les troupes (+10 % pour la version avancée, d’après le wiki).',items:[
@@ -128,19 +122,10 @@ window.RC_JEU={
         {id:'cles',nom:'Clés',icone:'i-lock',type:'compte',info:'Pour les coffres de la taverne.',items:[
           {id:'cle_ar',l:'Clé en argent',c:'p',vu:1,n:'Clé en argent'},{id:'cle_or',l:'Clé en or',c:'o',vu:1,n:'Clé en or'},
           {id:'cle_cr',l:'Clé de cristal (équipement)',c:'o',vu:1,n:'Clé de cristal'},{id:'cle_sv',l:'Clé de souverain (événements)',c:'o',vu:1,n:'Clé de souverain'}]},
-        {id:'devises',nom:'Devises et objets d’événements',icone:'n-gift',type:'compte',sortes:1,glow:'#d8b24c22',info:'À dépenser pendant les événements ou dans leurs boutiques.',items:[
-          {id:'chatoyante',l:'Pièce chatoyante',c:'p',vu:1},{id:'reliques',l:'Pièces de reliques',c:'p',vu:1},{id:'roupie',l:'Roupie du retour',c:'o',vu:1},
-          {id:'shilling',l:'Shilling marin',c:'b',vu:1},{id:'appat',l:'Appât',c:'b',vu:1},{id:'auric',l:'Auric noble',c:'b',vu:1},{id:'pomme',l:'Pomme d’or',c:'p',vu:1}]},
-        {id:'teleports',nom:'Téléportations',icone:'n-map',type:'compte',petit:1,items:[
-          {id:'tp_ci',l:'Ciblée',c:'p',vu:1,n:'Téléportation ciblée'},{id:'tp_te',l:'Territoriale',c:'b',vu:1,n:'Téléportation territoriale'},{id:'tp_al',l:'Aléatoire',c:'v',vu:1,n:'Téléportation aléatoire'}]},
         {id:'constr',nom:'Château et tours de guet',icone:'i-keep',type:'compte',petit:1,vals:1,items:[
           {id:'livre_all',l:'Livre d’alliance (château)',c:'v',vu:1,n:'Livre d’alliance'},{id:'fleche_res',l:'Flèche de résistance (tours de guet)',c:'v',vu:1,n:'Flèche de résistance'}]},
-        {id:'reinit',nom:'Remises à zéro',icone:'i-update',type:'compte',petit:1,vals:1,items:[
-          {id:'reinit_talent',l:'Talents',c:'b',vu:1,n:'Réinitialisation de talent'},{id:'reinit_comp',l:'Compétences d’un commandant',c:'p',vu:1,n:'Réinitialisation des compétences'}]},
-        {id:'lohar',nom:'Chefs barbares',icone:'i-skull',type:'compte',petit:1,info:'Invoquent un chef barbare et ses troupes d’élite près de ta ville.',items:[
-          {id:'arc_lohar',l:'Arc long de Lohar',c:'v',vu:1},{id:'bouc_lohar',l:'Bouclier de Lohar',c:'b',vu:1}]},
-        {id:'ville',nom:'Ville et royaume',icone:'i-town',type:'compte',petit:1,vals:1,items:[
-          {id:'pinceau',l:'Petit pinceau (thèmes de ville)',c:'p',vu:1,n:'Petit pinceau'},{id:'civ',l:'Changement de civilisation',c:'p',vu:1,n:'Changement de civilisation'},{id:'passeport',l:'Page de passeport (immigration)',c:'o',vu:1,n:'Page de passeport'}]}]
+        {id:'migration',nom:'Migration',icone:'n-map',type:'compte',petit:1,info:'Pour changer de royaume (immigration).',items:[
+          {id:'passeport',l:'Page de passeport',c:'o',vu:1,n:'Page de passeport'}]}]
     }
   },
   /* Accélérateurs : durées en minutes (même étude). Les quatre types spécialisés vont de 1 min à 15 h ; l'universel en plus 24 h, 3 j, 7 j, 30 j.

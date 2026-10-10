@@ -21,11 +21,8 @@ const OBJETS = [
   ['Boosts', [
     ['res5', 'orange, valeur du haut « 20 000 » : deux armures argentées avec des boucliers ronds rouges (Réserve)'],
     ['res6', 'orange, valeur du haut « 50 000 » : même dessin (Réserve)'],
-    ['bp8', 'vert, « 8h » : écusson doré ailé avec une gemme verte (Bouclier de la paix)'], ['bp24', 'même écusson, « 24h »'], ['bp3j', 'même écusson, « 3j »'], ['bp30j', 'même écusson, « 30j »'],
-    ['rec8', 'bleu, « 8h » : pelle avec une croix verte (récolte)'], ['rec24', 'violet, « 24h » : pelle avec une croix verte (récolte)'],
     ['att12', 'vert, « 12h » : lances ou flèches avec une croix verte (attaque)'], ['att24', 'bleu, « 24h » : lances ou flèches avec une croix verte (attaque)'], ['att24a', 'violet, « 24h » : lances ou flèches (attaque avancée)'],
     ['def12', 'vert, « 12h » : bouclier rond métallique avec une croix verte (défense)'], ['def24', 'bleu, « 24h » : bouclier rond métallique avec une croix verte (défense)'], ['def24a', 'violet, « 24h » : bouclier rond (défense avancée)'],
-    ['ar24', 'vert, « 24h » : longue-vue avec un rond rouge barré (anti-reconnaissance)'], ['ar7j', 'même longue-vue, « 7j »'],
     ['exp25', 'bleu, « 4h » : soldats en armure avec des boucliers dorés (expansion d’armée basique)'],
     ['exp50', 'violet, « 4h » : soldats en armure avec des boucliers dorés (expansion d’armée avancée)']]],
   ['Équipement', [
@@ -63,21 +60,11 @@ const OBJETS = [
     ['pa50', 'fiole verte, valeur du haut « 50 » (points d’action)'], ['pa100', 'fiole verte, « 100 »'], ['pa500', 'fiole verte, « 500 »'], ['pa1000', 'fiole verte, « 1 000 »'],
     ['cle_ar', 'violet : clé argentée (clé en argent)'], ['cle_or', 'orange : clé dorée simple (clé en or)'],
     ['cle_cr', 'orange : clé dorée avec un orbe bleu (clé de cristal)'], ['cle_sv', 'orange : clé dorée avec une gemme verte (clé de souverain)'],
-    ['chatoyante', 'violet : pièce argentée gravée « ROK » (pièce chatoyante)'], ['reliques', 'violet : deux gemmes vertes serties d’or (pièces de reliques)'],
-    ['roupie', 'orange : pièce hexagonale dorée avec une couronne (roupie du retour)'], ['shilling', 'bleu : pièce dorée avec un poisson (shilling marin)'],
-    ['appat', 'bleu : sac avec un poisson orange (appât)'], ['auric', 'bleu : médaillon hexagonal bleu et or (auric noble)'], ['pomme', 'violet : pomme dorée (pomme d’or)'],
-    ['tp_ci', 'violet : caisse en bois avec un drapeau jaune et des flèches jaunes (téléportation ciblée)'],
-    ['tp_te', 'bleu : caisse en bois avec un drapeau violet et des flèches violettes (téléportation territoriale)'],
-    ['tp_al', 'vert : caisse en bois avec un point d’interrogation bleu (téléportation aléatoire)'],
     ['livre_all', 'vert : livre rouge avec une épée (livre d’alliance)'], ['fleche_res', 'vert : pointe métallique avec une flamme (flèche de résistance)'],
-    ['arc_lohar', 'vert : chef barbare (arc long de Lohar)'], ['bouc_lohar', 'bleu : chef barbare (bouclier de Lohar)'],
-    ['pinceau', 'violet : pinceau doré à poils arc-en-ciel (petit pinceau)'], ['civ', 'violet : pyramide et temple avec des flèches (changement de civilisation)'],
     ['passeport', 'orange : carte dépliée avec une flèche jaune (page de passeport)'],
+    ['ignorer', 'objets sans intérêt pour l’appli, à donner sans quantité ni doute : boucliers de la paix (écusson doré ailé), longues-vues anti-reconnaissance, pelles de récolte (croix verte), pièce argentée « ROK », gemmes vertes serties d’or, pièce hexagonale à couronne, pièce au poisson, sac au poisson, médaillon hexagonal bleu et or, pomme dorée, caisses en bois à flèches (téléportations), chef barbare Lohar, pinceau arc-en-ciel, pyramide et temple (civilisation), livre « 2025 », livre vert et bleu et rouleau à ruban violet (réinitialisations), décorations de ville (petits bâtiments sur un carré d’herbe), rouleau rouge'],
     ['tresor_reine', 'orange : coffre bombé en métal doré et gris, serrure en forme de bouclier (trésor de la Reine guerrière)'],
-    ['coffre_scm', 'orange : coffre en bois cerclé d’or, fermoir sur le devant (coffre de sculpture de commandant)'],
-    ['reinit_talent', 'bleu : livre vert et bleu avec des symboles de couleur (réinitialisation de talent)'],
-    ['reinit_comp', 'violet : rouleau brun avec un ruban violet (réinitialisation des compétences)'],
-    ['ignorer', 'orange, SANS quantité : livre rouge marqué « 2025 » avec une couronne (livre de l’année, à ignorer)']]]
+    ['coffre_scm', 'orange : coffre en bois cerclé d’or, fermoir sur le devant (coffre de sculpture de commandant)']]]
 ];
 const ID_OBJETS = OBJETS.flatMap(([, L]) => L.map(([id]) => id)).concat(['aucun', 'inconnu']);
 const GUIDE = OBJETS.map(([o, L]) => `Onglet ${o} :\n` + L.map(([id, d]) => `  ${id} = ${d}`).join('\n')).join('\n');
