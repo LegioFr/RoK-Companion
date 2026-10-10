@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Ressources, style moderne</title>
+<!-- Page d'aperçu (2026-10-10) : l'onglet Ressources de l'Inventaire dans un style moderne, demandé par Mickaël
+     (« Oublie ce que tu as fait, fais-moi juste un aperçu du menu Ressources dans un style moderne et beau »).
+     Ce n'est pas l'appli : nombres de la version « Exemples ». À supprimer une fois le style choisi et intégré. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap">
+<style>
+:root{color-scheme:dark;
+  --bg:#07090f;--text:#f5f7fb;--muted:#9aa3b5;--faint:#6b7488;--line:rgba(255,255,255,.08);--glass:rgba(255,255,255,.045);
+  --food:#f6b544;--food-2:#ffd88a;--wood:#6fd38c;--wood-2:#b4f0c2;--stone:#8fb2e0;--stone-2:#cbdcf3;--gold:#f7d56b;--gold-2:#fff0b8;--gem:#ff6f91;--gem-2:#ffb3c6;
+  --ui:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;--num:"Plus Jakarta Sans",Inter,system-ui,sans-serif}
+*{box-sizing:border-box}html,body{margin:0}
+body{min-height:100vh;background:var(--bg);color:var(--text);font:15px/1.45 var(--ui);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+/* fond : lueurs douces aux couleurs des ressources, qui bougent lentement */
+.bgfx{position:fixed;inset:-20%;z-index:-1;pointer-events:none;filter:blur(70px);opacity:.55}
+.bgfx i{position:absolute;border-radius:50%;animation:drift 22s ease-in-out infinite alternate}
+.bgfx i:nth-child(1){left:8%;top:6%;width:40vw;height:40vw;background:radial-gradient(closest-side,rgba(246,181,68,.35),transparent)}
+.bgfx i:nth-child(2){right:4%;top:18%;width:36vw;height:36vw;background:radial-gradient(closest-side,rgba(111,211,140,.22),transparent);animation-duration:26s}
+.bgfx i:nth-child(3){left:30%;bottom:0;width:46vw;height:46vw;background:radial-gradient(closest-side,rgba(143,178,224,.22),transparent);animation-duration:30s}
+@keyframes drift{to{transform:translate(4vw,3vh) scale(1.08)}}
+svg{display:block;flex:none}button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:1000px;margin:0 auto;padding:28px 20px 80px}
+@media(max-width:600px){.wrap{padding:20px 14px 60px}}
+
+/* en-tête */
+.hd{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
+.hd h1{margin:0;font:800 40px/1 var(--num);letter-spacing:-.03em}
+.hd p{margin:6px 0 0;color:var(--muted);font-size:14px}
+.btn-imp{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border:0;border-radius:999px;background:linear-gradient(180deg,#fff,#dfe5ef);color:#0b0f17;font-weight:600;font-size:14px;box-shadow:0 8px 24px -10px rgba(255,255,255,.4)}
+.btn-imp svg{width:18px;height:18px}
+@media(max-width:600px){.hd h1{font-size:32px}.btn-imp span{display:none}.btn-imp{width:44px;padding:0;justify-content:center}}
+
+/* onglets : contrôle segmenté avec indicateur qui glisse */
+.seg{position:relative;display:flex;gap:2px;width:max-content;max-width:100%;overflow-x:auto;margin-bottom:22px;padding:4px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.035);scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{position:relative;z-index:1;flex:none;min-height:38px;padding:0 15px;border:0;border-radius:10px;background:none;color:var(--muted);font-weight:500;font-size:14px;transition:color .25s}
+.seg button.on{color:var(--text)}
+.seg button:not(.on){cursor:default}
+.seg .ind{position:absolute;top:4px;bottom:4px;left:0;border-radius:10px;background:rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 4px 14px -6px #000;transition:left .35s cubic-bezier(.2,.8,.2,1),width .35s cubic-bezier(.2,.8,.2,1)}
+
+/* carte en verre */
+.card{position:relative;border:1px solid var(--line);border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.025));-webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 24px 48px -28px rgba(0,0,0,.9)}
+.in{animation:in .7s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:var(--d,0s)}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+.lab{color:var(--muted);font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.num{font-family:var(--num);font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+
+/* total */
+.tot{padding:24px;margin-bottom:16px}
+.tot-h{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.tot .big{margin-top:6px;font-size:56px;line-height:1}
+.tot .big small{margin-left:6px;color:var(--muted);font-size:24px;font-weight:700}
+.tot-k{display:flex;gap:26px}
+.tot-k div{display:grid;gap:4px}
+.tot-k b{font:700 22px/1 var(--num);letter-spacing:-.02em}
+.tot-k div>span{color:var(--muted);font-size:13px}
+.stack{display:flex;gap:4px;height:12px;margin:22px 0 14px}
+.stack i{flex:var(--w) 1 0;min-width:8px;border-radius:999px;background:linear-gradient(90deg,var(--c),var(--c2));box-shadow:0 0 18px -4px var(--c);transform-origin:left;animation:grow 1.1s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(.25s + var(--k)*.08s)}
+@keyframes grow{from{transform:scaleX(0)}}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px}
+.legend span{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:13.5px}
+.legend b{color:var(--text);font-weight:600}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
+@media(max-width:600px){.tot{padding:20px}.tot .big{font-size:44px}.tot-k{gap:20px}}
+
+/* ressources */
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media(max-width:700px){.grid{grid-template-columns:minmax(0,1fr)}}
+.rc{overflow:hidden;padding:20px;transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .35s;text-align:left;width:100%}
+.rc::before{content:"";position:absolute;right:-60px;top:-80px;width:220px;height:220px;border-radius:50%;background:radial-gradient(closest-side,var(--c),transparent);opacity:.16;pointer-events:none;transition:opacity .35s}
+.rc:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 30px 56px -30px #000,0 0 0 1px color-mix(in srgb,var(--c) 18%,transparent)}
+.rc:hover::before{opacity:.26}
+.rc-h{display:flex;align-items:center;gap:12px}
+.chip{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:color-mix(in srgb,var(--c) 16%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 30%,transparent)}
+.chip svg{width:30px;height:30px;filter:drop-shadow(0 3px 5px rgba(0,0,0,.5))}
+.rc-h .nm{flex:1;font-weight:600;font-size:16px}
+.rc-h .pc{color:var(--muted);font-size:13px}
+.rc .val{margin:18px 0 4px;font-size:44px;line-height:1}
+.rc .val small{margin-left:4px;color:var(--muted);font-size:20px;font-weight:700}
+.rc .sub{color:var(--muted);font-size:13.5px}
+/* barre en ville / en caisses */
+.split{display:flex;gap:3px;height:8px;margin:18px 0 10px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.05)}
+.split i{transform-origin:left;animation:grow 1.1s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--d,0s) + .3s)}
+.split .a{flex:var(--a) 1 0;border-radius:999px;background:linear-gradient(90deg,var(--c),var(--c2))}
+.split .b{flex:var(--b) 1 0;border-radius:999px;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--c) 55%,transparent) 0 5px,color-mix(in srgb,var(--c) 25%,transparent) 5px 10px)}
+.sk{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;color:var(--muted)}
+.sk b{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+.sk span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:10px;height:10px;border-radius:3px;background:var(--c)}
+.sw.st{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--c) 70%,transparent) 0 3px,color-mix(in srgb,var(--c) 30%,transparent) 3px 6px)}
+
+/* gemmes, coffres, packs */
+.row3{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:700px){.row3{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.row3 .gem{grid-column:1/-1}}
+.mini{padding:18px}
+.mini .val{margin:14px 0 4px;font-size:32px;line-height:1}
+.mini .sub{color:var(--muted);font-size:13px;line-height:1.4}
+
+/* détail des caisses */
+.det{margin-top:16px;padding:22px}
+.det-h{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.det-h h2{margin:0;font:700 20px/1.2 var(--num);letter-spacing:-.02em}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pills button{display:inline-flex;align-items:center;gap:7px;min-height:36px;padding:0 13px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.03);color:var(--muted);font-size:13.5px;font-weight:500;transition:all .25s}
+.pills button.on{color:var(--text);border-color:color-mix(in srgb,var(--c) 55%,transparent);background:color-mix(in srgb,var(--c) 14%,transparent)}
+.bars{display:grid;gap:14px}
+.br{display:grid;grid-template-columns:120px minmax(0,1fr) 110px;align-items:center;gap:14px}
+.br .k{font-weight:600}.br .k small{display:block;color:var(--muted);font-weight:400;font-size:12.5px}
+.br .t{height:10px;border-radius:999px;background:rgba(255,255,255,.05);overflow:hidden}
+.br .t i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--c),var(--c2));box-shadow:0 0 14px -2px var(--c);transform-origin:left;animation:grow .9s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--k)*.07s)}
+.br .v{text-align:right;font:700 17px/1 var(--num);letter-spacing:-.02em}
+.det-f{display:flex;justify-content:space-between;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13.5px}
+.det-f b{color:var(--text);font:700 17px/1 var(--num)}
+@media(max-width:600px){.br{grid-template-columns:92px minmax(0,1fr) 78px;gap:10px}.det{padding:18px}}
+.foot{margin-top:22px;color:var(--faint);font-size:12.5px;text-align:center}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bgfx" aria-hidden="true"><i></i><i></i><i></i></div>
+<script src="icones.js"></script>
+<div class="wrap">
+  <div class="hd in">
+    <div><h1>Inventaire</h1><p>Profil Principal · mis à jour le 10 oct.</p></div>
+    <button class="btn-imp" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>Importer</span></button>
+  </div>
+  <div class="seg in" id="seg" style="--d:.05s">
+    <span class="ind" id="ind"></span>
+    <button type="button" class="on">Ressources</button><button type="button">Accélérateurs</button><button type="button">Boosts</button><button type="button">Équipement</button><button type="button">Attirail</button><button type="button">Autre</button>
+  </div>
+  <div id="app"></div>
+  <p class="foot">Aperçu du style, avec les nombres des exemples. L’appli n’est pas modifiée.</p>
+</div>
+<script>
+(function(){
+var ic=function(id){return '<svg viewBox="0 0 64 64" aria-hidden="true"><use href="#'+id+'"/></svg>';};
+var fr=function(x,d){return x.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}).replace(/ | /g,' ');};
+/* exemples (en millions) : en ville, caisses [taille, nombre] */
+var RES=[
+ {k:'food',n:'Nourriture',ic:'r-food',v:32,C:[[500000,18],[150000,32],[50000,44]]},
+ {k:'wood',n:'Bois',ic:'r-wood',v:27,C:[[500000,16],[150000,28],[50000,36]]},
+ {k:'stone',n:'Pierre',ic:'r-stone',v:12,C:[[375000,8],[112500,20],[37500,21]]},
+ {k:'gold',n:'Or',ic:'r-gold',v:6.1,C:[[200000,10],[50000,19],[15000,8]]}];
+RES.forEach(function(r){r.c=r.C.reduce(function(a,x){return a+x[0]*x[1];},0)/1e6;r.t=r.v+r.c;});
+var TOT=RES.reduce(function(a,r){return a+r.t;},0),VILLE=RES.reduce(function(a,r){return a+r.v;},0),CAIS=TOT-VILLE,SEL='food';
+function M(x){return x>=100?fr(Math.round(x),0):x.toLocaleString('fr-FR',{maximumFractionDigits:1}).replace(/\u202f|\u00a0/g,'\u2009');}
+function taille(t){return t>=1e6?fr(t/1e6,0)+' M':fr(t,0);}
+function vv(x){return x>=1?M(x)+' M':fr(Math.round(x*1000),0)+' K';}
+function cv(r){return '--c:var(--'+r.k+');--c2:var(--'+r.k+'-2)';}
+function total(){return '<section class="card tot in" style="--d:.1s"><div class="tot-h"><div><div class="lab">Toutes tes ressources</div><div class="big num"><span data-n="'+TOT+'">'+M(TOT)+'</span><small>M</small></div></div>'+
+  '<div class="tot-k"><div><b><span data-n="'+VILLE+'">'+M(VILLE)+'</span> M</b><span>en ville</span></div><div><b><span data-n="'+CAIS+'">'+M(CAIS)+'</span> M</b><span>en caisses</span></div></div></div>'+
+  '<div class="stack">'+RES.map(function(r,k){return '<i style="--w:'+r.t.toFixed(2)+';--k:'+k+';'+cv(r)+'"></i>';}).join('')+'</div>'+
+  '<div class="legend">'+RES.map(function(r){return '<span><i class="dot" style="'+cv(r)+'"></i>'+r.n+' <b>'+M(r.t)+' M</b> · '+Math.round(r.t/TOT*100)+' %</span>';}).join('')+'</div></section>';}
+function carte(r,i){return '<button type="button" class="card rc in" data-k="'+r.k+'" style="--d:'+(.18+i*.06).toFixed(2)+'s;'+cv(r)+'">'+
+  '<div class="rc-h"><span class="chip">'+ic(r.ic)+'</span><span class="nm">'+r.n+'</span><span class="pc">'+Math.round(r.t/TOT*100)+' % du total</span></div>'+
+  '<div class="val num"><span data-n="'+r.t+'">'+M(r.t)+'</span><small>M</small></div><div class="sub">'+r.C.reduce(function(a,x){return a+x[1];},0)+' caisses à ouvrir</div>'+
+  '<div class="split"><i class="a" style="--a:'+r.v+'"></i><i class="b" style="--b:'+r.c.toFixed(2)+'"></i></div>'+
+  '<div class="sk"><span><i class="sw"></i>En ville <b>'+M(r.v)+' M</b></span><span><i class="sw st"></i>En caisses <b>'+M(r.c)+' M</b></span></div></button>';}
+function mini(){return '<div class="row3">'+
+  '<div class="card mini gem in" style="--d:.45s;--c:var(--gem)"><div class="rc-h"><span class="chip">'+ic('r-gem')+'</span><span class="nm">Gemmes</span></div><div class="val num"><span data-n="185430" data-e="1">185 430</span></div><div class="sub">184 930 en ville · 500 en caisses (50 × 10)</div></div>'+
+  '<div class="card mini in" style="--d:.5s;--c:#e0b25c"><div class="rc-h"><span class="chip">'+ic('p-chest')+'</span><span class="nm">Coffres</span></div><div class="val num"><span data-n="7" data-e="1">7</span></div><div class="sub">au choix · jusqu’à 820 K de nourriture</div></div>'+
+  '<div class="card mini in" style="--d:.55s;--c:#d58a5a"><div class="rc-h"><span class="chip">'+ic('p-pack')+'</span><span class="nm">Packs</span></div><div class="val num"><span data-n="2" data-e="1">2</span></div><div class="sub">au hasard · ≈ 9 125 en moyenne</div></div></div>';}
+function detail(){var r=RES.filter(function(x){return x.k===SEL;})[0],mx=Math.max.apply(null,r.C.map(function(x){return x[0]*x[1];}));
+  return '<section class="card det in" style="--d:.6s;'+cv(r)+'"><div class="det-h"><h2>Détail des caisses</h2><div class="pills">'+
+    RES.map(function(x){return '<button type="button" data-s="'+x.k+'" class="'+(x.k===SEL?'on':'')+'" style="'+cv(x)+'"><i class="dot" style="'+cv(x)+'"></i>'+x.n+'</button>';}).join('')+'</div></div>'+
+    '<div class="bars">'+r.C.map(function(x,k){var val=x[0]*x[1]/1e6;return '<div class="br"><span class="k">'+taille(x[0])+'<small>× '+x[1]+'</small></span><span class="t"><i style="width:'+(x[0]*x[1]/mx*100).toFixed(1)+'%;--k:'+k+'"></i></span><span class="v">'+vv(val)+'</span></div>';}).join('')+'</div>'+
+    '<div class="det-f"><span>'+r.C.reduce(function(a,x){return a+x[1];},0)+' caisses de '+r.n.toLowerCase()+'</span><b>'+M(r.c)+' M</b></div></section>';}
+function compte(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  document.querySelectorAll('[data-n]').forEach(function(e){var n=+e.dataset.n,ent=e.dataset.e,t0=null,d=1100;
+    function f(t){if(!t0)t0=t;var k=Math.min(1,(t-t0)/d),v=n*(1-Math.pow(1-k,4));e.textContent=ent?fr(Math.round(v),0):M(v);if(k<1)requestAnimationFrame(f);}
+    requestAnimationFrame(f);});}
+function rendre(){document.getElementById('app').innerHTML=total()+'<div class="grid">'+RES.map(carte).join('')+'</div>'+mini()+detail();compte();}
+/* indicateur des onglets */
+function ind(){var on=document.querySelector('#seg .on'),i=document.getElementById('ind');i.style.left=on.offsetLeft+'px';i.style.width=on.offsetWidth+'px';}
+document.addEventListener('click',function(e){var b=e.target.closest('.pills button');if(b){SEL=b.dataset.s;var d=document.querySelector('.det');d.outerHTML=detail();return;}
+  var c=e.target.closest('.rc');if(c){SEL=c.dataset.k;document.querySelector('.det').outerHTML=detail();document.querySelector('.det').scrollIntoView({behavior:'smooth',block:'center'});return;}
+});
+addEventListener('resize',ind);
+rendre();ind();document.fonts&&document.fonts.ready.then(ind);
+})();
+</script>
+</body>
+</html>
