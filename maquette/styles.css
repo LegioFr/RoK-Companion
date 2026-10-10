@@ -806,3 +806,6 @@ button.more{border:0;background:none;cursor:pointer;font-family:inherit;min-heig
   .gx-i{padding:8px 10px}
   .gx-i b{font-size:17px}
 }
+/* carte seule sur sa rangée : toute la largeur, lignes sur 2 colonnes (choix de Mickaël du 2026-10-10) */
+.ic.large{grid-column:1/-1}
+@media(min-width:700px){.ic-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}}

@@ -63,6 +63,7 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   await ev(p,()=>{location.hash='accueil'});await p.waitForTimeout(300);ok('Total nourriture repris sur l’Accueil',/Total nourriture 6\d M/.test(await txt(p,'#homeTiles')||''),await txt(p,'#homeTiles'));
   await etat(p,'demo','#ma-ville-inventaire');await p.click('#invChips [data-inv=acc]');await p.click('#gAcc .ic-h[data-arg=general]');await p.waitForTimeout(200);
   ok('Tuile Généraux : 4 temps « avec les généraux »',(await ev(p,()=>document.querySelectorAll('#gAcc .it.gx .gx-i').length))===4);
+  ok('Détail des accélérateurs : la carte Généraux seule prend toute la largeur',(await ev(p,()=>{const c=document.querySelector('#gAcc .ic.large');const g=document.querySelector('#gAcc .ic-grid');return !!c&&/Généraux/.test(c.textContent)&&Math.abs(c.getBoundingClientRect().width-g.getBoundingClientRect().width)<2;})));
   ok('13 durées pour les accélérateurs généraux, 4 marquées *',(await ev(p,()=>[document.querySelectorAll('#shBody .inv-grid input').length,[...document.querySelectorAll('#shBody label')].filter(l=>/\*$/.test(l.textContent)).length].join('/')))==='13/4');
   await p.click('#sheet [data-act=close-sheet]');
   await p.click('#invChips [data-inv=autre]');await p.click('[data-act=item-edit][data-arg="autre|new"]');await p.fill('#itN','Passeports');await p.fill('#itQ','5');await p.click('[data-act=item-save]');await p.waitForTimeout(150);
