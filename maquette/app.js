@@ -475,22 +475,34 @@ function renderCity(){
   $('#gResearch').innerHTML=!p.research.length?vide('Pas encore renseignées.'):p.research.map(function(r){return '<div class="prow"><div class="ptop"><span>'+r[0]+'</span><span>'+r[1]+' %</span></div><div class="bar"><div class="fill" style="width:'+r[1]+'%"></div></div></div>';}).join('');
   $('#gTroops').innerHTML=!p.troops.length?vide('Pas encore renseignées.'):p.troops.map(function(t){return row({icon:t[1],title:t[0],sub:'Niveau '+t[2],val:nb(t[3])});}).join('');
   // inventaire, rangé comme les onglets du jeu (décision du 2026-10-09)
-  function fold(icon,name,val,det,sub,edit){return '<details class="fold"><summary><span class="ri">'+ic(icon)+'</span><span class="rc"><b>'+name+'</b>'+(sub?'<small>'+sub+'</small>':'')+'</span><span class="rv'+(val==='—'?' unk':'')+'">'+val+'</span><span class="go">'+ic('i-next2')+'</span></summary><div class="fold-b">'+det+'</div>'+
-    (edit?'<div class="fold-f"><button class="btn" type="button" data-act="inv-edit" data-arg="'+edit+'">'+ic('i-pencil')+'Modifier</button></div>':'')+'</details>';}
-  function lignes(L,vide){return L.length?L.map(function(c){return '<div><span>'+c[0]+'</span>'+c[1]+'</div>';}).join(''):'<div><span>'+vide+'</span>—</div>';}
-  var resH=RN.map(function(x){var r=p.res[x[0]];
-    /* « En ville » comme dans la barre du haut du jeu : un chiffre après la virgule (84,2 M) ; remarque de Mickaël du 2026-10-10 */
-    var L=(r.v!=null?[['En ville',(Math.round(r.v*10)/10).toFixed(1).replace('.',',')+'\u00a0M']]:[]).concat(r.c.map(function(c){return ['Caisses de '+c[0].replace(/ /g,'\u00a0'),nb(c[1])];}));
-    return fold(x[1],x[2],fM(resTot(r)),lignes(L,'Pas encore renseigné'),'',x[0]);}).join('');
-  var g=p.gemsIn,gt=g.v==null&&!g.c.length?'—':nb((g.v||0)+g.c.reduce(function(a,c){return a+c[1]*c[2];},0));
-  resH+=fold('r-gem','Gemmes',gt,lignes((g.v!=null?[['En ville',nb(g.v)]]:[]).concat(g.c.map(function(c){return ['Caisses de '+c[0].replace(/ /g,'\u00a0'),nb(c[1])];})),'Pas encore renseigné'),'','gems');
+  /* Inventaire, mélange des pistes A et C (choix de Mickaël du 2026-10-10) : grandes tuiles en haut (total, part en ville et en caisses),
+     cartes du détail en dessous (une ligne par taille de caisse ou par durée, avec une barre). Toucher une tuile ou une carte ouvre la saisie. */
+  var CHEV='<svg class="inv-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+  function f1(m){return (Math.round(m*10)/10).toFixed(1).replace('.',',')+'\u00a0M';}
+  function grand(o){var t=(o.v||0)+(o.c||0);
+    return '<button class="it'+(o.cls?' '+o.cls:'')+(o.val==='—'?' vide':'')+'" type="button" data-act="inv-edit" data-arg="'+o.arg+'" style="--glow:'+o.glow+'">'+
+      '<span class="it-h">'+ic(o.icon)+'<small>'+o.nom+'</small>'+CHEV+'<b>'+o.val+'</b></span>'+
+      (o.lv!=null&&t>0?'<span class="it-bar"><i class="v" style="width:'+(o.v/t*100)+'%"></i><i class="c" style="width:'+(o.c/t*100)+'%"></i></span>'+
+        '<span class="it-l"><span class="v">En ville <b>'+o.lv+'</b></span><span class="c">En caisses <b>'+o.lc+'</b></span></span>':'<span class="it-s">'+o.sub+'</span>')+'</button>';}
+  function carte(arg,icon,nom,tot,L,vide){var mx=Math.max.apply(null,L.map(function(x){return x[2];}).concat([0]));
+    return '<section class="ic"><button class="ic-h" type="button" data-act="inv-edit" data-arg="'+arg+'" aria-label="Modifier : '+nom+'">'+ic(icon)+'<b>'+nom+'</b><span>'+tot+'</span>'+ic('i-pencil')+'</button>'+
+      (L.length?L.map(function(x){return '<div class="ic-l"><span>'+x[0]+'</span><span class="ic-tr"><i style="width:'+Math.max(3,mx?x[2]/mx*100:0)+'%"></i></span><b>×\u00a0'+nb(x[1])+'</b></div>';}).join(''):'<p class="ic-vide">'+vide+'</p>')+'</section>';}
+  var GLOW={food:'#d8b24c33',wood:'#c27a4a33',stone:'#a9bdd52e',gold:'#f3d98233',gems:'#ef6a7a2e',build:'#d8a24c2e',research:'#8db6f22e',train:'#ef8a742e',heal:'#3ecf8e26',general:'#b99af02e'};
+  function cais(r){return r.c.reduce(function(a,c){return a+c[1]*c[2];},0);}
+  var resT=RN.map(function(x){var r=p.res[x[0]],c=cais(r),has=r.v!=null||r.c.length>0;
+    return grand({arg:x[0],icon:x[1],nom:x[2],val:has?fM(resTot(r)):'—',sub:'À renseigner',v:r.v||0,c:c,lv:has?(r.v!=null?f1(r.v):'—'):null,lc:r.c.length?fM(c):'—',glow:GLOW[x[0]]});}).join('');
+  var g=p.gemsIn,gc=g.c.reduce(function(a,c){return a+c[1]*c[2];},0),gHas=g.v!=null||g.c.length>0;
+  resT+=grand({arg:'gems',icon:'r-gem',nom:'Gemmes',cls:'large',val:gHas?nb((g.v||0)+gc):'—',sub:gHas?'En ville, dans la barre du haut du jeu':'À renseigner',v:g.v||0,c:gc,lv:g.c.length?(g.v!=null?nb(g.v):'—'):null,lc:nb(gc),glow:GLOW.gems});
   var cf=p.coffres||{},nC=sumK(cf,COFFRES),nPk=sumK(cf,PACKS);
-  $('#gRes').innerHTML='<div class="col">'+resH+'</div><div class="col"><div class="list">'+
-    row({act:'inv-edit',data:'coffres',icon:'p-chest',title:'Coffres « Choisissez un »',sub:'Niveaux 1 à 5 · leur contenu n’est pas compté',val:nC==null?'—':nb(nC),valCls:nC==null?'unk':''})+
-    row({act:'inv-edit',data:'coffres',icon:'p-pack',title:'Packs de ressources',sub:'Au hasard · leur contenu n’est pas compté',val:nPk==null?'—':nb(nPk),valCls:nPk==null?'unk':''})+'</div></div>';
-  var accH=AN.map(function(x){var a=p.acc[x[0]]||[];
-    return fold(x[1],x[2],a.length?fH(accTot(a)):'—',lignes(a.map(function(c){return [c[0],nb(c[1])];}),REEL?'Pas encore renseigné':'Aucun'),x[0]==='general'?'Utilisables partout':'',x[0]);});
-  $('#gAcc').innerHTML='<div class="col">'+accH.slice(0,3).join('')+'</div><div class="col">'+accH.slice(3).join('')+'</div>';
+  function mini(icon,nom,sub,n){return '<button class="it-mini'+(n!=null?' ok':'')+'" type="button" data-act="inv-edit" data-arg="coffres">'+ic(icon)+'<span><b>'+nom+'</b><small>'+(n!=null?sub:'À renseigner')+'</small></span><span class="n">'+(n==null?'—':nb(n))+'</span></button>';}
+  var resC=RN.map(function(x){var r=p.res[x[0]];return carte(x[0],x[1],x[2]+' · caisses',r.c.length?fM(cais(r)):'—',r.c.map(function(c){return [c[0],c[1],c[1]*c[2]];}),'Aucune caisse renseignée');}).join('')+
+    (g.c.length?carte('gems','r-gem','Gemmes · caisses',nb(gc),g.c.map(function(c){return [c[0],c[1],c[1]*c[2]];}),''):'');
+  $('#gRes').innerHTML='<div class="it-grid">'+resT+'</div><div class="it-mini-g">'+mini('p-chest','Coffres « Choisissez un »','Niveaux 1 à 5 · contenu non compté',nC)+mini('p-pack','Packs de ressources','Au hasard · contenu non compté',nPk)+'</div>'+
+    '<h3 class="inv-h3">Détail des caisses</h3><div class="ic-grid">'+resC+'</div>';
+  var accT=AN.map(function(x){var a=p.acc[x[0]]||[],n=a.reduce(function(s,c){return s+c[1];},0),gen=x[0]==='general';
+    return grand({arg:x[0],icon:x[1],nom:x[2],cls:gen?'large':'',val:a.length?fH(accTot(a)):'—',sub:a.length?nb(n)+' accélérateur'+(n>1?'s':'')+(gen?' · utilisables partout':''):(REEL?'À renseigner':'Aucun'),glow:GLOW[x[0]]});}).join('');
+  var accC=AN.map(function(x){var a=p.acc[x[0]]||[];return carte(x[0],x[1],x[2],a.length?fH(accTot(a)):'—',a.map(function(c){return [c[0],c[1],c[1]*c[2]];}),REEL?'Pas encore renseigné':'Aucun');}).join('');
+  $('#gAcc').innerHTML='<div class="it-grid">'+accT+'</div><h3 class="inv-h3">Détail par durée</h3><div class="ic-grid">'+accC+'</div>';
   var it=ITEMS[S.inv];if(it){var L=(p.items&&p.items[S.inv])||[];$('#itemsTitle').textContent=it[1];
     $('#gItems').innerHTML=(L.length?'<div class="list">'+L.map(function(o,i){return row({act:'item-edit',data:S.inv+'|'+i,icon:it[0],title:esc(o.n),val:nb(o.q)});}).join('')+'</div>':vide(REEL?'Aucun objet renseigné dans cet onglet.':'Aucun objet dans cet onglet.'))+
       '<div class="btns"><button class="btn" type="button" data-act="item-edit" data-arg="'+S.inv+'|new">'+ic('i-plus')+'Ajouter un objet</button></div>';}

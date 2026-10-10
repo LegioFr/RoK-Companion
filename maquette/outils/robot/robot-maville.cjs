@@ -25,11 +25,9 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   await etat(p,'demo:neuf','#ma-ville-progression');await mesure(p,t,'progression','[data-screen="ma-ville"]');
   await etat(p,'demo','#ma-ville-inventaire');
   for(const inv of ['res','acc','boosts','equip','attirail','autre']){await p.click('#invChips [data-inv='+inv+']');await p.waitForTimeout(150);
-    if(inv==='res'||inv==='acc'){await p.click('#'+(inv==='res'?'gRes':'gAcc')+' details.fold summary >> nth=0');await p.waitForTimeout(120);}
     await mesure(p,t,'inventaire-'+inv,'[data-screen="ma-ville"]');}
   for(const [nom,inv,sel] of [['fenetre-nourriture','res','#gRes [data-act=inv-edit][data-arg=food]'],['fenetre-coffres','res','#gRes [data-act=inv-edit][data-arg=coffres] >> nth=0'],['fenetre-generaux','acc','#gAcc [data-act=inv-edit][data-arg=general]'],['fenetre-objet','autre','[data-act=item-edit][data-arg="autre|new"]']]){
     await p.click('#invChips [data-inv='+inv+']');await p.waitForTimeout(120);
-    if(/nourriture|generaux/.test(nom)){const f=inv==='res'?'#gRes details.fold:has([data-arg=food])':'#gAcc details.fold:has([data-arg=general])';const open=await ev(p,s=>document.querySelector(s).open,f);if(!open){await p.click(f+' summary');await p.waitForTimeout(120);}}
     await p.click(sel);await p.waitForTimeout(250);await mesure(p,t,nom,'#sheet');await p.click('#sheet [data-act=close-sheet]');await p.waitForTimeout(150);}
   for(const sub of ['commandants','equipements','armements']){await etat(p,'demo','#ma-ville-'+sub);await mesure(p,t,sub,'[data-screen="ma-ville"]');}
   await etat(p,'demo','#import');await p.waitForTimeout(800);await mesure(p,t,'importer','[data-screen="import"]');
@@ -50,14 +48,16 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   await etat(p,'demo:f2','#ma-ville-progression');ok('Prérequis non renseigné signalé (Ferme 2)',/Réserve 17/.test(await txt(p,'#pgHero .hh-t')||'')&&/niveau non renseigné/.test(await txt(p,'#pgHero .pres')||''));
   await etat(p,'demo','#ma-ville-inventaire');
   ok('6 onglets d’inventaire comme le jeu',(await txt(p,'#invChips'))==='Ressources Accélérateurs Boosts Équipement Attirail Autre');
-  await p.click('#gRes details.fold summary >> nth=0');await p.click('#gRes [data-act=inv-edit][data-arg=food]');await p.waitForTimeout(200);
+  ok('Inventaire : 5 grandes tuiles et 5 cartes de caisses, gemmes comprises (tuiles A, cartes C)',(await ev(p,()=>[document.querySelectorAll('#gRes .it').length,document.querySelectorAll('#gRes .ic').length].join('/')))==='5/5');
+  await p.click('#gRes .it[data-arg=food]');await p.waitForTimeout(200);
   ok('7 tailles de caisses de nourriture',(await ev(p,()=>document.querySelectorAll('#shBody .inv-grid input').length))===7);
   await p.fill('#iv-ville','douze');await p.click('[data-act=inv-save]');await p.waitForTimeout(150);
   ok('Saisie illisible refusée',(await ev(p,()=>document.querySelectorAll('#shBody .ferr:not([hidden])').length))===1&&await ev(p,()=>document.getElementById('sheet').classList.contains('open')));
   await p.fill('#iv-ville','40,5 M');await p.fill('#iv-5000000','1');await p.click('[data-act=inv-save]');await p.waitForTimeout(250);
-  ok('Nourriture enregistrée et total à jour',/Nourriture 6\d M/.test(await txt(p,'#gRes details.fold')||''),await txt(p,'#gRes details.fold summary'));
+  ok('Nourriture enregistrée et total à jour',/nourriture 6\d M/i.test(await txt(p,'#gRes .it[data-arg=food]')||''),await txt(p,'#gRes .it[data-arg=food]'));
+  ok('« En ville » avec un chiffre après la virgule',/En ville 40,5 M/.test(await txt(p,'#gRes .it[data-arg=food]')||''));
   await ev(p,()=>{location.hash='accueil'});await p.waitForTimeout(300);ok('Total nourriture repris sur l’Accueil',/Total nourriture 6\d M/.test(await txt(p,'#homeTiles')||''),await txt(p,'#homeTiles'));
-  await etat(p,'demo','#ma-ville-inventaire');await p.click('#invChips [data-inv=acc]');await p.click('#gAcc details.fold:has([data-arg=general]) summary');await p.click('#gAcc [data-act=inv-edit][data-arg=general]');await p.waitForTimeout(200);
+  await etat(p,'demo','#ma-ville-inventaire');await p.click('#invChips [data-inv=acc]');await p.click('#gAcc .ic-h[data-arg=general]');await p.waitForTimeout(200);
   ok('13 durées pour les accélérateurs généraux, 4 marquées *',(await ev(p,()=>[document.querySelectorAll('#shBody .inv-grid input').length,[...document.querySelectorAll('#shBody label')].filter(l=>/\*$/.test(l.textContent)).length].join('/')))==='13/4');
   await p.click('#sheet [data-act=close-sheet]');
   await p.click('#invChips [data-inv=autre]');await p.click('[data-act=item-edit][data-arg="autre|new"]');await p.fill('#itN','Passeports');await p.fill('#itQ','5');await p.click('[data-act=item-save]');await p.waitForTimeout(150);
