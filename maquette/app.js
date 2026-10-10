@@ -574,26 +574,30 @@ function saveCorrectMulti(){
 
 /* ================= Import ================= */
 var step=1,anaTimer=null;
-function showStep(n){step=n;$$('[data-steppanel]').forEach(function(p){p.hidden=+p.dataset.steppanel!==n;});
+function showStep(n){step=n;$('#stepper').hidden=n===1;$$('[data-steppanel]').forEach(function(p){p.hidden=+p.dataset.steppanel!==n;});
   $$('#stepper .sp').forEach(function(b){var k=+b.dataset.sp;b.classList.toggle('done',k<n);if(k===n)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});}
 /* Écran Importer redessiné le 2026-10-10 (demande de Mickaël, proposé par Claude) */
+/* Écran Importer, piste C (2026-10-10) : une carte par onglet du jeu ; S.shots garde l'ordre de lecture, Ressources puis Accélérateurs */
+var ONGLET_IMP={res:['Res','Ressources'],acc:['Acc','Accélérateurs']};
 function renderShots(){
-  var n=S.shots.length,vraies=S.shots.filter(function(x){return x.file;}).length;
-  $('#impDrop').hidden=!!n;
-  $('#shots').innerHTML=n?S.shots.map(function(s,i){return '<figure class="shot'+(s.url?' real':'')+'">'+(s.url?'<img src="'+s.url+'" alt="Capture '+(i+1)+'">':'')+'<span class="shot-n">'+(i+1)+'</span>'+
-      (s.file?'<button class="shot-x" type="button" data-act="shot-rm" data-arg="'+i+'" aria-label="Retirer la capture '+(i+1)+'">✕</button>':'')+'</figure>';}).join('')+
-    (vraies&&n<20?'<label class="shot add" for="pickShots">'+ic('i-plus')+'<span>Ajouter</span></label>':''):'';
-  $('#shotsInfo').textContent=n?(vraies?'Touche une miniature ✕ pour la retirer. 20 captures au plus.':'Captures d’exemple : la lecture sera simulée, gratuite.'):'';
-  var sec=Math.ceil(vraies/3)*15;
-  $('#impCount').textContent=n?n+' capture'+(n>1?'s':'')+' prête'+(n>1?'s':''):'Aucune capture';
-  $('#impCost').textContent=!n?'Choisis tes captures pour commencer.':vraies&&SITE_PUB?'Claude Opus 5.5 · environ '+(sec<60?sec+'\u00a0s':Math.round(sec/60)+'\u00a0min')+' · environ '+String(Math.round(vraies*LECT_PRIX*100)/100).replace('.',',')+'\u00a0$':vraies?'La lecture marche sur la maquette publiée.':'Lecture simulée, gratuite.';
-  var b=$('#analyseBtn');b.disabled=!n;b.textContent=n?'Analyser '+(n>1?'les '+n+' captures':'la capture'):'Analyser';
+  var n=S.shots.length,vraies=S.shots.filter(function(x){return x.file;}).length,par={res:0,acc:0};
+  S.shots.forEach(function(s){par[s.tab]++;});
+  ['res','acc'].forEach(function(t){var K=ONGLET_IMP[t][0],k=par[t],add=$('#add'+K);
+    $('#imp'+K).classList.toggle('done',k>0);$('#n'+K).textContent=k;
+    $('#shots'+K).innerHTML=k?S.shots.map(function(s,i){if(s.tab!==t)return '';return '<figure class="shot'+(s.url?' real':'')+'">'+(s.url?'<img src="'+s.url+'" alt="Capture '+(i+1)+'">':'')+'<span class="shot-n">'+(i+1)+'</span>'+
+      (s.file?'<button class="shot-x" type="button" data-act="shot-rm" data-arg="'+i+'" aria-label="Retirer la capture '+(i+1)+'">✕</button>':'')+'</figure>';}).join(''):'<p class="imp-vide">Une capture par écran,<br>jusqu’en bas de la grille</p>';
+    add.innerHTML=ic(k?'i-plus':'n-camera')+(k?'Ajouter':'Ajouter mes captures');add.classList.toggle('primary',!k);add.hidden=vraies>=20;});
+  var sec=Math.ceil(vraies/3)*15,prix=(vraies*LECT_PRIX).toFixed(2).replace('.',','),manque=!par.res?'Ressources':!par.acc?'Accélérateurs':'';
+  $('#impCount').textContent=n?n+' capture'+(n>1?'s':''):'Aucune capture';
+  $('#impCost').textContent=!n?'Environ 0,05\u00a0$ par capture · effacées après lecture':!vraies?'Captures d’exemple · lecture simulée, gratuite':!SITE_PUB?'La lecture marche sur la maquette publiée.':
+    'Environ '+(sec<60?sec+'\u00a0s':Math.round(sec/60)+'\u00a0min')+' · environ '+prix+'\u00a0$'+(manque?' · '+manque+' sans capture : rien n’y changera':'');
+  var b=$('#analyseBtn');b.disabled=!n;b.textContent=n?'Lire '+(n>1?'les '+n+' captures':'la capture'):'Lire';
 }
 /* Avancement capture par capture pendant la lecture */
 var ETAT_TXT={attente:'En attente',envoi:'Envoi…',lecture:'Lecture par Claude…',ok:'Lue',echec:'Non lue'};
 function renderAnaList(J){var box=$('#anaList');if(!box)return;if(!J){box.innerHTML='';return;}
   box.innerHTML=J.files.map(function(f,i){var e=J.etat[i];if(!e)return '';var sh=S.shots[i]||{};
-    return '<div class="imp-li '+e+'">'+(sh.url?'<img src="'+sh.url+'" alt="">':'<span class="imp-li-ph"></span>')+'<span class="imp-li-t"><b>Capture '+(i+1)+'</b><small>'+ETAT_TXT[e]+(e==='ok'&&J.nb[i]!=null?' · '+J.nb[i]+' case'+(J.nb[i]>1?'s':''):'')+(e==='echec'&&J.msg[i]?' · '+esc(J.msg[i]):'')+'</small></span>'+
+    return '<div class="imp-li '+e+'">'+(sh.url?'<img src="'+sh.url+'" alt="">':'<span class="imp-li-ph"></span>')+'<span class="imp-li-t"><b>Capture '+(i+1)+(sh.tab?' · '+ONGLET_IMP[sh.tab][1]:'')+'</b><small>'+ETAT_TXT[e]+(e==='ok'&&J.nb[i]!=null?' · '+J.nb[i]+' case'+(J.nb[i]>1?'s':''):'')+(e==='echec'&&J.msg[i]?' · '+esc(J.msg[i]):'')+'</small></span>'+
       '<span class="imp-li-s">'+(e==='ok'?ic('i-check'):e==='echec'?ic('i-warn'):'<span class="imp-dot"></span>')+'</span></div>';}).join('');}
 function analyse(){
   if(S.shots.some(function(x){return x.file;})){if(!SITE_PUB){say('La lecture des captures marche sur la maquette publiée (site), pas dans ce fichier.');return;}lireVraies();return;}
@@ -1124,7 +1128,7 @@ var ACT={
   'quick-cancel':function(){S.quick=false;renderCity();},'quick-save':quickSave,
   correct:correctSheet,'save-correct':saveCorrect,
   'inv-edit':invSheet,'inv-save':invSave,'item-edit':itemSheet,'item-save':itemSave,'item-del':itemDel,
-  'sample-shots':function(){S.shots=[];S.lect=null;S.lectJob=null;for(var i=0;i<15;i++)S.shots.push({});renderShots();},
+  'sample-shots':function(){S.shots=[];S.lect=null;S.lectJob=null;for(var i=0;i<15;i++)S.shots.push({tab:i<9?'res':'acc'});renderShots();},
   'lect-sure':function(){lectSync();S.lect.sureOk=true;renderLect();say('Éléments sûrs confirmés.');},
   'lect-relire':function(){lectSync();lireVraies(true);},
   'shot-rm':function(i){i=+i;var x=S.shots[i];if(!x)return;try{if(x.url)URL.revokeObjectURL(x.url);}catch(e){}S.shots.splice(i,1);S.lect=null;S.lectJob=null;renderShots();say('Capture retirée.');},
@@ -1253,8 +1257,12 @@ document.addEventListener('change',function(e){
   else if(t.matches('#compList select')){$('#compList').dataset.live='1';compCheck();}
   else if(t.matches('[data-qk]'))quickCount();
   else if(t.matches('[data-notif]')){S.notif[t.dataset.notif]=t.checked;renderPlus();}
-  else if(t.id==='pickShots'){var fs=[].slice.call(t.files||[]).filter(function(f){return /^image\//.test(f.type);}).slice(0,20);
-    if(!fs.length){say('Choisis des images.');return;}S.shots=S.shots.filter(function(x){return x.file;}).concat(fs.map(function(f){return {url:URL.createObjectURL(f),file:f};})).slice(0,20);S.lect=null;S.lectJob=null;renderShots();say(fs.length+' capture'+(fs.length>1?'s':'')+' prête'+(fs.length>1?'s':'')+(SITE_PUB?'. Touche « Analyser » : Claude les lira.':'. Elles restent sur ton appareil.'));t.value='';}
+  else if(t.id==='pickShots'||t.id==='pickShotsAcc'){var tab=t.dataset.tab,fs=[].slice.call(t.files||[]).filter(function(f){return /^image\//.test(f.type);});t.value='';
+    if(!fs.length){say('Choisis des images.');return;}
+    var deja=S.shots.filter(function(x){return x.file;}),place=20-deja.length,pris=fs.slice(0,Math.max(0,place)).map(function(f){return {url:URL.createObjectURL(f),file:f,tab:tab};});
+    if(!pris.length){say('20 captures au plus : retires-en une avant d’en ajouter.');return;}
+    deja=deja.concat(pris);S.shots=deja.filter(function(x){return x.tab==='res';}).concat(deja.filter(function(x){return x.tab==='acc';}));S.lect=null;S.lectJob=null;renderShots();
+    say(pris.length+' capture'+(pris.length>1?'s':'')+' ajoutée'+(pris.length>1?'s':'')+' dans '+ONGLET_IMP[tab][1]+(fs.length>pris.length?' (20 au plus)':'')+'.');}
   else if(t.id==='pickVideo'){var v=t.files&&t.files[0];if(v)openSheet('Vidéo choisie','<p class="shp">'+esc(v.name)+'</p><p class="shp muted">La lecture d’un enregistrement d’écran est prévue plus tard (complément B03). La vidéo reste sur ton appareil.</p>',[['Fermer','close-sheet','primary']]);t.value='';}
   else if(t.id==='pickReport'){var f=t.files&&t.files[0];if(f){S.reports.unshift({t:'Rapport importé',d:TODAY_S+' · à relire',ok:null,img:URL.createObjectURL(f),obs:'Lecture simulée dans la maquette : les valeurs lues apparaîtront ici, à corriger.',hyp:'Aucune tant que les valeurs ne sont pas relues.',abs:'À compléter après relecture.'});S.rep=0;renderCombat();say('Rapport ajouté. Il reste sur ton appareil.');}t.value='';}
 });

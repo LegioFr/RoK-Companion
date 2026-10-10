@@ -24,7 +24,7 @@ Dernière mise à jour : 2026-10-08.
 - **Mémoire :** ce document. Une nouvelle session commence par le lire (voir `CLAUDE.md`).
 - **Langue :** français, tutoiement.
 
-## 3. État actuel (2026-10-09)
+## 3. État actuel (2026-10-10)
 
 ### Maquette
 - **Source :** `maquette/` (`index.html`, `styles.css`, `app.js`, `icones.js`). Ouvrir `maquette/index.html` dans un navigateur suffit.
@@ -50,7 +50,8 @@ Dernière mise à jour : 2026-10-08.
 - Regroupement (`lectRegrouper` dans `app.js`) : une même case vue sur deux captures n'est gardée qu'une fois. Une case coupée est retrouvée sur une autre capture, sinon elle est perdue et c'est signalé. Les tailles et durées sont comparées à `RC_JEU`. Seuls les onglets Ressources et Accélérateurs sont lus ; coffres, packs et autres onglets sont comptés « pas encore pris en charge ».
 - Relecture : un bouton confirme d'un coup les éléments sûrs ; les douteux se vérifient un par un (type d'accélérateur à choisir, quantité à corriger, « C'est bon » ou « Ignorer »).
 - Enregistrement (`lectEnregistrer`) : seuls les éléments lus sont écrits (absent ≠ zéro). Les ressources en ville viennent de la barre du haut, arrondies.
-- La lecture simulée reste pour « Utiliser les captures d'exemple ». Le bloc « Essai de lecture par l'IA » est retiré. Les 3 captures de l'essai restent dans l'espace privé (`captures/`, collection `lecture`).
+- **Écran Importer v42 (piste C, 2026-10-10, proposée par Claude, à valider)** : une carte par onglet du jeu (`#impRes`, `#impAcc`), chacune avec son bouton d'ajout (`#pickShots`, `#pickShotsAcc`, `data-tab`), ses miniatures et son nombre ; chaque capture garde son onglet (`tab`) et `S.shots` est rangé Ressources puis Accélérateurs (ordre de lecture). Rangée « Bientôt » (Boosts, Équipement, Attirail, Autre), une seule barre « Lire » (nombre, durée, coût ; signale une carte vide : rien n'y changera), frise des étapes cachée à l'étape 1. Le lien « vidéo d'écran (bientôt) » n'est plus affiché (l'idée reste prévue). Maquettes des 3 pistes : A épurée, B fenêtre du jeu, C une carte par onglet.
+- La lecture simulée reste pour « Essayer avec des captures d'exemple » (9 captures de Ressources, 6 d'Accélérateurs). Le bloc « Essai de lecture par l'IA » est retiré. Les 3 captures de l'essai restent dans l'espace privé (`captures/`, collection `lecture`).
 
 ### Essai de lecture par l'IA (préparé le 2026-10-09)
 - Écran Importer › bloc « Essai de lecture par l'IA » (site seulement) : Mickaël envoie ses captures (privées, `/api/capture`) ; la liste est dans la collection `lecture` (`GET /api/db?col=lecture`).
@@ -123,6 +124,7 @@ Dernière mise à jour : 2026-10-08.
 | 2026-10-09 | **Bâtiments de saison de KvK dans la Progression** (choix 2 de Mickaël) : 4e groupe « Saison de KvK » avec Forum d'état, Mine de cristal, Centre de recherche de cristal ; jamais comptés « à renseigner » ; les deux de cristal marqués « retiré en fin de saison ». Le Musée (sans niveau) n'y est pas. |
 | 2026-10-09 | **Lecture des captures par Claude Opus 5.5** (Mickaël, après l'essai : « On part sur opus, branche la lecture ») ; consigne v2 ; brancher la vraie lecture dans l'écran Importer. |
 | 2026-10-10 | Mickaël : « Tu peux refaire ce menu (Importer) beaucoup plus beau ? » Fait en v41 (proposé par Claude, à valider) : frise des étapes, grande zone « Ajoute tes captures », guide « Comment faire » et « Bon à savoir », miniatures retirables et « Ajouter », barre du bas avec nombre, durée et coût, avancement capture par capture, écran de résultat avec coche. |
+| 2026-10-10 | Mickaël, sur la v41 d'Importer : « Je suis vraiment pas fan ». Claude a proposé 3 pistes en images (A épurée, B fenêtre du jeu, C une carte par onglet) et a construit la C en v42 en attendant son choix (proposée par Claude, à valider ; test im3). |
 
 ## 5. Questions ouvertes (à trancher plus tard)
 
@@ -140,7 +142,7 @@ Dernière mise à jour : 2026-10-08.
 1. Mickaël : passer le dépôt en privé (recommandé).
 2. Revue de la maquette : partie connexion finie (21/21 bons), Accueil fini (12/12 après v34). **Ma ville : Progression refaite en v36 (plus propre, tous les bâtiments) ; 10 tests à faire par Mickaël (vp1 à vp5, vi1 à vi4, ia1)**. Puis, selon ses notes, Ma ville, Optimiser, Combat, Plus. Mickaël doit aussi corriger sa vraie « Routine du jour » dans sa version réelle (Claude la lira dans `reel/donnees`). Données du jeu : `references/donnees-jeu.md` (à vérifier sur captures quand Mickaël en envoie).
 3. Ma version réelle : ajouter, écran par écran, la saisie de ce qui ne se remplit pas encore (ressources et accélérateurs en premier, puis commandants, équipements, armements, marches), selon ce que Mickaël demande en l'utilisant. Lire de temps en temps `reel/donnees` pour voir ce qu'il a rempli.
-4. **Lecture des captures branchée (v39, Opus 5.5)** : tests im1 et im2 à faire par Mickaël. Ensuite : lire les autres onglets (Boosts, Équipement, Attirail, Autre ; coffres et packs), suivre le coût réel.
+4. **Lecture des captures branchée (v39, Opus 5.5)** : Mickaël doit dire quelle piste il préfère pour l'écran Importer (C construite en v42 ; A ou B si elle ne lui plaît pas), puis faire les tests im3, im1 et im2. Ensuite : lire les autres onglets (Boosts, Équipement, Attirail, Autre ; coffres et packs), suivre le coût réel.
 5. Recherches sur le jeu, en commençant par ce qui sert aux premiers écrans : bâtiments et prérequis jusqu'à l'Hôtel de ville 25, ressources, caisses, accélérateurs.
 
 ## 7. Journal des sessions
@@ -194,3 +196,4 @@ Dernière mise à jour : 2026-10-08.
 - **2026-10-09** (suite) : v39, choix de Mickaël : Claude Opus 5.5. Lecture branchée dans l'écran Importer : envoi, lecture, regroupement, relecture, enregistrement dans l'inventaire. Testée en local en rejouant les vraies réponses de l'essai (38 éléments, dont 3 à vérifier). Bloc d'essai retiré. Tests im1 et im2 ajoutés.
 - **2026-10-10** : premier vrai import de Mickaël (version Exemples). Constats : 3 captures non lues (« Failed to fetch », coupure réseau, sans doute l'écran mis en veille ou une autre appli ouverte pendant la lecture) et 5 objets lus avec des nombres différents selon la capture (sans doute des captures de moments ou de comptes différents). v40 : une coupure relance la lecture une fois toute seule, puis un bouton « Relire » apparaît ; l'écran est gardé allumé (wake lock) et le message est clair ; pour un nombre qui diffère, l'heure de chaque capture est donnée et la plus récente proposée ; une alerte signale quand la barre du haut change d'une capture à l'autre ; les nombres lus (sans les images) sont gardés dans la collection `lecture` pour que Claude puisse vérifier.
 - **2026-10-10** : v41, écran Importer redessiné (demande de Mickaël) ; l'étape « Analyse » s'appelle « Lecture » ; on peut ajouter des captures à celles déjà choisies et en retirer une ; la barre du bas laisse la place à la bulle d'outils. Robot de Ma ville et de l'écran Importer : sans constat nouveau.
+- **2026-10-10** (suite) : Mickaël n'aime pas la v41 d'Importer. 3 pistes dessinées et envoyées en images (A épurée, B fenêtre du jeu, C une carte par onglet) ; v42 = piste C : cartes Ressources et Accélérateurs avec leurs captures, « Bientôt » pour les autres onglets, un seul bouton « Lire », frise cachée avant la lecture, onglet de chaque capture affiché pendant la lecture, coût à 2 décimales. Test im3 ajouté, im1 réécrit. Robot de Ma ville en local : 18/18, aucun constat sur Importer aux 4 tailles.
