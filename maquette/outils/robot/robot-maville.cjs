@@ -48,7 +48,7 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   await etat(p,'demo:f2','#ma-ville-progression');ok('Prérequis non renseigné signalé (Ferme 2)',/Réserve 17/.test(await txt(p,'#pgHero .hh-t')||'')&&/niveau non renseigné/.test(await txt(p,'#pgHero .pres')||''));
   await etat(p,'demo','#ma-ville-inventaire');
   ok('6 onglets d’inventaire comme le jeu',(await txt(p,'#invChips'))==='Ressources Accélérateurs Boosts Équipement Attirail Autre');
-  ok('Inventaire : 5 grandes tuiles et 5 cartes de caisses, gemmes comprises (tuiles A, cartes C)',(await ev(p,()=>[document.querySelectorAll('#gRes .it').length,document.querySelectorAll('#gRes .ic').length].join('/')))==='5/5');
+  ok('Inventaire : 4 grandes tuiles, 3 tuiles Gemmes / Coffres / Packs, 5 cartes de caisses (gemmes comprises)',(await ev(p,()=>[document.querySelectorAll('#gRes .it-grid .it').length,document.querySelectorAll('#gRes .it-row3 .it').length,document.querySelectorAll('#gRes .ic').length].join('/')))==='4/3/5');
   await p.click('#gRes .it[data-arg=food]');await p.waitForTimeout(200);
   ok('7 tailles de caisses de nourriture',(await ev(p,()=>document.querySelectorAll('#shBody .inv-grid input').length))===7);
   await p.fill('#iv-ville','douze');await p.click('[data-act=inv-save]');await p.waitForTimeout(150);

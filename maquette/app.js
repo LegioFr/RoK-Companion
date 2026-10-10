@@ -492,12 +492,14 @@ function renderCity(){
   var resT=RN.map(function(x){var r=p.res[x[0]],c=cais(r),has=r.v!=null||r.c.length>0;
     return grand({arg:x[0],icon:x[1],nom:x[2],val:has?fM(resTot(r)):'—',sub:'À renseigner',v:r.v||0,c:c,lv:has?(r.v!=null?f1(r.v):'—'):null,lc:r.c.length?fM(c):'—',glow:GLOW[x[0]]});}).join('');
   var g=p.gemsIn,gc=g.c.reduce(function(a,c){return a+c[1]*c[2];},0),gHas=g.v!=null||g.c.length>0;
-  resT+=grand({arg:'gems',icon:'r-gem',nom:'Gemmes',cls:'large',val:gHas?nb((g.v||0)+gc):'—',sub:gHas?'En ville, dans la barre du haut du jeu':'À renseigner',v:g.v||0,c:gc,lv:g.c.length?(g.v!=null?nb(g.v):'—'):null,lc:nb(gc),glow:GLOW.gems});
+  /* Gemmes, Coffres et Packs : 3 tuiles côte à côte (proposition 1, choix de Mickaël du 2026-10-10 : la tuile Gemmes seule « faisait vide ») */
+  var resT3=grand({arg:'gems',icon:'r-gem',nom:'Gemmes',val:gHas?nb((g.v||0)+gc):'—',sub:gHas?'En ville':'À renseigner',v:g.v||0,c:gc,lv:g.c.length?(g.v!=null?nb(g.v):'—'):null,lc:nb(gc),glow:GLOW.gems});
   var cf=p.coffres||{},nC=sumK(cf,COFFRES),nPk=sumK(cf,PACKS);
-  function mini(icon,nom,sub,n){return '<button class="it-mini'+(n!=null?' ok':'')+'" type="button" data-act="inv-edit" data-arg="coffres">'+ic(icon)+'<span><b>'+nom+'</b><small>'+(n!=null?sub:'À renseigner')+'</small></span><span class="n">'+(n==null?'—':nb(n))+'</span></button>';}
+  resT3+=grand({arg:'coffres',icon:'p-chest',nom:'Coffres',val:nC==null?'—':nb(nC),sub:'« Choisissez un » · '+(nC==null?'à renseigner':'niveaux 1 à 5'),glow:'#d8b24c22'})+
+    grand({arg:'coffres',icon:'p-pack',nom:'Packs',val:nPk==null?'—':nb(nPk),sub:'De ressources · '+(nPk==null?'à renseigner':'au hasard'),glow:'#c27a4a22'});
   var resC=RN.map(function(x){var r=p.res[x[0]];return carte(x[0],x[1],x[2]+' · caisses',r.c.length?fM(cais(r)):'—',r.c.map(function(c){return [c[0],c[1],c[1]*c[2]];}),'Aucune caisse renseignée');}).join('')+
     (g.c.length?carte('gems','r-gem','Gemmes · caisses',nb(gc),g.c.map(function(c){return [c[0],c[1],c[1]*c[2]];}),''):'');
-  $('#gRes').innerHTML='<div class="it-grid">'+resT+'</div><div class="it-mini-g">'+mini('p-chest','Coffres « Choisissez un »','Niveaux 1 à 5 · contenu non compté',nC)+mini('p-pack','Packs de ressources','Au hasard · contenu non compté',nPk)+'</div>'+
+  $('#gRes').innerHTML='<div class="it-grid">'+resT+'</div><div class="it-row3">'+resT3+'</div>'+
     '<h3 class="inv-h3">Détail des caisses</h3><div class="ic-grid">'+resC+'</div>';
   var accT=AN.map(function(x){var a=p.acc[x[0]]||[],n=a.reduce(function(s,c){return s+c[1];},0),gen=x[0]==='general';
     return grand({arg:x[0],icon:x[1],nom:x[2],cls:gen?'large':'',val:a.length?fH(accTot(a)):'—',sub:a.length?nb(n)+' accélérateur'+(n>1?'s':'')+(gen?' · utilisables partout':''):(REEL?'À renseigner':'Aucun'),glow:GLOW[x[0]]});}).join('');
