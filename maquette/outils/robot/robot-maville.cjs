@@ -59,6 +59,13 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   const dB=await txt(p,'#gObj .it[data-arg="g:defense"]');await p.click('#gObj .ledger .lg-r:nth-child(2) .cz:nth-child(2)');await p.waitForTimeout(200);
   const fB=await ev(p,()=>document.getElementById('shTitle').textContent);await p.fill('#iv-c','3');await p.click('[data-act=inv-save]');await p.waitForTimeout(250);
   ok('Boosts : une case se remplit seule (Défense 24 h × 3 → la tuile gagne 3 j)',fB==='Défense +5 % : 24 h'&&/× 3/.test(await txt(p,'#gObj .ledger .lg-r:nth-child(2) .cz:nth-child(2)')||'')&&/4 j 0 h/.test(await txt(p,'#gObj .it[data-arg="g:defense"]')||''),fB+' | '+dB+' → '+await txt(p,'#gObj .it[data-arg="g:defense"]'));
+  /* v66 : Équipement sur le même modèle (demande de Mickaël du 2026-10-10) */
+  await p.click('#invChips [data-inv=equip]');await p.waitForTimeout(150);
+  ok('Équipement (v66) : 8 tuiles sans cases d’objets, détail en 10 lignes (Coffres à ouvrir en 3), une case par qualité',(await ev(p,()=>[document.querySelectorAll('#gObj .it').length,document.querySelectorAll('#gObj .it .sl').length,
+    [...document.querySelectorAll('#gObj .ledger .lg-r')].map(r=>r.querySelectorAll('.cz').length).join(',')].join('/')))==='8/0/5,5,5,5,5,5,3,5,4,5');
+  await p.click('#gObj .ledger .lg-r:nth-child(1) .cz:nth-child(4)');await p.waitForTimeout(200);const fE=await ev(p,()=>document.getElementById('shTitle').textContent);
+  await p.fill('#iv-c','2');await p.click('[data-act=inv-save]');await p.waitForTimeout(250);
+  ok('Équipement : une case se remplit seule (Cuir épique × 2)',fE==='Cuir : épique'&&/× 2/.test(await txt(p,'#gObj .ledger .lg-r:nth-child(1) .cz:nth-child(4)')||''),fE);
   /* Rendu pro (v58) : chaque tuile d'objets dit à quoi servent les objets et montre une case de qualité par objet */
   await p.click('#invChips [data-inv=autre]');await p.waitForTimeout(150);
   const rp=await ev(p,()=>{const T=[...document.querySelectorAll('#gObj .it.obj')];return [T.length,T.filter(t=>t.querySelector('.it-p')).length,document.querySelectorAll('#gObj .it[data-arg="g:tomes"] .sl').length,document.querySelectorAll('#gObj .it[data-arg="g:tomes"] .sl-c.q-p').length].join('/');});

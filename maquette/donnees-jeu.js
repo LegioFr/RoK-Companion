@@ -110,11 +110,13 @@ window.RC_JEU={
           {id:'plan_g',c:'g',vu:1},{id:'plan_v',c:'v',vu:1},{id:'plan_b',c:'b',vu:1},{id:'plan_p',c:'p',vu:1},{id:'plan_o',c:'o',vu:1}]},
         {id:'fragments',nom:'Fragments de plan',but:'30 fragments du même plan = 1 plan',icone:'n-copy',type:'qual',info:'30 fragments du même plan se combinent en 1 plan (jeu : « Combinez 30 fragments pour obtenir un plan »).',items:[
           {id:'frag_g',c:'g'},{id:'frag_v',c:'v',vu:1},{id:'frag_b',c:'b',vu:1},{id:'frag_p',c:'p',vu:1},{id:'frag_o',c:'o'}]},
-        {id:'coffres_eq',nom:'Coffres à ouvrir',but:'À ouvrir : matériaux ou fragments de plan',icone:'p-chest',type:'compte',carte:1,info:'Matériaux ou fragments de plan.',items:[
+        {id:'coffres_eq',nom:'Coffres à ouvrir',but:'À ouvrir : matériaux ou fragments de plan',icone:'p-chest',type:'compte',carte:1,info:'Matériaux ou fragments de plan.',
+          /* détail de l'onglet : une ligne par sorte de coffre, une case par qualité (2026-10-10) */
+          sous:[{nom:'Coffres de matériaux',ids:['cme_g','cme_v','lot_lo']},{nom:'Matériau au choix',ids:['cmc_g','cmc_v','cmc_b','cmc_p','cmc_o']},{nom:'Fragment de plan au choix',ids:['cfp_v','cfp_b','cfp_p','cfp_o']}],items:[
           {id:'cme_g',cl:'Matériaux',grp:'Matériaux',l:'Matériaux (pièce normale)',c:'g',vu:1,n:'Coffre de matériaux d’équipement'},{id:'cme_v',cl:'Matériaux',grp:'Matériaux',l:'Matériaux (pièce avancée)',c:'v',vu:1,nv:1},
           {id:'cmc_g',cl:'Matériau au choix',grp:'Matériaux',l:'Matériau normal au choix',c:'g',vu:1,n:'Coffre au choix de matériau d’équipement'},{id:'cmc_v',cl:'Matériau au choix',grp:'Matériaux',l:'Matériau avancé au choix',c:'v',vu:1,nv:1},
           {id:'cmc_b',cl:'Matériau au choix',grp:'Matériaux',l:'Matériau élite au choix',c:'b',vu:1,nv:1},{id:'cmc_p',cl:'Matériau au choix',grp:'Matériaux',l:'Matériau épique au choix',c:'p',vu:1,nv:1},{id:'cmc_o',cl:'Matériau au choix',grp:'Matériaux',l:'Matériau légendaire au choix',c:'o',vu:1,nv:1},
-          {id:'lot_lo',cl:'Légion de l’Ombre',grp:'Matériaux',l:'Lot de la Légion de l’Ombre',c:'v',vu:1,n:'Lot de matériau de la Légion de l’Ombre'},
+          {id:'lot_lo',cl:'Légion de l’Ombre',lc:'Légion de l’Ombre',grp:'Matériaux',l:'Lot de la Légion de l’Ombre',c:'v',vu:1,n:'Lot de matériau de la Légion de l’Ombre'},
           {id:'cfp_v',cl:'Fragment au choix',grp:'Fragments de plan',l:'Fragment de plan avancé au choix',c:'v',vu:1,n:'Coffre au choix de fragment de plan'},{id:'cfp_b',cl:'Fragment au choix',grp:'Fragments de plan',l:'Fragment de plan élite au choix',c:'b',vu:1},
           {id:'cfp_p',cl:'Fragment au choix',grp:'Fragments de plan',l:'Fragment de plan épique au choix',c:'p',vu:1},{id:'cfp_o',cl:'Fragment au choix',grp:'Fragments de plan',l:'Fragment de plan légendaire au choix',c:'o',vu:1}]},
         {id:'pieces',nom:'Pièces forgées',but:'Ton équipement déjà forgé',icone:'n-armor',type:'qual',fem:1,info:'Les pièces d’équipement de ton inventaire, portées ou non (le portrait du commandant qui la porte est dans le coin).',items:[
