@@ -62,6 +62,83 @@ window.RC_JEU={
       {id:'p2',nom:'niv. 2',couleur:'vert',food:10000,wood:10000,stone:7500,gold:5000,vu:true},
       {id:'p3',nom:'niv. 3',couleur:'bleu',food:100000,wood:100000,stone:100000,gold:100000,vu:false}]
   },
+  /* Objets des onglets Boosts, Équipement, Attirail et Autre de l'Inventaire (2026-10-10).
+     vu:1 = objet vu dans le jeu sur les captures de Mickaël du 10 oct. 2026 (nom en n, lu dans le panneau de droite quand il l'a touché).
+     Sans vu : wiki riseofkingdoms.fandom.com (pages « Items/… », lues par l'API le 10 oct. 2026), non vérifié.
+     nv:1 = nom pas encore lu dans le jeu (proposé par Claude, à vérifier). c = couleur du fond de la case :
+     g gris (normal), v vert (avancé), b bleu (élite), p violet (épique), o orange (légendaire).
+     Types de tuile : duree (h en heures), troupes, mat (5 qualités, 4 se combinent en 1 de la qualité au-dessus), qual (nombre par qualité),
+     qual3 (3 formes par qualité), valeur (val par objet), compte. Les quantités de Mickaël ne sont pas ici : elles restent dans sa version réelle. */
+  objets:{
+    source:'captures de Mickaël du 10 oct. 2026 (noms du jeu) et wiki riseofkingdoms.fandom.com (API, 10 oct. 2026)',
+    qualites:[['g','normal','normaux','normales'],['v','avancé','avancés','avancées'],['b','élite','élites','élites'],['p','épique','épiques','épiques'],['o','légendaire','légendaires','légendaires']],
+    onglets:{
+      boosts:[
+        {id:'bouclier',nom:'Bouclier de la paix',icone:'i-shield',type:'duree',glow:'#3ecf8e22',info:'Ta ville ne peut pas être attaquée.',items:[
+          {id:'bp8',l:'8 h',h:8,c:'v',vu:1,n:'Bouclier de la paix – 8 heures'},{id:'bp24',l:'24 h',h:24},{id:'bp3j',l:'3 j',h:72},{id:'bp30j',l:'30 j',h:720}]},
+        {id:'recolte',nom:'Récolte +50 %',icone:'i-sprout',type:'duree',glow:'#8dd36a22',info:'Augmentation de la vitesse de récolte : +50 % pour toutes les ressources.',items:[
+          {id:'rec8',l:'8 h',h:8,c:'b',vu:1,n:'Augmentation de la vitesse de récolte - 8 heures'},{id:'rec24',l:'24 h',h:24,c:'p',vu:1,nv:1}]},
+        {id:'antireco',nom:'Anti-reconnaissance',icone:'i-eyeoff',type:'duree',glow:'#8db6f222',info:'Longue-vue : les éclaireurs ennemis n’obtiennent rien sur ta ville.',items:[
+          {id:'ar24',l:'24 h',h:24,c:'v',vu:1,n:'Longue-vue anti-reconnaissance (24 h)'},{id:'ar7j',l:'7 j',h:168}]},
+        {id:'attaque',nom:'Attaque +5 %',icone:'t-swords',type:'duree',glow:'#ef8a7422',info:'Amélioration d’attaque : +5 % d’attaque pour toutes les troupes (+10 % pour la version avancée, d’après le wiki).',items:[
+          {id:'att12',l:'12 h',h:12,c:'v',vu:1,n:'Amélioration d’attaque - 12 heures'},{id:'att24',l:'24 h',h:24,c:'b',vu:1,nv:1},{id:'att24a',l:'24 h, +10 %',h:24}]},
+        {id:'defense',nom:'Défense +5 %',icone:'i-shield2',type:'duree',glow:'#8db6f222',info:'Amélioration de défense : +5 % de défense pour toutes les troupes (+10 % pour la version avancée, d’après le wiki).',items:[
+          {id:'def12',l:'12 h',h:12,c:'v',vu:1,n:'Amélioration de défense - 12 heures'},{id:'def24',l:'24 h',h:24,c:'b',vu:1,nv:1},{id:'def24a',l:'24 h, +10 %',h:24}]},
+        {id:'troupes',nom:'Troupes',icone:'n-banners',type:'troupes',glow:'#d8b24c22',info:'Réserves : capacité d’entraînement en plus, au prochain entraînement. Expansions : capacité d’unités de tous les commandants pendant 4 h.',items:[
+          {id:'res5',l:'Réserve niv. 5 (+20 000)',cap:20000,c:'o',vu:1,n:'Réserve Niveau 5'},{id:'res6',l:'Réserve niv. 6 (+50 000)',cap:50000,c:'o',vu:1,n:'Réserve Niveau 6'},
+          {id:'exp25',l:'Expansion basique (+25 %, 4 h)',c:'b',vu:1,n:'Expansion basique d’armée'},{id:'exp50',l:'Expansion avancée (+50 %, 4 h)',c:'p',vu:1,n:'Expansion avancée d’armée'}]}],
+      equip:[
+        {id:'cuir',nom:'Cuir',icone:'n-leather',type:'mat',items:[{id:'cuir_g',c:'g',vu:1},{id:'cuir_v',c:'v',vu:1},{id:'cuir_b',c:'b',vu:1},{id:'cuir_p',c:'p',vu:1,n:'Cuir (ÉPIQUE)'},{id:'cuir_o',c:'o'}]},
+        {id:'fer',nom:'Minerai de fer',nv:1,icone:'n-ore',type:'mat',items:[{id:'fer_g',c:'g',vu:1},{id:'fer_v',c:'v',vu:1},{id:'fer_b',c:'b',vu:1},{id:'fer_p',c:'p'},{id:'fer_o',c:'o'}]},
+        {id:'ebene',nom:'Ébène',nv:1,icone:'n-ebony',type:'mat',items:[{id:'ebene_g',c:'g',vu:1},{id:'ebene_v',c:'v',vu:1},{id:'ebene_b',c:'b',vu:1},{id:'ebene_p',c:'p',vu:1},{id:'ebene_o',c:'o'}]},
+        {id:'os',nom:'Os d’animal',nv:1,icone:'n-bone',type:'mat',items:[{id:'os_g',c:'g',vu:1},{id:'os_v',c:'v',vu:1},{id:'os_b',c:'b',vu:1},{id:'os_p',c:'p',vu:1},{id:'os_o',c:'o'}]},
+        {id:'plans',nom:'Plans',icone:'n-scroll',type:'qual',info:'Un plan sert à forger la pièce qu’il dessine (ex. « Plan de « Rétribution de la Légion de l’Ombre » », légendaire).',items:[
+          {id:'plan_g',c:'g',vu:1},{id:'plan_v',c:'v',vu:1},{id:'plan_b',c:'b',vu:1},{id:'plan_p',c:'p',vu:1},{id:'plan_o',c:'o',vu:1}]},
+        {id:'fragments',nom:'Fragments de plan',icone:'n-copy',type:'qual',info:'30 fragments du même plan se combinent en 1 plan (jeu : « Combinez 30 fragments pour obtenir un plan »).',items:[
+          {id:'frag_g',c:'g'},{id:'frag_v',c:'v',vu:1},{id:'frag_b',c:'b',vu:1},{id:'frag_p',c:'p',vu:1},{id:'frag_o',c:'o'}]},
+        {id:'coffres_eq',nom:'Coffres à ouvrir',icone:'p-chest',type:'compte',carte:1,info:'Matériaux ou fragments de plan.',items:[
+          {id:'cme_g',grp:'Matériaux',l:'Matériaux (pièce normale)',c:'g',vu:1,n:'Coffre de matériaux d’équipement'},{id:'cme_v',grp:'Matériaux',l:'Matériaux (pièce avancée)',c:'v',vu:1,nv:1},
+          {id:'cmc_g',grp:'Matériaux',l:'Matériau normal au choix',c:'g',vu:1,n:'Coffre au choix de matériau d’équipement'},{id:'cmc_v',grp:'Matériaux',l:'Matériau avancé au choix',c:'v',vu:1,nv:1},
+          {id:'cmc_b',grp:'Matériaux',l:'Matériau élite au choix',c:'b',vu:1,nv:1},{id:'cmc_p',grp:'Matériaux',l:'Matériau épique au choix',c:'p',vu:1,nv:1},{id:'cmc_o',grp:'Matériaux',l:'Matériau légendaire au choix',c:'o',vu:1,nv:1},
+          {id:'lot_lo',grp:'Matériaux',l:'Lot de la Légion de l’Ombre',c:'v',vu:1,n:'Lot de matériau de la Légion de l’Ombre'},
+          {id:'cfp_v',grp:'Fragments de plan',l:'Fragment de plan avancé au choix',c:'v',vu:1,n:'Coffre au choix de fragment de plan'},{id:'cfp_b',grp:'Fragments de plan',l:'Fragment de plan élite au choix',c:'b',vu:1},
+          {id:'cfp_p',grp:'Fragments de plan',l:'Fragment de plan épique au choix',c:'p',vu:1},{id:'cfp_o',grp:'Fragments de plan',l:'Fragment de plan légendaire au choix',c:'o',vu:1}]},
+        {id:'pieces',nom:'Pièces forgées',icone:'n-armor',type:'qual',fem:1,info:'Les pièces d’équipement de ton inventaire, portées ou non (le portrait du commandant qui la porte est dans le coin).',items:[
+          {id:'piece_g',c:'g',vu:1},{id:'piece_v',c:'v',vu:1},{id:'piece_b',c:'b',vu:1},{id:'piece_p',c:'p',vu:1},{id:'piece_o',c:'o'}]}],
+      attirail:[
+        {id:'cform',nom:'Coffres au choix de formation',icone:'p-chest',type:'compte',info:'Une pièce d’attirail d’élite, épique ou légendaire au hasard, pour la formation de ton choix.',items:[
+          {id:'cform',l:'Coffre au choix de formation',c:'b',vu:1,n:'Coffre au choix de formation'}]}],
+      autre:[
+        {id:'sculpt_choix',nom:'Sculptures au choix',icone:'i-crown',type:'qual',fem:1,top:1,glow:'#e6a64022',info:'S’échangent contre une sculpture de n’importe quel commandant de même rareté que tu possèdes (sauf exceptions).',items:[
+          {id:'sch_v',c:'v',vu:1,nv:1},{id:'sch_b',c:'b',vu:1,nv:1},{id:'sch_p',c:'p',vu:1,nv:1},{id:'sch_o',c:'o',vu:1,n:'Sculpture de commandant légendaire'}]},
+        {id:'sculpt_cmd',nom:'Sculptures de commandants',icone:'i-person',type:'qual',fem:1,top:1,glow:'#ad7be622',info:'Sculptures à un nom (ex. « Sculpture de Jules César ») : invoquent le commandant ou montent ses compétences. Compte-les par rareté.',items:[
+          {id:'scm_v',c:'v',vu:1},{id:'scm_b',c:'b',vu:1},{id:'scm_p',c:'p',vu:1},{id:'scm_o',c:'o',vu:1}]},
+        {id:'stellaires',nom:'Sculptures de lumière d’étoile',icone:'n-star',type:'qual3',fem:1,top:1,carte:1,glow:'#f3d98222',info:'Montent le niveau d’étoiles des commandants de même rareté. Bénie : bonus de chance en plus. Lot : beaucoup d’expérience.',items:[
+          {id:'ste_o_s',q:'o',f:'simples',c:'o',vu:1,n:'Sculpture de lumière d’étoile éblouissante'},{id:'ste_o_b',q:'o',f:'bénies',c:'o',vu:1,n:'Sculpture de lumière d’étoile éblouissante bénie'},{id:'ste_o_l',q:'o',f:'lots',c:'o',vu:1,n:'Lot de sculptures de lumière d’étoile éblouissantes'},
+          {id:'ste_p_s',q:'p',f:'simples',c:'p',vu:1,nv:1},{id:'ste_p_b',q:'p',f:'bénies',c:'p',vu:1,nv:1},{id:'ste_p_l',q:'p',f:'lots',c:'p',vu:1,nv:1},
+          {id:'ste_b_s',q:'b',f:'simples',c:'b',vu:1,nv:1},{id:'ste_b_b',q:'b',f:'bénies',c:'b',vu:1,nv:1},{id:'ste_b_l',q:'b',f:'lots',c:'b',vu:1,nv:1},
+          {id:'ste_v_s',q:'v',f:'simples',c:'v',vu:1,nv:1},{id:'ste_v_b',q:'v',f:'bénies',c:'v',vu:1,nv:1},{id:'ste_v_l',q:'v',f:'lots',c:'v',vu:1,nv:1}]},
+        {id:'tomes',nom:'Tomes du savoir',icone:'n-book',type:'valeur',unite:'EXP',carte:1,glow:'#8db6f222',info:'Expérience pour tes commandants.',items:[
+          {id:'xp1',l:'100 EXP',val:100,c:'v',vu:1,n:'Tome du savoir niv. 1'},{id:'xp2',l:'500 EXP',val:500,c:'b',vu:1},{id:'xp3',l:'1 000 EXP',val:1000,c:'p',vu:1},{id:'xp4',l:'5 000 EXP',val:5000,c:'p',vu:1},
+          {id:'xp5',l:'10 000 EXP',val:10000,c:'p',vu:1},{id:'xp6',l:'20 000 EXP',val:20000,c:'o',vu:1},{id:'xp7',l:'50 000 EXP',val:50000,c:'o',vu:1}]},
+        {id:'pa',nom:'Points d’action',nv:1,icone:'t-flask',type:'valeur',unite:'points',glow:'#3ecf8e22',info:'Pour les barbares, les forts et certains événements.',items:[
+          {id:'pa50',l:'50',val:50,c:'v',vu:1},{id:'pa100',l:'100',val:100,c:'v',vu:1},{id:'pa500',l:'500',val:500,c:'b',vu:1},{id:'pa1000',l:'1 000',val:1000,c:'p',vu:1}]},
+        {id:'cles',nom:'Clés',icone:'i-lock',type:'compte',info:'Pour les coffres de la taverne.',items:[
+          {id:'cle_ar',l:'Clé en argent',c:'p',vu:1,n:'Clé en argent'},{id:'cle_or',l:'Clé en or',c:'o',vu:1,n:'Clé en or'},
+          {id:'cle_cr',l:'Clé de cristal (équipement)',c:'o',vu:1,n:'Clé de cristal'},{id:'cle_sv',l:'Clé de souverain (événements)',c:'o',vu:1,n:'Clé de souverain'}]},
+        {id:'devises',nom:'Devises et objets d’événements',icone:'n-gift',type:'compte',sortes:1,glow:'#d8b24c22',info:'À dépenser pendant les événements ou dans leurs boutiques.',items:[
+          {id:'chatoyante',l:'Pièce chatoyante',c:'p',vu:1},{id:'reliques',l:'Pièces de reliques',c:'p',vu:1},{id:'roupie',l:'Roupie du retour',c:'o',vu:1},
+          {id:'shilling',l:'Shilling marin',c:'b',vu:1},{id:'appat',l:'Appât',c:'b',vu:1},{id:'auric',l:'Auric noble',c:'b',vu:1},{id:'pomme',l:'Pomme d’or',c:'p',vu:1}]},
+        {id:'teleports',nom:'Téléportations',icone:'n-map',type:'compte',petit:1,items:[
+          {id:'tp_ci',l:'Ciblée',c:'p',vu:1,n:'Téléportation ciblée'},{id:'tp_te',l:'Territoriale',c:'b',vu:1,n:'Téléportation territoriale'},{id:'tp_al',l:'Aléatoire',c:'v',vu:1,n:'Téléportation aléatoire'}]},
+        {id:'constr',nom:'Château et tours de guet',icone:'i-keep',type:'compte',petit:1,vals:1,items:[
+          {id:'livre_all',l:'Livre d’alliance (château)',c:'v',vu:1,n:'Livre d’alliance'},{id:'fleche_res',l:'Flèche de résistance (tours de guet)',c:'v',vu:1,n:'Flèche de résistance'}]},
+        {id:'lohar',nom:'Chefs barbares',icone:'i-skull',type:'compte',petit:1,info:'Invoquent un chef barbare et ses troupes d’élite près de ta ville.',items:[
+          {id:'arc_lohar',l:'Arc long de Lohar',c:'v',vu:1},{id:'bouc_lohar',l:'Bouclier de Lohar',c:'b',vu:1}]},
+        {id:'ville',nom:'Ville',icone:'i-town',type:'compte',petit:1,vals:1,items:[
+          {id:'pinceau',l:'Petit pinceau (thèmes de ville)',c:'p',vu:1,n:'Petit pinceau'},{id:'civ',l:'Changement de civilisation',c:'p',vu:1,nv:1}]}]
+    }
+  },
   /* Accélérateurs : durées en minutes (même étude). Les quatre types spécialisés vont de 1 min à 15 h ; l'universel en plus 24 h, 3 j, 7 j, 30 j.
      Durées vues sur les captures : 1 à 60 min, 3 h, 8 h, 15 h (pas pour chaque type) ; 24 h et plus : wiki et calculateur seulement (non vérifié). */
   accelerateurs:{

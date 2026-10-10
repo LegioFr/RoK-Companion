@@ -809,3 +809,34 @@ button.more{border:0;background:none;cursor:pointer;font-family:inherit;min-heig
 /* carte seule sur sa rangée : toute la largeur, lignes sur 2 colonnes (choix de Mickaël du 2026-10-10) */
 .ic.large{grid-column:1/-1}
 @media(min-width:700px){.ic-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}}
+/* Onglets Boosts, Équipement, Attirail, Autre (2026-10-10) : tuiles par famille d'objets, couleurs des qualités du jeu */
+.it-grid.trois .it-h b{font-size:24px}
+.it-petits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.it.petit .it-h b{font-size:24px}
+.vq{display:flex;flex-wrap:wrap;gap:6px}
+.vq>span{display:inline-flex;align-items:center;gap:5px;max-width:100%;padding:3px 9px;border:1px solid #a9bdd51f;border-radius:9px;background:#0b122099;color:var(--muted);font-size:12px}
+.vq b{color:var(--text);font-size:13px;white-space:nowrap}
+.dot{flex:none;display:inline-block;width:9px;height:9px;border-radius:3px}
+.dot.g{background:#b9c0c9}.dot.v{background:#5fbf5a}.dot.b{background:#5aa2e6}.dot.p{background:#ad7be6}.dot.o{background:#e6a640}
+.q5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+.q5>span{display:grid;justify-items:center;gap:1px;min-width:0;padding:5px 2px;border-radius:8px;color:#0b1220;font-size:11.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
+.q5 b{font:800 14px/1.1 var(--body);font-variant-numeric:tabular-nums;white-space:nowrap}
+.q5 .g{background:#b9c0c9}.q5 .v{background:#5fbf5a}.q5 .b{background:#5aa2e6}.q5 .p{background:#ad7be6}.q5 .o{background:#e6a640}
+.q5 .z{opacity:.35}
+@media(max-width:699px){.it.q5t{grid-column:1/-1}}
+@media(min-width:700px){
+  .it-grid.trois{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .it-grid.trois .it-h>svg:first-child{width:44px;height:44px}
+  .it-grid.trois .it-h b{font-size:30px}
+  .it-petits{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
+  .it.petit{padding:14px}
+  .it.petit .it-h{grid-template-areas:"i l g" "n n n"}
+  .it.petit .it-h>svg:first-child{width:34px;height:34px}
+  .it.petit .it-h small{font-size:12px;letter-spacing:.02em}
+  .it.petit .it-h b{font-size:28px}
+}
+.it.petit .it-h small{white-space:normal;overflow:visible}
+@media(min-width:700px){.ic.large .ic-l{grid-template-columns:minmax(150px,210px) minmax(0,1fr) 64px}}
+@media(max-width:699px){.ic-l{grid-template-columns:minmax(76px,1.3fr) minmax(36px,1fr) auto}}
+/* téléphone : les noms longs des familles d'objets passent à la ligne au lieu d'être coupés */
+@media(max-width:699px){#gObj .it-h small{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.25}}

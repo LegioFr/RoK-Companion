@@ -61,7 +61,7 @@ function niv(p,k){var v=p.v[k];if(!isMulti(k))return v;if(vide4(v))return null;r
 function nomPl(k){return FIELDS[k].pl||FIELDS[k].label;}
 function hist(v){if(v==null)return [];if(Array.isArray(v))return [{v:v,d:'5 oct. 2026',m:'',src:'Saisie'}];if(typeof v==='string')return [{v:v,d:'4 oct. 2026',m:'',src:'Saisie'}];return [{v:v,d:'5 oct. 2026',m:'Changé en jeu',src:'Saisie'},{v:Math.max(0,v-1),d:'12 sept. 2026',m:'',src:'Import'}];}
 function mkProfile(o){
-  if(!o.encours)o.encours=[];if(!o.coffres)o.coffres={};if(!o.items)o.items={boosts:[],equip:[],attirail:[],autre:[]};
+  if(!o.encours)o.encours=[];if(!o.coffres)o.coffres={};if(!o.objets)o.objets={};if(!o.items)o.items={boosts:[],equip:[],attirail:[],autre:[]};
   o.h={};Object.keys(FIELDS).forEach(function(k){if(!(k in o.v))o.v[k]=null;o.h[k]=hist(o.v[k]);});return o;
 }
 var P={
@@ -78,7 +78,10 @@ var P={
     acc:{build:[['1 min',212,1/60],['5 min',140,5/60],['60 min',195,1],['3 h',44,3],['8 h',12,8],['15 h',3,15]],research:[['1 min',160,1/60],['60 min',176,1],['8 h',14,8],['15 h',2,15]],
          train:[['60 min',120,1],['8 h',12,8]],heal:[['60 min',52,1],['8 h',3,8]],general:[['60 min',260,1],['8 h',14,8],['24 h',3,24]]},
     coffres:{c1:2,c2:3,c3:1,c4:1,pA:1,p2:1},
-    items:{boosts:[{n:'Bouclier de paix (8 h)',q:3},{n:'Augmentation de récolte',q:2}],equip:[],attirail:[],autre:[{n:'Livres d’expérience',q:1240},{n:'Sculptures légendaires',q:86},{n:'Passeports',q:12}]},
+    objets:{bp8:3,rec8:2,rec24:1,att12:4,def12:2,ar24:1,exp25:2,cuir_g:120,cuir_v:30,cuir_b:6,fer_g:96,fer_v:22,fer_b:4,ebene_g:80,ebene_v:18,os_g:75,os_v:20,os_b:3,
+      plan_v:6,plan_b:3,frag_v:12,frag_b:5,cme_g:4,cmc_g:20,cfp_v:15,piece_v:3,piece_b:2,cform:1,sch_p:30,sch_o:12,scm_p:120,scm_o:45,ste_o_s:20,ste_p_s:60,ste_b_s:150,ste_v_s:300,
+      xp1:800,xp2:120,xp3:240,xp4:12,xp5:6,pa50:90,pa100:40,pa500:4,cle_ar:5,cle_or:1,chatoyante:3,tp_ci:2,tp_al:5,livre_all:20,fleche_res:30,arc_lohar:4,pinceau:1},
+    items:{boosts:[],equip:[],attirail:[{n:'Cor du Nord',q:1,c:'b'}],autre:[{n:'Passeports',q:12}]},
     obj:{title:'Hôtel de ville 25',short:'HDV 25',pct:62,href:'#plan-c25'}}),
   f1:mkProfile({name:'Ferme 1',type:'Ferme',icon:'i-sprout',kd:'#3567',pid:'',power:'18,2 M',kills:'1,2 M',deaths:'40 K',gems:'3 200',ap:'1 000',
     tr:['▲ +0,4 M (7j)','',''],releves:61,corr:2,snaps:3,
@@ -204,7 +207,7 @@ function startReel(){
 /* Un profil créé avant l'ajout d'un champ reçoit ce champ vide (jamais zéro). */
 function normProfile(p){Object.keys(FIELDS).forEach(function(k){if(!(k in p.v))p.v[k]=null;if(!p.h[k])p.h[k]=[];
     if(isMulti(k)&&typeof p.v[k]==='number'){var a=[null,null,null,null];a[0]=p.v[k];p.v[k]=a;}});if(!p.encours)p.encours=[];
-  if(!p.coffres)p.coffres={};if(!p.items)p.items={};['boosts','equip','attirail','autre'].forEach(function(t){if(!p.items[t])p.items[t]=[];});return p;}
+  if(!p.coffres)p.coffres={};if(!p.objets)p.objets={};if(!p.items)p.items={};['boosts','equip','attirail','autre'].forEach(function(t){if(!p.items[t])p.items[t]=[];});return p;}
 var JEU=window.RC_JEU||{entrepot:{niveaux:{}},reset:{heureUTC:0},routine:[]};
 if(!S.routine)S.routine={items:JEU.routine.map(function(x){return {id:x.id,t:x.t,d:x.d};}),done:{},propose:true};
 if(!S.events)S.events=[];
@@ -371,6 +374,9 @@ function contenuCof(o){return [['food','nourriture'],['wood','bois'],['stone','p
 function valCof(o){return o.food||0;}
 function fV(u){return u>=1e7?fM(u/1e6):fQte(u);}
 function valPack(o){var L=['food','wood','stone','gold'].filter(function(k){return o[k];});return L.reduce(function(a,k){return a+o[k];},0)/(L.length||1);}
+/* Objets des onglets Boosts, Équipement, Attirail, Autre (RC_JEU.objets, 2026-10-10) */
+var JO=(window.RC_JEU&&window.RC_JEU.objets)||{onglets:{},qualites:[]},QL={};(JO.qualites||[]).forEach(function(q){QL[q[0]]=q;});
+function grpObj(id){var r=null;Object.keys(JO.onglets||{}).forEach(function(t){JO.onglets[t].forEach(function(g){if(g.id===id)r=g;});});return r;}
 function sumK(o,L){var n=null;L.forEach(function(x){if(o[x[0]]!=null)n=(n||0)+o[x[0]];});return n;}
 /* 82 200 000 → « 82,2 M » ; 942 500 → « 942,5 K » ; 750 → « 750 » */
 function fQte(u){function d(x){return String(Math.round(x*10)/10).replace('.',',');}return u>=1e6?d(u/1e6)+' M':u>=1e4?d(u/1e3)+' K':nb(u);}
@@ -420,6 +426,13 @@ function numFld(id,label,v,dec,aide){return '<div class="fld"><label for="'+id+'
 var INV_INTRO='<p class="sh-intro">Recopie les nombres de ton Inventaire. Laisse vide ce que tu ne connais pas, mets 0 si tu n’en as pas.</p>';
 function invSheet(k){
   var p=A();if(!p)return;S.invEdit=k;var acts=[['Annuler','close-sheet',''],['Enregistrer','inv-save','primary']],star=false;
+  /* Famille d'objets des onglets Boosts, Équipement, Attirail, Autre : un champ par objet, avec le nom du jeu quand il est connu */
+  if(String(k).indexOf('g:')===0){var g=grpObj(k.slice(2));if(!g)return;var ob=p.objets||{},etoile=false,nv=!!g.nv;
+    var lab=function(o){if(g.type==='mat'||g.type==='qual'){var t=QL[o.c][1];return t.charAt(0).toUpperCase()+t.slice(1);}
+      if(g.type==='qual3'){var u=QL[o.q][1];return u.charAt(0).toUpperCase()+u.slice(1)+' · '+({simples:'simple',bénies:'bénie',lots:'lot'})[o.f];}return o.l;};
+    var F=g.items.map(function(o){if(!o.vu)etoile=true;if(o.nv)nv=true;return numFld('iv-'+o.id,lab(o)+(o.vu?'':' *'),ob[o.id],false,o.n&&!o.nv?'« '+o.n+' »':'');}).join('');
+    openSheet(g.nom,INV_INTRO+(g.info?'<p class="sh-intro">'+g.info+'</p>':'')+'<div class="inv-grid deux">'+F+'</div>'+
+      ((etoile||nv)?'<p class="sh-note">'+(etoile?'* Vu seulement sur le wiki du jeu, pas encore sur tes captures. ':'')+(nv?'Certains noms ne sont pas encore lus dans le jeu.':'')+'</p>':''),acts);return;}
   /* Coffres et packs : une fenêtre chacun (remarque de Mickaël du 2026-10-10 : les deux tuiles ouvraient la même) */
   if(k==='coffres'){var cf=p.coffres||{};
     openSheet('Coffres « Choisissez un »',INV_INTRO+'<p class="sh-intro">Une ressource au choix à l’ouverture.</p><div class="inv-grid deux">'+COFFRES.map(function(x){return numFld('iv-'+x[0],x[1],cf[x[0]],false,contenuCof(x[2]));}).join('')+'</div>'+
@@ -445,7 +458,8 @@ function invSave(){
     if(raw==='')return null;var v=dec?parseQte(raw):parseEntier(raw);
     if(v==null){err.textContent=dec?'Écris par exemple 81,8 M, 500 K ou 1 200 000.':'Écris un nombre entier (0 si tu n’en as pas).';err.hidden=false;el.setAttribute('aria-invalid','true');bad++;if(!first)first=el;}return v;}
   var nom;
-  if(k==='coffres'||k==='packs'){var o=Object.assign({},p.coffres||{});(k==='coffres'?COFFRES:PACKS).forEach(function(x){var v=lit('iv-'+x[0]);if(v!=null)o[x[0]]=v;else delete o[x[0]];});if(!bad)p.coffres=o;nom=k==='coffres'?'Coffres enregistrés.':'Packs enregistrés.';}
+  if(String(k).indexOf('g:')===0){var g2=grpObj(k.slice(2)),o3=Object.assign({},p.objets||{});g2.items.forEach(function(x){var v=lit('iv-'+x.id);if(v!=null)o3[x.id]=v;else delete o3[x.id];});if(!bad)p.objets=o3;nom=g2.nom+' : enregistré.';}
+  else if(k==='coffres'||k==='packs'){var o=Object.assign({},p.coffres||{});(k==='coffres'?COFFRES:PACKS).forEach(function(x){var v=lit('iv-'+x[0]);if(v!=null)o[x[0]]=v;else delete o[x[0]];});if(!bad)p.coffres=o;nom=k==='coffres'?'Coffres enregistrés.':'Packs enregistrés.';}
   else if(AN.some(function(x){return x[0]===k;})){var J=JEU.accelerateurs,L=k==='general'?J.universel:J.specialises,a=[];
     L.forEach(function(m){var v=lit('iv-'+m);if(v!=null)a.push([fDur(m),v,m/60]);});if(!bad)p.acc[k]=a;nom='Accélérateurs enregistrés.';}
   else{var gem=k==='gems',C=JEU.caisses[k],r=gem?p.gemsIn:p.res[k],vl=lit('iv-ville',!gem),c=[];
@@ -456,9 +470,10 @@ function invSave(){
 }
 function itemSheet(arg){
   var a=String(arg||'').split('|'),t=a[0],p=A();if(!p||!ITEMS[t])return;var L=p.items[t]||(p.items[t]=[]),i=a[1]==='new'?-1:+a[1],o=i>=0?L[i]:null;S.itemEdit={t:t,i:i};
-  openSheet((o?'Modifier : ':'Ajouter un objet : ')+ITEMS[t][1],
+  openSheet(t==='attirail'?(o?'Modifier la pièce':'Ajouter une pièce d’attirail'):(o?'Modifier : ':'Ajouter un objet : ')+ITEMS[t][1],
     '<div class="fld"><label for="itN">Nom (comme dans le jeu)</label><input id="itN" autocomplete="off" value="'+(o?esc(o.n):'')+'" placeholder="Ex. Livres d’expérience"><small class="ferr" hidden></small></div>'+
-    numFld('itQ','Quantité',o?o.q:null),
+    numFld('itQ','Quantité',o?o.q:(t==='attirail'?1:null))+
+    (t==='attirail'?'<div class="fld"><label>Qualité</label><div class="chips" data-single id="itC">'+[['b','Élite'],['p','Épique'],['o','Légendaire']].map(function(c){return '<button class="chip" type="button" data-c="'+c[0]+'" aria-pressed="'+((o&&o.c||'b')===c[0])+'">'+c[1]+'</button>';}).join('')+'</div></div>':''),
     o?[['Supprimer','item-del','danger'],['Annuler','close-sheet',''],['Enregistrer','item-save','primary']]:[['Annuler','close-sheet',''],['Ajouter','item-save','primary']]);
 }
 function itemSave(){
@@ -466,7 +481,8 @@ function itemSave(){
   en.hidden=eq.hidden=true;if(!n){en.textContent='Donne le nom de l’objet.';en.hidden=false;$('#itN').focus();return;}
   if(q==null){eq.textContent='Écris un nombre entier (0 si tu n’en as plus).';eq.hidden=false;$('#itQ').focus();return;}
   var L=p.items[e.t];if(L.some(function(x,j){return j!==e.i&&x.n.toLowerCase()===n.toLowerCase();})){en.textContent='Cet objet est déjà dans la liste.';en.hidden=false;return;}
-  if(e.i>=0)L[e.i]={n:n,q:q};else L.push({n:n,q:q});p.invMaj=dateJour();closeSheet();say(e.i>=0?'Objet modifié.':'Objet ajouté.');refreshAll();
+  var nO={n:n,q:q};if(e.t==='attirail'){var cc=$('#itC [aria-pressed="true"]');nO.c=cc?cc.dataset.c:'b';}
+  if(e.i>=0)L[e.i]=nO;else L.push(nO);p.invMaj=dateJour();closeSheet();say(e.i>=0?'Objet modifié.':'Objet ajouté.');refreshAll();
 }
 function itemDel(){var p=A(),e=S.itemEdit;if(!p||!e||e.i<0)return;var o=p.items[e.t][e.i];p.items[e.t].splice(e.i,1);p.invMaj=dateJour();closeSheet();say('« '+o.n+' » retiré de la liste.');refreshAll();}
 function renderCity(){
@@ -490,14 +506,14 @@ function renderCity(){
   var CHEV='<svg class="inv-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
   function f1(m){return (Math.round(m*10)/10).toFixed(1).replace('.',',')+'\u00a0M';}
   function grand(o){var t=(o.v||0)+(o.c||0);
-    return '<button class="it'+(o.cls?' '+o.cls:'')+(o.extra?' gx':'')+(o.val==='—'?' vide':'')+'" type="button" data-act="inv-edit" data-arg="'+o.arg+'" style="--glow:'+o.glow+'">'+(o.extra?'<span class="gx-g">':'')+
+    return '<button class="it'+(o.cls?' '+o.cls:'')+(o.extra?' gx':'')+(o.val==='—'?' vide':'')+'" type="button" data-act="'+(o.act||'inv-edit')+'" data-arg="'+o.arg+'" style="--glow:'+o.glow+'">'+(o.extra?'<span class="gx-g">':'')+
       '<span class="it-h">'+ic(o.icon)+'<small>'+o.nom+'</small>'+CHEV+'<b>'+o.val+'</b></span>'+
       (o.lv!=null&&t>0?'<span class="it-bar"><i class="v" style="width:'+(o.v/t*100)+'%"></i><i class="c" style="width:'+(o.c/t*100)+'%"></i></span>'+
         '<span class="it-l"><span class="v">En ville <b>'+o.lv+'</b></span><span class="c">En caisses <b>'+o.lc+'</b></span></span>':'<span class="it-s">'+o.sub+'</span>')+
-      (o.extra?'</span>'+o.extra:'')+'</button>';}
+      (o.extra?'</span>'+o.extra:'')+(o.x||'')+'</button>';}
   /* large : carte seule sur sa rangée, sur toute la largeur, lignes sur 2 colonnes (choix de Mickaël du 2026-10-10 : pas de case vide) */
   function carte(arg,icon,nom,tot,L,vide,large){var mx=Math.max.apply(null,L.map(function(x){return x[2];}).concat([0]));
-    function ligne(x){return '<div class="ic-l"><span>'+x[0]+'</span><span class="ic-tr"><i style="width:'+Math.max(3,mx?x[2]/mx*100:0)+'%"></i></span><b>×\u00a0'+nb(x[1])+'</b></div>';}
+    function ligne(x){return '<div class="ic-l"><span>'+x[0]+'</span><span class="ic-tr"><i style="width:'+Math.max(3,mx?x[2]/mx*100:0)+'%"></i></span><b>'+(x[3]||'×\u00a0'+nb(x[1]))+'</b></div>';}
     var moitie=Math.ceil(L.length/2);
     return '<section class="ic'+(large?' large':'')+'"><button class="ic-h" type="button" data-act="inv-edit" data-arg="'+arg+'" aria-label="Modifier : '+nom+'">'+ic(icon)+'<b>'+nom+'</b><span>'+tot+'</span>'+ic('i-pencil')+'</button>'+
       (!L.length?'<p class="ic-vide">'+vide+'</p>':large&&L.length>1?'<div class="ic-cols"><div>'+L.slice(0,moitie).map(ligne).join('')+'</div><div>'+L.slice(moitie).map(ligne).join('')+'</div></div>':L.map(ligne).join(''))+'</section>';}
@@ -525,9 +541,49 @@ function renderCity(){
     return grand({arg:x[0],icon:x[1],nom:x[2],cls:gen?'large':'',extra:gen?avecGen:'',val:a.length?fH(accTot(a)):'—',sub:a.length?nb(n)+' accélérateur'+(n>1?'s':'')+(gen?' · utilisables partout':''):(REEL?'À renseigner':'Aucun'),glow:GLOW[x[0]]});}).join('');
   var accC=AN.map(function(x,k){var a=p.acc[x[0]]||[];return carte(x[0],x[1],x[2],a.length?fH(accTot(a)):'—',a.map(function(c){return [c[0],c[1],c[1]*c[2]];}),REEL?'Pas encore renseigné':'Aucun',AN.length%2===1&&k===AN.length-1);}).join('');
   $('#gAcc').innerHTML='<div class="it-grid">'+accT+'</div><h3 class="inv-h3">Détail par durée</h3><div class="ic-grid">'+accC+'</div>';
-  var it=ITEMS[S.inv];if(it){var L=(p.items&&p.items[S.inv])||[];$('#itemsTitle').textContent=it[1];
-    $('#gItems').innerHTML=(L.length?'<div class="list">'+L.map(function(o,i){return row({act:'item-edit',data:S.inv+'|'+i,icon:it[0],title:esc(o.n),val:nb(o.q)});}).join('')+'</div>':vide(REEL?'Aucun objet renseigné dans cet onglet.':'Aucun objet dans cet onglet.'))+
-      '<div class="btns"><button class="btn" type="button" data-act="item-edit" data-arg="'+S.inv+'|new">'+ic('i-plus')+'Ajouter un objet</button></div>';}
+  /* Onglets Boosts, Équipement, Attirail, Autre (2026-10-10, même modèle que Ressources et Accélérateurs) : une tuile par famille
+     d'objets du jeu (RC_JEU.objets), détail en dessous ; ce qui n'est pas dans la liste du jeu reste dans « Autres objets ». */
+  var it=ITEMS[S.inv];if(it){var L=(p.items&&p.items[S.inv])||[],ob=p.objets||{},att=S.inv==='attirail';
+    $('#itemsTitle').textContent=it[1];$('#itemsMaj').textContent=p.invMaj?'Mis à jour le '+p.invMaj:'';
+    function qn(o){return ob[o.id]||0;}
+    function vq(X){return X.length?'<span class="vq">'+X.map(function(x){return '<span>'+(x.c?'<i class="dot '+x.c+'"></i>':'')+x.l+' <b>'+(x.b!=null?x.b:'×\u00a0'+nb(x.q))+'</b></span>';}).join('')+'</span>':'';}
+    function tuileObj(g,cls){var has=g.items.some(function(o){return ob[o.id]!=null;}),T=g.items.filter(function(o){return qn(o)>0;}),n=T.reduce(function(a,o){return a+qn(o);},0),val='—',sub='À renseigner',x='';
+      if(has){sub='';
+        if(g.type==='duree'){val=n?fH(T.reduce(function(a,o){return a+qn(o)*o.h;},0)):'0 h';sub=nb(n)+' objet'+(n>1?'s':'');x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}
+        else if(g.type==='troupes'){var cap=T.reduce(function(a,o){return a+qn(o)*(o.cap||0);},0);val=cap?'+'+nb(cap):nb(n);sub=cap?'capacité d’entraînement en plus':nb(n)+' objet'+(n>1?'s':'');x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}
+        else if(g.type==='mat'){var Q={};g.items.forEach(function(o){Q[o.c]=qn(o);});var lg=Math.floor((Math.floor((Math.floor((Math.floor(Q.g/4)+Q.v)/4)+Q.b)/4)+Q.p)/4)+Q.o;
+          val='≈\u00a0'+nb(lg)+' légendaire'+(lg>1?'s':'');sub='si tu combines tout (4 = 1 de la qualité au-dessus)';
+          x='<span class="q5">'+g.items.map(function(o){return '<span class="'+o.c+(qn(o)?'':' z')+'"><b>'+nb(qn(o))+'</b>'+QL[o.c][1]+'</span>';}).join('')+'</span>';}
+        else if(g.type==='qual'||g.type==='qual3'){var P={};g.items.forEach(function(o){var q=o.q||o.c;P[q]=(P[q]||0)+qn(o);});var ord=['o','p','b','v','g'].filter(function(q){return P[q];});
+          var pl=function(q){return QL[q][g.fem?3:2];};
+          if(g.top&&ord.length){val=nb(P[ord[0]])+' '+pl(ord[0]);sub=ord.length>1?nb(n)+' en tout':'';x=vq(ord.slice(1).map(function(q){return {c:q,l:pl(q),b:nb(P[q])};}));}
+          else{val=nb(n);x=vq(ord.map(function(q){return {c:q,l:pl(q),b:nb(P[q])};}));}}
+        else if(g.type==='valeur'){var tot=T.reduce(function(a,o){return a+qn(o)*o.val;},0);val=(tot>=1e6?String(Math.round(tot/1e5)/10).replace('.',',')+'\u00a0M':nb(tot))+' '+g.unite;
+          sub=nb(n)+' objet'+(n>1?'s':'');x=vq(T.slice().sort(function(a,b){return b.val-a.val;}).slice(0,4).map(function(o){return {l:o.l,q:qn(o)};}));}
+        else if(g.vals){val=T.map(function(o){return nb(qn(o));}).join(' · ')||'0';x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}
+        else if(g.sortes){val=nb(T.length)+' sorte'+(T.length>1?'s':'');sub='à dépenser pendant les événements';x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}
+        else if(T.some(function(o){return o.grp;})){var Gp={};T.forEach(function(o){Gp[o.grp]=(Gp[o.grp]||0)+qn(o);});val=nb(n);sub=g.carte?'le détail est en bas':'';x=vq(Object.keys(Gp).map(function(k){return {l:k,q:Gp[k]};}));}
+        else{val=nb(n);x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}}
+      return grand({arg:'g:'+g.id,icon:g.icone,nom:g.nom,val:val,sub:sub,x:x,glow:g.glow||'#d8b24c1a',cls:(cls||'')+(g.type==='mat'?' q5t':'')});}
+    var G=(JO.onglets&&JO.onglets[S.inv])||[],grands=G.filter(function(g){return !g.petit;}),petits=G.filter(function(g){return g.petit;}),html='';
+    if(att){var nP=L.reduce(function(a,o){return a+(o.q||1);},0);
+      html+='<div class="it-grid">'+grand({act:'item-edit',arg:'attirail|new',icon:'n-ring',nom:'Pièces d’attirail',val:nb(nP)+' / 2\u00a0000',sub:nP?'place dans ton inventaire':'Ajoute tes pièces',glow:'#8db6f222',
+        x:vq(L.map(function(o){return {c:o.c,l:esc(o.n),b:''};}))})+grands.map(function(g){return tuileObj(g);}).join('')+'</div>';}
+    else html+='<div class="it-grid'+(S.inv==='boosts'?' trois':'')+'">'+grands.map(function(g,k){return tuileObj(g,grands.length%2&&k===grands.length-1&&S.inv!=='boosts'?'large':'');}).join('')+'</div>';
+    if(petits.length)html+='<div class="it-petits">'+petits.map(function(g){return tuileObj(g,'petit');}).join('')+'</div>';
+    var C=G.filter(function(g){return g.carte;}).map(function(g,k,A2){var T=g.items.filter(function(o){return qn(o)>0;}),lines;
+      if(g.type==='qual3'){lines=['o','p','b','v'].map(function(q){var f=g.items.filter(function(o){return o.q===q;}),t=f.reduce(function(a,o){return a+qn(o);},0);
+        return t?[QL[q][3].charAt(0).toUpperCase()+QL[q][3].slice(1),t,t,f.map(function(o){return nb(qn(o));}).join(' · ')]:null;}).filter(Boolean);}
+      else if(g.type==='valeur')lines=T.map(function(o){return [o.l,qn(o),qn(o)*o.val];});
+      else lines=T.map(function(o){return [o.l,qn(o),qn(o)];});
+      var tot=g.type==='qual3'?'simples · bénies · lots':g.type==='valeur'?'':nb(T.reduce(function(a,o){return a+qn(o);},0));
+      return carte('g:'+g.id,g.icone,g.nom,tot,lines,'Rien de renseigné',A2.length%2===1&&k===A2.length-1);});
+    if(C.length)html+='<h3 class="inv-h3">Détail</h3><div class="ic-grid">'+C.join('')+'</div>';
+    $('#gObj').innerHTML=html;
+    $('#itemsSub').textContent=att?'Tes pièces d’attirail':'Autres objets';
+    $('#gItems').innerHTML=(L.length?'<div class="list">'+L.map(function(o,i){return row({act:'item-edit',data:S.inv+'|'+i,icon:it[0],title:esc(o.n),sub:att&&o.c&&QL[o.c]?QL[o.c][1].charAt(0).toUpperCase()+QL[o.c][1].slice(1):'',val:nb(o.q)});}).join('')+'</div>':
+      vide(att?'Aucune pièce renseignée.':'Rien d’autre. Ajoute ici un objet qui n’est pas dans les tuiles.'))+
+      '<div class="btns"><button class="btn" type="button" data-act="item-edit" data-arg="'+S.inv+'|new">'+ic('i-plus')+(att?'Ajouter une pièce':'Ajouter un objet')+'</button></div>';}
   $('#lastImport').textContent=REEL?(p.invMaj?'Mis à jour le '+p.invMaj:''):S.active==='main'?(S.imported?'Import d’aujourd’hui':'Import du 2 oct.'):'';
   $$('#invChips .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.inv===S.inv));});
   $$('[data-invsec]').forEach(function(s){s.hidden=s.dataset.invsec!==(ITEMS[S.inv]?'items':S.inv);});
