@@ -81,6 +81,8 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   const f62=await ev(p,()=>[document.getElementById('shTitle').textContent,document.querySelectorAll('#shBody input').length,document.activeElement&&document.activeElement.id].join('/'));
   await p.fill('#iv-c','42410');await p.click('[data-act=inv-save]');await p.waitForTimeout(250);
   ok('Une case du détail s’ouvre seule et s’enregistre (note 6) : pack niv. 3 → × 42 410, total des packs à jour',f62==='Pack niv. 3/1/iv-c'&&/× 42 410/.test(await txt(p,'#gRes .lg-r:nth-child(7) .cz:nth-child(5)')||'')&&/42 412/.test(await txt(p,'#gRes .tr-c[data-arg=packs]')||''),f62);
+  ok('Notes 7 et 8 (v63) : plus de « Profil … » sous « Ma ville », plus de titre en haut des onglets de l’inventaire, « Coffres « Choisissez un » » sur une ligne',
+    (await ev(p,()=>[!!document.querySelector('[data-screen="ma-ville"] header .tw p'),document.querySelectorAll('[data-invsec] .sec-t').length,document.querySelector('#gRes .lg-r:nth-child(6) .lg-h span').getBoundingClientRect().height<24].join('/')))==='false/0/true');
   await p.click('#gRes .it[data-arg=food]');await p.waitForTimeout(200);
   ok('7 tailles de caisses de nourriture',(await ev(p,()=>document.querySelectorAll('#shBody .inv-grid input').length))===7);
   await p.fill('#iv-ville','douze');await p.click('[data-act=inv-save]');await p.waitForTimeout(150);
@@ -89,10 +91,12 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   ok('Nourriture enregistrée et total à jour',/nourriture 6\d M/i.test(await txt(p,'#gRes .it[data-arg=food]')||''),await txt(p,'#gRes .it[data-arg=food]'));
   ok('« En ville » avec un chiffre après la virgule',/En ville 40,5 M/.test(await txt(p,'#gRes .it[data-arg=food]')||''));
   await ev(p,()=>{location.hash='accueil'});await p.waitForTimeout(300);ok('Total nourriture repris sur l’Accueil',/Total nourriture 6\d M/.test(await txt(p,'#homeTiles')||''),await txt(p,'#homeTiles'));
-  await etat(p,'demo','#ma-ville-inventaire');await p.click('#invChips [data-inv=acc]');await p.click('#gAcc .ic-h[data-arg=general]');await p.waitForTimeout(200);
+  await etat(p,'demo','#ma-ville-inventaire');await p.click('#invChips [data-inv=acc]');await p.click('#gAcc .lg-h[data-arg=general]');await p.waitForTimeout(200);
   ok('Tuile Généraux : 4 temps « avec les généraux »',(await ev(p,()=>document.querySelectorAll('#gAcc .it.gx .gx-i').length))===4);
   ok('Tuiles des accélérateurs sans la petite ligne « N accélérateurs » (note 12)',(await ev(p,()=>document.querySelectorAll('#gAcc .it-grid .it .it-s').length))===0);
-  ok('Détail des accélérateurs : la carte Généraux seule prend toute la largeur',(await ev(p,()=>{const c=document.querySelector('#gAcc .ic.large');const g=document.querySelector('#gAcc .ic-grid');return !!c&&/Généraux/.test(c.textContent)&&Math.abs(c.getBoundingClientRect().width-g.getBoundingClientRect().width)<2;})));
+  ok('Détail des accélérateurs (v63, comme Ressources) : 5 lignes, 9 cases par type et 13 pour les généraux, sur 9 colonnes alignées par durée',
+    (await ev(p,()=>{const R=[...document.querySelectorAll('#gAcc .ledger .lg-r')];const x=c=>Math.round(c.getBoundingClientRect().left);
+      return R.length+'/'+R.map(r=>r.querySelectorAll('.cz').length).join(',')+'/'+(x(R[0].querySelectorAll('.cz')[8])===x(R[4].querySelectorAll('.cz')[8]));}))==='5/9,9,9,9,13/true');
   ok('13 durées pour les accélérateurs généraux, 4 marquées *',(await ev(p,()=>[document.querySelectorAll('#shBody .inv-grid input').length,[...document.querySelectorAll('#shBody label')].filter(l=>/\*$/.test(l.textContent)).length].join('/')))==='13/4');
   await p.click('#sheet [data-act=close-sheet]');
   await p.click('#invChips [data-inv=autre]');await p.click('[data-act=item-edit][data-arg="autre|new"]');await p.fill('#itN','Passeports');await p.fill('#itQ','5');await p.click('[data-act=item-save]');await p.waitForTimeout(150);
@@ -102,12 +106,18 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   ok('Lecture par Claude annoncée dans Importer',/Claude Opus 5\.5/.test(await txt(p,'#lectNote')||''));R.cle=await ev(p,()=>fetch('/api/lire').then(r=>r.json()).then(j=>j.cle?'clé en place':'clé absente').catch(()=>'?'));
   await p.context().close();}
 // 3. Détail des caisses avec de grosses quantités : aucun texte de case ne passe à la ligne ni ne dépasse (remarque du 2026-10-10, « × 42 410 » sur téléphone)
-for(const w of [360,390,768,820]){const p=await page(w,900);await etat(p,'demo','#ma-ville-inventaire');
+for(const w of [360,390,768,820,1028]){const p=await page(w,900);await etat(p,'demo','#ma-ville-inventaire');
   for(const [sel,v] of [['#gRes .lg-r:nth-child(7) .cz:nth-child(3)','42410'],['#gRes .lg-r:nth-child(7) .cz:nth-child(4)','16213'],['#gRes .lg-r:nth-child(1) .cz:nth-child(1)','34017'],['#gRes .lg-r:nth-child(6) .cz:nth-child(1)','1089']]){
     await ev(p,s=>document.querySelector(s).click(),sel);await p.waitForTimeout(150);await p.fill('#iv-c',v);await p.click('[data-act=inv-save]');await p.waitForTimeout(200);}
-  const bad=await ev(p,()=>{const o=[];document.querySelectorAll('#gRes .cz').forEach(c=>{const cr=c.getBoundingClientRect();[...c.children].forEach(e=>{const r=e.getBoundingClientRect(),lh=parseFloat(getComputedStyle(e).lineHeight)||16;
-    if(r.height>lh*1.4||r.left<cr.left+1||r.right>cr.right-1)o.push(e.textContent.replace(/\s+/g,' '));});});return o;});
-  ok('Nombres sur une ligne dans le détail des caisses à '+w+' px',bad.length===0,bad.slice(0,6).join(' | '));await p.context().close();}
+  await ev(p,()=>document.querySelector('#gAcc .lg-r:nth-child(4) .cz:nth-child(2)').click());await p.waitForTimeout(150);await p.fill('#iv-c','2670');await p.click('[data-act=inv-save]');await p.waitForTimeout(200);
+  await p.click('#invChips [data-inv=acc]');await p.waitForTimeout(150);
+  const bad=await ev(p,()=>{const o=[];document.querySelectorAll('#gRes .cz, #gAcc .cz').forEach(c=>{if(!c.getClientRects().length)return;const cr=c.getBoundingClientRect();[...c.children].forEach(e=>{const r=e.getBoundingClientRect(),lh=parseFloat(getComputedStyle(e).lineHeight)||16;
+    if(r.height>lh*1.4||r.left<cr.left+1||r.right>cr.right-1)o.push(e.textContent.replace(/\s+/g,' '));});});
+    document.querySelectorAll('#gAcc .lg-h span').forEach(e=>{if(e.getBoundingClientRect().height>24)o.push('nom : '+e.textContent);});return o;});
+  await p.click('#invChips [data-inv=res]');await p.waitForTimeout(150);
+  const bad2=await ev(p,()=>{const o=[];document.querySelectorAll('#gRes .cz').forEach(c=>{const cr=c.getBoundingClientRect();[...c.children].forEach(e=>{const r=e.getBoundingClientRect(),lh=parseFloat(getComputedStyle(e).lineHeight)||16;
+    if(r.height>lh*1.4||r.left<cr.left+1||r.right>cr.right-1)o.push(e.textContent.replace(/\s+/g,' '));});});document.querySelectorAll('#gRes .lg-h span').forEach(e=>{if(e.getBoundingClientRect().height>24)o.push('nom : '+e.textContent);});return o;});bad.push(...bad2);
+  ok('Nombres et noms sur une ligne dans les détails Ressources et Accélérateurs à '+w+' px',bad.length===0,bad.slice(0,6).join(' | '));await p.context().close();}
 fs.writeFileSync(path.join(SORTIE,'resultat-maville.json'),JSON.stringify(R,null,1));
 const n=Object.values(R.mesures).reduce((a,c)=>a+c.length,0);
 console.log('mesures :',Object.keys(R.mesures).length,'vues,',n,'constats ; fonctionnement :',R.fonction.filter(x=>x[0]==='OK').length+'/'+R.fonction.length,'; erreurs :',R.erreurs.length);

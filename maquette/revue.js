@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=62,VERSION='v'+VNUM+' · 10 oct. 2026';
+var VNUM=63,VERSION='v'+VNUM+' · 10 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -48,7 +48,10 @@ var CHANGES={
     {sel:'[data-steppanel="3"]',t:'Corrigé (ton import de ce matin) : « 8 cases coupées » s’affichait à tort. Le dessin du type d’accélérateur est en bas de la case : coupé, Claude ne connaît pas le type, et l’appli ne retrouvait pas la case entière sur la capture suivante. Elle compare maintenant la rangée coupée, colonne par colonne.'},
     {sel:'[data-steppanel="3"]',t:'Coffres et packs de ressources : la relecture dit combien elle en a vu et que tu peux les saisir à la main dans l’inventaire, au lieu de « autres onglets, ou coffres et packs ».'},
     {sel:'#stepper',t:'La frise des étapes n’apparaît qu’à partir de la lecture ; pendant la lecture, chaque capture lue dit son onglet (Ressources ou Accélérateurs).'}],
-  'ma-ville-inventaire':[{sel:'#gRes .ledger',t:'Tes notes 1 à 6 : chaque case du détail se touche pour la remplir seule ; le texte des cases est centré, même sans valeur ; plus de titre « Ressources », de ligne d’import, de ligne « Détail des caisses » ni de crayon ; le texte des bulles de pillage est centré.'},
+  'ma-ville-inventaire':[{sel:'#gAcc, #invChips',t:'Onglet Accélérateurs refait comme Ressources (ta demande) : les tuiles, puis le détail compact, une ligne par type et une case par durée du jeu, même à 0 (nombre et temps gagné), plus bleue quand elle fait gagner plus de temps. Les colonnes sont alignées par durée ; les 4 durées des généraux (24 h à 30 j) passent dessous. Chaque case se touche pour la remplir seule.'},
+    {sel:'#invChips, [data-screen="ma-ville"] header',t:'Plus de titre en haut des onglets de l’inventaire (ta réponse) ; plus de « Profil Principal » sous « Ma ville » (ta note 7).'},
+    {sel:'#gRes .ledger',t:'La colonne des noms prend la largeur du plus long : « Coffres « Choisissez un » » tient sur une ligne (ta note 8).'},
+    {sel:'#gRes .ledger',t:'Tes notes 1 à 6 : chaque case du détail se touche pour la remplir seule ; le texte des cases est centré, même sans valeur ; plus de titre « Ressources », de ligne d’import, de ligne « Détail des caisses » ni de crayon ; le texte des bulles de pillage est centré.'},
     {sel:'#gRes .ledger',t:'Aucun nombre ne passe plus à la ligne dans les cases (« × 42 410 » le faisait sur téléphone) : la police se réduit juste assez sur la ligne qui en a besoin. Sur une tablette en portrait, le nom passe au-dessus des cases.'},
     {sel:'#gRes .ledger, #invChips',t:'Détail des caisses (ta demande) : toutes les tailles du jeu sont affichées, même à 0, mais sur une seule ligne par ressource : une case par taille avec le nombre et ce que ça vaut. Plus la case est bleue, plus ses caisses valent cher (même échelle pour les 4 ressources). Gemmes, Coffres « Choisissez un » et Packs suivent le même modèle.'},
     {sel:'#gRes, #gAcc, #invChips',t:'Tes notes 12 à 17 : la ligne des totaux et la phrase sur le pillage sont retirées ; la part « en caisses » est en bleu plein, sans hachures ; Gemmes, Coffres et Packs sont centrés dans leur panneau ; les tuiles des accélérateurs n’ont plus la petite ligne « N accélérateurs ».'},

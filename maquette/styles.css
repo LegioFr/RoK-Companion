@@ -776,13 +776,14 @@ button.more{border:0;background:none;cursor:pointer;font-family:inherit;min-heig
 .tr-c.vide b{color:var(--muted)}
 .tr-s{color:var(--muted);font-size:12.5px}
 .tr-c.vide .tr-s{color:var(--gold-2);font-weight:700}
-.ledger{container:led/inline-size;display:grid;margin-top:14px;border:1px solid var(--line-cold);border-radius:18px;background:rgba(17,26,41,.85)}
-/* une ligne par ressource : en-tête à gauche (tablette), une case par taille du jeu à droite */
-.lg-r{display:grid;grid-template-columns:200px minmax(0,1fr);align-items:center;gap:8px 16px;min-width:0;padding:12px 18px;border-top:1px solid var(--line-cold)}
+.ledger{container:led/inline-size;display:grid;grid-template-columns:max-content minmax(0,1fr);margin-top:14px;border:1px solid var(--line-cold);border-radius:18px;background:rgba(17,26,41,.85)}
+/* une ligne par ressource : en-tête à gauche (tablette), une case par taille du jeu à droite ; la colonne des noms prend la largeur
+   du plus long (grille partagée par toutes les lignes : note 8 de Mickaël, « Coffres « Choisissez un » » était sur 2 lignes) */
+.lg-r{grid-column:1/-1;display:grid;grid-template-columns:subgrid;align-items:center;gap:8px 16px;min-width:0;padding:12px 18px;border-top:1px solid var(--line-cold)}
 .lg-r:first-child{border-top:0}
 .lg-h{display:flex;align-items:center;gap:9px;width:100%;min-width:0;min-height:44px;padding:0;border:0;background:none;color:var(--text);font:inherit;font-size:14.5px;font-weight:700;text-align:left}
 .lg-h svg{width:24px;height:24px}
-.lg-h span{min-width:0}
+.lg-h span{min-width:0;white-space:nowrap}
 .lg-h em{margin-left:auto;font:700 16px/1 var(--display);font-style:normal;white-space:nowrap}
 .lg-c{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:6px}
 /* chaque case se touche pour la remplir seule (note 6) ; ses textes restent sur une ligne : la police se réduit juste assez
@@ -800,9 +801,9 @@ button.more{border:0;background:none;cursor:pointer;font-family:inherit;min-heig
   .pil .pil-l,.pil .pil-p{display:none}.pil .pil-c{display:inline}
   .trio{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.tr-c:first-child{grid-column:1/-1;border-bottom:1px solid var(--line-cold)}.tr-c:nth-child(2){border-left:0}
 }
-/* Détail des caisses moins large que 780 px (tablette en portrait, téléphone) : le nom passe au-dessus des cases et les tailles s'écrivent en court ;
+/* Détail moins large que 860 px (tablette en portrait, téléphone) : le nom passe au-dessus des cases et les tailles s'écrivent en court ;
    moins de 560 px : les cases passent sur deux rangées (remarque du 2026-10-10 : les nombres passaient à la ligne entre 700 et 880 px d'écran) */
-@container led (max-width:779px){
+@container led (max-width:859px){
   .lg-r{grid-template-columns:minmax(0,1fr);padding:10px 14px 14px}.cz .cz-l{display:none}.cz .cz-c{display:inline}.cz small{font-size:min(12px,calc(100cqi / (var(--kc,7) * .52)))}}
 @container led (max-width:559px){
   .lg-c{grid-template-columns:repeat(var(--m),minmax(0,1fr));gap:5px}.cz{padding:6px 2px}}

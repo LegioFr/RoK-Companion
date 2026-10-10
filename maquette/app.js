@@ -477,6 +477,8 @@ function invSheet(k){
 }
 /* « c:food:1000 », « c:gems:50 », « c:cof:pB » : la case du détail des caisses, sa quantité et le nom à afficher */
 function czCase(p,k){var a=String(k).split(':'),t=a[1],id=a[2];
+  if(t==='acc'){var m=+a[3],xa=AN.filter(function(y){return y[0]===id;})[0];if(!xa)return null;var ca=(p.acc[id]||[]).filter(function(c){return Math.round(c[2]*60)===m;})[0],J=JEU.accelerateurs,vua=!J||J.vues.indexOf(m)>=0;
+    return {acc:id,m:m,q:ca?ca[1]:null,titre:xa[2]+' : accélérateurs de '+fDur(m).replace(' ',' '),lab:'Nombre d’accélérateurs',aide:vua?'':'Durée indiquée par le wiki du jeu, pas encore vue sur tes captures.'};}
   if(t==='cof'){var x=COFFRES.concat(PACKS).filter(function(y){return y[0]===id;})[0];if(!x)return null;var pk=PACKS.indexOf(x)>=0,cf=p.coffres||{};
     return {cof:true,id:id,q:cf[id]==null?null:cf[id],titre:pk?x[1]:'Coffres « Choisissez un » : '+x[1].toLowerCase(),lab:pk?'Nombre de packs':'Nombre de coffres',aide:(pk?'Au hasard : ':'Au choix : ')+contenuCof(x[2])+'.'};}
   var gem=t==='gems',rn=RN.filter(function(y){return y[0]===t;})[0];if(!gem&&!rn)return null;
@@ -493,7 +495,9 @@ function invSave(){
     if(nvB!=null&&(nvB<1||nvB>JPA.nivMax)){var elB=$('#iv-niv'),erB=elB.parentNode.querySelector('.ferr');erB.textContent='Un niveau de 1 à '+JPA.nivMax+'.';erB.hidden=false;elB.setAttribute('aria-invalid','true');bad++;if(!first)first=elB;}
     if(!bad){p.objets=o3;if($('#paT')){var tb=$('#paT [aria-pressed="true"]');p.paCalc={niv:nvB,talent:!!(tb&&tb.dataset.v==='1')};}}nom=g2.nom+' : enregistré.';}
   else if(String(k).indexOf('c:')===0){var cs=czCase(p,k),vc=lit('iv-c');
-    if(!bad&&cs){if(cs.cof){var oc=Object.assign({},p.coffres||{});if(vc==null)delete oc[cs.id];else oc[cs.id]=vc;p.coffres=oc;}
+    if(!bad&&cs){if(cs.acc){var La=(p.acc[cs.acc]||[]).filter(function(c){return Math.round(c[2]*60)!==cs.m;});if(vc!=null)La.push([fDur(cs.m),vc,cs.m/60]);
+        La.sort(function(a,b){return a[2]-b[2];});p.acc[cs.acc]=La;}
+      else if(cs.cof){var oc=Object.assign({},p.coffres||{});if(vc==null)delete oc[cs.id];else oc[cs.id]=vc;p.coffres=oc;}
       else{var L=cs.r.c.filter(function(c){return Math.round((cs.gem?c[2]:c[2]*1e6))!==cs.t;});if(vc!=null)L.push([nb(cs.t),vc,cs.gem?cs.t:cs.t/1e6]);
         L.sort(function(a,b){return a[2]-b[2];});cs.r.c=L;}}
     nom=cs?cs.titre+' : enregistré.':'';}
@@ -584,7 +588,7 @@ function renderCity(){
   /* Chaque case s'ouvre seule pour la remplir (note 6 de Mickaël du 2026-10-10) ; sans valeur, pas de ligne vide : le texte reste centré dans la case (note 1). */
   function cz(lab,labC,q,val,a,arg,nom){var z=!q,bt=q==null?'—':'× '+nb(q);K.b=Math.max(K.b,tl(bt));K.l=Math.max(K.l,tl(lab));K.c=Math.max(K.c,tl(labC));K.v=Math.max(K.v,tl(val||''));
     return '<button class="cz'+(z?' z':'')+'" type="button" data-act="inv-edit" data-arg="c:'+arg+'" aria-label="'+nom+' : '+(q==null?'non renseigné':bt)+'. Modifier" style="--a:'+(z?0:(0.12+0.5*a)).toFixed(3)+'"><small><span class="cz-l">'+lab+'</span><span class="cz-c">'+labC+'</span></small><b>'+bt+'</b>'+(val?'<span>'+val+'</span>':'')+'</button>';}
-  function lgR(arg,icon,nom,tot,cells,n){var h=lgR0(arg,icon,nom,tot,cells,n);K={b:0,l:0,c:0,v:0};return h;}
+  function lgR(arg,icon,nom,tot,cells,n,cols){var h=lgR0(arg,icon,nom,tot,cells,cols||n);K={b:0,l:0,c:0,v:0};return h;}
   function lgR0(arg,icon,nom,tot,cells,n){return '<div class="lg-r">'+(arg?'<button class="lg-h" type="button" data-act="inv-edit" data-arg="'+arg+'" aria-label="Modifier : '+nom+'">':'<div class="lg-h">')+
     ic(icon)+'<span>'+nom+'</span><em>'+tot+'</em>'+(arg?'</button>':'</div>')+'<div class="lg-c" style="--n:'+n+';--m:'+(n<=5?n:Math.ceil(n/2))+';--k:'+Math.max(K.b,3)+';--kl:'+Math.max(K.l,3)+';--kc:'+Math.max(K.c,3)+';--kv:'+Math.max(K.v,3)+'">'+cells+'</div></div>';}
   var MAXV=0;RN.forEach(function(x){p.res[x[0]].c.forEach(function(c){MAXV=Math.max(MAXV,c[1]*c[2]*1e6);});});
@@ -603,12 +607,20 @@ function renderCity(){
     return '<span class="gx-i">'+ic(x[1])+'<span>'+x[2]+'</span><b>'+fH(accTot(p.acc[x[0]]||[])+gT)+'</b></span>';}).join('')+'</span>':'';
   var accT=AN.map(function(x){var a=p.acc[x[0]]||[],n=a.reduce(function(s,c){return s+c[1];},0),gen=x[0]==='general';
     return grand({arg:x[0],icon:x[1],nom:x[2],cls:gen?'large':'',extra:gen?avecGen:'',val:a.length?fH(accTot(a)):'—',sub:a.length?'':(REEL?'À renseigner':'Aucun'),glow:GLOW[x[0]]});}).join('');
-  var accC=AN.map(function(x,k){var a=p.acc[x[0]]||[];return carte(x[0],x[1],x[2],a.length?fH(accTot(a)):'—',a.map(function(c){return [c[0],c[1],c[1]*c[2]];}),REEL?'Pas encore renseigné':'Aucun',AN.length%2===1&&k===AN.length-1);}).join('');
-  $('#gAcc').innerHTML='<div class="it-grid">'+accT+'</div><h3 class="inv-h3">Détail par durée</h3><div class="ic-grid">'+accC+'</div>';
+  /* Onglet Accélérateurs sur le modèle de Ressources (demande de Mickaël du 2026-10-10) : les tuiles, puis le détail compact,
+     une ligne par type, une case par durée du jeu (même à 0) qui se remplit seule. 9 colonnes alignées par durée : les 4 durées
+     propres aux généraux (1 j à 30 j) passent dessous. La case est d'autant plus bleue qu'elle fait gagner de temps (même échelle pour les 5 types). */
+  var JA=JEU.accelerateurs,MAXA=0;
+  function dCourt(mn){var h=mn/60,j=h/24;return mn<60?nb(mn)+' min':h<10?h.toLocaleString('fr-FR',{maximumFractionDigits:1})+' h':h<48?nb(Math.round(h))+' h':j.toLocaleString('fr-FR',{maximumFractionDigits:j<10?1:0}).replace(/[\s\u202f]/g,' ')+' j';}
+  AN.forEach(function(x){(p.acc[x[0]]||[]).forEach(function(c){MAXA=Math.max(MAXA,c[1]*c[2]*60);});});
+  var accL=AN.map(function(x){var a=p.acc[x[0]]||[],Q={},rien=!a.length,T=JA?(x[0]==='general'?JA.universel:JA.specialises):a.map(function(c){return Math.round(c[2]*60);});
+    a.forEach(function(c){Q[Math.round(c[2]*60)]=c[1];});
+    return lgR(x[0],x[1],x[2],rien?'—':fH(accTot(a)),T.map(function(m){var q=rien?null:(Q[m]||0),v=(q||0)*m,d=fDur(m).replace(' ',' ');
+      return cz(d,d,q,q?dCourt(v):'',MAXA?v/MAXA:0,'acc:'+x[0]+':'+m,x[2]+', accélérateurs de '+d);}).join(''),T.length,9);}).join('');
+  $('#gAcc').innerHTML='<div class="it-grid">'+accT+'</div><div class="ledger" aria-label="Détail par durée">'+accL+'</div>';
   /* Onglets Boosts, Équipement, Attirail, Autre (2026-10-10, même modèle que Ressources et Accélérateurs) : une tuile par famille
      d'objets du jeu (RC_JEU.objets), détail en dessous ; ce qui n'est pas dans la liste du jeu reste dans « Autres objets ». */
   var it=ITEMS[S.inv];if(it){var L=(p.items&&p.items[S.inv])||[],ob=p.objets||{},att=S.inv==='attirail';
-    $('#itemsTitle').textContent=it[1];$('#itemsMaj').textContent=p.invMaj?'Mis à jour le '+p.invMaj:'';
     function qn(o){return ob[o.id]||0;}
     /* « Rendu pro » (demande de Mickaël du 2026-10-10) : chaque objet est une case de la couleur de sa qualité, comme dans l'inventaire du jeu,
        avec le nombre dans le coin et une légende courte dessous ; une ligne dit à quoi servent les objets (g.but). */
