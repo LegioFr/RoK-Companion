@@ -840,3 +840,5 @@ button.more{border:0;background:none;cursor:pointer;font-family:inherit;min-heig
 @media(max-width:699px){.ic-l{grid-template-columns:minmax(76px,1.3fr) minmax(36px,1fr) auto}}
 /* téléphone : les noms longs des familles d'objets passent à la ligne au lieu d'être coupés */
 @media(max-width:699px){#gObj .it-h small{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.25}}
+@media(max-width:699px){.it.s2-2{grid-column:span 2}}
+@media(min-width:700px){.it.s4-4{grid-column:span 4}.it.s4-2{grid-column:span 2}}

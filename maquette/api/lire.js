@@ -71,7 +71,13 @@ const OBJETS = [
     ['tp_al', 'vert : caisse en bois avec un point d’interrogation bleu (téléportation aléatoire)'],
     ['livre_all', 'vert : livre rouge avec une épée (livre d’alliance)'], ['fleche_res', 'vert : pointe métallique avec une flamme (flèche de résistance)'],
     ['arc_lohar', 'vert : chef barbare (arc long de Lohar)'], ['bouc_lohar', 'bleu : chef barbare (bouclier de Lohar)'],
-    ['pinceau', 'violet : pinceau doré à poils arc-en-ciel (petit pinceau)'], ['civ', 'violet : pyramide et temple avec des flèches (changement de civilisation)']]]
+    ['pinceau', 'violet : pinceau doré à poils arc-en-ciel (petit pinceau)'], ['civ', 'violet : pyramide et temple avec des flèches (changement de civilisation)'],
+    ['passeport', 'orange : carte dépliée avec une flèche jaune (page de passeport)'],
+    ['tresor_reine', 'orange : coffre bombé en métal doré et gris, serrure en forme de bouclier (trésor de la Reine guerrière)'],
+    ['coffre_scm', 'orange : coffre en bois cerclé d’or, fermoir sur le devant (coffre de sculpture de commandant)'],
+    ['reinit_talent', 'bleu : livre vert et bleu avec des symboles de couleur (réinitialisation de talent)'],
+    ['reinit_comp', 'violet : rouleau brun avec un ruban violet (réinitialisation des compétences)'],
+    ['ignorer', 'orange, SANS quantité : livre rouge marqué « 2025 » avec une couronne (livre de l’année, à ignorer)']]]
 ];
 const ID_OBJETS = OBJETS.flatMap(([, L]) => L.map(([id]) => id)).concat(['aucun', 'inconnu']);
 const GUIDE = OBJETS.map(([o, L]) => `Onglet ${o} :\n` + L.map(([id, d]) => `  ${id} = ${d}`).join('\n')).join('\n');

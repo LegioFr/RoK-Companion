@@ -572,7 +572,11 @@ function renderCity(){
       html+='<div class="it-grid">'+grand({act:'item-edit',arg:'attirail|new',icon:'n-ring',nom:'Pièces d’attirail',val:nb(nP)+' / 2\u00a0000',sub:nP?'place dans ton inventaire':'Ajoute tes pièces',glow:'#8db6f222',
         x:vq(L.map(function(o){return {c:o.c,l:esc(o.n),b:''};}))})+grands.map(function(g){return tuileObj(g);}).join('')+'</div>';}
     else html+='<div class="it-grid'+(S.inv==='boosts'?' trois':'')+'">'+grands.map(function(g,k){return tuileObj(g,grands.length%2&&k===grands.length-1&&S.inv!=='boosts'?'large':'');}).join('')+'</div>';
-    if(petits.length)html+='<div class="it-petits">'+petits.map(function(g){return tuileObj(g,'petit');}).join('')+'</div>';
+    /* petites tuiles : la dernière rangée remplit toute la largeur (4 colonnes sur tablette, 2 sur téléphone ; pas de case vide) */
+    if(petits.length){var np=petits.length,r4=np%4,r2=np%2;
+      html+='<div class="it-petits">'+petits.map(function(g,k){var c='petit',fin=np-1-k;
+        if(r4===1&&fin===0)c+=' s4-4';else if(r4===2&&fin<2)c+=' s4-2';else if(r4===3&&fin===0)c+=' s4-2';
+        if(r2===1&&fin===0)c+=' s2-2';return tuileObj(g,c);}).join('')+'</div>';}
     var C=G.filter(function(g){return g.carte;}).map(function(g,k,A2){var T=g.items.filter(function(o){return qn(o)>0;}),lines;
       if(g.type==='qual3'){lines=['o','p','b','v'].map(function(q){var f=g.items.filter(function(o){return o.q===q;}),t=f.reduce(function(a,o){return a+qn(o);},0);
         return t?[QL[q][3].charAt(0).toUpperCase()+QL[q][3].slice(1),t,t,f.map(function(o){return nb(qn(o));}).join(' · ')]:null;}).filter(Boolean);}
@@ -832,6 +836,7 @@ function lectRegrouper(L,erreurs,n){
       if(!ok)perdues+=R.length;});
     var acc={},ord=[];
     seq.forEach(function(S){S.cells.forEach(function(x){var id=x.id_objet,O=OBJ_ID[id];
+      if(id==='ignorer'||id==='aucun')return;
       if(id==='piece_attirail'){var cq=String(x.couleur||'');attP[cq]=(attP[cq]||0)+1;return;}
       if(!O){objInc++;return;}
       var q=parseEntier(x.quantite);if(q==null&&/^piece_/.test(id)&&!String(x.quantite||'').trim())q=1;/* pièce forgée : une case = une pièce */

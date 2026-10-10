@@ -50,7 +50,7 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   ok('6 onglets d’inventaire comme le jeu',(await txt(p,'#invChips'))==='Ressources Accélérateurs Boosts Équipement Attirail Autre');
   const nbT=async inv=>{await p.click('#invChips [data-inv='+inv+']');await p.waitForTimeout(150);return ev(p,()=>document.querySelectorAll('#gObj .it').length);};
   const tT=[await nbT('boosts'),await nbT('equip'),await nbT('attirail'),await nbT('autre')].join('/');
-  ok('Tuiles des autres onglets : Boosts 6, Équipement 8, Attirail 2, Autre 11',tT==='6/8/2/11',tT);
+  ok('Tuiles des autres onglets : Boosts 6, Équipement 8, Attirail 2, Autre 13',tT==='6/8/2/13',tT);
   await p.click('#invChips [data-inv=boosts]');await p.click('#gObj .it[data-arg="g:bouclier"]');await p.waitForTimeout(200);await p.fill('#iv-bp24','2');await p.click('[data-act=inv-save]');await p.waitForTimeout(200);
   ok('Saisie d’un boost : la tuile additionne les durées',/3 j 0 h/.test(await txt(p,'#gObj .it[data-arg="g:bouclier"]')||''),await txt(p,'#gObj .it[data-arg="g:bouclier"]'));
   await p.click('#invChips [data-inv=res]');await p.waitForTimeout(150);
