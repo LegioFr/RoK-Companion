@@ -62,12 +62,13 @@ const OBJETS = [
     ['cle_cr', 'orange : clé dorée avec un orbe bleu (clé de cristal)'], ['cle_sv', 'orange : clé dorée avec une gemme verte (clé de souverain)'],
     ['livre_all', 'vert : livre rouge avec une épée (livre d’alliance)'], ['fleche_res', 'vert : pointe métallique avec une flamme (flèche de résistance)'],
     ['passeport', 'orange : carte dépliée avec une flèche jaune (page de passeport)'],
-    ['ignorer', 'objets sans intérêt pour l’appli, à donner sans quantité ni doute : boucliers de la paix (écusson doré ailé), longues-vues anti-reconnaissance, pelles de récolte (croix verte), pièce argentée « ROK », gemmes vertes serties d’or, pièce hexagonale à couronne, pièce au poisson, sac au poisson, médaillon hexagonal bleu et or, pomme dorée, caisses en bois à flèches (téléportations), chef barbare Lohar, pinceau arc-en-ciel, pyramide et temple (civilisation), livre « 2025 », livre vert et bleu et rouleau à ruban violet (réinitialisations), décorations de ville (petits bâtiments sur un carré d’herbe), rouleau rouge'],
     ['tresor_reine', 'orange : coffre bombé en métal doré et gris, serrure en forme de bouclier (trésor de la Reine guerrière)'],
-    ['coffre_scm', 'orange : coffre en bois cerclé d’or, fermoir sur le devant (coffre de sculpture de commandant)']]]
+    ['coffre_scm', 'orange : coffre en bois cerclé d’or, fermoir sur le devant (coffre de sculpture de commandant)']]],
+  ['Tous les onglets (objets à ignorer)', [
+    ['ignorer', 'objet sans intérêt pour l’appli, dans n’importe quel onglet (sur = true) : boucliers de la paix (écusson doré ailé), longues-vues anti-reconnaissance, pelles de récolte (croix verte), pièce argentée « ROK », gemmes vertes serties d’or, pièce hexagonale à couronne, pièce au poisson, sac au poisson, médaillon hexagonal bleu et or, pomme dorée, caisses en bois à flèches (téléportations), chef barbare Lohar, pinceau arc-en-ciel, pyramide et temple (civilisation), livre « 2025 », livre vert et bleu et rouleau à ruban violet (réinitialisations), décorations de ville (petits bâtiments sur un carré d’herbe), rouleau rouge']]]
 ];
 const ID_OBJETS = OBJETS.flatMap(([, L]) => L.map(([id]) => id)).concat(['aucun', 'inconnu']);
-const GUIDE = OBJETS.map(([o, L]) => `Onglet ${o} :\n` + L.map(([id, d]) => `  ${id} = ${d}`).join('\n')).join('\n');
+const GUIDE = OBJETS.map(([o, L]) => `${o.startsWith('Tous') ? o : 'Onglet ' + o} :\n` + L.map(([id, d]) => `  ${id} = ${d}`).join('\n')).join('\n');
 
 /* Couleur de la case (2026-10-10) : elle donne le niveau des coffres « Choisissez un » et des packs de ressources
    (captures de Mickaël du 10 oct. 2026 ; voir RC_JEU.coffres dans donnees-jeu.js). */
