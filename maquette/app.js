@@ -351,6 +351,10 @@ function renderProfile(){
   $('#pfTitle').textContent=p.name;$('#pfActive').hidden=k!==S.active;$('#pfActivate').hidden=k===S.active;
   $('#pfInfo').innerHTML=row({icon:'i-bolt',title:'Puissance',val:esc(p.power)})+row({icon:'i-tag',title:'Type',val:'<span style="font-size:17px">'+esc(p.type)+'</span>'})+
     row({icon:'i-id',title:'ID joueur RoK',val:'<span style="font-size:17px">'+(p.pid?esc(p.pid):'—')+'</span>'});
+  /* Réglages (niveau VIP, bâtisseurs, bonus de vitesse, civilisation), sortis de Ma ville le 2026-10-10 (choix de Mickaël) */
+  var BLDp=ordreBat(),SETp=Object.keys(FIELDS).filter(function(x){return FIELDS[x].grp==='set'&&BLDp.indexOf(x)<0;}),act=k===S.active;
+  $('#pfSet').innerHTML='<div class="btiles">'+SETp.map(function(x){var h=tuile(p,x);return act?h:h.replace(/^<a /,'<div ').replace(/ href="[^"]*"/,'').replace(/<\/a>$/,'</div>');}).join('')+'</div>'+
+    (act?'':'<p class="src">Rends ce profil actif pour modifier ses réglages.</p>');
   $('#pfHist').innerHTML=row({icon:'i-journal',title:p.releves+' relevé'+(p.releves>1?'s':'')+', dont '+p.corr+' correction'+(p.corr>1?'s':'')})+
     row({icon:'i-lock',title:p.snaps+' instantané'+(p.snaps>1?'s':''),sub:'Copies figées de l’état du profil, utilisées par les bilans'});
   var o=ORDER.filter(function(x){return x!==k;});
@@ -527,13 +531,13 @@ function renderCity(){
   /* Progression ne montre que les bâtiments, Hôtel de ville compris (choix 3 de Mickaël du 2026-10-10 : plus de grande tuile du prochain niveau ;
      ce qui concerne le plan vers l'Hôtel de ville va dans Optimiser). Le bâtiment qui bloque le prochain niveau reste entouré d'or. */
   var BLD=ordreBat(),SET=Object.keys(FIELDS).filter(function(k){return FIELDS[k].grp==='set'&&BLD.indexOf(k)<0;}),MAN=manquants(p);
-  if(S.quick){$('#gSet').innerHTML='<div class="list">'+SET.map(function(k){return qrow(p,k);}).join('')+'</div>';
+  /* Réglages : dans la fiche du profil (choix de Mickaël du 2026-10-10) ; « Tout renseigner » les propose toujours, en tête */
+  $('#gSetQ').innerHTML=S.quick?'<section class="sec"><div class="sec-t"><h2>Réglages du profil</h2></div><div class="list">'+SET.map(function(k){return qrow(p,k);}).join('')+'</div></section>':'';
+  if(S.quick){
     $('#gBld').innerHTML='<div class="list">'+BLD.map(function(k){return qrow(p,k);}).join('')+'</div>';}
-  else{$('#gSet').innerHTML='<div class="btiles">'+SET.map(function(k){return tuile(p,k);}).join('')+'</div>';
+  else{
     $('#gBld').innerHTML=(JEU.batiments?JEU.batiments.groupes:[['Bâtiments',BLD]]).map(function(g){var L=g[1].filter(function(k){return FIELDS[k];});
       return '<div class="bgrp'+(g[2]?' saison':'')+'"><h3>'+g[0]+'</h3>'+(g[2]?'<p class="bgrp-n">'+g[2]+'</p>':'')+'<div class="btiles">'+L.map(function(k){return tuile(p,k,MAN[k]);}).join('')+'</div></div>';}).join('');}
-  var nu=BLD.filter(function(k){return !FIELDS[k].saison&&(isMulti(k)?vide4(p.v[k]):p.v[k]==null);}).length;
-  $('#bldCount').textContent=nu?nu+' à renseigner':'Tous renseignés';
   $('#bldNote').textContent='Entouré d’or : le niveau requis pour ton prochain Hôtel de ville (guides et wiki du jeu, pas encore vérifiés dans le jeu). Les bâtiments sans niveau (forgeron, magasin, monument…) ne sont pas suivis.';
   $('#quickBar').innerHTML=S.quick?'<div class="qbar"><span id="qCount">Saisie rapide</span><div class="chips" data-single id="qMotif" hidden><button class="chip" type="button" aria-pressed="true">Changé en jeu</button><button class="chip" type="button" aria-pressed="false">Erreur de saisie</button><button class="chip" type="button" aria-pressed="false">Autre</button></div><div class="btns" style="margin-top:0"><button class="btn" type="button" data-act="quick-cancel">Annuler</button><button class="btn primary" type="button" data-act="quick-save">Enregistrer</button></div></div>':'';
   $('#gResearch').innerHTML=!p.research.length?vide('Pas encore renseignées.'):p.research.map(function(r){return '<div class="prow"><div class="ptop"><span>'+r[0]+'</span><span>'+r[1]+' %</span></div><div class="bar"><div class="fill" style="width:'+r[1]+'%"></div></div></div>';}).join('');
@@ -719,6 +723,7 @@ function quickSave(){
 /* ================= Valeur ================= */
 function renderValue(){
   var p=A();if(!p)return;var k=S.valKey,f=FIELDS[k],v=p.v[k],t=valTxt(k,v);
+  var regl=FIELDS[k].grp==='set'&&ordreBat().indexOf(k)<0,vb=$('#valBack');if(vb){vb.setAttribute('href',regl?'#profil':'#ma-ville-progression');vb.lastChild.textContent=regl?'Profil':'Ma ville';}
   $('#valTitle').textContent=nomPl(k);$('#valLabel').textContent=KIND[f.kind][0];
   $('#valBig').textContent=t==null?'—':t;$('#valBig').classList.toggle('unk',t==null);
   $('#valBtn').innerHTML=ic('i-pencil')+(t==null?'Renseigner':'Corriger');

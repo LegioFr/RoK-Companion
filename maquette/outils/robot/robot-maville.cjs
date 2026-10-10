@@ -29,7 +29,8 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   for(const [nom,inv,sel] of [['fenetre-nourriture','res','#gRes [data-act=inv-edit][data-arg=food]'],['fenetre-coffres','res','#gRes [data-act=inv-edit][data-arg=coffres] >> nth=0'],['fenetre-generaux','acc','#gAcc [data-act=inv-edit][data-arg=general]'],['fenetre-objet','autre','[data-act=item-edit][data-arg="autre|new"]']]){
     await p.click('#invChips [data-inv='+inv+']');await p.waitForTimeout(120);
     await p.click(sel);await p.waitForTimeout(250);await mesure(p,t,nom,'#sheet');await p.click('#sheet [data-act=close-sheet]');await p.waitForTimeout(150);}
-  for(const sub of ['commandants','equipements','armements']){await etat(p,'demo','#ma-ville-'+sub);await mesure(p,t,sub,'[data-screen="ma-ville"]');}
+  for(const sub of ['recherches','commandants','equipements','armements']){await etat(p,'demo','#ma-ville-'+sub);await mesure(p,t,sub,'[data-screen="ma-ville"]');}
+  await etat(p,'demo','#profil');await mesure(p,t,'profil','[data-screen="profil"]');
   await etat(p,'demo','#import');await p.waitForTimeout(800);await mesure(p,t,'importer','[data-screen="import"]');
   await p.context().close();}
 // 2. Fonctionnement (tablette de Mickaël)
@@ -39,6 +40,13 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   const cols=await ev(p,()=>getComputedStyle(document.querySelector('#gBld .btiles')).gridTemplateColumns.split(' ').length);
   ok('Bâtiments en 4 colonnes de tuiles à 1028 px',cols===4,String(cols));
   ok('Progression : que des bâtiments (v70, choix 3 de Mickaël) : plus de grande tuile du prochain niveau, l’Hôtel de ville en tête du groupe « Autres », niveau 24',(await ev(p,()=>[!!document.getElementById('pgHero'),(document.querySelector('#gBld .bgrp:nth-child(3) .btile')||{}).getAttribute&&document.querySelector('#gBld .bgrp:nth-child(3) .btile').getAttribute('href'),(document.querySelector('#gBld a[href="#valeur-hdv"] .bt-v')||{}).textContent].join('/')))==='false/#valeur-hdv/24');
+  /* v71 : onglet « Bâtiments », Réglages dans le profil, Recherches et troupes à part (choix de Mickaël du 2026-10-10) */
+  ok('Onglets de Ma ville : Bâtiments, Recherches et troupes, Inventaire, Commandants, Équipements, Armements (v71)',(await txt(p,'[data-screen="ma-ville"] .tabs'))==='Bâtiments Recherches et troupes Inventaire Commandants Équipements Armements');
+  ok('Onglet Bâtiments : ni réglages, ni recherches, ni troupes (v71)',(await ev(p,()=>{const P=document.querySelector('[data-panel=progression]');return !/Réglages|Recherches|Troupes|Niveau VIP/.test(P.innerText);})));
+  await etat(p,'demo','#ma-ville-recherches');ok('Onglet Recherches et troupes : les deux parties (v71)',/Recherches.*Troupes/s.test(await txt(p,'[data-panel=recherches]')||''));
+  await etat(p,'demo','#profil');ok('Réglages dans la fiche du profil : VIP 17, Bâtisseurs 2, Bonus de vitesse, Civilisation France (v71)',/17 Niveau VIP 2 Bâtisseurs — Bonus de vitesse à renseigner France Civilisation/.test(await txt(p,'#pfSet')||''),await txt(p,'#pfSet'));
+  await p.click('#pfSet a[href="#valeur-vip"]');await p.waitForTimeout(300);ok('Un réglage ouvert depuis le profil y ramène (« Profil »)',(await ev(p,()=>[document.getElementById('valBack').getAttribute('href'),document.getElementById('valBack').textContent.trim()].join('/')))==='#profil/Profil');
+  await etat(p,'demo','#ma-ville-progression');
   ok('Hôtel de ville et 18 bâtiments à niveau en 3 groupes, et 3 de saison',(await ev(p,()=>[document.querySelectorAll('#gBld .btile').length,document.querySelectorAll('#gBld .bgrp').length,document.querySelectorAll('#gBld .bgrp.saison .btile').length].join('/')))==='22/4/3');
   ok('Prérequis manquant entouré (Mur)',(await ev(p,()=>[...document.querySelectorAll('#gBld .btile.manque')].map(a=>a.getAttribute('href')).join(',')))==='#valeur-mur');
   await p.click('#gBld a[href="#valeur-comptoir"]');await p.waitForTimeout(300);ok('Comptoir ouvre sa valeur',(await txt(p,'#valTitle'))==='Comptoir');

@@ -52,8 +52,10 @@ window.RC_TESTS=[
  {g:'Accueil · événements',p:['demo','#accueil'],l:[
   ['ac10','Regarde « Prochains événements », puis touche « Calendrier ».','Les dates et les heures (heure de France) sont claires, et un événement en cours se repère tout de suite.'],
   ['ac11','Dans le calendrier, touche « Ajouter » et ajoute un événement avec une date dans quelques jours.','C’est facile ; il apparaît à sa place dans le calendrier et sur l’Accueil.']]},
- {g:'Ma ville · progression',p:['demo','#ma-ville-progression'],l:[
-  ['vp1','Regarde Ma ville › Progression sur ta tablette, en portrait, puis en paysage.','C’est propre et lisible : les réglages puis les bâtiments en tuiles ; plus de grande tuile du prochain niveau en haut (ton choix 3).',null,70,'que des bâtiments'],
+ {g:'Ma ville · bâtiments',p:['demo','#ma-ville-progression'],l:[
+  ['vp1','Regarde Ma ville › Bâtiments sur ta tablette, en portrait, puis en paysage.','L’onglet s’appelle « Bâtiments » et ne montre que les bâtiments en tuiles : plus de grande tuile du prochain niveau, plus de réglages, de recherches ni de troupes.',null,71,'que des bâtiments'],
+  ['vp7','Ouvre la fiche de ton profil (Accueil, touche ton profil), regarde « Réglages », puis touche « Niveau VIP » et reviens.','Niveau VIP, bâtisseurs, bonus de vitesse et civilisation sont dans ton profil ; la fenêtre du niveau VIP ramène au profil.',null,71,'réglages dans le profil'],
+  ['vp8','Dans Ma ville, ouvre l’onglet « Recherches et troupes ».','Tes recherches et tes troupes y sont (encore des exemples, la saisie est prévue).',null,71,'nouvel onglet'],
   ['vp2','Dans le groupe « Autres », regarde la tuile Hôtel de ville, puis la tuile Mur entourée d’or.','L’Hôtel de ville est une tuile comme les autres (24) ; le Mur, entouré d’or, dit « niveau 24 requis » : c’est ce qui bloque ton prochain Hôtel de ville. Touche-le : il ouvre la valeur du Mur.',null,70,'Hôtel de ville parmi les bâtiments'],
   ['vp3','Regarde les bâtiments : Économique, Militaire, Autres.','Il ne manque aucun bâtiment à niveau de ton jeu, ils sont rangés comme dans le jeu et portent les noms du jeu (Réserve, Moulin à bois, Comptoir…). Sinon, laisse une note.'],
   ['vp6','Regarde le dernier groupe, « Saison de KvK ».','Forum d’état, Mine de cristal et Centre de recherche de cristal y sont ; tu comprends que les deux bâtiments de cristal disparaissent à la fin de la saison.'],
