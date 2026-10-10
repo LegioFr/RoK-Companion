@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=55,VERSION='v'+VNUM+' · 10 oct. 2026';
+var VNUM=56,VERSION='v'+VNUM+' · 10 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -48,7 +48,9 @@ var CHANGES={
     {sel:'[data-steppanel="3"]',t:'Corrigé (ton import de ce matin) : « 8 cases coupées » s’affichait à tort. Le dessin du type d’accélérateur est en bas de la case : coupé, Claude ne connaît pas le type, et l’appli ne retrouvait pas la case entière sur la capture suivante. Elle compare maintenant la rangée coupée, colonne par colonne.'},
     {sel:'[data-steppanel="3"]',t:'Coffres et packs de ressources : la relecture dit combien elle en a vu et que tu peux les saisir à la main dans l’inventaire, au lieu de « autres onglets, ou coffres et packs ».'},
     {sel:'#stepper',t:'La frise des étapes n’apparaît qu’à partir de la lecture ; pendant la lecture, chaque capture lue dit son onglet (Ressources ou Accélérateurs).'}],
-  'ma-ville-inventaire':[{sel:'#invChips',t:'Objets inutiles au site retirés (ton choix) : bouclier de la paix, anti-reconnaissance, récolte, devises d’événements, téléportations, chefs barbares, remises à zéro, changement de civilisation, pinceau, décorations. La lecture les ignore. Gardés : passeport (tuile « Migration »), points d’action, clés.'},
+  'ma-ville-inventaire':[{sel:'#gObj .it[data-arg="g:pa"], #invChips',t:'Nouveau (ta demande) : les points d’action sont calculés. Onglet Autre : la tuile dit combien de barbares tes potions permettent d’attaquer, l’EXP par commandant et combien de jours de recharge elles valent. La carte du détail explique le calcul ; « Barbares niv. … » règle le niveau des barbares et le talent qui baisse le coût. Règles du wiki, à vérifier dans le jeu.'},
+    {sel:'#invChips',t:'Sur téléphone, l’unité des grandes tuiles est plus petite : « 12 légendaires » et « 500 000 EXP » étaient coupés.'},
+    {sel:'#invChips',t:'Objets inutiles au site retirés (ton choix) : bouclier de la paix, anti-reconnaissance, récolte, devises d’événements, téléportations, chefs barbares, remises à zéro, changement de civilisation, pinceau, décorations. La lecture les ignore. Gardés : passeport (tuile « Migration »), points d’action, clés.'},
     {sel:'#invChips',t:'Noms que tu m’as envoyés ajoutés : Trésor de la Reine guerrière et Coffre de sculpture de commandant (nouvelle tuile « Coffres de sculptures »), Page de passeport, Réinitialisation de talent et des compétences (nouvelle petite tuile « Remises à zéro »), et tous les noms des boosts 24 h, matériaux, sculptures et points d’action. Claude les reconnaît aussi à la lecture.'},
     {sel:'#invChips',t:'Boosts, Équipement, Attirail et Autre refaits comme Ressources (ta demande) : une tuile par famille d’objets, avec les noms lus sur tes captures et les couleurs de qualité du jeu. Touche une tuile pour saisir les quantités.'},
     {sel:'#invChips',t:'Équipement : pour chaque matériau, les 5 qualités et ce que ça ferait en légendaires si tu combinais tout (4 = 1 de la qualité au-dessus). Boosts : la durée totale par type. Autre : sculptures, tomes, points d’action, clés, devises d’événements…'},

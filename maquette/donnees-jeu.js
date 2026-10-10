@@ -62,6 +62,24 @@ window.RC_JEU={
       {id:'p2',nom:'niv. 2',couleur:'vert',food:10000,wood:10000,stone:7500,gold:5000,vu:true},
       {id:'p3',nom:'niv. 3',couleur:'bleu',food:100000,wood:100000,stone:100000,gold:100000,vu:false}]
   },
+  /* Points d'action : ce qu'ils rapportent (demande de Mickaël du 2026-10-10). Wiki riseofkingdoms.fandom.com, lu par l'API le 10 oct. 2026,
+     non vérifié dans le jeu : pages « Barbarians » (révision du 2024-11-07), « Resources » (2025-05-31), « VIP » (2026-08-02),
+     « Category:Peacekeeping » (2023-04-04). Détail : references/donnees-jeu.md. */
+  pa:{
+    verifie:false,
+    cout:50,          // une attaque de barbares
+    chaine:2,         // −2 à chaque attaque enchaînée sans rentrer en ville…
+    chaineMax:10,     // …jusqu'à −10 (40 points)
+    talent:10,        // talent « Insight » de l'arbre Maintien de la paix : −10 de plus (nom français à vérifier)
+    recharge:45,      // 1 point toutes les 45 s environ, sans bonus
+    plafond:1000,     // la recharge s'arrête à 1 000 (les potions peuvent dépasser)
+    vipRecharge:[1,1,1.05,1.05,1.05,1.1,1.1,1.1,1.15,1.15,1.15,1.15,1.2,1.2,1.25,1.3,1.35,1.35,1.35], // VIP 0 à 18
+    vipPlafond:{15:100,16:200,17:350,18:400},
+    /* EXP gagnée par chaque commandant de la marche (le principal et le secondaire), sans bonus ; le butin donne en plus des tomes du savoir
+       pour la même EXP. Niveaux 1 à 25 : tableau du wiki ; 26 à 40 : déduit du nombre de tomes du butin (100 EXP × niveau), non vérifié. */
+    exp:function(n){return n<=10?106*n:100*n;},
+    nivMax:40
+  },
   /* Objets des onglets Boosts, Équipement, Attirail et Autre de l'Inventaire (2026-10-10).
      vu:1 = objet vu dans le jeu sur les captures de Mickaël du 10 oct. 2026 (nom en n, lu dans le panneau de droite quand il l'a touché).
      Sans vu : wiki riseofkingdoms.fandom.com (pages « Items/… », lues par l'API le 10 oct. 2026), non vérifié.
@@ -117,11 +135,11 @@ window.RC_JEU={
         {id:'tomes',nom:'Tomes du savoir',icone:'n-book',type:'valeur',unite:'EXP',carte:1,glow:'#8db6f222',info:'Expérience pour tes commandants.',items:[
           {id:'xp1',l:'100 EXP',val:100,c:'v',vu:1,n:'Tome du savoir niv. 1'},{id:'xp2',l:'500 EXP',val:500,c:'b',vu:1},{id:'xp3',l:'1 000 EXP',val:1000,c:'p',vu:1},{id:'xp4',l:'5 000 EXP',val:5000,c:'p',vu:1},
           {id:'xp5',l:'10 000 EXP',val:10000,c:'p',vu:1},{id:'xp6',l:'20 000 EXP',val:20000,c:'o',vu:1},{id:'xp7',l:'50 000 EXP',val:50000,c:'o',vu:1}]},
-        {id:'pa',nom:'Points d’action',icone:'t-flask',type:'valeur',unite:'points',glow:'#3ecf8e22',info:'Pour les barbares, les forts et certains événements.',items:[
-          {id:'pa50',l:'50',val:50,c:'v',vu:1,n:'Récupération de points d’action urgente'},{id:'pa100',l:'100',val:100,c:'v',vu:1},{id:'pa500',l:'500',val:500,c:'b',vu:1},{id:'pa1000',l:'1 000',val:1000,c:'p',vu:1}]},
         {id:'cles',nom:'Clés',icone:'i-lock',type:'compte',info:'Pour les coffres de la taverne.',items:[
           {id:'cle_ar',l:'Clé en argent',c:'p',vu:1,n:'Clé en argent'},{id:'cle_or',l:'Clé en or',c:'o',vu:1,n:'Clé en or'},
           {id:'cle_cr',l:'Clé de cristal (équipement)',c:'o',vu:1,n:'Clé de cristal'},{id:'cle_sv',l:'Clé de souverain (événements)',c:'o',vu:1,n:'Clé de souverain'}]},
+        {id:'pa',nom:'Points d’action',icone:'t-flask',type:'valeur',unite:'points',carte:1,/* en dernier : tuile sur toute la largeur, place pour le calcul */glow:'#3ecf8e22',info:'Pour les barbares, les forts et certains événements.',items:[
+          {id:'pa50',l:'50',val:50,c:'v',vu:1,n:'Récupération de points d’action urgente'},{id:'pa100',l:'100',val:100,c:'v',vu:1},{id:'pa500',l:'500',val:500,c:'b',vu:1},{id:'pa1000',l:'1 000',val:1000,c:'p',vu:1}]},
         {id:'constr',nom:'Château et tours de guet',icone:'i-keep',type:'compte',petit:1,vals:1,items:[
           {id:'livre_all',l:'Livre d’alliance (château)',c:'v',vu:1,n:'Livre d’alliance'},{id:'fleche_res',l:'Flèche de résistance (tours de guet)',c:'v',vu:1,n:'Flèche de résistance'}]},
         {id:'migration',nom:'Migration',icone:'n-map',type:'compte',petit:1,info:'Pour changer de royaume (immigration).',items:[

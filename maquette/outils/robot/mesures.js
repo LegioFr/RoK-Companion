@@ -36,6 +36,8 @@ window.__mesurer = function (rootSel) {
   feuilles.forEach(e => { const s = getComputedStyle(e), fs = parseFloat(s.fontSize), txt = e.textContent.replace(/\s+/g, ' ').trim().slice(0, 40);
     if (fs < 12) out.push(['texte petit', '« ' + txt + ' » : ' + fs + ' px.']);
     if ((s.overflow === 'hidden' || s.textOverflow === 'ellipsis') && e.scrollWidth > e.clientWidth + 1) out.push(['texte coupé', '« ' + txt + ' » est coupé.']);
+    // texte sur une ligne plus large que sa case (coupé par la carte autour, ex. « 12 légendaires » sur téléphone, 2026-10-10)
+    else if (s.whiteSpace === 'nowrap' && e.clientWidth && e.scrollWidth > e.clientWidth + 1) out.push(['texte qui dépasse', '« ' + txt + ' » dépasse de sa case (' + (e.scrollWidth - e.clientWidth) + ' px).']);
     const c = lum(s.color), f = fond(e); if (!c || !f || f.img) return;
     const ratio = (Math.max(c.L, f.L) + .05) / (Math.min(c.L, f.L) + .05), grand = fs >= 24 || (fs >= 18.66 && +s.fontWeight >= 700);
     if (ratio < (grand ? 3 : 4.5)) out.push(['contraste', '« ' + txt + ' » : ' + ratio.toFixed(2) + ' (minimum ' + (grand ? 3 : 4.5) + ').']);

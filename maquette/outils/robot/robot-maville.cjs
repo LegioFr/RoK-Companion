@@ -53,6 +53,13 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   ok('Tuiles des autres onglets : Boosts 3, Équipement 8, Attirail 2, Autre 9 (objets inutiles retirés)',tT==='3/8/2/9',tT);
   await p.click('#invChips [data-inv=boosts]');await p.click('#gObj .it[data-arg="g:attaque"]');await p.waitForTimeout(200);await p.fill('#iv-att24','2');await p.click('[data-act=inv-save]');await p.waitForTimeout(200);
   ok('Saisie d’un boost : la tuile additionne les durées',/4 j 0 h/.test(await txt(p,'#gObj .it[data-arg="g:attaque"]')||''),await txt(p,'#gObj .it[data-arg="g:attaque"]'));
+  /* Points d'action (v56) : exemples = 10 500 points, VIP 17, barbares niv. 25 sans talent */
+  await p.click('#invChips [data-inv=autre]');await p.waitForTimeout(150);
+  const paC=async()=>(await txt(p,'#gObj .ic:has(.pa-c)')||'').replace(/\s+/g,' ');
+  let pa1=await paC();
+  ok('Points d’action calculés : 210 à 262 barbares, 525 K à 655 K EXP, ≈ 2 590 / jour, ≈ 4 jours',/210 à 262/.test(pa1)&&/525 K à 655 K/.test(pa1)&&/2 590 \/ jour/.test(pa1)&&/4 jours de recharge/.test(pa1)&&/262 barbares/.test(await txt(p,'#gObj .it[data-arg="g:pa"]')||''),pa1.slice(0,200));
+  await p.click('#gObj .pa-reg');await p.waitForTimeout(200);await p.fill('#iv-niv','30');await p.click('#paT [data-v="1"]');await p.click('[data-act=inv-save]');await p.waitForTimeout(200);pa1=await paC();
+  ok('Réglages des points d’action : niv. 30 avec le talent → 262 à 350 barbares, 786 K à 1,1 M EXP',/262 à 350/.test(pa1)&&/786 K à 1,1 M/.test(pa1),pa1.slice(0,200));
   await p.click('#invChips [data-inv=res]');await p.waitForTimeout(150);
   ok('Inventaire : 4 grandes tuiles, 3 tuiles Gemmes / Coffres / Packs, 7 cartes (caisses, gemmes, coffres, packs)',(await ev(p,()=>[document.querySelectorAll('#gRes .it-grid .it').length,document.querySelectorAll('#gRes .it-row3 .it').length,document.querySelectorAll('#gRes .ic').length].join('/')))==='4/3/7');
   const fen=async(sel)=>ev(p,s=>{document.querySelector(s).click();const r=[document.getElementById('shTitle').textContent,document.querySelectorAll('#shBody input').length,document.getElementById('shBody').textContent];document.querySelector('#sheet [data-act=close-sheet]').click();return r;},sel);
