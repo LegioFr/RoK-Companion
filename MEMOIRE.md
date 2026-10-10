@@ -139,6 +139,7 @@ Dernière mise à jour : 2026-10-08.
 | 2026-10-10 | Mickaël : faire aussi les autres onglets de l'Inventaire (Boosts, Équipement, Attirail, Autre). Plan : ses captures de chaque onglet, recherches (premières notes dans `references/donnees-jeu.md`), pistes en images, puis lecture par Claude. |
 | 2026-10-10 | Mickaël envoie 20 captures de Boosts, Équipement, Attirail et Autre (« absolument tout ce que j'ai »). Claude propose un écran par onglet dans le style validé (tuiles + détail), en images avec ses chiffres ; en attente de sa validation. |
 | 2026-10-10 | Mickaël envoie ~45 captures du panneau de droite (noms du jeu) et demande ce qu'il manque. Claude construit les 4 onglets en v52 (proposition des images, validée par sa réponse « Ta besoin de quoi… » puis ses captures ; à confirmer au test vi8). |
+| 2026-10-10 | Mickaël : « Vas-y » : la lecture des captures par Claude remplit aussi Boosts, Équipement, Attirail et Autre. |
 
 ## 5. Questions ouvertes (à trancher plus tard)
 

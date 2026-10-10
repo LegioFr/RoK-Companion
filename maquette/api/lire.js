@@ -14,6 +14,68 @@ const EFFORTS = ['low', 'medium', 'high'];
 const ID = /^c[a-z0-9]{6,40}\.(png|jpe?g|webp)$/;
 const json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
 
+/* Objets des onglets Boosts, Équipement, Attirail et Autre (2026-10-10, décision de Mickaël « Vas-y ») : chaque case reçoit l'identifiant
+   d'un objet du catalogue de l'appli (maquette/donnees-jeu.js, RC_JEU.objets). Descriptions des icônes tirées des captures de Mickaël
+   du 10 oct. 2026 (couleur = fond de la case : gris, vert, bleu, violet, orange). */
+const OBJETS = [
+  ['Boosts', [
+    ['res5', 'orange, valeur du haut « 20 000 » : deux armures argentées avec des boucliers ronds rouges (Réserve)'],
+    ['res6', 'orange, valeur du haut « 50 000 » : même dessin (Réserve)'],
+    ['bp8', 'vert, « 8h » : écusson doré ailé avec une gemme verte (Bouclier de la paix)'], ['bp24', 'même écusson, « 24h »'], ['bp3j', 'même écusson, « 3j »'], ['bp30j', 'même écusson, « 30j »'],
+    ['rec8', 'bleu, « 8h » : pelle avec une croix verte (récolte)'], ['rec24', 'violet, « 24h » : pelle avec une croix verte (récolte)'],
+    ['att12', 'vert, « 12h » : lances ou flèches avec une croix verte (attaque)'], ['att24', 'bleu, « 24h » : lances ou flèches avec une croix verte (attaque)'], ['att24a', 'violet, « 24h » : lances ou flèches (attaque avancée)'],
+    ['def12', 'vert, « 12h » : bouclier rond métallique avec une croix verte (défense)'], ['def24', 'bleu, « 24h » : bouclier rond métallique avec une croix verte (défense)'], ['def24a', 'violet, « 24h » : bouclier rond (défense avancée)'],
+    ['ar24', 'vert, « 24h » : longue-vue avec un rond rouge barré (anti-reconnaissance)'], ['ar7j', 'même longue-vue, « 7j »'],
+    ['exp25', 'bleu, « 4h » : soldats en armure avec des boucliers dorés (expansion d’armée basique)'],
+    ['exp50', 'violet, « 4h » : soldats en armure avec des boucliers dorés (expansion d’armée avancée)']]],
+  ['Équipement', [
+    ['cme_g', 'gris : coffre argenté massif, en métal blanc (coffre de matériaux d’équipement)'], ['cme_v', 'vert : le même coffre argenté'],
+    ['cmc_g', 'gris : coffre couleur cuivre à angles saillants (coffre au choix de matériau)'], ['cmc_v', 'vert : le même coffre cuivre'],
+    ['cmc_b', 'bleu : le même coffre cuivre'], ['cmc_p', 'violet : le même coffre cuivre'], ['cmc_o', 'orange : le même coffre cuivre'],
+    ['lot_lo', 'vert : coffre en bois bombé, cerclé de fer gris, petite serrure (lot de la Légion de l’Ombre)'],
+    ['cfp_v', 'vert : coffre en bois plus large cerclé de fer, grosse serrure carrée (fragment de plan avancé au choix)'],
+    ['cfp_b', 'bleu : coffre bronze couvert d’écailles (fragment de plan élite au choix)'],
+    ['cfp_p', 'violet : coffre argenté à écailles avec une pièce d’armure dorée dessus (fragment de plan épique au choix)'],
+    ['cfp_o', 'orange : coffre rouge et or avec une pièce dorée (plastron, jambières, gants, arme) en haut à droite (fragment de plan légendaire au choix)'],
+    ['piece_g', 'gris : pièce d’équipement forgée (casque, armure, gants, pantalon, bottes, arme, accessoire), souvent avec un portrait de commandant ou un insigne dans un coin, SANS quantité'],
+    ['piece_v', 'vert : pièce d’équipement forgée, sans quantité'], ['piece_b', 'bleu : pièce d’équipement forgée, sans quantité'],
+    ['piece_p', 'violet : pièce d’équipement forgée, sans quantité'], ['piece_o', 'orange : pièce d’équipement forgée, sans quantité'],
+    ['plan_g', 'gris : parchemin doré avec le dessin d’une pièce, SANS pièce de puzzle (plan)'], ['plan_v', 'vert : plan'], ['plan_b', 'bleu : plan'], ['plan_p', 'violet : plan'], ['plan_o', 'orange : plan'],
+    ['frag_g', 'gris : parchemin avec une pièce de puzzle blanche en haut à gauche (fragment de plan)'], ['frag_v', 'vert : fragment de plan'], ['frag_b', 'bleu : fragment de plan'], ['frag_p', 'violet : fragment de plan'], ['frag_o', 'orange : fragment de plan'],
+    ['cuir_g', 'gris : cuir (peaux et rouleaux de cuir brun)'], ['cuir_v', 'vert : cuir'], ['cuir_b', 'bleu : cuir'], ['cuir_p', 'violet : cuir'], ['cuir_o', 'orange : cuir'],
+    ['fer_g', 'gris : minerai de fer (pierres gris argenté)'], ['fer_v', 'vert : minerai de fer'], ['fer_b', 'bleu : minerai de fer'], ['fer_p', 'violet : minerai de fer'], ['fer_o', 'orange : minerai de fer'],
+    ['ebene_g', 'gris : ébène (planches de bois brun très sombre)'], ['ebene_v', 'vert : ébène'], ['ebene_b', 'bleu : ébène'], ['ebene_p', 'violet : ébène'], ['ebene_o', 'orange : ébène'],
+    ['os_g', 'gris : os d’animal (crocs et os blancs)'], ['os_v', 'vert : os d’animal'], ['os_b', 'bleu : os d’animal'], ['os_p', 'violet : os d’animal'], ['os_o', 'orange : os d’animal']]],
+  ['Attirail', [
+    ['cform', 'coffre doré à pointes avec une gemme bleue, avec une quantité (coffre au choix de formation)'],
+    ['piece_attirail', 'pièce d’attirail (parchemin, cor, étendard, emblème…) avec un petit insigne doré en haut à gauche, SANS quantité']]],
+  ['Autre', [
+    ['sch_o', 'orange : tête sculptée dorée façon totem (sculpture de commandant au choix, légendaire)'], ['sch_p', 'violet : la même tête, argentée'],
+    ['sch_b', 'bleu : la même tête, bronze'], ['sch_v', 'vert : la même tête, en pierre'],
+    ['scm_o', 'orange : buste blanc d’un commandant nommé (sculpture de commandant)'], ['scm_p', 'violet : buste blanc de commandant'],
+    ['scm_b', 'bleu : buste blanc de commandant'], ['scm_v', 'vert : buste blanc de commandant'],
+    ['ste_o_s', 'orange : UNE étoile dorée lisse sur un socle (sculpture de lumière d’étoile)'], ['ste_o_b', 'orange : étoile dorée hérissée, à rayons (bénie)'], ['ste_o_l', 'orange : plusieurs étoiles dorées (lot)'],
+    ['ste_p_s', 'violet : une étoile argentée lisse'], ['ste_p_b', 'violet : étoile argentée hérissée'], ['ste_p_l', 'violet : plusieurs étoiles argentées'],
+    ['ste_b_s', 'bleu : une étoile bronze lisse'], ['ste_b_b', 'bleu : étoile bronze hérissée'], ['ste_b_l', 'bleu : plusieurs étoiles bronze'],
+    ['ste_v_s', 'vert : une étoile grise lisse'], ['ste_v_b', 'vert : étoile grise hérissée'], ['ste_v_l', 'vert : plusieurs étoiles grises'],
+    ['xp1', 'livre bleu « XP », valeur du haut « 100 » (tome du savoir)'], ['xp2', 'livre « XP », « 500 »'], ['xp3', 'livre « XP », « 1 000 »'], ['xp4', 'livre « XP », « 5 000 »'],
+    ['xp5', 'livre « XP », « 10 000 »'], ['xp6', 'livre « XP », « 20 000 »'], ['xp7', 'livre « XP », « 50 000 »'],
+    ['pa50', 'fiole verte, valeur du haut « 50 » (points d’action)'], ['pa100', 'fiole verte, « 100 »'], ['pa500', 'fiole verte, « 500 »'], ['pa1000', 'fiole verte, « 1 000 »'],
+    ['cle_ar', 'violet : clé argentée (clé en argent)'], ['cle_or', 'orange : clé dorée simple (clé en or)'],
+    ['cle_cr', 'orange : clé dorée avec un orbe bleu (clé de cristal)'], ['cle_sv', 'orange : clé dorée avec une gemme verte (clé de souverain)'],
+    ['chatoyante', 'violet : pièce argentée gravée « ROK » (pièce chatoyante)'], ['reliques', 'violet : deux gemmes vertes serties d’or (pièces de reliques)'],
+    ['roupie', 'orange : pièce hexagonale dorée avec une couronne (roupie du retour)'], ['shilling', 'bleu : pièce dorée avec un poisson (shilling marin)'],
+    ['appat', 'bleu : sac avec un poisson orange (appât)'], ['auric', 'bleu : médaillon hexagonal bleu et or (auric noble)'], ['pomme', 'violet : pomme dorée (pomme d’or)'],
+    ['tp_ci', 'violet : caisse en bois avec un drapeau jaune et des flèches jaunes (téléportation ciblée)'],
+    ['tp_te', 'bleu : caisse en bois avec un drapeau violet et des flèches violettes (téléportation territoriale)'],
+    ['tp_al', 'vert : caisse en bois avec un point d’interrogation bleu (téléportation aléatoire)'],
+    ['livre_all', 'vert : livre rouge avec une épée (livre d’alliance)'], ['fleche_res', 'vert : pointe métallique avec une flamme (flèche de résistance)'],
+    ['arc_lohar', 'vert : chef barbare (arc long de Lohar)'], ['bouc_lohar', 'bleu : chef barbare (bouclier de Lohar)'],
+    ['pinceau', 'violet : pinceau doré à poils arc-en-ciel (petit pinceau)'], ['civ', 'violet : pyramide et temple avec des flèches (changement de civilisation)']]]
+];
+const ID_OBJETS = OBJETS.flatMap(([, L]) => L.map(([id]) => id)).concat(['aucun', 'inconnu']);
+const GUIDE = OBJETS.map(([o, L]) => `Onglet ${o} :\n` + L.map(([id, d]) => `  ${id} = ${d}`).join('\n')).join('\n');
+
 /* Couleur de la case (2026-10-10) : elle donne le niveau des coffres « Choisissez un » et des packs de ressources
    (captures de Mickaël du 10 oct. 2026 ; voir RC_JEU.coffres dans donnees-jeu.js). */
 /* Icônes des accélérateurs : étude des captures de Mickaël du 2026-10-06 (texte du panneau de droite) ; ajoutées le 2026-10-09
@@ -32,7 +94,11 @@ Règles :
 - Les accélérateurs se distinguent par le petit dessin posé sur les flèches : établi et marteau = construction ; fiole = recherche ; cible = entraînement ; rouleau de bandage = soin ; sablier = universel (« Accélération », utilisable partout).
 - Onglet Ressources : « pack de ressources » = coffre doré et argenté à serrure ; « coffre de ressources au choix » = coffre en bois rempli de ressources (épi, bûche, pierre).
 - couleur : la couleur du fond de la case, « gris », « vert », « bleu », « violet » ou « orange » ; « inconnu » si elle n'est pas visible.
-- sur = false dès qu'un chiffre de la case est douteux ou illisible.`;
+- id_objet : dans les onglets Ressources et Accélérateurs, mets "aucun". Dans les onglets Boosts, Équipement, Attirail et Autre, donne l'identifiant de l'objet d'après la liste ci-dessous (couleur du fond, dessin, valeur du haut) ; "inconnu" s'il n'y est pas ou si tu hésites.
+- Une case sans quantité (pièce d'équipement forgée, pièce d'attirail) : quantite = "".
+- sur = false dès qu'un chiffre de la case est douteux ou illisible, ou que tu hésites sur l'objet.
+Objets des autres onglets :
+` + GUIDE;
 
 const TXT = { type: 'string' };
 const SCHEMA = {
@@ -42,8 +108,8 @@ const SCHEMA = {
     barre: { type: 'object', additionalProperties: false, required: ['nourriture', 'bois', 'pierre', 'or', 'gemmes'],
       properties: { nourriture: TXT, bois: TXT, pierre: TXT, or: TXT, gemmes: TXT } },
     cases: { type: 'array', items: { type: 'object', additionalProperties: false,
-      required: ['ligne', 'colonne', 'objet', 'valeur_haut', 'quantite', 'couleur', 'coupee', 'sur'],
-      properties: { ligne: { type: 'integer' }, colonne: { type: 'integer' }, objet: TXT, valeur_haut: TXT, quantite: TXT,
+      required: ['ligne', 'colonne', 'objet', 'id_objet', 'valeur_haut', 'quantite', 'couleur', 'coupee', 'sur'],
+      properties: { ligne: { type: 'integer' }, colonne: { type: 'integer' }, objet: TXT, id_objet: { type: 'string', enum: ID_OBJETS }, valeur_haut: TXT, quantite: TXT,
         couleur: { type: 'string', enum: ['gris', 'vert', 'bleu', 'violet', 'orange', 'inconnu'] }, coupee: { type: 'boolean' }, sur: { type: 'boolean' } } } },
     panneau: { type: 'object', additionalProperties: false, required: ['nom', 'texte'], properties: { nom: TXT, texte: TXT } }
   }
