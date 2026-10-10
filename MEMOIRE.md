@@ -129,6 +129,7 @@ Dernière mise à jour : 2026-10-08.
 | 2026-10-10 | Mickaël, sur la v41 d'Importer : « Je suis vraiment pas fan ». Claude a proposé 3 pistes en images (A épurée, B fenêtre du jeu, C une carte par onglet) et a construit la C en v42 en attendant son choix (proposée par Claude, à valider ; test im3). |
 | 2026-10-10 | **Écran Importer : piste A** (Mickaël : « J'aime bien A ») : un seul bouton, 3 étapes en images, puis miniatures et « Lire ». Fait en v43. |
 | 2026-10-10 | **Inventaire : mélange des pistes A et C** (Mickaël : « J'aime bien la tuile haute sur le A et les caisses dans les tuiles basses sur le C ») : grandes tuiles en haut (total, barre en ville / en caisses), cartes de caisses à barres en dessous. |
+| 2026-10-10 | **Inventaire Ressources et Accélérateurs (v46) validés** par Mickaël (« C'est très bien pour le menu ressources et accélérateur ») ; seule la tuile Gemmes « fait vide » : 2 propositions envoyées en images (1 : Gemmes, Coffres et Packs en 3 tuiles côte à côte, recommandée ; 2 : Gemmes à côté d'une tuile « Coffres et packs »), en attente de son choix. |
 
 ## 5. Questions ouvertes (à trancher plus tard)
 
