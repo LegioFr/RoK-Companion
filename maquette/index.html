@@ -350,34 +350,62 @@
   </section>
 
   <!-- ===================================================== IMPORT -->
-  <section data-screen="import" data-g="ma-ville" data-title="Importer des captures" data-st="wip" data-b="B03" data-note="Lecture branchée le 9 oct. (ton choix : Claude Opus 5.5). Choisis de vraies captures de l’Inventaire du jeu (onglets Ressources et Accélérateurs) : Claude les lit, tu relis ce qui est douteux, puis tout va dans ton inventaire. Environ 0,05 $ par capture. « Utiliser les captures d’exemple » garde la lecture simulée, gratuite." hidden>
-    <header class="header"><div class="tw"><a class="back" href="#ma-ville-inventaire"><i data-i="i-back"></i>Ma ville</a><h1>Importer</h1></div></header>
-    <div class="stepper" role="group" aria-label="Étapes de l’import" id="stepper">
-      <span class="sp" data-sp="1"><i>1</i>Captures</span>
-      <span class="sp" data-sp="2"><i>2</i>Analyse</span>
-      <span class="sp" data-sp="3"><i>3</i>Relecture</span>
-      <span class="sp" data-sp="4"><i>4</i>Résultat</span>
-    </div>
+  <section data-screen="import" data-g="ma-ville" data-title="Importer des captures" data-st="wip" data-b="B03" data-note="Redessiné le 10 oct. à ta demande (proposé par Claude, à valider) : grande zone d’ajout, guide « Comment faire », miniatures que tu peux retirer, coût et durée avant de lancer, avancement capture par capture. Lecture par Claude Opus 5.5 (ton choix du 9 oct.), environ 0,05 $ par capture. « Utiliser les captures d’exemple » garde la lecture simulée, gratuite." hidden>
+    <header class="header"><div class="tw"><a class="back" href="#ma-ville-inventaire"><i data-i="i-back"></i>Ma ville</a><h1>Importer</h1><p>Ton inventaire lu depuis tes captures du jeu</p></div></header>
+    <ol class="stepper" aria-label="Étapes de l’import" id="stepper">
+      <li class="sp" data-sp="1"><i>1</i><span>Captures</span></li>
+      <li class="sp" data-sp="2"><i>2</i><span>Lecture</span></li>
+      <li class="sp" data-sp="3"><i>3</i><span>Relecture</span></li>
+      <li class="sp" data-sp="4"><i>4</i><span>Résultat</span></li>
+    </ol>
 
     <div data-steppanel="1">
-      <div class="note" style="margin-bottom:12px" id="lectNote"><i data-i="n-info"></i><span>Prends tes captures dans l’Inventaire du jeu, onglets <b>Ressources</b> et <b>Accélérateurs</b>, en entier, en faisant défiler la grille. Claude Opus 5.5 les lit : environ 10 s et 0,05 $ par capture. Les autres onglets ne sont pas encore lus.</span></div>
-      <div class="shots" id="shots"></div>
-      <p class="muted" style="margin:12px 0 0" id="shotsInfo"></p>
-      <div class="btns">
-        <label class="btn gold" for="pickShots"><i data-i="n-camera"></i>Choisir des captures</label>
-        <input id="pickShots" type="file" accept="image/*" multiple hidden>
-        <button class="btn" type="button" data-act="sample-shots" data-ex>Utiliser les captures d’exemple</button>
-        <label class="btn" for="pickVideo"><i data-i="n-video"></i>Importer une vidéo</label>
-        <input id="pickVideo" type="file" accept="video/*" hidden>
+      <div class="imp-grid">
+        <div class="imp-main">
+          <div class="imp-drop" id="impDrop">
+            <span class="imp-ico"><i data-i="n-camera"></i></span>
+            <h2>Ajoute tes captures</h2>
+            <p>Celles de l’Inventaire du jeu, onglets <b>Ressources</b> et <b>Accélérateurs</b>, en entier.</p>
+            <label class="btn primary imp-big" for="pickShots"><i data-i="n-camera"></i>Choisir des captures</label>
+            <button class="btn imp-ex" type="button" data-act="sample-shots" data-ex>Utiliser les captures d’exemple</button>
+          </div>
+          <div class="shots" id="shots"></div>
+          <p class="imp-hint" id="shotsInfo"></p>
+          <input id="pickShots" type="file" accept="image/*" multiple hidden>
+          <input id="pickVideo" type="file" accept="video/*" hidden>
+        </div>
+        <aside class="imp-side">
+          <section class="imp-card">
+            <h3>Comment faire</h3>
+            <ol class="imp-how">
+              <li><span class="imp-how-i"><i data-i="r-food"></i></span><span><b>Ouvre l’Inventaire</b>, onglet Ressources.</span></li>
+              <li><span class="imp-how-i"><i data-i="n-camera"></i></span><span><b>Fais une capture</b>, fais défiler la grille, recommence jusqu’en bas.</span></li>
+              <li><span class="imp-how-i"><i data-i="a-general"></i></span><span><b>Pareil</b> pour l’onglet Accélérateurs.</span></li>
+            </ol>
+          </section>
+          <section class="imp-card" id="lectNote">
+            <h3>Bon à savoir</h3>
+            <ul class="imp-facts">
+              <li><i data-i="i-bolt"></i><span>Lu par <b>Claude Opus 5.5</b> : environ 15&nbsp;s et 0,05&nbsp;$ par capture.</span></li>
+              <li><i data-i="i-lock"></i><span>Tes captures sont effacées dès qu’elles sont lues.</span></li>
+              <li><i data-i="i-check"></i><span>Tu relis tout avant d’enregistrer ; rien n’est écrit pour ce qui n’est pas sur les captures.</span></li>
+              <li><i data-i="i-pending"></i><span>Pas encore lus : Boosts, Équipement, Attirail, Autre.</span></li>
+            </ul>
+            <label class="imp-video" for="pickVideo"><i data-i="n-video"></i>Importer une vidéo d’écran (bientôt)</label>
+          </section>
+        </aside>
       </div>
-      <div class="btns"><button class="btn primary" type="button" data-act="analyse" id="analyseBtn">Analyser</button></div>
+      <div class="imp-bar">
+        <div class="imp-bar-t"><b id="impCount">Aucune capture</b><small id="impCost">Choisis tes captures pour commencer.</small></div>
+        <button class="btn primary" type="button" data-act="analyse" id="analyseBtn">Analyser</button>
+      </div>
     </div>
 
     <div data-steppanel="2" hidden>
-      <div class="card">
-        <div class="ptop"><span id="anaText">Lecture…</span><span id="anaPct">0 %</span></div>
+      <div class="card imp-ana">
+        <div class="imp-ana-h"><span class="imp-spin" aria-hidden="true"></span><div class="imp-ana-t"><h3 id="anaText">Lecture…</h3><p id="anaNote">La lecture se fait sur ton téléphone. Tes captures ne quittent jamais l’appareil.</p></div><b class="imp-pct" id="anaPct">0 %</b></div>
         <div class="bar"><div class="fill" id="anaFill" style="width:0%"></div></div>
-        <p id="anaNote">La lecture se fait sur ton téléphone. Tes captures ne quittent jamais l’appareil.</p>
+        <div class="imp-list" id="anaList"></div>
       </div>
     </div>
 
@@ -422,7 +450,8 @@
     </div>
 
     <div data-steppanel="4" hidden>
-      <div class="card hl">
+      <div class="card hl imp-res">
+        <span class="imp-res-i"><i data-i="i-check"></i></span>
         <h3 id="resTitle"></h3>
         <p id="resText"></p>
         <div class="btns"><a class="btn primary" href="#ma-ville-inventaire">Voir l’inventaire</a><button class="btn" type="button" data-act="import-reset">Nouvel import</button></div>

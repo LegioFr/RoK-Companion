@@ -630,3 +630,97 @@ button.more{border:0;background:none;cursor:pointer;font-family:inherit;min-heig
 .lq-type{padding-left:66px}
 @media(max-width:520px){.lq-type,.field{padding-left:0}}
 .field input[data-lqv]{height:44px}
+/* ---------- Écran Importer redessiné (demande de Mickaël du 2026-10-10, proposé par Claude) ---------- */
+.stepper{display:flex;gap:0;margin:0 0 22px;padding:0;list-style:none;border:0;background:none}
+.stepper .sp{position:relative;flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:8px;min-height:0;padding:0;border:0;background:none;color:var(--muted);font-size:12px;font-weight:700;text-align:center}
+.stepper .sp::before{content:"";position:absolute;top:15px;right:50%;width:100%;height:2px;background:#2a3a52}
+.stepper .sp:first-child::before{display:none}
+.stepper .sp i{position:relative;z-index:1;display:grid;place-items:center;width:32px;height:32px;border:2px solid #2a3a52;border-radius:50%;background:var(--surface);color:var(--muted);font:700 14px/1 var(--display);font-style:normal}
+.stepper .sp.done{color:var(--green)}
+.stepper .sp.done i{border-color:var(--green);background:#14302a;color:var(--green)}
+.stepper .sp.done::before,.stepper .sp[aria-current="step"]::before{background:linear-gradient(90deg,var(--green),var(--gold))}
+.stepper .sp.done+.sp.done::before{background:var(--green)}
+.stepper .sp[aria-current="step"]{border:0;background:none;color:var(--gold-2)}
+.stepper .sp[aria-current="step"] i{border-color:var(--gold);background:linear-gradient(135deg,#f3d982,#c99a3d);color:#1d1406;box-shadow:0 0 0 5px #d8b24c22}
+.imp-grid{display:grid;gap:18px}
+.imp-drop{display:grid;justify-items:center;gap:10px;padding:34px 20px 28px;border:2px dashed #d8b24c66;border-radius:22px;background:radial-gradient(ellipse at 50% 0,#d8b24c1f,transparent 70%),linear-gradient(160deg,#1b283b,#111a29);text-align:center}
+.imp-drop[hidden]{display:none}
+.imp-ico{display:grid;place-items:center;width:88px;height:88px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#3a4a64,#1b283b 70%);border:1px solid #d8b24c55;box-shadow:0 10px 30px #00000055}
+.imp-ico svg{width:54px;height:54px}
+.imp-drop h2{margin:6px 0 0;font:700 26px/1.2 var(--display);color:var(--gold-2)}
+.imp-drop p{max-width:440px;margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+.imp-drop p b{color:var(--text)}
+.imp-big{min-height:54px;margin-top:8px;padding:0 28px;font-size:17px}
+.imp-ex{min-height:44px;border-color:transparent;background:none;color:var(--muted)}
+.shots{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.shots:empty{display:none}
+.shot{margin:0;aspect-ratio:16/10;border-radius:14px;overflow:visible}
+.shot.real img{border-radius:13px}
+.shot-n{position:absolute;left:8px;bottom:8px;z-index:1;display:grid;place-items:center;min-width:26px;height:26px;padding:0 7px;border-radius:13px;background:#0b1220d9;color:var(--gold-2);font:700 13px/1 var(--display)}
+.shot-x{position:absolute;right:-8px;top:-8px;z-index:2;display:grid;place-items:center;width:44px;height:44px;border:0;background:none;color:#fff;font-size:15px;font-weight:700}
+.shot-x::before{content:"";position:absolute;inset:8px;border-radius:50%;background:#c6463a;box-shadow:0 2px 8px #0008;z-index:-1}
+.shot.add{display:grid;place-content:center;justify-items:center;gap:6px;border:2px dashed #d8b24c66;background:#d8b24c0d;color:var(--gold-2);font-weight:700;cursor:pointer}
+.shot.add::after{display:none}
+.shot.add svg{width:28px;height:28px}
+.imp-hint{margin:10px 0 0;color:var(--muted);font-size:13px}
+.imp-hint:empty{display:none}
+.imp-side{display:grid;gap:12px;align-content:start}
+.imp-card{padding:16px;border:1px solid var(--line-cold);border-radius:16px;background:linear-gradient(135deg,var(--card-a),var(--card-b))}
+.imp-card h3{margin:0 0 12px;font:700 18px/1.2 var(--display);color:var(--text)}
+.imp-how{display:grid;gap:12px;margin:0;padding:0;list-style:none;counter-reset:how}
+.imp-how li{display:flex;align-items:center;gap:12px;font-size:14px;line-height:1.45;color:var(--muted)}
+.imp-how li b{color:var(--text)}
+.imp-how-i{position:relative;flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:#0e1624;border:1px solid var(--line)}
+.imp-how-i svg{width:32px;height:32px}
+.imp-how li{counter-increment:how}
+.imp-how-i::after{content:counter(how);position:absolute;right:-6px;top:-6px;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--gold);color:#1d1406;font:700 11px/1 var(--display)}
+.imp-facts{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.imp-facts li{display:flex;align-items:flex-start;gap:10px;color:var(--muted);font-size:13px;line-height:1.45}
+.imp-facts li b{color:var(--text)}
+.imp-facts svg{width:22px;height:22px;flex:none}
+.imp-video{display:flex;align-items:center;gap:8px;min-height:44px;margin-top:12px;padding-top:10px;border-top:1px solid #a9bdd51f;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer}
+.imp-video svg{width:22px;height:22px}
+.imp-bar{position:sticky;bottom:calc(var(--nav-h) + 8px + env(safe-area-inset-bottom,0px));z-index:20;display:flex;align-items:center;gap:12px;margin-top:18px;padding:12px 12px 12px 16px;border:1px solid #d8b24c66;border-radius:16px;background:#0f1828f2;backdrop-filter:blur(6px)}
+.imp-bar-t{display:grid;flex:1;min-width:0}
+.imp-bar-t b{color:var(--text);font-size:15px}
+.imp-bar-t small{color:var(--muted);font-size:12px}
+.imp-bar .btn{flex:none;min-height:50px;padding:0 22px;font-size:16px}
+.imp-ana{padding:18px}
+.imp-ana-h{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.imp-ana-t{flex:1;min-width:0}
+.imp-ana-t h3{margin:0;font:700 19px/1.2 var(--display)}
+.imp-ana-t p{margin:4px 0 0}
+.imp-pct{flex:none;color:var(--gold-2);font:700 22px/1 var(--display);font-variant-numeric:tabular-nums}
+.imp-spin{flex:none;width:34px;height:34px;border-radius:50%;border:3px solid #d8b24c33;border-top-color:var(--gold-2);animation:impspin 1s linear infinite}
+@keyframes impspin{to{transform:rotate(360deg)}}
+.imp-list{display:grid;gap:8px;margin-top:16px}
+.imp-list:empty{display:none}
+.imp-li{display:flex;align-items:center;gap:12px;padding:8px 12px 8px 8px;border:1px solid var(--line-cold);border-radius:12px;background:#0e1624aa}
+.imp-li img,.imp-li-ph{flex:none;width:72px;height:45px;border-radius:8px;object-fit:cover;background:#1b283b}
+.imp-li-t{display:grid;flex:1;min-width:0}.imp-li-t b{font-size:14px}.imp-li-t small{color:var(--muted);font-size:12px}
+.imp-li-s svg{width:22px;height:22px}
+.imp-li.ok{border-color:#3ecf8e55}.imp-li.ok small{color:var(--green)}
+.imp-li.echec{border-color:#ef8a7455}.imp-li.echec small{color:var(--red)}
+.imp-li.envoi small,.imp-li.lecture small{color:var(--gold-2)}
+.imp-dot{display:block;width:10px;height:10px;border-radius:50%;background:#2a3a52}
+.imp-li.envoi .imp-dot,.imp-li.lecture .imp-dot{background:var(--gold-2);animation:imppulse 1s ease-in-out infinite}
+@keyframes imppulse{50%{opacity:.3}}
+.imp-res{display:grid;justify-items:center;text-align:center;padding:28px 18px}
+.imp-res-i{display:grid;place-items:center;width:64px;height:64px;margin-bottom:6px;border-radius:50%;background:#3ecf8e22;color:var(--green);border:1px solid #3ecf8e66}
+.imp-res-i svg{width:34px;height:34px;stroke-width:2.4}
+.imp-res h3{font-size:22px}
+.imp-res .btns{justify-content:center}
+@media(prefers-reduced-motion:reduce){.imp-spin,.imp-li .imp-dot{animation:none}}
+@media(min-width:700px){
+  .stepper .sp{font-size:13px}
+  .shots{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+}
+@media(min-width:960px){
+  .imp-grid{grid-template-columns:minmax(0,7fr) minmax(0,4fr);align-items:start;gap:22px}
+  .imp-drop{min-height:360px;align-content:center}
+}
+@media(min-width:1100px){.imp-bar{bottom:16px}}
+.imp-ana.fini .imp-spin{animation:none;border-color:var(--green);background:#14302a}
+.imp-ana.fini .imp-spin::after{content:"";display:block;width:12px;height:7px;margin:9px auto 0;border-left:3px solid var(--green);border-bottom:3px solid var(--green);transform:rotate(-45deg)}
+/* place pour la bulle d'outils de la maquette (54 px, en bas à droite), pour qu'elle ne cache pas « Analyser » */
+.imp-bar{margin-right:70px}
