@@ -154,7 +154,7 @@ Types d'objets vus dans le jeu (pas les quantités de Mickaël, qui restent dans
 
 ## Points d'action : ce qu'ils rapportent (2026-10-10, demande de Mickaël)
 
-Utilisé par la tuile et la carte « Points d'action » (onglet Autre de l'Inventaire), `RC_JEU.pa` dans `maquette/donnees-jeu.js`.
+Utilisé par la tuile « Points d'action » (onglet Autre de l'Inventaire ; pas de carte de détail depuis la v57), `RC_JEU.pa` dans `maquette/donnees-jeu.js`.
 Source : wiki riseofkingdoms.fandom.com, pages lues par l'API le 2026-10-10. **Rien n'est encore vérifié dans le jeu.**
 
 - **Coût d'une attaque de barbares :** 50 points ; −2 à chaque attaque enchaînée sans que le commandant rentre en ville, jusqu'à −10 (40 points) ; le talent « Insight » de l'arbre Maintien de la paix (« Peacekeeping ») retire 10 points de plus (40, puis 30 en enchaînant). Page « Barbarians » (révision du 2024-11-07) et « Category:Peacekeeping » (2023-04-04, talent à 3 points : « Action Point Cost Reduction 10 »). Le plafond de −10 pour l'enchaînement vient d'un guide (riseofkingdomsguides.com, « Barbarian Forts and Barbarians ») ; la phrase du wiki est ambiguë. **Nom français du talent inconnu** (« Perspicacité » ? non trouvé en ligne).

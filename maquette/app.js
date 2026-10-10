@@ -443,15 +443,16 @@ function invSheet(k){
     var lab=function(o){if(g.type==='mat'||g.type==='qual'){var t=QL[o.c][1];return t.charAt(0).toUpperCase()+t.slice(1);}
       if(g.type==='qual3'){var u=QL[o.q][1];return u.charAt(0).toUpperCase()+u.slice(1)+' · '+({simples:'simple',bénies:'bénie',lots:'lot'})[o.f];}return o.l;};
     var F=g.items.map(function(o){if(!o.vu)etoile=true;if(o.nv)nv=true;return numFld('iv-'+o.id,lab(o)+(o.vu?'':' *'),ob[o.id],false,o.n&&!o.nv?'« '+o.n+' »':'');}).join('');
-    openSheet(g.nom,INV_INTRO+(g.info?'<p class="sh-intro">'+g.info+'</p>':'')+'<div class="inv-grid deux">'+F+'</div>'+
-      ((etoile||nv)?'<p class="sh-note">'+(etoile?'* Vu seulement sur le wiki du jeu, pas encore sur tes captures. ':'')+(nv?'Certains noms ne sont pas encore lus dans le jeu.':'')+'</p>':''),acts);return;}
-  /* Réglages du calcul des points d'action : niveau des barbares attaqués et talent qui baisse le coût (2026-10-10) */
-  if(k==='pacalc'){var rc=p.paCalc||{};
-    openSheet('Calcul des points d’action','<p class="sh-intro">Pour estimer l’expérience que tes points d’action peuvent rapporter.</p>'+
-      numFld('iv-niv','Niveau des barbares que tu attaques',rc.niv,false,'De 1 à '+JPA.nivMax+'. Le plus haut niveau que ton commandant bat facilement.')+
-      '<div class="fld"><label>Ton commandant a le talent qui baisse le coût de '+JPA.talent+' points</label><small class="fld-h">Arbre Maintien de la paix (« Insight » en anglais, nom français à vérifier).</small>'+
+    /* Points d'action : les réglages du calcul sont dans la même fenêtre (choix de Mickaël du 2026-10-10 : plus de carte de détail) */
+    var rc=p.paCalc||{},paR=g.id==='pa'&&JPA?'<h3 class="sh-sub">Pour le calcul</h3>'+
+      numFld('iv-niv','Niveau des barbares que tu attaques',rc.niv,false,'De 1 à '+JPA.nivMax+'. Sert à calculer l’EXP de tes commandants.')+
+      '<div class="fld"><label>Ton commandant a le talent « −'+JPA.talent+' points »</label><small class="fld-h">Arbre Maintien de la paix (« Insight » en anglais, nom français à vérifier).</small>'+
       '<div class="chips" data-single id="paT">'+[['1','Oui'],['0','Non']].map(function(c){return '<button class="chip" type="button" data-v="'+c[0]+'" aria-pressed="'+((rc.talent?'1':'0')===c[0])+'">'+c[1]+'</button>';}).join('')+'</div></div>'+
-      '<p class="sh-note">Coûts, expérience et recharge viennent du wiki du jeu (10 oct. 2026), pas encore vérifiés dans le jeu.</p>',acts);return;}
+      '<p class="sh-note">Une attaque de barbares coûte '+JPA.cout+' points, puis '+(JPA.cout-JPA.chaineMax)+' quand tu enchaînes les attaques sans rentrer en ville ('+JPA.talent+' de moins avec le talent) ; '+
+      'le calcul prend le coût enchaîné. Chaque commandant de la marche gagne l’EXP d’un barbare, et le butin donne autant d’EXP en tomes. Sans potion, le jeu redonne environ 1 point toutes les '+JPA.recharge+' s, plus avec le VIP. '+
+      'Règles du wiki du jeu, pas encore vérifiées dans le jeu.</p>':'';
+    openSheet(g.nom,INV_INTRO+(g.info?'<p class="sh-intro">'+g.info+'</p>':'')+'<div class="inv-grid deux">'+F+'</div>'+paR+
+      ((etoile||nv)?'<p class="sh-note">'+(etoile?'* Vu seulement sur le wiki du jeu, pas encore sur tes captures. ':'')+(nv?'Certains noms ne sont pas encore lus dans le jeu.':'')+'</p>':''),acts);return;}
   /* Coffres et packs : une fenêtre chacun (remarque de Mickaël du 2026-10-10 : les deux tuiles ouvraient la même) */
   if(k==='coffres'){var cf=p.coffres||{};
     openSheet('Coffres « Choisissez un »',INV_INTRO+'<p class="sh-intro">Une ressource au choix à l’ouverture.</p><div class="inv-grid deux">'+COFFRES.map(function(x){return numFld('iv-'+x[0],x[1],cf[x[0]],false,contenuCof(x[2]));}).join('')+'</div>'+
@@ -477,10 +478,10 @@ function invSave(){
     if(raw==='')return null;var v=dec?parseQte(raw):parseEntier(raw);
     if(v==null){err.textContent=dec?'Écris par exemple 81,8 M, 500 K ou 1 200 000.':'Écris un nombre entier (0 si tu n’en as pas).';err.hidden=false;el.setAttribute('aria-invalid','true');bad++;if(!first)first=el;}return v;}
   var nom;
-  if(k==='pacalc'){var nv=lit('iv-niv');if(nv!=null&&(nv<1||nv>JPA.nivMax)){var el=$('#iv-niv'),er=el.parentNode.querySelector('.ferr');er.textContent='Un niveau de 1 à '+JPA.nivMax+'.';er.hidden=false;el.setAttribute('aria-invalid','true');el.focus();return;}
-    if(bad){say('Le niveau est à corriger : rien n’a été enregistré.');$('#iv-niv').focus();return;}
-    var tb=$('#paT [aria-pressed="true"]');p.paCalc={niv:nv,talent:!!(tb&&tb.dataset.v==='1')};closeSheet();say('Calcul des points d’action : réglages enregistrés.');refreshAll();return;}
-  if(String(k).indexOf('g:')===0){var g2=grpObj(k.slice(2)),o3=Object.assign({},p.objets||{});g2.items.forEach(function(x){var v=lit('iv-'+x.id);if(v!=null)o3[x.id]=v;else delete o3[x.id];});if(!bad)p.objets=o3;nom=g2.nom+' : enregistré.';}
+  if(String(k).indexOf('g:')===0){var g2=grpObj(k.slice(2)),o3=Object.assign({},p.objets||{});g2.items.forEach(function(x){var v=lit('iv-'+x.id);if(v!=null)o3[x.id]=v;else delete o3[x.id];});
+    var nvB=$('#iv-niv')?lit('iv-niv'):null;
+    if(nvB!=null&&(nvB<1||nvB>JPA.nivMax)){var elB=$('#iv-niv'),erB=elB.parentNode.querySelector('.ferr');erB.textContent='Un niveau de 1 à '+JPA.nivMax+'.';erB.hidden=false;elB.setAttribute('aria-invalid','true');bad++;if(!first)first=elB;}
+    if(!bad){p.objets=o3;if($('#paT')){var tb=$('#paT [aria-pressed="true"]');p.paCalc={niv:nvB,talent:!!(tb&&tb.dataset.v==='1')};}}nom=g2.nom+' : enregistré.';}
   else if(k==='coffres'||k==='packs'){var o=Object.assign({},p.coffres||{});(k==='coffres'?COFFRES:PACKS).forEach(function(x){var v=lit('iv-'+x[0]);if(v!=null)o[x[0]]=v;else delete o[x[0]];});if(!bad)p.coffres=o;nom=k==='coffres'?'Coffres enregistrés.':'Packs enregistrés.';}
   else if(AN.some(function(x){return x[0]===k;})){var J=JEU.accelerateurs,L=k==='general'?J.universel:J.specialises,a=[];
     L.forEach(function(m){var v=lit('iv-'+m);if(v!=null)a.push([fDur(m),v,m/60]);});if(!bad)p.acc[k]=a;nom='Accélérateurs enregistrés.';}
@@ -532,13 +533,13 @@ function renderCity(){
       '<span class="it-h">'+ic(o.icon)+'<small>'+o.nom+'</small>'+CHEV+'<b>'+o.val+'</b></span>'+
       (o.lv!=null&&t>0?'<span class="it-bar"><i class="v" style="width:'+(o.v/t*100)+'%"></i><i class="c" style="width:'+(o.c/t*100)+'%"></i></span>'+
         '<span class="it-l"><span class="v">En ville <b>'+o.lv+'</b></span><span class="c">En caisses <b>'+o.lc+'</b></span></span>':'<span class="it-s">'+o.sub+'</span>')+
-      (o.extra?'</span>'+o.extra:'')+(o.x||'')+'</button>';}
+      (o.extra?(o.x||'')+'</span>'+o.extra:(o.x||''))+'</button>';}
   /* large : carte seule sur sa rangée, sur toute la largeur, lignes sur 2 colonnes (choix de Mickaël du 2026-10-10 : pas de case vide) */
-  function carte(arg,icon,nom,tot,L,vide,large,apres){var mx=Math.max.apply(null,L.map(function(x){return x[2];}).concat([0]));
+  function carte(arg,icon,nom,tot,L,vide,large){var mx=Math.max.apply(null,L.map(function(x){return x[2];}).concat([0]));
     function ligne(x){return '<div class="ic-l"><span>'+x[0]+'</span><span class="ic-tr"><i style="width:'+Math.max(3,mx?x[2]/mx*100:0)+'%"></i></span><b>'+(x[3]||'×\u00a0'+nb(x[1]))+'</b></div>';}
     var moitie=Math.ceil(L.length/2);
     return '<section class="ic'+(large?' large':'')+'"><button class="ic-h" type="button" data-act="inv-edit" data-arg="'+arg+'" aria-label="Modifier : '+nom+'">'+ic(icon)+'<b>'+nom+'</b><span>'+tot+'</span>'+ic('i-pencil')+'</button>'+
-      (!L.length?'<p class="ic-vide">'+vide+'</p>':large&&L.length>1?'<div class="ic-cols"><div>'+L.slice(0,moitie).map(ligne).join('')+'</div><div>'+L.slice(moitie).map(ligne).join('')+'</div></div>':L.map(ligne).join(''))+(apres||'')+'</section>';}
+      (!L.length?'<p class="ic-vide">'+vide+'</p>':large&&L.length>1?'<div class="ic-cols"><div>'+L.slice(0,moitie).map(ligne).join('')+'</div><div>'+L.slice(moitie).map(ligne).join('')+'</div></div>':L.map(ligne).join(''))+'</section>';}
   var GLOW={food:'#d8b24c33',wood:'#c27a4a33',stone:'#a9bdd52e',gold:'#f3d98233',gems:'#ef6a7a2e',build:'#d8a24c2e',research:'#8db6f22e',train:'#ef8a742e',heal:'#3ecf8e26',general:'#b99af02e'};
   function cais(r){return r.c.reduce(function(a,c){return a+c[1]*c[2];},0);}
   var resT=RN.map(function(x){var r=p.res[x[0]],c=cais(r),has=r.v!=null||r.c.length>0;
@@ -569,17 +570,7 @@ function renderCity(){
     $('#itemsTitle').textContent=it[1];$('#itemsMaj').textContent=p.invMaj?'Mis à jour le '+p.invMaj:'';
     function qn(o){return ob[o.id]||0;}
     function vq(X){return X.length?'<span class="vq">'+X.map(function(x){return '<span>'+(x.c?'<i class="dot '+x.c+'"></i>':'')+x.l+' <b>'+(x.b!=null?x.b:'×\u00a0'+nb(x.q))+'</b></span>';}).join('')+'</span>':'';}
-    /* Carte Points d'action : ce qu'ils rapportent, sous le détail des potions */
-    function paBloc(c){function l(t,d,v){return '<div class="pa-l"><span>'+t+(d?'<small>'+d+'</small>':'')+'</span><b>'+v+'</b></div>';}
-      return '<div class="pa-c"><h4>Ce qu’ils rapportent</h4>'+
-        l('Barbares',c.c0+' points la première attaque, '+c.c1+' en enchaînant',nb(c.n0)+' à '+nb(c.n1))+
-        l('EXP par commandant',c.niv?'barbares niv. '+c.niv+' · '+nb(c.xp)+' EXP chacun · autant en tomes dans le butin':'choisis le niveau des barbares que tu attaques',
-          c.niv?fQte(c.e0)+' à '+fQte(c.e1):'—')+
-        l('Recharge naturelle',c.vip!=null?'VIP '+c.vip+' : ×'+String(c.mult).replace('.',',')+' · plafond '+nb(c.plafond)+' points':'sans bonus VIP · plafond '+nb(c.plafond)+' points','≈ '+nb(Math.round(c.jour/10)*10)+' / jour')+
-        l('Tes potions valent','','≈ '+nb(c.jours)+' jours de recharge')+
-        '<button class="pa-reg" type="button" data-act="inv-edit" data-arg="pacalc">'+ic('i-pencil')+'<span>Barbares '+(c.niv?'niv. '+c.niv:': niveau ?')+' · talent −'+JPA.talent+' : '+(c.talent?'oui':'non')+'</span></button>'+
-        '<p class="pa-n">Règles du wiki du jeu, pas encore vérifiées dans le jeu. Bonus d’expérience (talents, Lohar) non comptés.</p></div>';}
-    function tuileObj(g,cls){var has=g.items.some(function(o){return ob[o.id]!=null;}),T=g.items.filter(function(o){return qn(o)>0;}),n=T.reduce(function(a,o){return a+qn(o);},0),val='—',sub='À renseigner',x='';
+    function tuileObj(g,cls){var has=g.items.some(function(o){return ob[o.id]!=null;}),T=g.items.filter(function(o){return qn(o)>0;}),n=T.reduce(function(a,o){return a+qn(o);},0),val='—',sub='À renseigner',x='',ext='';
       if(has){sub='';
         if(g.type==='duree'){val=n?fH(T.reduce(function(a,o){return a+qn(o)*o.h;},0)):'0 h';sub=nb(n)+' objet'+(n>1?'s':'');x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}
         else if(g.type==='troupes'){var cap=T.reduce(function(a,o){return a+qn(o)*(o.cap||0);},0);val=cap?'+'+nb(cap):nb(n);sub=cap?'capacité d’entraînement en plus':nb(n)+' objet'+(n>1?'s':'');x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}
@@ -592,16 +583,20 @@ function renderCity(){
           else{val=nb(n);x=vq(ord.map(function(q){return {c:q,l:pl(q),b:nb(P[q])};}));}}
         else if(g.type==='valeur'){var tot=T.reduce(function(a,o){return a+qn(o)*o.val;},0);val=(tot>=1e6?String(Math.round(tot/1e5)/10).replace('.',',')+'\u00a0M':nb(tot))+' '+g.unite;
           sub=nb(n)+' objet'+(n>1?'s':'');x=vq(T.slice().sort(function(a,b){return b.val-a.val;}).slice(0,4).map(function(o){return {l:o.l,q:qn(o)};}));
+          /* Points d'action : à droite, ce que donnent les potions (proposition 1 de Mickaël du 2026-10-10, comme la tuile Généraux) */
           var pc=g.id==='pa'?paCalc(p):null;
-          if(pc&&pc.T){sub='jusqu’à ≈ '+nb(pc.n1)+' barbares';
-            x=vq([{l:'EXP par commandant',b:pc.e1?'≈ '+fQte(pc.e1):'niveau ?'},{l:'Recharge',b:'≈ '+nb(pc.jours)+' j'}]);}}
+          if(pc&&pc.T){sub=nb(n)+' potion'+(n>1?'s':'');
+            var gi=function(i,l,v){return '<span class="gx-i">'+ic(i)+'<span>'+l+'</span><b>'+v+'</b></span>';};
+            ext='<span class="gx-l un"><span class="gx-t">Avec tes potions</span>'+gi('i-skull','Barbares'+(pc.niv?' niv.\u00a0'+pc.niv:''),'≈\u00a0'+nb(pc.n1))+
+              gi('n-book','EXP par commandant',pc.e1?'≈\u00a0'+fQte(pc.e1):'niveau\u00a0?')+
+              gi('t-hourglass','Jours de recharge',pc.jours<1?'≈\u00a0'+Math.max(1,Math.round(pc.jours*24))+'\u00a0h':'≈\u00a0'+nb(pc.jours)+'\u00a0j')+'</span>';}}
         else if(g.vals){val=T.map(function(o){return nb(qn(o));}).join(' · ')||'0';x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}
         else if(g.sortes){val=nb(T.length)+' sorte'+(T.length>1?'s':'');sub='à dépenser pendant les événements';x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}
         else if(T.some(function(o){return o.grp;})){var Gp={};T.forEach(function(o){Gp[o.grp]=(Gp[o.grp]||0)+qn(o);});val=nb(n);sub=g.carte?'le détail est en bas':'';x=vq(Object.keys(Gp).map(function(k){return {l:k,q:Gp[k]};}));}
         else{val=nb(n);x=vq(T.map(function(o){return {l:o.l,q:qn(o)};}));}}
       /* unité en plus petit sur téléphone (« 12 légendaires » était coupé, 2026-10-10) */
       var mU=/^(.*\d(?:[\s\u00a0][KM])?)[\s\u00a0](\D+)$/.exec(val);if(mU)val=mU[1]+'<span class="u"> '+mU[2]+'</span>';
-      return grand({arg:'g:'+g.id,icon:g.icone,nom:g.nom,val:val,sub:sub,x:x,glow:g.glow||'#d8b24c1a',cls:(cls||'')+(g.type==='mat'?' q5t':'')});}
+      return grand({arg:'g:'+g.id,icon:g.icone,nom:g.nom,val:val,sub:sub,x:x,extra:ext,glow:g.glow||'#d8b24c1a',cls:(cls||'')+(g.type==='mat'?' q5t':'')+(ext&&!/large/.test(cls||'')?' large':'')});}
     var G=(JO.onglets&&JO.onglets[S.inv])||[],grands=G.filter(function(g){return !g.petit;}),petits=G.filter(function(g){return g.petit;}),html='';
     if(att){var nP=L.reduce(function(a,o){return a+(o.q||1);},0);
       html+='<div class="it-grid">'+grand({act:'item-edit',arg:'attirail|new',icon:'n-ring',nom:'Pièces d’attirail',val:nb(nP)+' / 2\u00a0000',sub:nP?'place dans ton inventaire':'Ajoute tes pièces',glow:'#8db6f222',
@@ -618,8 +613,7 @@ function renderCity(){
       else if(g.type==='valeur')lines=T.map(function(o){return [o.l,qn(o),qn(o)*o.val];});
       else lines=T.map(function(o){return [o.l,qn(o),qn(o)];});
       var tot=g.type==='qual3'?'simples · bénies · lots':g.type==='valeur'?'':nb(T.reduce(function(a,o){return a+qn(o);},0));
-      var pc=g.id==='pa'?paCalc(p):null;if(pc)tot=nb(pc.T)+' points';
-      return carte('g:'+g.id,g.icone,g.nom,tot,lines,'Rien de renseigné',A2.length%2===1&&k===A2.length-1,pc&&pc.T?paBloc(pc):'');});
+      return carte('g:'+g.id,g.icone,g.nom,tot,lines,'Rien de renseigné',A2.length%2===1&&k===A2.length-1);});
     if(C.length)html+='<h3 class="inv-h3">Détail</h3><div class="ic-grid">'+C.join('')+'</div>';
     $('#gObj').innerHTML=html;
     $('#itemsSub').textContent=att?'Tes pièces d’attirail':'Autres objets';

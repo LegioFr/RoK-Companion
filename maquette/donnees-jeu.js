@@ -138,7 +138,7 @@ window.RC_JEU={
         {id:'cles',nom:'Clés',icone:'i-lock',type:'compte',info:'Pour les coffres de la taverne.',items:[
           {id:'cle_ar',l:'Clé en argent',c:'p',vu:1,n:'Clé en argent'},{id:'cle_or',l:'Clé en or',c:'o',vu:1,n:'Clé en or'},
           {id:'cle_cr',l:'Clé de cristal (équipement)',c:'o',vu:1,n:'Clé de cristal'},{id:'cle_sv',l:'Clé de souverain (événements)',c:'o',vu:1,n:'Clé de souverain'}]},
-        {id:'pa',nom:'Points d’action',icone:'t-flask',type:'valeur',unite:'points',carte:1,/* en dernier : tuile sur toute la largeur, place pour le calcul */glow:'#3ecf8e22',info:'Pour les barbares, les forts et certains événements.',items:[
+        {id:'pa',nom:'Points d’action',icone:'t-flask',type:'valeur',unite:'points',/* en dernier, sur toute la largeur, avec le calcul à droite ; pas de carte de détail (choix de Mickaël du 2026-10-10) */glow:'#3ecf8e22',info:'Pour les barbares, les forts et certains événements.',items:[
           {id:'pa50',l:'50',val:50,c:'v',vu:1,n:'Récupération de points d’action urgente'},{id:'pa100',l:'100',val:100,c:'v',vu:1},{id:'pa500',l:'500',val:500,c:'b',vu:1},{id:'pa1000',l:'1 000',val:1000,c:'p',vu:1}]},
         {id:'constr',nom:'Château et tours de guet',icone:'i-keep',type:'compte',petit:1,vals:1,items:[
           {id:'livre_all',l:'Livre d’alliance (château)',c:'v',vu:1,n:'Livre d’alliance'},{id:'fleche_res',l:'Flèche de résistance (tours de guet)',c:'v',vu:1,n:'Flèche de résistance'}]},
