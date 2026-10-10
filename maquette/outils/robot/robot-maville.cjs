@@ -74,10 +74,14 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   const fA=await ev(p,()=>[document.getElementById('shTitle').textContent,(document.querySelector('#itC [aria-pressed="true"]')||{}).textContent].join('/'));
   await p.fill('#itN','Emblème du Nord');await p.click('[data-act=item-save]');await p.waitForTimeout(250);
   ok('Attirail : la case « Épique » ouvre l’ajout d’une pièce épique, la ligne compte ensuite × 1',fA==='Ajouter une pièce d’attirail/Épique'&&/× 1/.test(await txt(p,'#gObj .ledger .lg-r:nth-child(1) .cz:nth-child(2)')||''),fA);
-  /* Rendu pro (v58) : chaque tuile d'objets dit à quoi servent les objets et montre une case de qualité par objet */
+  /* v68 : Autre sur le modèle de Ressources (demande de Mickaël du 2026-10-10) : tuiles avec « à quoi ça sert », sans cases d'objets ; détail en 11 lignes */
   await p.click('#invChips [data-inv=autre]');await p.waitForTimeout(150);
-  const rp=await ev(p,()=>{const T=[...document.querySelectorAll('#gObj .it.obj')];return [T.length,T.filter(t=>t.querySelector('.it-p')).length,document.querySelectorAll('#gObj .it[data-arg="g:tomes"] .sl').length,document.querySelectorAll('#gObj .it[data-arg="g:tomes"] .sl-c.q-p').length].join('/');});
-  ok('Rendu pro : 9 tuiles d’objets avec leur ligne « à quoi ça sert », Tomes en 5 cases dont 3 violettes',rp==='9/9/5/3',rp);
+  const rp=await ev(p,()=>{const T=[...document.querySelectorAll('#gObj .it.obj')];return [T.length,T.filter(t=>t.querySelector('.it-p')).length,document.querySelectorAll('#gObj .it .sl').length,
+    [...document.querySelectorAll('#gObj .ledger .lg-r')].map(r=>r.querySelectorAll('.cz').length).join(','),((document.querySelector('#gObj .ledger .lg-r:nth-child(7) .cz:nth-child(1)')||{}).textContent||'').replace(/\s/g,' ')].join('/');});
+  ok('Autre (v68) : 9 tuiles avec leur ligne « à quoi ça sert », sans cases d’objets ; détail en 11 lignes (lumière d’étoile en 3), Tomes 100 EXP × 800 = 80 K',rp==='9/9/0/4,4,4,4,4,2,7,4,4,2,1/100 EXP100 EXP× 80080 K',rp);
+  await p.click('#gObj .ledger .lg-r:nth-child(4) .cz:nth-child(4)');await p.waitForTimeout(200);const fS=await ev(p,()=>document.getElementById('shTitle').textContent);
+  await p.fill('#iv-c','3');await p.click('[data-act=inv-save]');await p.waitForTimeout(250);
+  ok('Autre : une case se remplit seule (lumière d’étoile légendaire bénie × 3)',fS==='Sculptures de lumière d’étoile : légendaire · bénie'&&/× 3/.test(await txt(p,'#gObj .ledger .lg-r:nth-child(4) .cz:nth-child(4)')||''),fS);
   /* Points d'action (v57, proposition 1 de Mickaël) : exemples = 10 500 points, VIP 17, barbares niv. 25 sans talent ; plus de carte de détail */
   await p.click('#invChips [data-inv=autre]');await p.waitForTimeout(150);
   const paT=async()=>(await txt(p,'#gObj .it[data-arg="g:pa"]')||'').replace(/\s+/g,' ');
