@@ -453,6 +453,8 @@ function invSheet(k){
       'Règles du wiki du jeu, pas encore vérifiées dans le jeu.</p>':'';
     openSheet(g.nom,INV_INTRO+(g.info?'<p class="sh-intro">'+g.info+'</p>':'')+'<div class="inv-grid deux">'+F+'</div>'+paR+
       ((etoile||nv)?'<p class="sh-note">'+(etoile?'* Vu seulement sur le wiki du jeu, pas encore sur tes captures. ':'')+(nv?'Certains noms ne sont pas encore lus dans le jeu.':'')+'</p>':''),acts);return;}
+  /* Attirail : une case de la ligne des pièces ajoute une pièce de cette qualité (2026-10-10) */
+  if(String(k).indexOf('c:att:')===0){var qa=String(k).slice(6);itemSheet('attirail|new');if(qa)$$('#itC .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.c===qa));});return;}
   /* Une seule case du détail des caisses (note 6 de Mickaël du 2026-10-10 : remplir les cases une par une en les touchant) */
   if(String(k).indexOf('c:')===0){var cs=czCase(p,k);if(!cs)return;
     openSheet(cs.titre,INV_INTRO+numFld('iv-c',cs.lab,cs.q,false,cs.aide),acts);return;}
@@ -478,7 +480,7 @@ function invSheet(k){
 /* « c:food:1000 », « c:gems:50 », « c:cof:pB » : la case du détail des caisses, sa quantité et le nom à afficher */
 function czCase(p,k){var a=String(k).split(':'),t=a[1],id=a[2];
   if(t==='obj'){var fo=null,fg=null;Object.keys(JO.onglets||{}).forEach(function(k2){JO.onglets[k2].forEach(function(g){g.items.forEach(function(o){if(o.id===id){fo=o;fg=g;}});});});if(!fo)return null;var ob2=p.objets||{},lo=fo.l||fo.cl||(QL[fo.c]?(fg.fem?QL[fo.c][3].replace(/s$/,''):QL[fo.c][1]):id);
-    return {obj:id,q:ob2[id]==null?null:ob2[id],titre:fg.nom+' : '+lo,lab:'Quantité',aide:((fo.n?'Dans le jeu : « '+fo.n+' ».':'')+(fo.vu?'':' Vu seulement sur le wiki du jeu, pas encore sur tes captures.')).trim()};}
+    return {obj:id,q:ob2[id]==null?null:ob2[id],titre:fg.items.length===1?fg.nom:fg.nom+' : '+lo,lab:'Quantité',aide:((fo.n?'Dans le jeu : « '+fo.n+' ».':'')+(fo.vu?'':' Vu seulement sur le wiki du jeu, pas encore sur tes captures.')).trim()};}
   if(t==='acc'){var m=+a[3],xa=AN.filter(function(y){return y[0]===id;})[0];if(!xa)return null;var ca=(p.acc[id]||[]).filter(function(c){return Math.round(c[2]*60)===m;})[0],J=JEU.accelerateurs,vua=!J||J.vues.indexOf(m)>=0;
     return {acc:id,m:m,q:ca?ca[1]:null,titre:xa[2]+' : accélérateurs de '+fDur(m).replace(' ',' '),lab:'Nombre d’accélérateurs',aide:vua?'':'Durée indiquée par le wiki du jeu, pas encore vue sur tes captures.'};}
   if(t==='cof'){var x=COFFRES.concat(PACKS).filter(function(y){return y[0]===id;})[0];if(!x)return null;var pk=PACKS.indexOf(x)>=0,cf=p.coffres||{};
@@ -661,7 +663,7 @@ function renderCity(){
     /* Onglet Boosts sur le modèle de Ressources et Accélérateurs (demande de Mickaël du 2026-10-10) : tuiles sans les cases d'objets
        (le grand nombre et à quoi servent les objets), puis le détail compact, une ligne par famille, une case par objet du jeu, même à 0,
        qui se remplit seule ; la case est d'autant plus bleue qu'elle compte dans sa ligne (durée, ou capacité de troupes). */
-    var LEDGER=S.inv==='boosts'||S.inv==='equip';
+    var LEDGER=S.inv==='boosts'||S.inv==='equip'||S.inv==='attirail';
     /* poids d'une case dans sa ligne : durée, capacité de troupes, ou pour les matériaux leur valeur (4 d'une qualité = 1 de la qualité au-dessus) */
     function poids(g,o){return g.type==='duree'?o.h:g.type==='troupes'?(o.cap||0):g.type==='mat'?Math.pow(4,['g','v','b','p','o'].indexOf(o.c)):1;}
     /* Équipement (demande de Mickaël du 2026-10-10) : une case par qualité ; « Coffres à ouvrir » en 3 lignes (g.sous) pour que chaque case reste lisible */
@@ -674,11 +676,16 @@ function renderCity(){
         v=!q?'':g.type==='duree'?dCourt(q*o.h*60):o.cap?'+'+fK(q*o.cap):'';
         /* case étroite (téléphone) : « Légend. », sinon « Légendaire » rétrécit toute la ligne à moins de 11 px */
         return cz(lb,lb.replace(/^Légendaire$/,'Légend.'),q,v,mx?(q||0)*poids(g,o)/mx:0,'obj:'+o.id,esc(g.nom)+', '+lb);}).join(''),g.items.length);}
+    /* Attirail (demande de Mickaël du 2026-10-10) : la ligne des pièces compte ta liste de pièces par qualité ;
+       toucher une case ouvre « Ajouter une pièce d'attirail » avec cette qualité choisie */
+    function lignePieces(){var PQ2={};L.forEach(function(o){PQ2[o.c||'b']=(PQ2[o.c||'b']||0)+(o.q||1);});var mx=Math.max(PQ2.b||0,PQ2.p||0,PQ2.o||0),has=L.length>0;
+      return lgR('c:att:','n-ring','Pièces d’attirail',has?nb(L.reduce(function(a,o){return a+(o.q||1);},0)):'—',['b','p','o'].map(function(q){var n=has?(PQ2[q]||0):null,lb=capQ(q,true);
+        return cz(lb,lb.replace(/^Légendaire$/,'Légend.'),n,'',mx?(n||0)/mx:0,'att:'+q,'Pièces d’attirail, '+lb.toLowerCase());}).join(''),3);}
     var G=(JO.onglets&&JO.onglets[S.inv])||[],grands=G.filter(function(g){return !g.petit;}),petits=G.filter(function(g){return g.petit;}),html='';
     if(att){var nP=L.reduce(function(a,o){return a+(o.q||1);},0);
       var PQ={};L.forEach(function(o){PQ[o.c||'b']=(PQ[o.c||'b']||0)+(o.q||1);});
       html+='<div class="it-grid">'+grand({act:'item-edit',arg:'attirail|new',icon:'n-ring',nom:'Pièces d’attirail',val:nb(nP)+' / 2\u00a0000',sub:'',glow:'#8db6f222',cls:'obj',
-        x:'<span class="it-p">Places prises dans ton inventaire d’attirail</span>'+(nP?slots(['o','p','b'].filter(function(q){return PQ[q];}).map(function(q){return slot(q,'n-ring',PQ[q],capQ(q,true));})):'<span class="it-s">Ajoute tes pièces</span>')})+grands.map(function(g){return tuileObj(g);}).join('')+'</div>';}
+        x:'<span class="it-p">Places prises dans ton inventaire d’attirail</span>'+(nP?(LEDGER?'':slots(['o','p','b'].filter(function(q){return PQ[q];}).map(function(q){return slot(q,'n-ring',PQ[q],capQ(q,true));}))):'<span class="it-s">Ajoute tes pièces</span>')})+grands.map(function(g){return tuileObj(g);}).join('')+'</div>';}
     else html+='<div class="it-grid'+(S.inv==='boosts'?' trois':'')+'">'+grands.map(function(g,k){return tuileObj(g,grands.length%2&&k===grands.length-1&&S.inv!=='boosts'?'large':'');}).join('')+'</div>';
     /* petites tuiles : la dernière rangée remplit toute la largeur (4 colonnes sur tablette, 2 sur téléphone ; pas de case vide) */
     if(petits.length){var np=petits.length,r4=np%4,r2=np%2;
@@ -692,7 +699,7 @@ function renderCity(){
       else lines=T.map(function(o){return [o.l,qn(o),qn(o)];});
       var tot=g.type==='qual3'?'simples · bénies · lots':g.type==='valeur'?'':nb(T.reduce(function(a,o){return a+qn(o);},0));
       return carte('g:'+g.id,g.icone,g.nom,tot,lines,'Rien de renseigné',A2.length%2===1&&k===A2.length-1);});
-    if(LEDGER)html+='<div class="ledger" aria-label="Détail">'+G.map(lignesObj).join('')+'</div>';
+    if(LEDGER)html+='<div class="ledger" aria-label="Détail">'+(att?lignePieces():'')+G.map(lignesObj).join('')+'</div>';
     else if(C.length)html+='<h3 class="inv-h3">Détail</h3><div class="ic-grid">'+C.join('')+'</div>';
     $('#gObj').innerHTML=html;
     $('#itemsSub').textContent=att?'Tes pièces d’attirail':'Autres objets';

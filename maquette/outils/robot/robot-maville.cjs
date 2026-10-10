@@ -66,6 +66,14 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   await p.click('#gObj .ledger .lg-r:nth-child(1) .cz:nth-child(4)');await p.waitForTimeout(200);const fE=await ev(p,()=>document.getElementById('shTitle').textContent);
   await p.fill('#iv-c','2');await p.click('[data-act=inv-save]');await p.waitForTimeout(250);
   ok('Équipement : une case se remplit seule (Cuir épique × 2)',fE==='Cuir : épique'&&/× 2/.test(await txt(p,'#gObj .ledger .lg-r:nth-child(1) .cz:nth-child(4)')||''),fE);
+  /* v67 : Attirail sur le même modèle (demande de Mickaël du 2026-10-10) */
+  await p.click('#invChips [data-inv=attirail]');await p.waitForTimeout(150);
+  ok('Attirail (v67) : 2 tuiles sans cases d’objets, détail en 2 lignes (pièces par qualité : 3 cases ; coffres de formation : 1)',(await ev(p,()=>[document.querySelectorAll('#gObj .it').length,document.querySelectorAll('#gObj .it .sl').length,
+    [...document.querySelectorAll('#gObj .ledger .lg-r')].map(r=>r.querySelectorAll('.cz').length).join(',')].join('/')))==='2/0/3,1');
+  await p.click('#gObj .ledger .lg-r:nth-child(1) .cz:nth-child(2)');await p.waitForTimeout(200);
+  const fA=await ev(p,()=>[document.getElementById('shTitle').textContent,(document.querySelector('#itC [aria-pressed="true"]')||{}).textContent].join('/'));
+  await p.fill('#itN','Emblème du Nord');await p.click('[data-act=item-save]');await p.waitForTimeout(250);
+  ok('Attirail : la case « Épique » ouvre l’ajout d’une pièce épique, la ligne compte ensuite × 1',fA==='Ajouter une pièce d’attirail/Épique'&&/× 1/.test(await txt(p,'#gObj .ledger .lg-r:nth-child(1) .cz:nth-child(2)')||''),fA);
   /* Rendu pro (v58) : chaque tuile d'objets dit à quoi servent les objets et montre une case de qualité par objet */
   await p.click('#invChips [data-inv=autre]');await p.waitForTimeout(150);
   const rp=await ev(p,()=>{const T=[...document.querySelectorAll('#gObj .it.obj')];return [T.length,T.filter(t=>t.querySelector('.it-p')).length,document.querySelectorAll('#gObj .it[data-arg="g:tomes"] .sl').length,document.querySelectorAll('#gObj .it[data-arg="g:tomes"] .sl-c.q-p').length].join('/');});
