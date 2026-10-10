@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=68,VERSION='v'+VNUM+' · 10 oct. 2026';
+var VNUM=69,VERSION='v'+VNUM+' · 10 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -48,7 +48,8 @@ var CHANGES={
     {sel:'[data-steppanel="3"]',t:'Corrigé (ton import de ce matin) : « 8 cases coupées » s’affichait à tort. Le dessin du type d’accélérateur est en bas de la case : coupé, Claude ne connaît pas le type, et l’appli ne retrouvait pas la case entière sur la capture suivante. Elle compare maintenant la rangée coupée, colonne par colonne.'},
     {sel:'[data-steppanel="3"]',t:'Coffres et packs de ressources : la relecture dit combien elle en a vu et que tu peux les saisir à la main dans l’inventaire, au lieu de « autres onglets, ou coffres et packs ».'},
     {sel:'#stepper',t:'La frise des étapes n’apparaît qu’à partir de la lecture ; pendant la lecture, chaque capture lue dit son onglet (Ressources ou Accélérateurs).'}],
-  'ma-ville-inventaire':[{sel:'#gObj, #invChips',t:'Onglet Autre refait comme les autres (ta demande) : les 6 onglets de l’inventaire ont maintenant le même modèle. 9 tuiles sans les cases d’objets (Points d’action garde « Avec tes potions »), puis le détail en 11 lignes : la lumière d’étoile en 3 lignes (simples, bénies, lots), une case par qualité ; Tomes et Points d’action montrent ce que vaut chaque case. Château et tours de guet : « 20 · 30 » (livres d’alliance · flèches de résistance).'},
+  'ma-ville-inventaire':[{sel:'#gObj, #gItems',t:'Les 12 passeports des Exemples étaient dans « Autres objets » et pas dans la tuile Migration (ta remarque) : ils sont maintenant dans la case Passeport. « Autres objets » refuse désormais un objet qui a déjà sa case dans le détail et dit où le remplir.'},
+    {sel:'#gObj, #invChips',t:'Onglet Autre refait comme les autres (ta demande) : les 6 onglets de l’inventaire ont maintenant le même modèle. 9 tuiles sans les cases d’objets (Points d’action garde « Avec tes potions »), puis le détail en 11 lignes : la lumière d’étoile en 3 lignes (simples, bénies, lots), une case par qualité ; Tomes et Points d’action montrent ce que vaut chaque case. Château et tours de guet : « 20 · 30 » (livres d’alliance · flèches de résistance).'},
     {sel:'#gObj, #invChips',t:'Onglet Attirail refait comme les autres (ta demande) : 2 tuiles sans les cases d’objets, puis le détail : tes pièces comptées par qualité (élite, épique, légendaire ; toucher une case ajoute une pièce de cette qualité) et les coffres au choix de formation. Ta liste de pièces reste dessous.'},
     {sel:'#gObj, #invChips',t:'Onglet Équipement refait comme Ressources et Boosts (ta demande) : des tuiles sans les cases d’objets, puis le détail, une ligne par matériau, plans, fragments et pièces forgées, une case par qualité (même à 0) ; « Coffres à ouvrir » en 3 lignes (coffres de matériaux, matériau au choix, fragment de plan au choix). Pour les matériaux, la case est d’autant plus bleue qu’elle vaut de matériau (4 = 1 de la qualité au-dessus). Chaque case se touche pour la remplir seule.'},
     {sel:'#gObj .ledger',t:'Boosts, ligne Troupes : les réserves affichent leur effet, « Réserve +20 000 » et « Réserve +50 000 », au lieu de leur niveau (ta demande) ; le nom du jeu reste dans la fenêtre de la case.'},

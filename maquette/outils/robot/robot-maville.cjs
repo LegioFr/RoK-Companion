@@ -125,8 +125,11 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   ok('13 durées pour les accélérateurs généraux, 4 marquées *',(await ev(p,()=>[document.querySelectorAll('#shBody .inv-grid input').length,[...document.querySelectorAll('#shBody label')].filter(l=>/\*$/.test(l.textContent)).length].join('/')))==='13/4');
   await p.click('#sheet [data-act=close-sheet]');
   await p.click('#invChips [data-inv=autre]');await p.click('[data-act=item-edit][data-arg="autre|new"]');await p.fill('#itN','Passeports');await p.fill('#itQ','5');await p.click('[data-act=item-save]');await p.waitForTimeout(150);
-  ok('Objet en double refusé',/déjà dans la liste/.test(await txt(p,'#shBody .ferr:not([hidden])')||''));
+  ok('Objet qui a déjà sa case refusé dans la liste libre (passeports → Migration, v69)',/déjà sa case : Autre › Migration › Passeport/.test(await txt(p,'#shBody .ferr:not([hidden])')||''),await txt(p,'#shBody .ferr:not([hidden])'));
   await p.fill('#itN','Clés de bronze');await p.click('[data-act=item-save]');await p.waitForTimeout(150);ok('Objet ajouté',/Clés de bronze 5/.test(await txt(p,'#gItems')||''));
+  await p.click('[data-act=item-edit][data-arg="autre|new"]');await p.fill('#itN','clés de bronze');await p.fill('#itQ','1');await p.click('[data-act=item-save]');await p.waitForTimeout(150);
+  ok('Objet en double refusé',/déjà dans la liste/.test(await txt(p,'#shBody .ferr:not([hidden])')||''));await p.click('#sheet [data-act=close-sheet]');
+  ok('Exemples : les 12 passeports dans la tuile Migration (v69)',/MIGRATION 12/i.test(await txt(p,'#gObj .it[data-arg="g:migration"]')||''),await txt(p,'#gObj .it[data-arg="g:migration"]'));
   await etat(p,'demo','#import');await p.waitForTimeout(1200);
   ok('Lecture par Claude annoncée dans Importer',/Claude Opus 5\.5/.test(await txt(p,'#lectNote')||''));R.cle=await ev(p,()=>fetch('/api/lire').then(r=>r.json()).then(j=>j.cle?'clé en place':'clé absente').catch(()=>'?'));
   await p.context().close();}

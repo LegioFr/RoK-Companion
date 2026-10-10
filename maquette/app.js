@@ -80,9 +80,9 @@ var P={
     coffres:{c1:2,c2:3,c3:1,c4:1,pA:1,p2:1},
     objets:{att12:4,def12:2,exp25:2,cuir_g:120,cuir_v:30,cuir_b:6,fer_g:96,fer_v:22,fer_b:4,ebene_g:80,ebene_v:18,os_g:75,os_v:20,os_b:3,
       plan_v:6,plan_b:3,frag_v:12,frag_b:5,cme_g:4,cmc_g:20,cfp_v:15,piece_v:3,piece_b:2,cform:1,sch_p:30,sch_o:12,scm_p:120,scm_o:45,ste_o_s:20,ste_p_s:60,ste_b_s:150,ste_v_s:300,
-      xp1:800,xp2:120,xp3:240,xp4:12,xp5:6,pa50:90,pa100:40,pa500:4,cle_ar:5,cle_or:1,livre_all:20,fleche_res:30},
+      xp1:800,xp2:120,xp3:240,xp4:12,xp5:6,pa50:90,pa100:40,pa500:4,cle_ar:5,cle_or:1,livre_all:20,fleche_res:30,passeport:12},
     paCalc:{niv:25,talent:false},
-    items:{boosts:[],equip:[],attirail:[{n:'Cor du Nord',q:1,c:'b'}],autre:[{n:'Passeports',q:12}]},
+    items:{boosts:[],equip:[],attirail:[{n:'Cor du Nord',q:1,c:'b'}],autre:[]},
     obj:{title:'Hôtel de ville 25',short:'HDV 25',pct:62,href:'#plan-c25'}}),
   f1:mkProfile({name:'Ferme 1',type:'Ferme',icon:'i-sprout',kd:'#3567',pid:'',power:'18,2 M',kills:'1,2 M',deaths:'40 K',gems:'3 200',ap:'1 000',
     tr:['▲ +0,4 M (7j)','',''],releves:61,corr:2,snaps:3,
@@ -523,11 +523,17 @@ function itemSheet(arg){
     (t==='attirail'?'<div class="fld"><label>Qualité</label><div class="chips" data-single id="itC">'+[['b','Élite'],['p','Épique'],['o','Légendaire']].map(function(c){return '<button class="chip" type="button" data-c="'+c[0]+'" aria-pressed="'+((o&&o.c||'b')===c[0])+'">'+c[1]+'</button>';}).join('')+'</div></div>':''),
     o?[['Supprimer','item-del','danger'],['Annuler','close-sheet',''],['Enregistrer','item-save','primary']]:[['Annuler','close-sheet',''],['Ajouter','item-save','primary']]);
 }
+/* la case du détail qui correspond à un nom écrit à la main (nom du jeu, nom long ou nom court ; sans accents, majuscules ni pluriels) */
+function normNom(x){return String(x||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,' ').toLowerCase().split(/[^a-z0-9]+/).filter(Boolean).map(function(w){return w.length>3?w.replace(/[sx]$/,''):w;}).join(' ');}
+function caseDe(n){var k=normNom(n),r='';if(!k)return '';Object.keys(JO.onglets||{}).forEach(function(t){(JO.onglets[t]||[]).forEach(function(g){g.items.forEach(function(o){if(r)return;
+  if([o.n,o.l,o.cl&&o.cl.length>=6?o.cl:''].some(function(x){return x&&normNom(x)===k;}))r=ITEMS[t][1]+' › '+g.nom+' › '+(o.cl||o.l||o.n);});});});return r;}
 function itemSave(){
   var p=A(),e=S.itemEdit;if(!p||!e)return;var n=$('#itN').value.trim(),q=parseEntier($('#itQ').value),en=$('#itN').parentNode.querySelector('.ferr'),eq=$('#itQ').parentNode.querySelector('.ferr');
   en.hidden=eq.hidden=true;if(!n){en.textContent='Donne le nom de l’objet.';en.hidden=false;$('#itN').focus();return;}
   if(q==null){eq.textContent='Écris un nombre entier (0 si tu n’en as plus).';eq.hidden=false;$('#itQ').focus();return;}
   var L=p.items[e.t];if(L.some(function(x,j){return j!==e.i&&x.n.toLowerCase()===n.toLowerCase();})){en.textContent='Cet objet est déjà dans la liste.';en.hidden=false;return;}
+  /* un objet qui a déjà sa case dans le détail ne va pas dans la liste libre (remarque de Mickaël du 2026-10-10 : 12 passeports dans « Autres objets », rien dans Migration) */
+  if(e.t!=='attirail'){var dj=caseDe(n);if(dj){en.textContent='Cet objet a déjà sa case : '+dj+'. Touche-la dans le détail pour le remplir.';en.hidden=false;return;}}
   var nO={n:n,q:q};if(e.t==='attirail'){var cc=$('#itC [aria-pressed="true"]');nO.c=cc?cc.dataset.c:'b';}
   if(e.i>=0)L[e.i]=nO;else L.push(nO);p.invMaj=dateJour();closeSheet();say(e.i>=0?'Objet modifié.':'Objet ajouté.');refreshAll();
 }
