@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=72,VERSION='v'+VNUM+' · 10 oct. 2026';
+var VNUM=73,VERSION='v'+VNUM+' · 10 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -26,7 +26,7 @@ var CHANGES={
     {sel:'',t:'Deux versions de la maquette (onglet États) : « Exemples », pour les tests, et « Ma version réelle », vierge, que tu remplis toi-même ; elle est gardée avec la maquette publiée.'},
     {sel:'',t:'Tous les tests, leurs résultats, les captures jointes et les notes ont été supprimés (ta demande ; une archive est gardée dans le dépôt).'}],
   'profil':[{sel:'#pfSet',t:'Réglages (niveau VIP, bâtisseurs, bonus de vitesse, civilisation) : ici maintenant, sortis de Ma ville (ton choix). Un réglage ouvert d’ici y ramène.'}],
-  'ma-ville-recherches':[{sel:'[data-panel="recherches"]',t:'Nouvel onglet : Recherches et Troupes, sortis de l’onglet Bâtiments (ton choix).'}],
+  'ma-ville-recherches':[{sel:'#gTrp',t:'Troupes sur le modèle de Ressources (ta demande) : une tuile par type (total, et part du niveau 5 en or), puis le détail, une case par niveau qui se remplit seule ; le nom d’une ligne ouvre les 5 niveaux du type. Noms des types et des niveaux à vérifier dans le jeu.'},{sel:'#gResearch',t:'Recherches : encore des exemples, en attendant les noms des technologies de ton Académie.'},{sel:'[data-panel="recherches"]',t:'Nouvel onglet : Recherches et Troupes, sortis de l’onglet Bâtiments (ton choix).'}],
   'evenements':[{sel:'#evList',t:'Chaque événement a un bouton « Me prévenir » ; activé, il devient « Rappel activé » et un message dit quand tu seras prévenu (ta note 7).'}],
   'plan-c25':[{sel:'[data-screen="plan-c25"] h1',t:'Titre « Hôtel de ville 25 » au lieu de « Château 25 » (ta note 6).'}],
   'mot-de-passe-oublie':[{sel:'[data-auth="mot-de-passe-oublie"] .a-feedback',t:'Adresse sans compte : « Aucun compte avec cette adresse… ». Adresse connue : « E-mail envoyé à … » (ta décision).'},{sel:'[data-auth="mot-de-passe-oublie"] .a-primary',t:'Le lien de l’e-mail ne se simule que si un e-mail est vraiment parti.'}],
@@ -34,7 +34,8 @@ var CHANGES={
   'inscription':[{sel:'[data-auth="inscription"] .a-signup',t:'« Déjà un compte ? » retiré, comme sur « Se connecter ».'},{sel:'[data-auth="inscription"]',t:'Même taille de carte que « Se connecter » (ta note 3).'}],
   'confirmation':[{sel:'[data-auth="confirmation"] .a-intro',t:'« Un e-mail de confirmation t’a été envoyé. » (ta note 4).'}],
   'nouveau-mot-de-passe':[{sel:'[data-auth="nouveau-mot-de-passe"]',t:'Écran ajouté, repris de B01-05. Après « Enregistrer », tu es connecté.'}],
-  'ma-ville-progression':[{sel:'#gBld',t:'Onglet Bâtiments refait comme Ressources (ta demande) : 4 tuiles, une par groupe du jeu, qui disent combien de bâtiments sont au niveau de ton Hôtel de ville (le plus haut possible), puis le détail : une case par bâtiment, et par exemplaire pour les fermes, moulins, carrières, mines et hôpitaux. Chaque case se touche pour la remplir seule ; plus elle est bleue, plus le bâtiment est proche du niveau de l’Hôtel de ville. Le nom d’une ligne ouvre sa page (historique). Une tuile fait défiler jusqu’à son groupe.'},
+  'ma-ville-progression':[{sel:'#gBld',t:'La phrase sous le détail est retirée (ta note 11) ; « pas encore vérifié dans le jeu » est dit dans la fenêtre du bâtiment entouré d’or.'},
+    {sel:'#gBld',t:'Onglet Bâtiments refait comme Ressources (ta demande) : 4 tuiles, une par groupe du jeu, qui disent combien de bâtiments sont au niveau de ton Hôtel de ville (le plus haut possible), puis le détail : une case par bâtiment, et par exemplaire pour les fermes, moulins, carrières, mines et hôpitaux. Chaque case se touche pour la remplir seule ; plus elle est bleue, plus le bâtiment est proche du niveau de l’Hôtel de ville. Le nom d’une ligne ouvre sa page (historique). Une tuile fait défiler jusqu’à son groupe.'},
     {sel:'[data-screen="ma-ville"] .tabs',t:'L’onglet s’appelle « Bâtiments » et son titre intérieur est retiré ; Réglages vont dans la fiche du profil, Recherches et Troupes dans un nouvel onglet « Recherches et troupes » (tes 3 choix).'},
     {sel:'#gBld',t:'Progression ne montre plus que les bâtiments (ton choix 3) : la grande tuile « Vers le niveau 25 » est retirée, le plan vers l’Hôtel de ville ira dans Optimiser. L’Hôtel de ville est une tuile du groupe « Autres » ; le bâtiment qui bloque le prochain niveau reste entouré d’or (« niveau 24 requis »).'},
     {sel:'#gBld .bgrp.saison',t:'Nouveau groupe « Saison de KvK » (ton choix) : Forum d’état, Mine de cristal, Centre de recherche de cristal. Jamais comptés « à renseigner » ; les deux bâtiments de cristal sont signalés « retiré en fin de saison ».'},

@@ -45,11 +45,16 @@ for(const [t,w,h] of TAILLES){const p=await page(w,h);
   /* v71 : onglet « Bâtiments », Réglages dans le profil, Recherches et troupes à part (choix de Mickaël du 2026-10-10) */
   ok('Onglets de Ma ville : Bâtiments, Recherches et troupes, Inventaire, Commandants, Équipements, Armements (v71)',(await txt(p,'[data-screen="ma-ville"] .tabs'))==='Bâtiments Recherches et troupes Inventaire Commandants Équipements Armements');
   ok('Onglet Bâtiments : ni réglages, ni recherches, ni troupes (v71)',(await ev(p,()=>{const P=document.querySelector('[data-panel=progression]');return !/Réglages|Recherches|Troupes|Niveau VIP/.test(P.innerText);})));
-  await etat(p,'demo','#ma-ville-recherches');ok('Onglet Recherches et troupes : les deux parties (v71)',/Recherches.*Troupes/s.test(await txt(p,'[data-panel=recherches]')||''));
+  await etat(p,'demo','#ma-ville-recherches');
+  ok('Recherches et troupes (v73) : 4 tuiles de troupes (total, niveau 5), détail 4 × 5 niveaux, puis Recherches',(await ev(p,()=>[[...document.querySelectorAll('#gTrp .it .it-h b')].map(b=>b.textContent.replace(/\s/g,' ')).join(','),
+    [...document.querySelectorAll('#gTrp .lg-r')].map(r=>r.querySelectorAll('.cz').length).join(','),!!document.getElementById('gResearch')].join('/')))==='158 000,112 000,227 000,46 000/5,5,5,5/true');
+  await p.click('#gTrp .cz[data-arg="c:trp:arc:4"]');await p.waitForTimeout(200);const fR=await ev(p,()=>document.getElementById('shTitle').textContent);await p.fill('#iv-c','5000');await p.click('[data-act=inv-save]');await p.waitForTimeout(250);
+  ok('Troupes : une case se remplit seule (Archers niveau 5 × 5 000 → tuile 232 000)',fR==='Archers : niveau 5'&&/232 000/.test(await txt(p,'#gTrp .it[data-arg="trp:arc"]')||''),fR);
   await etat(p,'demo','#profil');ok('Réglages dans la fiche du profil : VIP 17, Bâtisseurs 2, Bonus de vitesse, Civilisation France (v71)',/17 Niveau VIP 2 Bâtisseurs — Bonus de vitesse à renseigner France Civilisation/.test(await txt(p,'#pfSet')||''),await txt(p,'#pfSet'));
   await p.click('#pfSet a[href="#valeur-vip"]');await p.waitForTimeout(300);ok('Un réglage ouvert depuis le profil y ramène (« Profil »)',(await ev(p,()=>[document.getElementById('valBack').getAttribute('href'),document.getElementById('valBack').textContent.trim()].join('/')))==='#profil/Profil');
   await etat(p,'demo','#ma-ville-progression');
   ok('37 cases : Hôtel de ville, 18 bâtiments (fermes, moulins, carrières, mines et hôpitaux par exemplaire) et 3 de saison',(await ev(p,()=>document.querySelectorAll('#gBld .cz').length))===37);
+  ok('Plus de phrase sous le détail des bâtiments (note 11, v73)',(await ev(p,()=>document.getElementById('bldNote').textContent))==='');
   ok('Prérequis manquant entouré (Mur, niv. 24 requis)',(await ev(p,()=>[...document.querySelectorAll('#gBld .cz.manque')].map(a=>a.dataset.arg+' '+a.querySelector(':scope>span').textContent).join(',')))==='c:bat:mur:-1 niv. 24 requis');
   await p.click('#gBld .cz[data-arg="c:bat:taverne:-1"]');await p.waitForTimeout(200);const fT=await ev(p,()=>[document.getElementById('shTitle').textContent,document.getElementById('iv-c').value].join('/'));
   await p.fill('#iv-c','22');await p.click('[data-act=inv-save]');await p.waitForTimeout(250);

@@ -60,7 +60,12 @@ function vide4(v){return !v||!v.some(function(x){return x!=null;});}
 function niv(p,k){var v=p.v[k];if(!isMulti(k))return v;if(vide4(v))return null;return Math.max.apply(null,v.filter(function(x){return x!=null;}));}
 function nomPl(k){return FIELDS[k].pl||FIELDS[k].label;}
 function hist(v){if(v==null)return [];if(Array.isArray(v))return [{v:v,d:'5 oct. 2026',m:'',src:'Saisie'}];if(typeof v==='string')return [{v:v,d:'4 oct. 2026',m:'',src:'Saisie'}];return [{v:v,d:'5 oct. 2026',m:'Changé en jeu',src:'Saisie'},{v:Math.max(0,v-1),d:'12 sept. 2026',m:'',src:'Import'}];}
+/* Troupes (2026-10-10, onglet Recherches et troupes sur le modèle de Ressources) : un nombre par type et par niveau (1 à 5), null = pas renseigné.
+   Les anciennes données (troops : [nom, icône, niveau, nombre]) sont reprises. Noms des types et des niveaux : à vérifier dans le jeu. */
+var TRP=[['inf','t-swords','Infanterie','#ef8a7422'],['cav','n-horseshoe','Cavalerie','#d8b24c22'],['arc','n-bow','Archers','#3ecf8e1f'],['sie','n-catapult','Siège','#8db6f222']];
+function troupesDe(p){if(p.troupes)return p.troupes;var T={};(p.troops||[]).forEach(function(t){var x=TRP.filter(function(y){return y[2]===t[0];})[0];if(!x||!t[2])return;var a=T[x[0]]||(T[x[0]]=[0,0,0,0,0]);a[t[2]-1]=t[3];});p.troupes=T;return T;}
 function mkProfile(o){
+  troupesDe(o);
   if(!o.encours)o.encours=[];if(!o.coffres)o.coffres={};if(!o.objets)o.objets={};if(!o.items)o.items={boosts:[],equip:[],attirail:[],autre:[]};
   o.h={};Object.keys(FIELDS).forEach(function(k){if(!(k in o.v))o.v[k]=null;o.h[k]=hist(o.v[k]);});return o;
 }
@@ -71,6 +76,7 @@ var P={
       chateau:22,taverne:21,tourguet:20,ferme:[24,24,23,22],scierie:[24,23,23,22],carriere:[23,22,21,21],mine:[22,21,20,19],
       forum:6,minecristal:4,cristalrech:3},
     research:[['Économie',68],['Militaire',54]],troops:[['Infanterie','t-swords',5,120000],['Cavalerie','n-horseshoe',5,85000],['Archers','n-bow',4,210000],['Siège','n-catapult',4,40000]],
+    troupes:{inf:[0,0,8000,30000,120000],cav:[0,0,5000,22000,85000],arc:[0,2000,15000,210000,0],sie:[0,0,6000,40000,0]},
     /* Exemples : tailles de caisses et durées d'accélérateurs du jeu (étude B03 du 6 oct. 2026) ; les nombres sont inventés */
     res:{food:{v:32,c:[['500 000',18,.5],['150 000',32,.15],['50 000',44,.05]]},wood:{v:27,c:[['500 000',16,.5],['150 000',28,.15],['50 000',36,.05]]},
          stone:{v:12,c:[['375 000',8,.375],['112 500',20,.1125],['37 500',21,.0375]]},gold:{v:6.1,c:[['200 000',10,.2],['50 000',19,.05],['15 000',8,.015]]}},
@@ -208,7 +214,7 @@ function startReel(){
 /* Un profil créé avant l'ajout d'un champ reçoit ce champ vide (jamais zéro). */
 function normProfile(p){Object.keys(FIELDS).forEach(function(k){if(!(k in p.v))p.v[k]=null;if(!p.h[k])p.h[k]=[];
     if(isMulti(k)&&typeof p.v[k]==='number'){var a=[null,null,null,null];a[0]=p.v[k];p.v[k]=a;}});if(!p.encours)p.encours=[];
-  if(!p.coffres)p.coffres={};if(!p.objets)p.objets={};if(!p.items)p.items={};['boosts','equip','attirail','autre'].forEach(function(t){if(!p.items[t])p.items[t]=[];});return p;}
+  troupesDe(p);if(!p.coffres)p.coffres={};if(!p.objets)p.objets={};if(!p.items)p.items={};['boosts','equip','attirail','autre'].forEach(function(t){if(!p.items[t])p.items[t]=[];});return p;}
 var JEU=window.RC_JEU||{entrepot:{niveaux:{}},reset:{heureUTC:0},routine:[]};
 if(!S.routine)S.routine={items:JEU.routine.map(function(x){return {id:x.id,t:x.t,d:x.d};}),done:{},propose:true};
 if(!S.events)S.events=[];
@@ -441,10 +447,14 @@ function invSheet(k){
       'Règles du wiki du jeu, pas encore vérifiées dans le jeu.</p>':'';
     openSheet(g.nom,INV_INTRO+(g.info?'<p class="sh-intro">'+g.info+'</p>':'')+'<div class="inv-grid deux">'+F+'</div>'+paR+
       ((etoile||nv)?'<p class="sh-note">'+(etoile?'* Vu seulement sur le wiki du jeu, pas encore sur tes captures. ':'')+(nv?'Certains noms ne sont pas encore lus dans le jeu.':'')+'</p>':''),acts);return;}
+  /* Troupes (2026-10-10) : la tuile ou le nom d'une ligne ouvre les 5 niveaux du type ; une case, son seul niveau */
+  if(String(k).indexOf('trp:')===0){var xt=TRP.filter(function(y){return y[0]===k.slice(4);})[0];if(!xt)return;var at=troupesDe(p)[xt[0]]||[];
+    openSheet('Troupes : '+xt[2].toLowerCase(),'<p class="sh-intro">Recopie le nombre de troupes de chaque niveau (Caserne, Écurie, Champ de tir ou Atelier). Laisse vide ce que tu ne connais pas, mets 0 si tu n’en as pas.</p><div class="inv-grid">'+
+      [0,1,2,3,4].map(function(i){return numFld('iv-t'+i,'Niveau '+(i+1),at[i]);}).join('')+'</div><p class="sh-note">Noms des niveaux : à vérifier dans le jeu.</p>',acts);return;}
   /* Bâtiments (2026-10-10) : l'en-tête d'une ligne ouvre la valeur (historique, correction de tous les exemplaires) ; une case, son seul niveau */
   if(String(k).indexOf('b:')===0){location.hash='valeur-'+k.slice(2);return;}
   if(String(k).indexOf('c:bat:')===0){var ab=k.split(':'),bk=ab[2],bi=+ab[3],fb=FIELDS[bk];if(!fb)return;var mb=bi>=0,cb=mb?(p.v[bk]||[])[bi]:p.v[bk],db=mb?(((JEU.batiments||{}).instances||{})[bk]||[])[bi]:0;
-    openSheet((mb?fb.label+' '+(bi+1):fb.label)+' : niveau',numFld('iv-c','Niveau',cb==null?null:cb,false,((db>1?'Débloqué par l’Hôtel de ville '+db+'. ':'')+(p.v.hdv!=null&&bk!=='hdv'?'Au plus le niveau de ton Hôtel de ville ('+p.v.hdv+').':'')).trim()),acts);return;}
+    openSheet((mb?fb.label+' '+(bi+1):fb.label)+' : niveau',numFld('iv-c','Niveau',cb==null?null:cb,false,((db>1?'Débloqué par l’Hôtel de ville '+db+'. ':'')+(p.v.hdv!=null&&bk!=='hdv'?'Au plus le niveau de ton Hôtel de ville ('+p.v.hdv+'). ':'')+(manquants(p)[bk]?'Niveau '+manquants(p)[bk]+' requis pour ton prochain Hôtel de ville (guides et wiki du jeu, pas encore vérifié dans le jeu).':'')).trim()),acts);return;}
   /* Attirail : une case de la ligne des pièces ajoute une pièce de cette qualité (2026-10-10) */
   if(String(k).indexOf('c:att:')===0){var qa=String(k).slice(6);itemSheet('attirail|new');if(qa)$$('#itC .chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.c===qa));});return;}
   /* Une seule case du détail des caisses (note 6 de Mickaël du 2026-10-10 : remplir les cases une par une en les touchant) */
@@ -473,6 +483,8 @@ function invSheet(k){
 function czCase(p,k){var a=String(k).split(':'),t=a[1],id=a[2];
   if(t==='obj'){var fo=null,fg=null;Object.keys(JO.onglets||{}).forEach(function(k2){JO.onglets[k2].forEach(function(g){g.items.forEach(function(o){if(o.id===id){fo=o;fg=g;}});});});if(!fo)return null;var ob2=p.objets||{},lo=fo.l||fo.cl||((QL[fo.c]?(fg.fem?QL[fo.c][3].replace(/s$/,''):QL[fo.c][1]):id)+(fo.f?' · '+({simples:'simple',bénies:'bénie',lots:'lot'})[fo.f]:''));
     return {obj:id,q:ob2[id]==null?null:ob2[id],titre:fg.items.length===1?fg.nom:fg.nom+' : '+lo,lab:'Quantité',aide:((fo.n?'Dans le jeu : « '+fo.n+' ».':'')+(fo.vu?'':' Vu seulement sur le wiki du jeu, pas encore sur tes captures.')).trim()};}
+  if(t==='trp'){var xp=TRP.filter(function(y){return y[0]===id;})[0],it2=+a[3];if(!xp)return null;var at2=troupesDe(p)[id]||[];
+    return {trp:id,i:it2,q:at2[it2]==null?null:at2[it2],titre:xp[2]+' : niveau '+(it2+1),lab:'Nombre de troupes',aide:'Nom du niveau à vérifier dans le jeu.'};}
   if(t==='acc'){var m=+a[3],xa=AN.filter(function(y){return y[0]===id;})[0];if(!xa)return null;var ca=(p.acc[id]||[]).filter(function(c){return Math.round(c[2]*60)===m;})[0],J=JEU.accelerateurs,vua=!J||J.vues.indexOf(m)>=0;
     return {acc:id,m:m,q:ca?ca[1]:null,titre:xa[2]+' : accélérateurs de '+fDur(m).replace(' ',' '),lab:'Nombre d’accélérateurs',aide:vua?'':'Durée indiquée par le wiki du jeu, pas encore vue sur tes captures.'};}
   if(t==='cof'){var x=COFFRES.concat(PACKS).filter(function(y){return y[0]===id;})[0];if(!x)return null;var pk=PACKS.indexOf(x)>=0,cf=p.coffres||{};
@@ -498,13 +510,15 @@ function invSave(){
     if(nvB!=null&&(nvB<1||nvB>JPA.nivMax)){var elB=$('#iv-niv'),erB=elB.parentNode.querySelector('.ferr');erB.textContent='Un niveau de 1 à '+JPA.nivMax+'.';erB.hidden=false;elB.setAttribute('aria-invalid','true');bad++;if(!first)first=elB;}
     if(!bad){p.objets=o3;if($('#paT')){var tb=$('#paT [aria-pressed="true"]');p.paCalc={niv:nvB,talent:!!(tb&&tb.dataset.v==='1')};}}nom=g2.nom+' : enregistré.';}
   else if(String(k).indexOf('c:')===0){var cs=czCase(p,k),vc=lit('iv-c');
-    if(!bad&&cs){if(cs.obj){var o4=Object.assign({},p.objets||{});if(vc==null)delete o4[cs.obj];else o4[cs.obj]=vc;p.objets=o4;}
+    if(!bad&&cs){if(cs.trp){var TT2=troupesDe(p),A2=(TT2[cs.trp]||[null,null,null,null,null]).slice();A2[cs.i]=vc;TT2[cs.trp]=A2;}
+      else if(cs.obj){var o4=Object.assign({},p.objets||{});if(vc==null)delete o4[cs.obj];else o4[cs.obj]=vc;p.objets=o4;}
       else if(cs.acc){var La=(p.acc[cs.acc]||[]).filter(function(c){return Math.round(c[2]*60)!==cs.m;});if(vc!=null)La.push([fDur(cs.m),vc,cs.m/60]);
         La.sort(function(a,b){return a[2]-b[2];});p.acc[cs.acc]=La;}
       else if(cs.cof){var oc=Object.assign({},p.coffres||{});if(vc==null)delete oc[cs.id];else oc[cs.id]=vc;p.coffres=oc;}
       else{var L=cs.r.c.filter(function(c){return Math.round((cs.gem?c[2]:c[2]*1e6))!==cs.t;});if(vc!=null)L.push([nb(cs.t),vc,cs.gem?cs.t:cs.t/1e6]);
         L.sort(function(a,b){return a[2]-b[2];});cs.r.c=L;}}
     nom=cs?cs.titre+' : enregistré.':'';}
+  else if(String(k).indexOf('trp:')===0){var tk=k.slice(4),nt=[0,1,2,3,4].map(function(i){return lit('iv-t'+i);});if(!bad){var TT=troupesDe(p);TT[tk]=nt;}nom='Troupes enregistrées.';}
   else if(k==='coffres'||k==='packs'){var o=Object.assign({},p.coffres||{});(k==='coffres'?COFFRES:PACKS).forEach(function(x){var v=lit('iv-'+x[0]);if(v!=null)o[x[0]]=v;else delete o[x[0]];});if(!bad)p.coffres=o;nom=k==='coffres'?'Coffres enregistrés.':'Packs enregistrés.';}
   else if(AN.some(function(x){return x[0]===k;})){var J=JEU.accelerateurs,L=k==='general'?J.universel:J.specialises,a=[];
     L.forEach(function(m){var v=lit('iv-'+m);if(v!=null)a.push([fDur(m),v,m/60]);});if(!bad)p.acc[k]=a;nom='Accélérateurs enregistrés.';}
@@ -581,10 +595,20 @@ function renderCity(){
       var S1=[];L.filter(function(k){return !isMulti(k);}).forEach(function(k){S1=S1.concat(inst(k));});
       if(S1.length)rows+=ligneBat(g[0],bi[0],S1,null,first?gi:null);});
     $('#gBld').innerHTML='<div class="it-grid">'+tiles+'</div><div class="ledger bat" aria-label="Détail des bâtiments">'+rows.replace(/class="lg-c"/g,'class="lg-c wrap"')+'</div>';}
-  $('#bldNote').textContent=S.quick?'':'Plus la case est bleue, plus le bâtiment est proche du niveau de ton Hôtel de ville, le plus haut possible. Entouré d’or : le niveau requis pour ton prochain Hôtel de ville (guides et wiki du jeu, pas encore vérifiés dans le jeu). Les bâtiments sans niveau (forgeron, magasin, monument…) ne sont pas suivis.';
+  /* plus de phrase sous le détail (note 11 de Mickaël du 2026-10-10) : « non vérifié » est dit dans la fenêtre du bâtiment qui bloque */
+  $('#bldNote').textContent='';
   $('#quickBar').innerHTML=S.quick?'<div class="qbar"><span id="qCount">Saisie rapide</span><div class="chips" data-single id="qMotif" hidden><button class="chip" type="button" aria-pressed="true">Changé en jeu</button><button class="chip" type="button" aria-pressed="false">Erreur de saisie</button><button class="chip" type="button" aria-pressed="false">Autre</button></div><div class="btns" style="margin-top:0"><button class="btn" type="button" data-act="quick-cancel">Annuler</button><button class="btn primary" type="button" data-act="quick-save">Enregistrer</button></div></div>':'';
   $('#gResearch').innerHTML=!p.research.length?vide('Pas encore renseignées.'):p.research.map(function(r){return '<div class="prow"><div class="ptop"><span>'+r[0]+'</span><span>'+r[1]+' %</span></div><div class="bar"><div class="fill" style="width:'+r[1]+'%"></div></div></div>';}).join('');
-  $('#gTroops').innerHTML=!p.troops.length?vide('Pas encore renseignées.'):p.troops.map(function(t){return row({icon:t[1],title:t[0],sub:'Niveau '+t[2],val:nb(t[3])});}).join('');
+  /* Troupes sur le modèle de Ressources (demande de Mickaël du 2026-10-10) : une tuile par type (total, barre niveau 5 / niveaux 1 à 4),
+     puis le détail, une case par niveau qui se remplit seule ; plus la case est bleue, plus il y a de troupes (même échelle pour les 4 types). */
+  var TR=troupesDe(p),MXT=0;TRP.forEach(function(x){(TR[x[0]]||[]).forEach(function(n){MXT=Math.max(MXT,n||0);});});
+  var trT=TRP.map(function(x){var a=TR[x[0]],has=!!a&&a.some(function(n){return n!=null;}),tot=has?a.reduce(function(s,n){return s+(n||0);},0):0,t5=has?(a[4]||0):0;
+    return grand({arg:'trp:'+x[0],icon:x[1],nom:x[2],val:has?nb(tot):'—',sub:'À renseigner',v:t5,c:tot-t5,lv:has?nb(t5):null,lc:nb(tot-t5),lvT:'Niveau 5',lcT:'Niveaux 1 à 4',glow:x[3]});}).join('');
+  K={b:0,l:0,c:0,v:0};
+  var trL=TRP.map(function(x){var a=TR[x[0]],has=!!a&&a.some(function(n){return n!=null;});
+    return lgR('trp:'+x[0],x[1],x[2],has?nb(a.reduce(function(s,n){return s+(n||0);},0)):'—',[0,1,2,3,4].map(function(i){var q=has?(a[i]==null?0:a[i]):null;
+      return cz('Niveau '+(i+1),'Niv. '+(i+1),q,'',MXT?(q||0)/MXT:0,'trp:'+x[0]+':'+i,x[2]+', niveau '+(i+1),{num:1});}).join(''),5);}).join('');
+  $('#gTrp').innerHTML='<div class="it-grid">'+trT+'</div><div class="ledger" aria-label="Détail des troupes">'+trL+'</div>';
   // inventaire, rangé comme les onglets du jeu (décision du 2026-10-09)
   /* Inventaire, mélange des pistes A et C (choix de Mickaël du 2026-10-10) : grandes tuiles en haut (total, part en ville et en caisses),
      cartes du détail en dessous (une ligne par taille de caisse ou par durée, avec une barre). Toucher une tuile ou une carte ouvre la saisie. */
@@ -622,7 +646,7 @@ function renderCity(){
      chaque ligne note la longueur de ses plus longs textes (--k, --kl, --kc, --kv) et la feuille de style réduit la police juste assez pour la largeur de la case. */
   var K={b:0,l:0,c:0,v:0};function tl(x){return String(x).replace(/&[^;]+;/g,'x').length;}
   /* Chaque case s'ouvre seule pour la remplir (note 6 de Mickaël du 2026-10-10) ; sans valeur, pas de ligne vide : le texte reste centré dans la case (note 1). */
-  function cz(lab,labC,q,val,a,arg,nom,op){op=op||{};var z=!q,bt=q==null?'—':op.brut?String(q):'× '+nb(q);K.b=Math.max(K.b,tl(bt));K.l=Math.max(K.l,tl(lab));K.c=Math.max(K.c,tl(labC));K.v=Math.max(K.v,tl(val||''));
+  function cz(lab,labC,q,val,a,arg,nom,op){op=op||{};var z=!q,bt=q==null?'—':op.brut?String(q):op.num?nb(q):'× '+nb(q);K.b=Math.max(K.b,tl(bt));K.l=Math.max(K.l,tl(lab));K.c=Math.max(K.c,tl(labC));K.v=Math.max(K.v,tl(val||''));
     return '<button class="cz'+(z?' z':'')+(op.cls?' '+op.cls:'')+'" type="button" data-act="inv-edit" data-arg="c:'+arg+'" aria-label="'+nom+' : '+(q==null?'non renseigné':bt)+'. Modifier" style="--a:'+(z?0:(0.12+0.5*a)).toFixed(3)+'"><small><span class="cz-l">'+lab+'</span><span class="cz-c">'+labC+'</span></small><b>'+bt+'</b>'+(val?'<span>'+val+'</span>':'')+'</button>';}
   function lgR(arg,icon,nom,tot,cells,n,cols){var h=lgR0(arg,icon,nom,tot,cells,cols||n);K={b:0,l:0,c:0,v:0};return h;}
   function lgR0(arg,icon,nom,tot,cells,n){return '<div class="lg-r">'+(arg?'<button class="lg-h" type="button" data-act="inv-edit" data-arg="'+arg+'" aria-label="Modifier : '+nom+'">':'<div class="lg-h">')+
@@ -1218,8 +1242,8 @@ function renderEvents(){
     return '<div class="row ev-row"><span class="ri">'+ic(e.icon||'i-flag')+'</span><span class="rc"><b>'+esc(e.n)+'</b><small>'+esc(evTexte(e,now))+(e.fin&&e.debut&&e.debut>now?' · jusqu’au '+fQuand(e.fin):'')+' · '+pill(st[0],st[1])+'</small></span>'+
       (can?'<button class="btn sm ev-rem'+(on?' on':'')+'" type="button" data-act="remind" data-arg="'+e.id+'" aria-pressed="'+!!on+'">'+ic('i-bell')+(on?'Rappel activé':'Me prévenir')+'</button>':'')+'</div>';}).join(''):vide('Aucun événement pour l’instant. Touche « Ajouter » pour noter ceux de ton royaume.');
   if(REEL){$('#kvkPill').className='pill st-plan';$('#kvkPill').innerHTML='<i></i>Rien à vérifier';$('#kvkList').innerHTML=vide('La préparation au KvK s’appuiera sur tes marches, tes troupes et tes accélérateurs.');return;}
-  var full=S.marches.filter(function(m){return m.eq;}).length;var t5=P.main.troops[0][3]+P.main.troops[1][3];
-  var K=[[true,'Accélérateurs de soins','3 j 4 h · objectif 3 j','#ma-ville-inventaire'],[t5>=300000,'Troupes niveau 5',nb(t5)+' · objectif 300 000','#ma-ville-progression'],
+  var full=S.marches.filter(function(m){return m.eq;}).length;var T5=troupesDe(P.main),t5=TRP.reduce(function(a,x){return a+((T5[x[0]]||[])[4]||0);},0);
+  var K=[[true,'Accélérateurs de soins','3 j 4 h · objectif 3 j','#ma-ville-inventaire'],[t5>=300000,'Troupes niveau 5',nb(t5)+' · objectif 300 000','#ma-ville-recherches'],
     [full===4,'Marches complètes',full+' sur 4'+(full<4?' · une marche incomplète':''),'#combat'],[true,'Ressources pour soigner','Couvertes par tes réserves',null]];
   var bad=K.filter(function(x){return !x[0];}).length;var kp=$('#kvkPill');kp.className='pill st-'+(bad?'warn':'ok');kp.innerHTML='<i></i>'+(bad?bad+' à préparer':'Prêt');
   $('#kvkList').innerHTML=K.map(function(x){return row({href:x[3],icon:x[0]?'i-check':'i-warn',title:x[1],sub:x[2],go:!!x[3]&&!x[0]});}).join('');
