@@ -569,9 +569,9 @@ function renderCity(){
   function lgR(arg,icon,nom,tot,cells,n){return '<div class="lg-r">'+(arg?'<button class="lg-h" type="button" data-act="inv-edit" data-arg="'+arg+'" aria-label="Modifier : '+nom+'">':'<div class="lg-h">')+
     ic(icon)+'<span>'+nom+'</span><em>'+tot+'</em>'+(arg?ic('i-pencil')+'</button>':'</div>')+'<div class="lg-c" style="--n:'+n+';--m:'+(n<=5?n:Math.ceil(n/2))+'">'+cells+'</div></div>';}
   var MAXV=0;RN.forEach(function(x){p.res[x[0]].c.forEach(function(c){MAXV=Math.max(MAXV,c[1]*c[2]*1e6);});});
-  var ledger=RN.map(function(x){var r=p.res[x[0]],T=JEU.caisses[x[0]].tailles,Q={},rien=r.c.length===0;r.c.forEach(function(c){Q[Math.round(c[2]*1e6)]=c[1];});
+  var ledger=RN.map(function(x){var r=p.res[x[0]],T=JEU.caisses&&JEU.caisses[x[0]]?JEU.caisses[x[0]].tailles:r.c.map(function(c){return Math.round(c[2]*1e6);}),Q={},rien=r.c.length===0;r.c.forEach(function(c){Q[Math.round(c[2]*1e6)]=c[1];});
       return lgR(x[0],x[1],x[2],rien?'—':fM(cais(r)),T.map(function(t){var q=rien?null:(Q[t]||0),v=(q||0)*t;return cz(nb(t),court(t),q,q?fV(v):'',MAXV?v/MAXV:0);}).join(''),T.length);}).join('')+
-    (function(){var T=JEU.caisses.gems.tailles,Q={},rien=g.c.length===0,mx=0;g.c.forEach(function(c){Q[c[2]]=c[1];mx=Math.max(mx,c[1]*c[2]);});
+    (function(){var T=JEU.caisses&&JEU.caisses.gems?JEU.caisses.gems.tailles:g.c.map(function(c){return c[2];}),Q={},rien=g.c.length===0,mx=0;g.c.forEach(function(c){Q[c[2]]=c[1];mx=Math.max(mx,c[1]*c[2]);});
       return lgR('gems','r-gem','Gemmes',rien?'—':nb(gc),T.map(function(t){var q=rien?null:(Q[t]||0),v=(q||0)*t;return cz(nb(t),nb(t),q,q?nb(v):'',mx?v/mx:0);}).join(''),T.length);})()+
     (function(){var mx=Math.max.apply(null,COFFRES.map(function(x){return cf[x[0]]||0;}).concat([0]));
       return lgR('coffres','p-chest','Coffres « Choisissez un »',nC==null?'—':nb(nC),COFFRES.map(function(x){var q=nC==null?null:(cf[x[0]]||0);return cz(x[1],x[1].replace('Niveau','Niv.'),q,'',mx?(q||0)/mx:0);}).join(''),COFFRES.length);})()+
