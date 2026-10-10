@@ -479,7 +479,8 @@ function renderCity(){
     (edit?'<div class="fold-f"><button class="btn" type="button" data-act="inv-edit" data-arg="'+edit+'">'+ic('i-pencil')+'Modifier</button></div>':'')+'</details>';}
   function lignes(L,vide){return L.length?L.map(function(c){return '<div><span>'+c[0]+'</span>'+c[1]+'</div>';}).join(''):'<div><span>'+vide+'</span>—</div>';}
   var resH=RN.map(function(x){var r=p.res[x[0]];
-    var L=(r.v!=null?[['En ville',fM(r.v)]]:[]).concat(r.c.map(function(c){return ['Caisses de '+c[0].replace(/ /g,'\u00a0'),nb(c[1])];}));
+    /* « En ville » comme dans la barre du haut du jeu : un chiffre après la virgule (84,2 M) ; remarque de Mickaël du 2026-10-10 */
+    var L=(r.v!=null?[['En ville',(Math.round(r.v*10)/10).toFixed(1).replace('.',',')+'\u00a0M']]:[]).concat(r.c.map(function(c){return ['Caisses de '+c[0].replace(/ /g,'\u00a0'),nb(c[1])];}));
     return fold(x[1],x[2],fM(resTot(r)),lignes(L,'Pas encore renseigné'),'',x[0]);}).join('');
   var g=p.gemsIn,gt=g.v==null&&!g.c.length?'—':nb((g.v||0)+g.c.reduce(function(a,c){return a+c[1]*c[2];},0));
   resH+=fold('r-gem','Gemmes',gt,lignes((g.v!=null?[['En ville',nb(g.v)]]:[]).concat(g.c.map(function(c){return ['Caisses de '+c[0].replace(/ /g,'\u00a0'),nb(c[1])];})),'Pas encore renseigné'),'','gems');
