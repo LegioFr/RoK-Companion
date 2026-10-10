@@ -5,7 +5,7 @@
    Les notes vont dans la base de l'artefact (capacité db) ; hors claude.ai, elles restent dans ce navigateur. */
 (function(){
 'use strict';
-var VNUM=43,VERSION='v'+VNUM+' · 10 oct. 2026';
+var VNUM=44,VERSION='v'+VNUM+' · 10 oct. 2026';
 /* Numéro de version affiché dans Plus › L'appli (demande de Mickaël du 2026-10-09). */
 (function(){var v=document.getElementById('verTxt');if(v)v.textContent='Maquette '+VERSION;})();
 /* Version affichée par la maquette : « demo » (exemples, pour les tests) ou « reel » (ma version réelle, vierge). */
@@ -38,7 +38,8 @@ var CHANGES={
     {sel:'#gBld',t:'Noms du jeu repris de tes captures : Réserve (et non Entrepôt), Moulin à bois, Comptoir, Centre d’alliance, Champ de tir à l’arc, Atelier d’armes de siège. Les « ° » ont disparu : tous les noms sont vérifiés.'},
     {sel:'[data-screen="ma-ville"] [data-sync]',t:'Le faux « Synchronisé » est remplacé par le vrai état : « Enregistré », « Enregistrement… » ou « En attente d’envoi » dans ta version réelle, « Exemples, non enregistrés » ici.'},
     {sel:'#gSet',t:'Réglages en tuiles. Le bonus de vitesse accepte une décimale (42,5 %), comme dans le jeu.'}],
-  'import':[{sel:'.imp-hero',t:'Piste A, ton choix : un seul bouton « Choisir mes captures » (Ressources et Accélérateurs ensemble), avec les 3 étapes en images en dessous.'},
+  'import':[{sel:'',t:'Nouveau (v44) : si une nouvelle version est envoyée pendant que la page est ouverte, un bandeau « Nouvelle version de la maquette » apparaît en haut quand tu reviens sur la page, avec « Recharger ». Ton import de 10 h 01 tournait encore sur la v42.'},
+    {sel:'.imp-hero',t:'Piste A, ton choix : un seul bouton « Choisir mes captures » (Ressources et Accélérateurs ensemble), avec les 3 étapes en images en dessous.'},
     {sel:'.imp-foot',t:'Durée, coût, effacement des captures et relecture : sur une seule ligne en bas, au lieu des blocs de texte.'},
     {sel:'[data-steppanel="3"]',t:'Corrigé (ton import de ce matin) : « 8 cases coupées » s’affichait à tort. Le dessin du type d’accélérateur est en bas de la case : coupé, Claude ne connaît pas le type, et l’appli ne retrouvait pas la case entière sur la capture suivante. Elle compare maintenant la rangée coupée, colonne par colonne.'},
     {sel:'[data-steppanel="3"]',t:'Coffres et packs de ressources : la relecture dit combien elle en a vu et que tu peux les saisir à la main dans l’inventaire, au lieu de « autres onglets, ou coffres et packs ».'},
@@ -153,7 +154,9 @@ var css=el('style');css.textContent=[
 '#rcRun .rk .sim{border-color:#d8b24c88;color:#f3d982}',
 '#rcRun .rk .ph{border-color:var(--rc-line)}#rcRun.min .rb{display:none}#rcRun button:focus-visible{outline:2px solid var(--rc);outline-offset:2px}',
 '#rcRun .sm{display:none}@media(max-width:640px){#rcRun .lg{display:none}#rcRun .sm{display:inline}#rcRun .rk{flex-wrap:nowrap;gap:4px;margin-top:6px}#rcRun .rk button{flex:1 1 auto;min-height:36px;padding:0 6px;font-size:12.5px;white-space:nowrap}#rcRun .rk .nx{margin-left:0}#rcRun .rb{padding:0 10px 8px}#rcRun .ra{font-size:13.5px}#rcRun .re{font-size:12.5px;margin-top:2px}#rcRun .rh{padding:4px 4px 2px 10px}}',
-'@media(max-width:640px){#rcPnl{left:0!important;right:0;top:auto!important;bottom:0;width:100%;max-height:72vh;border-radius:18px 18px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}}'
+'@media(max-width:640px){#rcPnl{left:0!important;right:0;top:auto!important;bottom:0;width:100%;max-height:72vh;border-radius:18px 18px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}}',
+'#rcMaj{position:fixed;z-index:134;top:calc(10px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:12px;width:max-content;max-width:calc(100vw - 16px);padding:8px 8px 8px 14px;border:1px solid rgba(56,189,248,.45);border-radius:14px;background:rgba(10,18,32,.97);box-shadow:0 12px 34px #000b;color:#e8f6ff;font:600 14px/1.4 Roboto,system-ui,sans-serif}',
+'#rcMaj button{flex:none;min-height:40px;padding:0 14px;border:0;border-radius:10px;background:#38bdf8;color:#04121c;font:800 14px Roboto,sans-serif;cursor:pointer}'
 ].join('\n');
 document.head.appendChild(css);
 
@@ -204,6 +207,16 @@ function saveLocal(){LS.set('notes',ALLN);setNotes(ALLN);refresh();}
    Même façon d'appeler que la base de claude.ai : collection().onSnapshot / add, doc().get / set / update / delete.
    Les écritures partent une par une ; l'écran est mis à jour tout de suite, puis relu quand la page reprend la main. */
 var SITE=/\.vercel\.app$/.test(location.hostname)||!!window.RC_SITE;
+/* Nouvelle version envoyée pendant que la page est ouverte : un bandeau le dit, avec « Recharger ».
+   Ajouté le 2026-10-10 : Mickaël a refait un import avec la v42 restée ouverte, alors que la v43 corrigeait le problème. */
+if(SITE)(function(){var fait=false,last=0;
+  function verif(){if(fait||Date.now()-last<30000)return;last=Date.now();
+    fetch('revue.js',{cache:'no-store'}).then(function(r){return r.ok?r.text():'';}).then(function(t){var m=t.match(/var VNUM=(\d+)/);if(m&&+m[1]>VNUM&&!fait){fait=true;montre(+m[1]);}}).catch(function(){});}
+  function montre(n){var d=document.createElement('div');d.id='rcMaj';d.setAttribute('role','status');
+    d.innerHTML='<span>Nouvelle version de la maquette (v'+n+')</span><button type="button">Recharger</button>';
+    d.querySelector('button').addEventListener('click',function(){location.reload();});document.body.appendChild(d);}
+  document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')verif();});
+  window.addEventListener('focus',verif);setInterval(verif,300000);setTimeout(verif,5000);})();
 /* État d'enregistrement de « Ma version réelle », affiché en haut de Ma ville (remplace le faux « Synchronisé », 2026-10-09).
    Hors site : rien ne part, les données restent dans ce navigateur. */
 window.RC_SYNC=function(){return {local:true};};
